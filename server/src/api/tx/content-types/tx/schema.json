@@ -18,19 +18,16 @@
     "from": {
       "type": "string"
     },
-    "fromTag": {
+    "fromName": {
       "type": "string"
     },
     "to": {
       "type": "string"
     },
-    "toTag": {
+    "toName": {
       "type": "string"
     },
     "value": {
-      "type": "string"
-    },
-    "tokenName": {
       "type": "string"
     },
     "tokenSymbol": {
@@ -46,6 +43,15 @@
       "type": "string"
     },
     "note": {
+      "type": "string"
+    },
+    "tokenAddress": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "items": {
       "type": "string"
     }
   }
