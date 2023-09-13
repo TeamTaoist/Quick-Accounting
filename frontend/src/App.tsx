@@ -1,5 +1,7 @@
+import RouterLink from "./router";
+
 function App() {
-  return <></>;
+  return <RouterLink />;
 }
 
 export default App;
