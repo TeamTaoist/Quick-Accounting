@@ -1,0 +1,52 @@
+{
+  "kind": "collectionType",
+  "collectionName": "txes",
+  "info": {
+    "singularName": "tx",
+    "pluralName": "txes",
+    "displayName": "tx",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "hash": {
+      "type": "string"
+    },
+    "from": {
+      "type": "string"
+    },
+    "fromTag": {
+      "type": "string"
+    },
+    "to": {
+      "type": "string"
+    },
+    "toTag": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    },
+    "tokenName": {
+      "type": "string"
+    },
+    "tokenSymbol": {
+      "type": "string"
+    },
+    "tokenDecimal": {
+      "type": "string"
+    },
+    "blockNumber": {
+      "type": "biginteger"
+    },
+    "wallet": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    }
+  }
+}
