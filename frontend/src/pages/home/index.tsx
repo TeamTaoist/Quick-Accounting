@@ -13,7 +13,7 @@ import Button from "@mui/material/Button";
 
 import { BASIC_TOKENS } from "../../utils/constants";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
 export default function Home() {
   const [daoAddress, setDaoAddress] = useState("");
@@ -229,6 +229,10 @@ export default function Home() {
       //     },
       //   ],
       // };
+
+      const checkEqual = (a1:string, a2:string) => {
+        return a1.toLowerCase() === a2.toLowerCase();
+      }
       if (data.status === "1") {
         setOriginTxs(
           data.result.map((d: any) => ({
@@ -239,13 +243,13 @@ export default function Home() {
             tokenName: d.tokenName,
             tokenDecimal: d.tokenDecimal,
             tokenSymbol: d.tokenSymbol,
-            isOut: d.from === daoAddress,
+            isOut: checkEqual(d.from, daoAddress),
             value: ethers.utils.formatUnits(
               ethers.BigNumber.from(d.value),
               Number(d.tokenDecimal)
             ),
-            sender: d.from === daoAddress ? "" : d.from,
-            receiver: d.from === daoAddress ? d.to : "",
+            sender: checkEqual(d.from, daoAddress) ? "" : d.from,
+            receiver: checkEqual(d.from, daoAddress) ? d.to : "",
           }))
         );
       }
