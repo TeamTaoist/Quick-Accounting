@@ -4,14 +4,23 @@ import Box from "@mui/material/Box";
 import styled from "@emotion/styled";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { tagTx, uploadJson } from "../../../request/api";
 
 interface IProps {
-  tx: ITransaction;
+  daoAddress: string;
+  tokenAddress: string;
+  tx?: ITransaction;
   open: boolean;
   handleClose: () => void;
 }
 
-export default function TagModal({ open, handleClose, tx }: IProps) {
+export default function TagModal({
+  open,
+  handleClose,
+  tx,
+  daoAddress,
+  tokenAddress,
+}: IProps) {
   const [category, setCategory] = useState("");
   const [usage, setUsage] = useState("");
   const [sender, setSender] = useState("");
@@ -30,14 +39,46 @@ export default function TagModal({ open, handleClose, tx }: IProps) {
     handleClose();
   };
 
-  const onConfirm = () => {
+  const onConfirm = async () => {
+    if (!tx) {
+      return;
+    }
     // TODO
     console.log(category, usage, sender, receiver, comment);
     // check values
 
     try {
       // upload to ipfs
+      const p: any = { hash: tx.hash, items: usage, note: comment };
+      if (sender) {
+        p.fromName = sender;
+      }
+      if (receiver) {
+        p.toName = receiver;
+      }
+
+      const resp = await uploadJson(p);
+      const { IpfsHash } = resp.data;
+
       // insert to db
+      await tagTx({
+        wallet: daoAddress,
+        tokenAddress,
+        blockNumber: Number(tx.blockNumber),
+        hash: tx.hash,
+        from: tx.from,
+        to: tx.to,
+        fromName: sender,
+        toName: receiver,
+        value: tx.value,
+        tokenName: tx.tokenName,
+        tokenSymbol: tx.tokenSymbol,
+        tokenDecimal: tx.tokenDecimal,
+        items: usage,
+        note: comment,
+        ipfs: IpfsHash,
+        category,
+      });
       onClose();
     } catch (error) {
       console.error(error);
@@ -57,9 +98,10 @@ export default function TagModal({ open, handleClose, tx }: IProps) {
         </Title>
         <ModalContent>
           <div>
-            <p className="display-item">Hash: {tx.hash}</p>
+            <p className="display-item">Hash: {tx?.hash}</p>
             <p className="display-item">
-              Transfer Value: {tx.isOut ? "-" : "+"} {tx.value} {tx.tokenSymbol}
+              Transfer Value: {tx?.isOut ? "-" : "+"} {tx?.value}{" "}
+              {tx?.tokenSymbol}
             </p>
           </div>
 
@@ -72,7 +114,7 @@ export default function TagModal({ open, handleClose, tx }: IProps) {
           />
           <TextField
             fullWidth
-            label="Usage"
+            label="Items"
             size="small"
             value={usage}
             onChange={(e) => setUsage(e.target.value)}
@@ -97,7 +139,7 @@ export default function TagModal({ open, handleClose, tx }: IProps) {
 
           <TextField
             fullWidth
-            label="Comment"
+            label="Note"
             size="small"
             value={comment}
             onChange={(e) => setComment(e.target.value)}

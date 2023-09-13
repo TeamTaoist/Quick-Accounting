@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import styled from "@emotion/styled";
+
 import Search from "./components/search";
 import Table from "./components/table";
 import { getTxByHash } from "../../request/api";
 import { ethers } from "ethers";
+import Pagination from "@mui/material/Pagination";
 
 const PAGE_SIZE = 10;
 
@@ -10,11 +13,13 @@ export default function Home() {
   const [daoAddress, setDaoAddress] = useState("");
   const [tokenAddress, setTokenAddress] = useState("");
 
-  const [showTable, setShowTable] = useState(true);
+  const [showTable, setShowTable] = useState(false);
 
   const [originTxs, setOriginTxs] = useState<ITransaction[]>([]);
+  const [txMap, setTxMap] = useState<{ [tx: string]: ITransactionMore }>({});
 
-  const [page] = useState(1);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const onChangeAddress = (key: string, value: string) => {
     if (key === "dao") {
@@ -23,6 +28,30 @@ export default function Home() {
       setTokenAddress(value);
     }
   };
+
+  const getTxMore = async (hashes: string[]) => {
+    if (!hashes.length) {
+      setTxMap({});
+      return;
+    }
+    try {
+      const result = await Promise.all(hashes.map((hash) => getTxByHash(hash)));
+      const _tx_map: { [tx: string]: ITransactionMore } = {};
+      result.forEach((resp, i) => {
+        const data = resp.data.data;
+        if (data[0]) {
+          _tx_map[hashes[i]] = data[0].attributes;
+        }
+      });
+      setTxMap(_tx_map);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getTxMore(originTxs.map((d) => d.hash));
+  }, [originTxs]);
 
   const getCurrentTxList = async () => {
     try {
@@ -199,6 +228,8 @@ export default function Home() {
             hash: d.hash,
             from: d.from,
             to: d.to,
+            blockNumber: d.blockNumber,
+            tokenName: d.tokenName,
             tokenDecimal: d.tokenDecimal,
             tokenSymbol: d.tokenSymbol,
             isOut: d.from === daoAddress,
@@ -227,14 +258,29 @@ export default function Home() {
     getCurrentTxList();
   }, [page]);
 
+  const onChangePage = (_: any, p: number) => {
+    setPage(p);
+  };
+
   return (
     <div>
       {showTable ? (
-        <>
-          <div>Dao: {daoAddress}</div>
-          <div>Token: {tokenAddress}</div>
-          <Table data={originTxs} />
-        </>
+        <Table
+          data={originTxs}
+          daoAddress={daoAddress}
+          tokenAddress={tokenAddress}
+          txMap={txMap}
+        >
+          <PageLine>
+            <PaginationBox
+              count={total}
+              color="primary"
+              shape="rounded"
+              page={page}
+              onChange={onChangePage}
+            />
+          </PageLine>
+        </Table>
       ) : (
         <Search
           daoAddress={daoAddress}
@@ -246,3 +292,12 @@ export default function Home() {
     </div>
   );
 }
+
+const PageLine = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const PaginationBox = styled(Pagination)`
+  margin: 30px 0 0;
+`;
