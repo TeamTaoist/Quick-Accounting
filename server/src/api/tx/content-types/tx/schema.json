@@ -53,6 +53,9 @@
     },
     "items": {
       "type": "string"
+    },
+    "ipfs": {
+      "type": "string"
     }
   }
 }
