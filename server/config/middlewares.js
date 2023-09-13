@@ -14,7 +14,7 @@ module.exports = [
     config: {
       enabled: true,
       headers: "*",
-      origin: ["http://localhost:5173"],
+      origin: ["http://localhost:1337", "http://localhost:5173"],
     },
   },
 ];
