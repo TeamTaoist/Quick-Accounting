@@ -6,11 +6,12 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 interface IProps {
+  tx: ITransaction;
   open: boolean;
   handleClose: () => void;
 }
 
-export default function TagModal({ open, handleClose }: IProps) {
+export default function TagModal({ open, handleClose, tx }: IProps) {
   const [category, setCategory] = useState("");
   const [usage, setUsage] = useState("");
   const [sender, setSender] = useState("");
@@ -55,7 +56,13 @@ export default function TagModal({ open, handleClose }: IProps) {
           <h2>Tag the Transaction</h2>
         </Title>
         <ModalContent>
-          <div>TODO: here to display the tx details</div>
+          <div>
+            <p className="display-item">Hash: {tx.hash}</p>
+            <p className="display-item">
+              Transfer Value: {tx.isOut ? "-" : "+"} {tx.value} {tx.tokenSymbol}
+            </p>
+          </div>
+
           <TextField
             fullWidth
             label="Category"
@@ -70,20 +77,24 @@ export default function TagModal({ open, handleClose }: IProps) {
             value={usage}
             onChange={(e) => setUsage(e.target.value)}
           />
-          <TextField
-            fullWidth
-            label="Sender"
-            size="small"
-            value={sender}
-            onChange={(e) => setSender(e.target.value)}
-          />
-          <TextField
-            fullWidth
-            label="Receiver"
-            size="small"
-            value={receiver}
-            onChange={(e) => setReceiver(e.target.value)}
-          />
+          {tx?.isOut ? (
+            <TextField
+              fullWidth
+              label="Receiver"
+              size="small"
+              value={receiver}
+              onChange={(e) => setReceiver(e.target.value)}
+            />
+          ) : (
+            <TextField
+              fullWidth
+              label="Sender"
+              size="small"
+              value={sender}
+              onChange={(e) => setSender(e.target.value)}
+            />
+          )}
+
           <TextField
             fullWidth
             label="Comment"
@@ -117,4 +128,7 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 18px;
+  .display-item {
+    font-size: 12px;
+  }
 `;

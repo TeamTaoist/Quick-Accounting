@@ -4,6 +4,7 @@ import InputLabel from "@mui/material/InputLabel";
 import InputBase from "@mui/material/InputBase";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
+import { ethers } from "ethers";
 
 interface IProps {
   daoAddress: string;
@@ -19,9 +20,15 @@ export default function Search({
   onSearch,
 }: IProps) {
   const handleSearch = () => {
-    if (!daoAddress || !tokenAddress) {
-      return;
-    }
+    // if (!daoAddress || !tokenAddress) {
+    //   return;
+    // }
+    // if (
+    //   !ethers.utils.isAddress(daoAddress) ||
+    //   !ethers.utils.isAddress(tokenAddress)
+    // ) {
+    //   return;
+    // }
     onSearch();
   };
   return (

@@ -1,12 +1,13 @@
-import request from "./http";
 import axios from "axios";
 
-export const getTxs = () => {
-  return request.get("/api/txes");
+const strapi_base = "http://localhost:1337";
+
+export const getTxByHash = (hash: string) => {
+  return axios.get(`${strapi_base}/api/txes?filters[hash][$eq]=${hash}`);
 };
 
 export const tagTx = () => {
-  return request.put("/api/txes", {});
+  return axios.put(`${strapi_base}/api/txes`, {});
 };
 
 type TxListParamsType = {
