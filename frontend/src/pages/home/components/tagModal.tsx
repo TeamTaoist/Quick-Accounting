@@ -12,6 +12,7 @@ interface IProps {
   tx?: ITransaction;
   open: boolean;
   handleClose: () => void;
+  updateTx: (hash:string, tx: ITransactionMore) => void;
 }
 
 export default function TagModal({
@@ -20,6 +21,7 @@ export default function TagModal({
   tx,
   daoAddress,
   tokenAddress,
+  updateTx,
 }: IProps) {
   const [category, setCategory] = useState("");
   const [usage, setUsage] = useState("");
@@ -61,7 +63,7 @@ export default function TagModal({
       const { IpfsHash } = resp.data;
 
       // insert to db
-      await tagTx({
+      const uresp = await tagTx({
         wallet: daoAddress,
         tokenAddress,
         blockNumber: Number(tx.blockNumber),
@@ -79,6 +81,7 @@ export default function TagModal({
         ipfs: IpfsHash,
         category,
       });
+      updateTx(tx.hash, uresp.data.data.attributes);
       onClose();
     } catch (error) {
       console.error(error);

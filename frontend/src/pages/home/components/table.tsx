@@ -12,12 +12,14 @@ export default function Table({
   daoAddress,
   tokenAddress,
   children,
+  updateTx,
 }: {
   data: ITransaction[];
   txMap: { [tx: string]: ITransactionMore };
   daoAddress: string;
   tokenAddress: string;
   children: React.ReactNode;
+  updateTx: (hash: string, tx: ITransactionMore) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [showTx, setShowTx] = useState<ITransaction>();
@@ -105,6 +107,7 @@ export default function Table({
         tx={showTx}
         daoAddress={daoAddress}
         tokenAddress={tokenAddress}
+        updateTx={updateTx}
       />
     </>
   );
