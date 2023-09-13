@@ -4,21 +4,23 @@ import InputLabel from "@mui/material/InputLabel";
 import InputBase from "@mui/material/InputBase";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
+import { AppActionType, useAppContext } from "../../../provider/appProvider";
 
 interface IProps {
   daoAddress: string;
-  tokenAddress: string;
+  // tokenAddress: string;
   onChange: (key: string, value: string) => void;
   onSearch: () => void;
 }
 
 export default function Search({
   daoAddress,
-  tokenAddress,
+  // tokenAddress,
   onChange,
   onSearch,
 }: IProps) {
-  const handleSearch = () => {
+  const { dispatch } = useAppContext();
+  const handleSearch = async () => {
     // if (!daoAddress || !tokenAddress) {
     //   return;
     // }
@@ -28,6 +30,11 @@ export default function Search({
     // ) {
     //   return;
     // }
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    dispatch({ type: AppActionType.SET_ACCOUNT, payload: accounts[0] });
+
     onSearch();
   };
   return (
@@ -46,7 +53,7 @@ export default function Search({
             />
           </FormControl>
         </InputItem>
-        <InputItem>
+        {/* <InputItem>
           <FormControl variant="standard" fullWidth>
             <InputLabel shrink htmlFor="bootstrap-input">
               Token Address
@@ -57,9 +64,9 @@ export default function Search({
               onChange={(e) => onChange("token", e.target.value)}
             />
           </FormControl>
-        </InputItem>
+        </InputItem> */}
         <Button variant="contained" onClick={handleSearch}>
-          Search
+          Connect Wallet
         </Button>
       </SearchContainer>
     </PaperStyle>

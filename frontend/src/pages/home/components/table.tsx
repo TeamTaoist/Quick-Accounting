@@ -33,10 +33,6 @@ export default function Table({
 
   return (
     <>
-      <BasicDataBox>
-        <p>Dao: {daoAddress}</p>
-        <p>Token: {tokenAddress}</p>
-      </BasicDataBox>
       <TableBox>
         <TableStyle data-toggle="table">
           <thead>
@@ -56,7 +52,11 @@ export default function Table({
               <tr key={i}>
                 <td>{formatHash(item.hash)}</td>
                 <td>
-                  {item.isOut ? <TagStyle className="minus">-</TagStyle> : <TagStyle>+</TagStyle>}{" "}
+                  {item.isOut ? (
+                    <TagStyle className="minus">-</TagStyle>
+                  ) : (
+                    <TagStyle>+</TagStyle>
+                  )}{" "}
                   {item.value} {item.tokenSymbol}
                 </td>
                 <td className="tc">{txMap[item.hash]?.category}</td>
@@ -115,7 +115,7 @@ const TableBox = styled.div`
   margin-inline: 20px;
   padding: 20px;
   border-radius: 6px;
-`; 
+`;
 
 const TableStyle = styled.table`
   width: 100%;
@@ -129,14 +129,6 @@ const TableStyle = styled.table`
     display: none;
   }
 `;
-
-const BasicDataBox = styled.div`
-  background-color: #fff;
-  padding: 10px 20px;
-  margin: 0 20px 20px;
-  border-radius: 6px;
-`;
-
 
 const TagStyle = styled.span`
   color: green;

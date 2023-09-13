@@ -6,6 +6,10 @@ import Table from "./components/table";
 import { getTxByHash } from "../../request/api";
 import { ethers } from "ethers";
 import Pagination from "@mui/material/Pagination";
+import FormControl from "@mui/material/FormControl";
+import FilledInput from "@mui/material/FilledInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import Button from "@mui/material/Button";
 
 const PAGE_SIZE = 10;
 
@@ -53,10 +57,10 @@ export default function Home() {
     getTxMore(originTxs.map((d) => d.hash));
   }, [originTxs]);
 
-  const getCurrentTxList = async () => {
+  const getCurrentTxList = async (init?: boolean) => {
     try {
       //   const resp = await getTxList({
-      //     page,
+      //     page: init ? 1 : page,
       //     pageSize: PAGE_SIZE,
       //     daoAddress,
       //     tokenAddress,
@@ -251,39 +255,77 @@ export default function Home() {
     console.log(daoAddress, tokenAddress);
 
     setShowTable(true);
-    getCurrentTxList();
   };
 
   useEffect(() => {
-    getCurrentTxList();
+    page > 1 && getCurrentTxList();
   }, [page]);
 
   const onChangePage = (_: any, p: number) => {
     setPage(p);
   };
 
+  const onHandleSearch = () => {
+    setPage(1);
+    getCurrentTxList(true);
+  };
+
   return (
     <HomeStyle>
       {showTable ? (
-        <Table
-          data={originTxs}
-          daoAddress={daoAddress}
-          tokenAddress={tokenAddress}
-          txMap={txMap}
-        >
-          <PageLine>
-            <PaginationBox
-              color="primary"
-              shape="rounded"
-              page={page}
-              onChange={onChangePage}
-            />
-          </PageLine>
-        </Table>
+        <>
+          <BasicDataBox>
+            <FormControl
+              style={{ width: "50%" }}
+              sx={{ m: 1 }}
+              variant="filled"
+            >
+              <FilledInput
+                id="filled-adornment-amount"
+                value={daoAddress}
+                readOnly
+                startAdornment={
+                  <InputAdornment position="start">Dao</InputAdornment>
+                }
+              />
+            </FormControl>
+            <div style={{display: "flex", alignItems: "center"}}>
+              <FormControl
+                style={{ width: "50%" }}
+                sx={{ m: 1 }}
+                variant="filled"
+              >
+                <FilledInput
+                  value={tokenAddress}
+                  autoFocus
+                  onChange={(e) => onChangeAddress("token", e.target.value)}
+                  startAdornment={
+                    <InputAdornment position="start">Token</InputAdornment>
+                  }
+                />
+              </FormControl>
+              <Button variant="contained" onClick={onHandleSearch}>Search</Button>
+            </div>
+          </BasicDataBox>
+          <Table
+            data={originTxs}
+            daoAddress={daoAddress}
+            tokenAddress={tokenAddress}
+            txMap={txMap}
+          >
+            <PageLine>
+              <PaginationBox
+                color="primary"
+                shape="rounded"
+                page={page}
+                onChange={onChangePage}
+              />
+            </PageLine>
+          </Table>
+        </>
       ) : (
         <Search
           daoAddress={daoAddress}
-          tokenAddress={tokenAddress}
           onChange={onChangeAddress}
           onSearch={handleSearch}
         />
@@ -304,4 +346,10 @@ const PageLine = styled.div`
 
 const PaginationBox = styled(Pagination)`
   margin: 30px 0 0;
+`;
+const BasicDataBox = styled.div`
+  background-color: #fff;
+  padding: 10px 20px;
+  margin: 0 20px 20px;
+  border-radius: 6px;
 `;
