@@ -56,7 +56,8 @@ export default function Table({
               <tr key={i}>
                 <td>{formatHash(item.hash)}</td>
                 <td>
-                  {item.isOut ? "-" : "+"} {item.value} {item.tokenSymbol}
+                  {item.isOut ? <TagStyle className="minus">-</TagStyle> : <TagStyle>+</TagStyle>}{" "}
+                  {item.value} {item.tokenSymbol}
                 </td>
                 <td className="tc">{txMap[item.hash]?.category}</td>
                 <td className="tc">
@@ -113,6 +114,7 @@ const TableBox = styled.div`
   background-color: #fff;
   margin-inline: 20px;
   padding: 20px;
+  border-radius: 6px;
 `; 
 
 const TableStyle = styled.table`
@@ -132,5 +134,13 @@ const BasicDataBox = styled.div`
   background-color: #fff;
   padding: 10px 20px;
   margin: 0 20px 20px;
+  border-radius: 6px;
 `;
 
+
+const TagStyle = styled.span`
+  color: green;
+  &.minus {
+    color: orange;
+  }
+`;

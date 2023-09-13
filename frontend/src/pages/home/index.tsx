@@ -263,7 +263,7 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <HomeStyle>
       {showTable ? (
         <Table
           data={originTxs}
@@ -273,7 +273,6 @@ export default function Home() {
         >
           <PageLine>
             <PaginationBox
-              count={total}
               color="primary"
               shape="rounded"
               page={page}
@@ -289,9 +288,14 @@ export default function Home() {
           onSearch={handleSearch}
         />
       )}
-    </div>
+    </HomeStyle>
   );
 }
+
+const HomeStyle = styled.div`
+  height: calc(100vh - 80px);
+  padding-top: 30px;
+`;
 
 const PageLine = styled.div`
   display: flex;

@@ -4,7 +4,6 @@ import InputLabel from "@mui/material/InputLabel";
 import InputBase from "@mui/material/InputBase";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import { ethers } from "ethers";
 
 interface IProps {
   daoAddress: string;
