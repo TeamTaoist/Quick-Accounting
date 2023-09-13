@@ -11,6 +11,8 @@ import FilledInput from "@mui/material/FilledInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
 
+import { BASIC_TOKENS } from "../../utils/constants";
+
 const PAGE_SIZE = 10;
 
 export default function Home() {
@@ -63,7 +65,8 @@ export default function Home() {
           page: init ? 1 : page,
           pageSize: PAGE_SIZE,
           daoAddress,
-          tokenAddress,
+          // tokenAddress,
+          tokenAddress: BASIC_TOKENS[0],
         });
         const { data } = resp;
       // const data = {
@@ -254,6 +257,8 @@ export default function Home() {
   const handleSearch = () => {
     console.log(daoAddress, tokenAddress);
 
+    getCurrentTxList(true); // fetch tx list
+
     setShowTable(true);
   };
 
@@ -289,11 +294,11 @@ export default function Home() {
                 value={daoAddress}
                 readOnly
                 startAdornment={
-                  <InputAdornment position="start">Dao</InputAdornment>
+                  <InputAdornment position="start">Treasury</InputAdornment>
                 }
               />
             </FormControl>
-            <div style={{ display: "flex", alignItems: "center" }}>
+            {/* <div style={{ display: "flex", alignItems: "center" }}>
               <FormControl
                 style={{ width: "50%" }}
                 sx={{ m: 1 }}
@@ -311,7 +316,7 @@ export default function Home() {
               <Button variant="contained" onClick={onHandleSearch}>
                 Search
               </Button>
-            </div>
+            </div> */}
           </BasicDataBox>
           <Table
             data={originTxs}

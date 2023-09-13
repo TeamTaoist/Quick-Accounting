@@ -43,7 +43,7 @@ export default function Search({
         <InputItem>
           <FormControl variant="standard" fullWidth>
             <InputLabel shrink htmlFor="bootstrap-input">
-              Dao Address
+              Treasury Address
             </InputLabel>
             <BootstrapInput
               fullWidth
