@@ -6,12 +6,16 @@ import { ethers } from "ethers";
 
 type CategoryMap = { [k: string]: ethers.BigNumber };
 
+const ZERO = ethers.BigNumber.from(0);
+
 export default function CharDisplay({
   daoAddress,
   tokenAddress,
+  txMap,
 }: {
   daoAddress: string;
   tokenAddress: string;
+  txMap: { [tx: string]: ITransactionMore };
 }) {
   const [inCategoriesMap, setInCategoriesMap] = useState<CategoryMap>({});
   const [outCategoriesMap, setOutCategoriesMap] = useState<CategoryMap>({});
@@ -31,12 +35,12 @@ export default function CharDisplay({
                 if (!out_categories_set[cat]) {
                   out_categories_set[cat] = ethers.BigNumber.from(0);
                 }
-                out_categories_set[cat] = ethers.BigNumber.from(element.value);
+                out_categories_set[cat] = out_categories_set[cat].add(ethers.BigNumber.from(element.value));
               } else {
                 if (!in_categories_set[cat]) {
                   in_categories_set[cat] = ethers.BigNumber.from(0);
                 }
-                in_categories_set[cat] = ethers.BigNumber.from(element.value);
+                in_categories_set[cat] = in_categories_set[cat].add(ethers.BigNumber.from(element.value));
               }
             }
           );
@@ -47,17 +51,21 @@ export default function CharDisplay({
           console.error(err);
         });
     };
-    daoAddress && tokenAddress && getAllTxs();
-  }, [daoAddress, tokenAddress]);
+    !!Object.keys(txMap).length && daoAddress && tokenAddress && getAllTxs();
+  }, [daoAddress, tokenAddress, txMap]);
 
   const { categories, data } = useMemo(() => {
     return {
       categories: Object.keys(inCategoriesMap).concat(
         Object.keys(outCategoriesMap)
       ),
-      data: Object.values(inCategoriesMap).concat(
-        Object.values(outCategoriesMap)
-      ),
+      data: Object.values(inCategoriesMap)
+        .map((v) => ethers.utils.formatUnits(v, 6))
+        .concat(
+          Object.values(outCategoriesMap).map(
+            (v) => ethers.utils.formatUnits(v, 6)
+          )
+        ),
     };
   }, [inCategoriesMap, outCategoriesMap]);
 

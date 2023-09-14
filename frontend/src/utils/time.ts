@@ -6,7 +6,6 @@ export const getUTC = () => {
 };
 
 export const formatTime = (time: number, formatter?: '-' | '.') => {
-  console.log(time)
   if (formatter === '-') {
     return dayjs(time).format('YYYY-MM-DD HH:mm');
   }

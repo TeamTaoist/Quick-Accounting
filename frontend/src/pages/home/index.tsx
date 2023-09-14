@@ -9,7 +9,6 @@ import Pagination from "@mui/material/Pagination";
 import FormControl from "@mui/material/FormControl";
 import FilledInput from "@mui/material/FilledInput";
 import InputAdornment from "@mui/material/InputAdornment";
-import Button from "@mui/material/Button";
 import { formatTime } from "../../utils/time";
 import CharDisplay from "./components/chart";
 
@@ -300,7 +299,7 @@ export default function Home() {
                 }
               />
             </FormControl>
-            <CharDisplay daoAddress={daoAddress} tokenAddress={tokenAddress} />
+            <CharDisplay daoAddress={daoAddress} tokenAddress={tokenAddress} txMap={txMap} />
 
             {/* <div style={{ display: "flex", alignItems: "center" }}>
               <FormControl
