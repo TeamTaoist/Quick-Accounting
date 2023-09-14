@@ -33,6 +33,15 @@ export default function Table({
     setOpen(false);
   };
 
+  const formatName = (name: string, address: string) => {
+    return (
+      <>
+        {name && <p>{name}</p>}
+        <p>{formatHash(address)}</p>
+      </>
+    );
+  };
+
   return (
     <>
       <TableBox>
@@ -46,13 +55,20 @@ export default function Table({
               <th>Receiver</th>
               <th>Items</th>
               <th>Note</th>
+              <th>Time</th>
               <th>Tag</th>
             </tr>
           </thead>
           <tbody>
             {data.map((item, i) => (
               <tr key={i}>
-                <td>{formatHash(item.hash)}</td>
+                <td>
+                  <Hash
+                    href={`https://etherscan.io/tx/${item.hash}`}
+                  >
+                    {formatHash(item.hash)}
+                  </Hash>
+                </td>
                 <td>
                   {item.isOut ? (
                     <TagStyle className="minus">-</TagStyle>
@@ -63,13 +79,18 @@ export default function Table({
                 </td>
                 <td className="tc">{txMap[item.hash]?.category}</td>
                 <td className="tc">
-                  {item.isOut ? "" : txMap[item.hash]?.fromName}
+                  {item.isOut
+                    ? formatHash(item.from)
+                    : formatName(txMap[item.hash]?.fromName, item.from)}
                 </td>
                 <td className="tc">
-                  {item.isOut ? txMap[item.hash]?.toName : ""}
+                  {item.isOut
+                    ? formatName(txMap[item.hash]?.toName, item.from)
+                    : formatHash(item.to)}
                 </td>
                 <td className="tc">{txMap[item.hash]?.items}</td>
                 <td className="tc">{txMap[item.hash]?.note}</td>
+                <td className="tc">{item.dateDisplay}</td>
                 <td className="tc">
                   {txMap[item.hash] ? (
                     <Button
@@ -82,7 +103,6 @@ export default function Table({
                         )
                       }
                     >
-                      {" "}
                       Look up
                     </Button>
                   ) : (
@@ -137,5 +157,16 @@ const TagStyle = styled.span`
   color: green;
   &.minus {
     color: orange;
+  }
+`;
+
+const Hash = styled.a`
+  cursor: pointer;
+  color: unset;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: darkblue;
   }
 `;

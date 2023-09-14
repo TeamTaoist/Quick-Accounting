@@ -7,6 +7,7 @@ declare interface ITransactionOrigin {
   tokenDecimal: string;
   value: string;
   blockNumber: string;
+  timeStamp: string;
 }
 
 declare interface ITransaction {
@@ -19,6 +20,7 @@ declare interface ITransaction {
   tokenDecimal: string;
   value: string;
   isOut: boolean;
+  dateDisplay: string;
 }
 
 declare interface ITransactionMore {

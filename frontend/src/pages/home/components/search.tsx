@@ -76,6 +76,7 @@ export default function Search({
 const PaperStyle = styled(Paper)`
   width: 500px;
   margin: auto;
+  margin-top: 30px;
 `;
 
 const SearchContainer = styled.div`

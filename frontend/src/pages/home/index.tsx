@@ -10,6 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import FilledInput from "@mui/material/FilledInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
+import { formatTime, getUTC } from "../../utils/time";
 
 import { BASIC_TOKENS } from "../../utils/constants";
 
@@ -250,6 +251,7 @@ export default function Home() {
             ),
             sender: checkEqual(d.from, daoAddress) ? "" : d.from,
             receiver: checkEqual(d.from, daoAddress) ? d.to : "",
+            dateDisplay: formatTime(Number(d.timeStamp) * 1000, "-"),
           }))
         );
       }
