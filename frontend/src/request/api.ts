@@ -6,6 +6,12 @@ export const getTxByHash = (hash: string) => {
   return axios.get(`${strapi_base}/api/txes?filters[hash][$eq]=${hash}`);
 };
 
+export const getTxByWallet= (daoAddress: string, tokenAddress: string) => {
+  return axios.get(
+    `${strapi_base}/api/txes?filters[wallet][$eq]=${daoAddress}&filters[tokenAddress][$eq]=${tokenAddress}`
+  );
+};
+
 type TxTagParamsType = {
   wallet: string;
   blockNumber: number;

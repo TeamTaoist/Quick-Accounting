@@ -10,7 +10,8 @@ import FormControl from "@mui/material/FormControl";
 import FilledInput from "@mui/material/FilledInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
-import { formatTime, getUTC } from "../../utils/time";
+import { formatTime } from "../../utils/time";
+import CharDisplay from "./components/chart";
 
 import { BASIC_TOKENS } from "../../utils/constants";
 
@@ -18,7 +19,7 @@ const PAGE_SIZE = 20;
 
 export default function Home() {
   const [daoAddress, setDaoAddress] = useState("");
-  const [tokenAddress, setTokenAddress] = useState("");
+  const [tokenAddress, setTokenAddress] = useState(BASIC_TOKENS[0]);
 
   const [showTable, setShowTable] = useState(false);
 
@@ -62,14 +63,13 @@ export default function Home() {
 
   const getCurrentTxList = async (init?: boolean) => {
     try {
-        const resp = await getTxList({
-          page: init ? 1 : page,
-          pageSize: PAGE_SIZE,
-          daoAddress,
-          // tokenAddress,
-          tokenAddress: BASIC_TOKENS[0],
-        });
-        const { data } = resp;
+      const resp = await getTxList({
+        page: init ? 1 : page,
+        pageSize: PAGE_SIZE,
+        daoAddress,
+        tokenAddress,
+      });
+      const { data } = resp;
       // const data = {
       //   status: "1",
       //   message: "OK-Missing/Invalid API Key, rate limit of 1/5sec applied",
@@ -231,9 +231,9 @@ export default function Home() {
       //   ],
       // };
 
-      const checkEqual = (a1:string, a2:string) => {
+      const checkEqual = (a1: string, a2: string) => {
         return a1.toLowerCase() === a2.toLowerCase();
-      }
+      };
       if (data.status === "1") {
         setOriginTxs(
           data.result.map((d: any) => ({
@@ -245,7 +245,8 @@ export default function Home() {
             tokenDecimal: d.tokenDecimal,
             tokenSymbol: d.tokenSymbol,
             isOut: checkEqual(d.from, daoAddress),
-            value: ethers.utils.formatUnits(
+            value: d.value,
+            valueDisplay: ethers.utils.formatUnits(
               ethers.BigNumber.from(d.value),
               Number(d.tokenDecimal)
             ),
@@ -276,13 +277,8 @@ export default function Home() {
     setPage(p);
   };
 
-  const onHandleSearch = () => {
-    setPage(1);
-    getCurrentTxList(true);
-  };
-
   const updateTx = (hash: string, tx: ITransactionMore) => {
-    setTxMap({...txMap, [hash]: tx})
+    setTxMap({ ...txMap, [hash]: tx });
   };
 
   return (
@@ -304,6 +300,8 @@ export default function Home() {
                 }
               />
             </FormControl>
+            <CharDisplay daoAddress={daoAddress} tokenAddress={tokenAddress} />
+
             {/* <div style={{ display: "flex", alignItems: "center" }}>
               <FormControl
                 style={{ width: "50%" }}
@@ -370,4 +368,5 @@ const BasicDataBox = styled.div`
   padding: 10px 20px;
   margin: 0 20px 20px;
   border-radius: 6px;
+  display: flex;
 `;

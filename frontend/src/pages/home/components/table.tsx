@@ -75,7 +75,7 @@ export default function Table({
                   ) : (
                     <TagStyle>+</TagStyle>
                   )}{" "}
-                  {item.value} {item.tokenSymbol}
+                  {item.valueDisplay} {item.tokenSymbol}
                 </td>
                 <td className="tc">{txMap[item.hash]?.category}</td>
                 <td className="tc">

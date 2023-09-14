@@ -19,6 +19,7 @@ declare interface ITransaction {
   tokenSymbol: string;
   tokenDecimal: string;
   value: string;
+  valueDisplay: string;
   isOut: boolean;
   dateDisplay: string;
 }
