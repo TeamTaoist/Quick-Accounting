@@ -1,1 +1,37 @@
+name: Test Build
 
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v3
+
+     - name: Setup Node
+       uses: actions/setup-node@v2
+       with:
+         node-version: '16.17.0'
+
+     - name: Compile
+       env:
+         CI: false
+       run: |
+         npm install;
+         npm run build;
+
+     # - name: Pushes to another repository
+     #   run: |
+     #     git clone --single-branch --branch "main" "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/xrdavies/seepass-web.git";
+     #     cd seepass-web;
+     #     git config --global user.name dev;
+     #     git config --global user.email dev@seedao.xyz;
+     #     cp -R ../build/* .;
+     #     git add .;
+     #     git status;
+     #     git commit -m "deploy";
+     #     git status;
+     #     git push "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/xrdavies/seepass-web.git" --set-upstream main
