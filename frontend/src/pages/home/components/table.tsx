@@ -111,7 +111,7 @@ export default function Table({
                       size="small"
                       onClick={() => handleTag(item)}
                     >
-                      Add Tag
+                      Audit
                     </Button>
                   )}
                 </td>
