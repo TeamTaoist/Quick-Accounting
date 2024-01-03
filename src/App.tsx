@@ -1,5 +1,11 @@
+import RouterLink from "./router";
+
 const App = () => {
-  return <div>Quick Accounting</div>;
+  return (
+    <div>
+      <RouterLink />
+    </div>
+  );
 };
 
 export default App;

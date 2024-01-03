@@ -8,3 +8,12 @@ img {
   width: 100%;
   display: block
 }
+
+:root {
+  --bg-primary: #D9D9D9
+}
+
+.container {
+  max-width: 1512px;
+  margin-inline: auto;
+}

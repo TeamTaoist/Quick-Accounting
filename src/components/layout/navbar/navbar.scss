@@ -1,0 +1,15 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  height: 92px;
+  background: var(--bg-primary);
+  padding-left: 38px;
+  gap: 16px;
+  img {
+    width: 70px;
+  }
+  h3 {
+    font-size: 30px;
+    font-weight: 500;
+  }
+}
