@@ -10,7 +10,12 @@ img {
 }
 
 :root {
-  --bg-primary: #D9D9D9
+  --bg-primary: #D9D9D9;
+  --text-primary: #000;
+}
+
+ul, li {
+  text-decoration: none;
 }
 
 .container {

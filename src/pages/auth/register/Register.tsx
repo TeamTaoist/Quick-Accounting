@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import logo from "../../../assets/auth/logo.jpg";
 import Header from "../../../components/layout/header/Header";
 import "./register.scss";
@@ -16,7 +17,9 @@ const Register = () => {
           organizations, and generate financial reports. Everything in QA is
           trackable, and transparent.
         </p>
-        <button className="connect-btn">Connect Wallet</button>
+        <Link to="/login" className="connect-btn">
+          Connect Wallet
+        </Link>
       </div>
     </Header>
   );

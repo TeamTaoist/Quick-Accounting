@@ -22,8 +22,6 @@
   }
   .connect-btn {
     background: var(--bg-primary);
-    border: none;
-    outline: none;
     font-size: 22px;
     font-weight: 400;
     padding: 16px 0;
@@ -31,5 +29,8 @@
     border-radius: 7px;
     margin-top: 50px;
     cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-primary);
   }
 }
