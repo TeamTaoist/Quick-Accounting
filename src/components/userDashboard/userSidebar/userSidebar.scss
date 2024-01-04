@@ -1,0 +1,48 @@
+.user-sidebar {
+  border-right: 1px solid var(--border);
+  width: 380px;
+  height: 100vh;
+  // height: 100%;
+  padding-top: 137px;
+  .user-address {
+    padding-inline: 27px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .address {
+      display: flex;
+      gap: 9px;
+      img {
+        width: 30px;
+      }
+      p {
+        font-size: 22px;
+        font-weight: 500px;
+      }
+    }
+    .disconnect {
+      border: none;
+      outline: none;
+      background: var(--bg-primary);
+      font-size: 15px;
+      padding: 8px 20px;
+      border-radius: 7px;
+    }
+  }
+  // payment request
+  .payment-request {
+    padding: 40px 0;
+    ul > li {
+      list-style: none;
+      background: var(--bg-primary);
+      font-size: 18px;
+      padding: 10px 0;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      img {
+        width: 15px;
+      }
+    }
+  }
+}

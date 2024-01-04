@@ -5,7 +5,12 @@ import "./userDashboard.scss";
 const UserDashboard = () => (
   <div>
     <Sidebar>
-      <UserSidebar />
+      <div className="user-dashboard">
+        <UserSidebar />
+        <div className="details">
+          <h2>You don't have any payment request</h2>
+        </div>
+      </div>
     </Sidebar>
   </div>
 );
