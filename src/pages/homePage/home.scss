@@ -34,20 +34,3 @@
     color: var(--text-primary);
   }
 }
-
-// SidebarLink.scss
-.active {
-  // Styles for the active link
-  background-color: #4caf50;
-  color: white;
-}
-
-.sidebar-link {
-  // Common styles for all links
-
-  &:hover {
-    // Styles for hover state
-    background-color: #555;
-    color: white;
-  }
-}

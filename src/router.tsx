@@ -4,6 +4,7 @@ import Home from "./pages/homePage/Home";
 import LoginPopup from "./pages/auth/login/LoginPopup";
 import UserDashboard from "./pages/userDashboard/UserDashboard";
 import WorkSpaceForm from "./pages/workspace/WorkSpaceForm";
+import WorkspaceDashboard from "./pages/workspaceDashboard/WorkspaceDashboard";
 
 const RouterLink = () => {
   return (
@@ -15,6 +16,7 @@ const RouterLink = () => {
         <Route path="/login" element={<LoginPopup />}></Route>
         <Route path="/user" element={<UserDashboard />}></Route>
         <Route path="/create-workspace" element={<WorkSpaceForm />}></Route>
+        <Route path="/workspace" element={<WorkspaceDashboard />}></Route>
       </Routes>
     </Router>
   );
