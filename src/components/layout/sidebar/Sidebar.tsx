@@ -2,6 +2,7 @@ import logo from "../../../assets/navbar/logo.svg";
 import plus from "../../../assets/dashboard/plus.svg";
 import avatar from "../../../assets/dashboard/avatar.svg";
 import "./sidebar.scss";
+import { Link } from "react-router-dom";
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -16,7 +17,9 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
           <div className="workspace-logo">
             <img src={logo} alt="" />
           </div>
-          <img className="plus-icon" src={plus} alt="" />
+          <Link to="/create-workspace">
+            <img className="plus-icon" src={plus} alt="" />
+          </Link>
         </div>
         <div className="user">
           <img src={avatar} alt="" />

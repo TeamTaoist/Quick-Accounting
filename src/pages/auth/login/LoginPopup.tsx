@@ -9,7 +9,7 @@ const LoginPopup = () => {
     <Header>
       <div className="login">
         <div className="popup">
-          <Link to="/register">
+          <Link to="/">
             <img className="close-btn" src={cancelIcon} alt="" />
           </Link>
           <h3>Select your wallet</h3>

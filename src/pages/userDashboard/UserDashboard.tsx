@@ -6,10 +6,11 @@ const UserDashboard = () => (
   <div>
     <Sidebar>
       <div className="user-dashboard">
-        <UserSidebar />
-        <div className="details">
-          <h2>You don't have any payment request</h2>
-        </div>
+        <UserSidebar>
+          <div className="details">
+            <h2>You don't have any payment request</h2>
+          </div>
+        </UserSidebar>
       </div>
     </Sidebar>
   </div>

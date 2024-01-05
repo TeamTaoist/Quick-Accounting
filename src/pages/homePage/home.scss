@@ -1,9 +1,9 @@
-.register {
+.home {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items:center;
-  height: 90vh;
+  align-items: center;
+  height: 85vh;
   max-width: 750px;
   margin-inline: auto;
   img {
@@ -32,5 +32,22 @@
     text-align: center;
     text-decoration: none;
     color: var(--text-primary);
+  }
+}
+
+// SidebarLink.scss
+.active {
+  // Styles for the active link
+  background-color: #4caf50;
+  color: white;
+}
+
+.sidebar-link {
+  // Common styles for all links
+
+  &:hover {
+    // Styles for hover state
+    background-color: #555;
+    color: white;
   }
 }

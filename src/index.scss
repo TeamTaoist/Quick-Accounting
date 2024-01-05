@@ -1,3 +1,5 @@
+@import url(https://db.onlinewebfonts.com/c/ee5e0963d4f220cba32a5765cc4f9772?family=PingFangHK);
+
 * {
   margin: 0;
   padding: 0;
@@ -13,6 +15,11 @@ img {
   --bg-primary: #d9d9d9;
   --text-primary: #000;
   --border: gray;
+  --hover-bg: #f5f5f5;
+}
+
+body {
+  font-family: "PingFangHK";
 }
 
 ul,
