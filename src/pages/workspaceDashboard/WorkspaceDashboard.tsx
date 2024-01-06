@@ -1,12 +1,13 @@
 import Sidebar from "../../components/layout/sidebar/Sidebar";
+import WorkspaceLayout from "../../components/layout/workspaceLayout/WorkspaceLayout";
 import WorkspaceSidebar from "../../components/workspace/workspaceSidebar/WorkspaceSidebar";
+import { WorkspaceContent, WorkspaceDetails } from "./WorkspaceDashboard.style";
 
 const WorkspaceDashboard = () => {
   return (
-    <Sidebar>
-      {/* workspace sidebar */}
-      <WorkspaceSidebar />
-    </Sidebar>
+    <>
+      <WorkspaceLayout>dfjdkf</WorkspaceLayout>
+    </>
   );
 };
 

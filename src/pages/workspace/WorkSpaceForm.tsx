@@ -12,14 +12,18 @@ import {
   WorkspaceContainer,
   WorkspaceForm,
 } from "./WorkSpaceForm.style";
+import { useNavigate } from "react-router-dom";
 
 const WorkSpaceForm = () => {
+  const navigate = useNavigate();
   const [age, setAge] = useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
   };
-
+  const createWorkspace = () => {
+    navigate("/workspace");
+  };
   return (
     <Header>
       <WorkspaceContainer>
@@ -73,7 +77,7 @@ const WorkSpaceForm = () => {
                 <MenuItem value={20}>Twenty</MenuItem>
               </Select>
             </FormControl>
-            <Button>Set up workspace</Button>
+            <Button onClick={createWorkspace}>Set up workspace</Button>
           </Safe>
         </WorkspaceForm>
       </WorkspaceContainer>

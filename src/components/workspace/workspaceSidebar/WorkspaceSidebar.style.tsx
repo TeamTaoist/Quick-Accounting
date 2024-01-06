@@ -4,6 +4,7 @@ export const SidebarContainer = styled.div`
   border-right: 1px solid var(--border);
   width: 327px;
   height: 100vh;
+  border: 1px solid red;
 `;
 export const WorkspaceInfo = styled.div`
   display: flex;
