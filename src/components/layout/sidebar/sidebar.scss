@@ -1,8 +1,9 @@
 .sidebar-container {
   display: flex;
+  overflow: hidden;
   .sidebar {
     border-right: 1px solid var(--border);
-    width: 131px;
+    min-width: 131px;
     height: 100vh;
 
     .logo {

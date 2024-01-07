@@ -18,7 +18,8 @@ import bookkeeping from "../../../assets/workspace/bookkeeping.svg";
 import reports from "../../../assets/workspace/reports.svg";
 import { Link } from "react-router-dom";
 
-const WorkspaceSidebar = ({ children }: { children: React.ReactNode }) => {
+const WorkspaceSidebar = () => {
+  // const WorkspaceSidebar = ({ children }: { children: React.ReactNode }) => {
   const [activeLink, setActiveLink] = useState("Assets");
   const handleLink = (name: any) => {
     setActiveLink(name);
@@ -93,7 +94,7 @@ const WorkspaceSidebar = ({ children }: { children: React.ReactNode }) => {
           />
         </SidebarLinkList>
       </SidebarContainer>
-      {children}
+      {/* {children} */}
     </>
   );
 };

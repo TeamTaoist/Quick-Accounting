@@ -4,7 +4,7 @@ export const SidebarContainer = styled.div`
   border-right: 1px solid var(--border);
   width: 327px;
   height: 100vh;
-  border: 1px solid red;
+  overflow-y: scroll;
 `;
 export const WorkspaceInfo = styled.div`
   display: flex;
@@ -13,6 +13,11 @@ export const WorkspaceInfo = styled.div`
   padding: 0 19px 0 33px;
   border-bottom: 1px solid var(--border);
   height: 130px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+
   img {
     width: 14px;
   }

@@ -1,85 +1,56 @@
 import { useState } from "react";
 import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
-import { AssetHeader, AssetSection, AssetTable } from "./assets.style";
+import { AssetHeader, AssetSection, AssetTable, RowCell } from "./assets.style";
 import { Container, InputAdornment, TextField } from "@mui/material";
 import searchIcon from "../../../assets/workspace/search-icon.svg";
-// mui table
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
+import linkIcon from "../../../assets/workspace/link-icon.svg";
 
-interface Column {
-  id: "name" | "code" | "population" | "size" | "density";
-  label: string;
-  minWidth?: number;
-  align?: "right";
-  format?: (value: number) => string;
-}
-
-const columns: readonly Column[] = [
-  { id: "name", label: "Name", minWidth: 170 },
-  { id: "code", label: "ISO\u00a0Code", minWidth: 100 },
+const tableData = [
   {
-    id: "population",
-    label: "Population",
-    minWidth: 170,
-    align: "right",
-    format: (value: number) => value.toLocaleString("en-US"),
+    assetsName: "USDT",
+    asset: "Teather",
+    price: "2.22",
+    priceIncrease: "1.11",
+    currentBalance: "12423.34",
+    balance: "342.22",
+    link: "",
   },
   {
-    id: "size",
-    label: "Size\u00a0(km\u00b2)",
-    minWidth: 170,
-    align: "right",
-    format: (value: number) => value.toLocaleString("en-US"),
+    assetsName: "MATIC",
+    asset: "Polygon",
+    price: "2.22",
+    priceIncrease: "1.11",
+    currentBalance: "12423.34",
+    balance: "342.22",
+    link: "",
   },
   {
-    id: "density",
-    label: "Density",
-    minWidth: 170,
-    align: "right",
-    format: (value: number) => value.toFixed(2),
+    assetsName: "MATIC",
+    asset: "Polygon",
+    price: "2.22",
+    priceIncrease: "1.11",
+    currentBalance: "12423.34",
+    balance: "342.22",
+    link: "",
   },
-];
-interface Data {
-  name: string;
-  code: string;
-  population: number;
-  size: number;
-  density: number;
-}
-
-function createData(
-  name: string,
-  code: string,
-  population: number,
-  size: number
-): Data {
-  const density = population / size;
-  return { name, code, population, size, density };
-}
-
-const rows = [
-  createData("India", "IN", 1324171354, 3287263),
-  createData("China", "CN", 1403500365, 9596961),
-  createData("Italy", "IT", 60483973, 301340),
-  createData("United States", "US", 327167434, 9833520),
-  createData("Canada", "CA", 37602103, 9984670),
-  createData("Australia", "AU", 25475400, 7692024),
-  createData("Germany", "DE", 83019200, 357578),
-  createData("Ireland", "IE", 4857000, 70273),
-  createData("Mexico", "MX", 126577691, 1972550),
-  createData("Japan", "JP", 126317000, 377973),
-  createData("France", "FR", 67022000, 640679),
-  createData("United Kingdom", "GB", 67545757, 242495),
-  createData("Russia", "RU", 146793744, 17098246),
-  createData("Nigeria", "NG", 200962417, 923768),
-  createData("Brazil", "BR", 210147125, 8515767),
+  {
+    assetsName: "MATIC",
+    asset: "Polygon",
+    price: "2.22",
+    priceIncrease: "1.11",
+    currentBalance: "12423.34",
+    balance: "342.22",
+    link: "",
+  },
+  {
+    assetsName: "MATIC",
+    asset: "Polygon",
+    price: "2.22",
+    priceIncrease: "1.11",
+    currentBalance: "12423.34",
+    balance: "342.22",
+    link: "",
+  },
 ];
 
 const Assets = () => {
@@ -89,98 +60,69 @@ const Assets = () => {
     setSearchTerm(event.target.value);
   };
   //table
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
   return (
     <WorkspaceLayout>
       <AssetSection>
         <AssetHeader>
-          <Container maxWidth="sm">
-            <TextField
-              id="search"
-              type="search"
-              placeholder="Search Token"
-              value={searchTerm}
-              onChange={handleChange}
-              sx={{ width: 350 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <img src={searchIcon} alt="" />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Container>
+          <TextField
+            id="search"
+            type="search"
+            placeholder="Search Token"
+            value={searchTerm}
+            onChange={handleChange}
+            sx={{ width: 350 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <img src={searchIcon} alt="" />
+                </InputAdornment>
+              ),
+            }}
+          />
         </AssetHeader>
         <AssetTable>
-          <h3>Value: $ 28,478,450</h3>
-          {/* table */}
-          <Paper sx={{ width: "100%", overflow: "hidden" }}>
-            <TableContainer sx={{ maxHeight: 440 }}>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
-                    {columns.map((column) => (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        style={{ minWidth: column.minWidth }}
-                      >
-                        {column.label}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={row.code}
-                        >
-                          {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === "number"
-                                  ? column.format(value)
-                                  : value}
-                              </TableCell>
-                            );
-                          })}
-                        </TableRow>
-                      );
-                    })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
-          {/* table end */}
+          {/* <h3>Value: $ 28,478,450</h3> */}
+          <table>
+            <thead>
+              <tr>
+                <th>Assets</th>
+                <th>Current price</th>
+                <th>Balance</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {tableData.map((data) => (
+                <tr>
+                  <td>
+                    <RowCell>
+                      <h6>{data.assetsName}</h6>
+                      <p>{data.asset}</p>
+                    </RowCell>
+                  </td>
+                  <td>
+                    <RowCell>
+                      <h6>$ {data.currentBalance}</h6>
+                      <p style={{ color: "#2F82CF" }}>(+{data.balance}%)</p>
+                    </RowCell>
+                  </td>
+                  <td>
+                    <RowCell>
+                      <h6>
+                        {data.price} {data.assetsName}
+                      </h6>
+                      <p>{data.priceIncrease}</p>
+                    </RowCell>
+                  </td>
+                  <td>
+                    <a href="">
+                      <img src={linkIcon} alt="" />
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </AssetTable>
       </AssetSection>
     </WorkspaceLayout>

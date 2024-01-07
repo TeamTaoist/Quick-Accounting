@@ -44,6 +44,14 @@ const NewPaymentRequest = () => {
   const handleCategoryChange = (event: SelectChangeEvent) => {
     setAge(event.target.value as string);
   };
+
+  // add new payment request
+  const [rows, setRows] = useState([{ id: 1 }]);
+
+  const handleAddPayment = () => {
+    const newRow = { id: rows.length + 1 };
+    setRows([...rows, newRow]);
+  };
   return (
     <Header>
       <CreateRequest>
@@ -76,98 +84,106 @@ const NewPaymentRequest = () => {
               </TableHead>
               <TableBody>
                 {/* <TableRow sx={{ td: { border: 1, padding: 0 } }}> */}
-                <TableRow sx={{ height: "30px", borderRadius: "10px" }}>
-                  <TableCell
-                    // size="small"
+                {rows.map((row) => (
+                  <TableRow
+                    key={row.id}
                     sx={{
-                      border: "1px solid var(--border)",
-                      padding: 0,
-                      borderTopLeftRadius: "10px !important",
-                      borderBottomLeftRadius: "10px !important",
+                      height: "30px",
+                      borderRadius: "10px",
                     }}
                   >
-                    <TextField
+                    <TableCell
+                      // size="small"
                       sx={{
-                        "& fieldset": { border: "none" },
-                      }}
-                      size="small"
-                      fullWidth
-                      // id="fullWidth"
-                      placeholder="Enter wallet address"
-                      InputProps={{
-                        style: { padding: 0 },
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      border: "1px solid var(--border)",
-                      borderRadius: "5px",
-                      padding: 0,
-                      paddingLeft: "10px",
-                      // minHeight: "40px",
-                    }}
-                  >
-                    0.00
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      border: "1px solid var(--border)",
-                      padding: 0,
-                      borderTopRightRadius: "5px",
-                      borderBottomRightRadius: "5px",
-                      // minHeight: "40px",
-                    }}
-                  >
-                    <Select
-                      labelId="demo-select-small-label"
-                      id="demo-select-small"
-                      value={selectedValue}
-                      onChange={handleChange}
-                      size="small"
-                      IconComponent={() => (
-                        <InputAdornment position="start">
-                          <img
-                            src={arrowBottom}
-                            alt="Custom Arrow Icon"
-                            style={{ marginRight: "50px" }}
-                          />
-                        </InputAdornment>
-                      )}
-                      sx={{
-                        minWidth: "100%",
-                        "& fieldset": { border: "none" },
+                        border: "1px solid var(--border)",
+                        padding: 0,
+                        borderTopLeftRadius: "10px !important",
+                        borderBottomLeftRadius: "10px !important",
                       }}
                     >
-                      <MenuItem
-                        value="Option1"
+                      <TextField
                         sx={{
-                          "&:hover": { backgroundColor: "var(--hover-bg)" },
-                          "&.Mui-selected": {
-                            backgroundColor: "var(--hover-bg)",
-                          },
+                          "& fieldset": { border: "none" },
+                        }}
+                        size="small"
+                        fullWidth
+                        // id="fullWidth"
+                        placeholder="Enter wallet address"
+                        InputProps={{
+                          style: { padding: 0 },
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        border: "1px solid var(--border)",
+                        borderRadius: "5px",
+                        padding: 0,
+                        paddingLeft: "10px",
+                        // minHeight: "40px",
+                      }}
+                    >
+                      0.00
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        border: "1px solid var(--border)",
+                        padding: 0,
+                        borderTopRightRadius: "5px",
+                        borderBottomRightRadius: "5px",
+                        // minHeight: "40px",
+                      }}
+                    >
+                      <Select
+                        labelId="demo-select-small-label"
+                        id="demo-select-small"
+                        value={selectedValue}
+                        onChange={handleChange}
+                        size="small"
+                        IconComponent={() => (
+                          <InputAdornment position="start">
+                            <img
+                              src={arrowBottom}
+                              alt="Custom Arrow Icon"
+                              style={{ marginRight: "50px" }}
+                            />
+                          </InputAdornment>
+                        )}
+                        sx={{
+                          minWidth: "100%",
+                          "& fieldset": { border: "none" },
                         }}
                       >
-                        Ten
-                      </MenuItem>
-                      <MenuItem value="Option2">Twenty</MenuItem>
-                    </Select>
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      border: "none",
-                      padding: 0,
-                      // minHeight: "40px",
-                    }}
-                  >
-                    <DeleteIcon>
-                      <img src={trash} alt="" />
-                    </DeleteIcon>
-                  </TableCell>
-                </TableRow>
+                        <MenuItem
+                          value="Option1"
+                          sx={{
+                            "&:hover": { backgroundColor: "var(--hover-bg)" },
+                            "&.Mui-selected": {
+                              backgroundColor: "var(--hover-bg)",
+                            },
+                          }}
+                        >
+                          Ten
+                        </MenuItem>
+                        <MenuItem value="Option2">Twenty</MenuItem>
+                      </Select>
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        border: "none",
+                        padding: 0,
+                        // minHeight: "40px",
+                      }}
+                    >
+                      <DeleteIcon>
+                        <img src={trash} alt="" />
+                      </DeleteIcon>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
-            <AddPayment>
+            <AddPayment onClick={handleAddPayment}>
               <img src={add} alt="" />
               <span>Add</span>
             </AddPayment>
