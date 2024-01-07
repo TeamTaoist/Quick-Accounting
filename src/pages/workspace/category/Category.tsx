@@ -19,9 +19,11 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
-// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useNavigate } from "react-router-dom";
 
 const Category = () => {
+  const navigate = useNavigate();
   const [hasCategory, setHasCategory] = useState(true);
   const [selectedValue, setSelectedValue] = useState("Text");
 
@@ -55,7 +57,7 @@ const Category = () => {
               <img src={add} alt="" />
               <span>Create category</span>
             </CreateBtn>
-            <CreateBtn>
+            <CreateBtn onClick={() => navigate("/archived")}>
               <img src={archive} alt="" />
               <span>View archive</span>
             </CreateBtn>
@@ -64,7 +66,7 @@ const Category = () => {
           <CategoryOption>
             <Accordion>
               <AccordionSummary
-                // expandIcon={<ExpandMoreIcon />}
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
                 sx={{ backgroundColor: "var(--hover-bg)" }}
@@ -101,7 +103,7 @@ const Category = () => {
                     <OptionCreateButtons>
                       <button>
                         <img src={add} alt="" />
-                        <span>Create category</span>
+                        <span>Create property</span>
                       </button>
                       <button>
                         <img src={archive} alt="" />
