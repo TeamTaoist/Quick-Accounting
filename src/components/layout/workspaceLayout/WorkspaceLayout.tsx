@@ -28,5 +28,9 @@ const WorkspaceContent = styled.div`
   display: flex;
 `;
 const Details = styled.div`
-  display: flex;
+  flex: 1;
+  /* min-width: 100vw; */
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 100vh;
 `;

@@ -22,7 +22,7 @@ const WorkSpaceForm = () => {
     setAge(event.target.value);
   };
   const createWorkspace = () => {
-    navigate("/workspace");
+    navigate("/assets");
   };
   return (
     <Header>
