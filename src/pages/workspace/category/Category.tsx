@@ -185,9 +185,9 @@ const CreateCategory = styled.div`
   padding-top: 30px;
   margin-left: 40px;
 `;
-const CategoryTitle = styled.div`
+export const CategoryTitle = styled.div`
   height: 100vh;
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -201,7 +201,7 @@ const CategoryTitle = styled.div`
     padding: 30px 0;
   }
 `;
-const CreateOptionButton = styled.div`
+export const CreateOptionButton = styled.div`
   display: flex;
   gap: 50px;
 `;

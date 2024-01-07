@@ -9,6 +9,7 @@ import NewPaymentRequest from "./pages/workspaceDashboard/newPaymentRequest/NewP
 import Assets from "./pages/workspaceDashboard/assets/Assets";
 import Category from "./pages/workspace/category/Category";
 import Archived from "./pages/workspace/category/Archived";
+import PaymentRequest from "./pages/workspace/paymentRequest/PaymentRequest";
 
 const RouterLink = () => {
   return (
@@ -21,10 +22,14 @@ const RouterLink = () => {
         <Route path="/user" element={<UserDashboard />}></Route>
         <Route path="/create-workspace" element={<WorkSpaceForm />}></Route>
         <Route path="/workspace" element={<WorkspaceDashboard />}></Route>
-        <Route path="/payment-request" element={<NewPaymentRequest />}></Route>
+        <Route
+          path="/new-payment-request"
+          element={<NewPaymentRequest />}
+        ></Route>
         <Route path="/assets" element={<Assets />}></Route>
         <Route path="/category" element={<Category />}></Route>
         <Route path="/archived" element={<Archived />}></Route>
+        <Route path="/payment-request" element={<PaymentRequest />}></Route>
       </Routes>
     </Router>
   );
