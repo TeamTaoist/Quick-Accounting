@@ -1,0 +1,42 @@
+name: Test Build
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v3
+
+     - name: Setup Node
+       uses: actions/setup-node@v2
+       with:
+         node-version: '18.17.0'
+      
+     - name: Compile
+       env:
+         CI: false
+       run: |
+         npm install;
+         npm run build;
+
+     - name: Push to gh_pages branch
+       run: |
+          git fetch --all;
+          rm -rf ./src;
+          rm -rf ./public;
+          rm package.json;
+          rm tsconfig.json;
+          rm yarn.lock;
+          rm package-lock.json;
+          git checkout -b gh_pages origin/gh_pages;
+          cp -R ./build/* .;
+          git config --global user.email "bot@taoist.com"
+          git config --global user.name "bot"
+          git add .;
+          git status;
+          git commit -m "deploy";
+          git push;
