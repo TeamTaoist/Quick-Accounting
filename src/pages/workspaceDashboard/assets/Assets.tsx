@@ -1,9 +1,24 @@
 import { useState } from "react";
 import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
-import { AssetHeader, AssetSection, AssetTable, RowCell } from "./assets.style";
-import { Container, InputAdornment, TextField } from "@mui/material";
+import {
+  AssetHeader,
+  AssetSection,
+  AssetTable,
+  RowCell,
+  RowLink,
+} from "./assets.style";
+import { InputAdornment, TextField } from "@mui/material";
 import searchIcon from "../../../assets/workspace/search-icon.svg";
 import linkIcon from "../../../assets/workspace/link-icon.svg";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
 const tableData = [
   {
@@ -52,7 +67,9 @@ const tableData = [
     link: "",
   },
 ];
-
+const recipientFormate = (n: string) => {
+  return `${n.slice(0, 6)}...${n.slice(-4)}`;
+};
 const Assets = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -81,48 +98,57 @@ const Assets = () => {
           />
         </AssetHeader>
         <AssetTable>
-          {/* <h3>Value: $ 28,478,450</h3> */}
-          <table>
-            <thead>
-              <tr>
-                <th>Assets</th>
-                <th>Current price</th>
-                <th>Balance</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableData.map((data) => (
-                <tr>
-                  <td>
-                    <RowCell>
-                      <h6>{data.assetsName}</h6>
-                      <p>{data.asset}</p>
-                    </RowCell>
-                  </td>
-                  <td>
-                    <RowCell>
-                      <h6>$ {data.currentBalance}</h6>
-                      <p style={{ color: "#2F82CF" }}>(+{data.balance}%)</p>
-                    </RowCell>
-                  </td>
-                  <td>
-                    <RowCell>
-                      <h6>
-                        {data.price} {data.assetsName}
-                      </h6>
-                      <p>{data.priceIncrease}</p>
-                    </RowCell>
-                  </td>
-                  <td>
-                    <a href="">
-                      <img src={linkIcon} alt="" />
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <TableContainer
+            component={Paper}
+            sx={{ maxHeight: 370, minWidth: 630 }}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ textAlign: "center" }}>Assets</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    Current price
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>Balance</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tableData.map((row) => (
+                  <TableRow key={row.assetsName}>
+                    <TableCell>
+                      {/* {recipientFormate(row.assetsName)} */}
+                      <RowCell>
+                        <h6>{row.assetsName}</h6>
+                        <p>{row.asset}</p>
+                      </RowCell>
+                    </TableCell>
+                    <TableCell>
+                      <RowCell>
+                        <h6>$ {row.currentBalance}</h6>
+                        <p style={{ color: "#2F82CF" }}>(+{row.balance}%)</p>
+                      </RowCell>
+                    </TableCell>
+                    <TableCell>
+                      <RowCell>
+                        <h6>
+                          {row.price} {row.assetsName}
+                        </h6>
+                        <p>{row.priceIncrease}</p>
+                      </RowCell>
+                    </TableCell>
+                    <TableCell>
+                      <RowLink>
+                        <a href="">
+                          <img src={linkIcon} alt="" />
+                        </a>
+                      </RowLink>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </AssetTable>
       </AssetSection>
     </WorkspaceLayout>

@@ -10,6 +10,7 @@ import Assets from "./pages/workspaceDashboard/assets/Assets";
 import Category from "./pages/workspace/category/Category";
 import Archived from "./pages/workspace/category/Archived";
 import PaymentRequest from "./pages/workspace/paymentRequest/PaymentRequest";
+import Settings from "./pages/workspace/settings/Settings";
 
 const RouterLink = () => {
   return (
@@ -30,6 +31,7 @@ const RouterLink = () => {
         <Route path="/category" element={<Category />}></Route>
         <Route path="/archived" element={<Archived />}></Route>
         <Route path="/payment-request" element={<PaymentRequest />}></Route>
+        <Route path="/settings" element={<Settings />}></Route>
       </Routes>
     </Router>
   );

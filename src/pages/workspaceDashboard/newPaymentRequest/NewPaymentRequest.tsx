@@ -3,15 +3,19 @@ import {
   AddPayment,
   CreateRequest,
   DeleteIcon,
+  Image,
+  NoteInfo,
   NoteInformation,
   Request,
   RequestHeader,
+  RequestSubmit,
   // Table,
 } from "./newPaymentRequest.style";
 import cancel from "../../../assets/auth/cancel.svg";
 import trash from "../../../assets/workspace/trash.svg";
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import add from "../../../assets/workspace/add.svg";
+import categoryIcon from "../../../assets/workspace/category-icon.svg";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -199,7 +203,9 @@ const NewPaymentRequest = () => {
                     sx={{ td: { border: 1, padding: 0, paddingInline: 1 } }}
                   >
                     <TableCell sx={{ height: 1, width: 200 }}>
-                      Category
+                      <NoteInfo>
+                        <Image src={categoryIcon} alt="" /> Category
+                      </NoteInfo>
                     </TableCell>
                     <TableCell>
                       <FormControl fullWidth>
@@ -215,7 +221,7 @@ const NewPaymentRequest = () => {
                               <img
                                 src={arrowBottom}
                                 alt="Custom Arrow Icon"
-                                style={{ marginRight: "30px" }}
+                                style={{ marginRight: "20px" }}
                               />
                             </InputAdornment>
                           )}
@@ -225,7 +231,7 @@ const NewPaymentRequest = () => {
                           }}
                         >
                           <MenuItem disabled value="Category">
-                            Placeholder
+                            Category name
                           </MenuItem>
                           <MenuItem
                             value={10}
@@ -246,6 +252,7 @@ const NewPaymentRequest = () => {
                 </TableBody>
               </Table>
             </TableContainer>
+            <RequestSubmit>Submit</RequestSubmit>
           </NoteInformation>
         </Request>
       </CreateRequest>

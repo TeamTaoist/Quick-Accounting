@@ -65,3 +65,30 @@ export const NoteInformation = styled.div`
   padding-inline: 46px;
   padding-top: 21px;
 `;
+export const Image = styled.img`
+  width: 16px;
+`;
+export const NoteInfo = styled.div`
+  display: flex;
+  gap: 6px;
+`;
+export const RequestSubmit = styled.button`
+  background: var(--bg-primary);
+  border: none;
+  outline: none;
+  font-size: 18px;
+  font-weight: 400;
+  padding: 10px 0;
+  width: 100%;
+  border-radius: 4px;
+  margin-top: 21px;
+  cursor: pointer;
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  img {
+    width: 10px;
+  }
+`;
