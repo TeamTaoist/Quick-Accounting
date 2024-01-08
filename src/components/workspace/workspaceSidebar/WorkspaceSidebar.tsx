@@ -19,12 +19,6 @@ import reports from "../../../assets/workspace/reports.svg";
 import { Link } from "react-router-dom";
 
 const WorkspaceSidebar = () => {
-  // const WorkspaceSidebar = ({ children }: { children: React.ReactNode }) => {
-  const [activeLink, setActiveLink] = useState("Assets");
-  const handleLink = (name: any) => {
-    setActiveLink(name);
-  };
-
   return (
     <>
       <SidebarContainer>
@@ -50,48 +44,20 @@ const WorkspaceSidebar = () => {
         </PaymentRequest>
         {/* sidebar list */}
         <SidebarLinkList className="">
-          <SidebarLink
-            icon={assets}
-            name="Assets"
-            activeLink={activeLink}
-            handleLink={handleLink}
-            to="/assets"
-          />
-          <SidebarLink
-            icon={category}
-            name="Category"
-            activeLink={activeLink}
-            handleLink={handleLink}
-            to="/category"
-          />
+          <SidebarLink icon={assets} name="Assets" to="/assets" />
+          <SidebarLink icon={category} name="Category" to="/category" />
           <SidebarLink
             icon={paymentRequest}
             name="Payment request"
-            activeLink={activeLink}
-            handleLink={handleLink}
             to="/payment-request"
           />
-          <SidebarLink
-            icon={queue}
-            name="Queue （Signing）"
-            activeLink={activeLink}
-            handleLink={handleLink}
-            to="/queue-sign"
-          />
+          <SidebarLink icon={queue} name="Queue （Signing）" to="/queue" />
           <SidebarLink
             icon={bookkeeping}
             name="Bookkeeping"
-            activeLink={activeLink}
-            handleLink={handleLink}
             to="/bookkeeping"
           />
-          <SidebarLink
-            icon={reports}
-            name="Reports"
-            activeLink={activeLink}
-            handleLink={handleLink}
-            to="/reports"
-          />
+          <SidebarLink icon={reports} name="Reports" to="/reports" />
         </SidebarLinkList>
       </SidebarContainer>
       {/* {children} */}

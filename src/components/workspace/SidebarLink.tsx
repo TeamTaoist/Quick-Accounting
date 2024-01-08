@@ -1,35 +1,20 @@
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-const SidebarLink = ({ to, name, handleLink, activeLink, icon }: any) => {
+const SidebarLink = ({ to, name, icon }: any) => {
   return (
-    <SidebarList
-      className={`${name === activeLink ? "active" : ""}`}
-      onClick={() => handleLink(name)}
-    >
-      <Link to={to}>
-        <SidebarLin className="link">
-          <img src={icon} alt="" />
-          {name}
-        </SidebarLin>
-      </Link>
-    </SidebarList>
+    <SidebarLinks to={to}>
+      <img src={icon} alt="" />
+      {name}
+    </SidebarLinks>
   );
 };
 
 export default SidebarLink;
 
-const SidebarList = styled.div`
+const SidebarLinks = styled(NavLink)`
   padding: 10px 0 10px 43px;
   margin-bottom: 10px;
-  &:hover {
-    background-color: var(--bg-primary);
-  }
-  &.active {
-    background-color: #efefef;
-  }
-`;
-const SidebarLin = styled.div`
   text-decoration: none;
   font-size: 20px;
   color: #000;
@@ -39,5 +24,11 @@ const SidebarLin = styled.div`
   align-items: center;
   img {
     width: 20px;
+  }
+  &:hover {
+    background-color: var(--bg-primary);
+  }
+  &.active {
+    background-color: #efefef;
   }
 `;

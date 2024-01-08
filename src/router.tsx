@@ -13,6 +13,7 @@ import PaymentRequest from "./pages/workspace/paymentRequest/PaymentRequest";
 import Settings from "./pages/workspace/settings/Settings";
 import PaymentRequestDetails from "./pages/workspace/paymentRequest/PaymentRequestDetails";
 import SignPaymentRequest from "./pages/workspace/paymentRequest/SignPaymentRequest";
+import Queue from "./pages/workspace/queue/Queue";
 
 const RouterLink = () => {
   return (
@@ -39,6 +40,7 @@ const RouterLink = () => {
         ></Route>
         <Route path="/settings" element={<Settings />}></Route>
         <Route path="/sign-payment" element={<SignPaymentRequest />}></Route>
+        <Route path="/queue" element={<Queue />}></Route>
       </Routes>
     </Router>
   );
