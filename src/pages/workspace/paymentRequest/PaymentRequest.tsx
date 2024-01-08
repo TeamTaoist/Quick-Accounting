@@ -12,6 +12,7 @@ import searchIcon from "../../../assets/workspace/search-icon.svg";
 import approve from "../../../assets/workspace/select.svg";
 import download from "../../../assets/workspace/download.svg";
 import reject from "../../../assets/workspace/reject.svg";
+import back from "../../../assets/workspace/back.svg";
 import filterIcon from "../../../assets/workspace/filtering.svg";
 
 // table
@@ -35,6 +36,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import RejectDataTable from "../../../components/workspace/RejectDataTable";
 
 interface SubPayment {
   id: number;
@@ -140,6 +142,7 @@ const PaymentRequest = () => {
   const handleDropdownChange = (event: any) => {
     setSelectedValue(event.target.value);
   };
+  const [paymentRequest, setPaymentRequest] = useState(true);
   return (
     <WorkspaceLayout>
       <PaymentRequestContainer>
@@ -197,162 +200,182 @@ const PaymentRequest = () => {
               <MenuItem value="option3">Option 3</MenuItem>
             </Select>
           </FormControl>
-          <ViewReject>
-            <Image src={reject} alt="" />
-            <p>View rejection</p>
+          <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
+            {paymentRequest ? (
+              <div>
+                <Image src={reject} alt="" />
+                <p>View rejection</p>
+              </div>
+            ) : (
+              <div>
+                <Image src={back} alt="" />
+                <p>Back</p>
+              </div>
+            )}
           </ViewReject>
         </Header>
-        <ActionBtn>
-          <Btn>
-            <img src={download} alt="" />
-            <p>Download</p>
-          </Btn>
-          <Btn>
-            <img src={reject} alt="" />
-            <p>Reject</p>
-          </Btn>
-          <Btn onClick={() => navigate("/sign-payment")}>
-            <img src={approve} alt="" />
-            <p>Approve</p>
-          </Btn>
-        </ActionBtn>
-        {/* table */}
-        <TableContainer
-          style={{
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-            overflow: "hidden",
-          }}
-        >
-          <Table size="small">
-            <TableHead style={{ backgroundColor: "#f0f0f0" }}>
-              <TableRow>
-                <TableCell>
-                  <Checkbox
-                    indeterminate={
-                      selected.length > 0 && selected.length < payments.length
-                    }
-                    checked={selected.length === payments.length}
-                    onChange={handleSelectAllClick}
-                  />
-                  Category
-                </TableCell>
-                <TableCell>Recipient</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {payments.map((payment) => (
-                <React.Fragment key={payment.id}>
-                  {payment.subPayment.length > 0 ? (
-                    <TableRow
-                      onClick={() => handleRowToggle(payment.id)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <TableCell
-                        colSpan={5}
-                        style={{
-                          padding: 0,
-                          paddingLeft: "16px",
-                          borderBottom: "1px solid #ddd",
-                          borderTop: "none",
-                          position: "relative",
-                        }}
-                      >
-                        <Checkbox
-                          checked={isSelected(payment.id)}
-                          onChange={(event) =>
-                            handleCheckboxClick(event, payment.id)
-                          }
-                        />
-                        {payment.idNumber}
-                        <IconButton
-                          aria-label="expand row"
-                          size="small"
-                          style={{
-                            position: "absolute",
-                            left: "200px",
-                          }}
-                        >
-                          {openRows.includes(payment.id) ? (
-                            <KeyboardArrowUpIcon />
-                          ) : (
-                            <KeyboardArrowDownIcon />
-                          )}
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        style={{
-                          padding: 0,
-                          paddingLeft: "16px",
-                          borderBottom: "1px solid #ddd",
-                          borderTop: "none",
-                        }}
-                      >
-                        <Checkbox
-                          checked={isSelected(payment.id)}
-                          onChange={(event) =>
-                            handleCheckboxClick(event, payment.id)
-                          }
-                        />
-                        {payment.idNumber}
-                      </TableCell>
-                      <TableCell>{payment.category}</TableCell>
-                      <TableCell>{payment.amount}</TableCell>
-                      <TableCell>{payment.date}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outlined"
-                          sx={{
-                            borderColor: "black",
-                            color: "black",
-                            textTransform: "lowercase",
-                          }}
-                          onClick={() =>
-                            navigate(`/payment-request/${payment.id}`)
-                          }
-                        >
-                          view more
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  )}
+        {paymentRequest ? (
+          <PaymentRequestBody>
+            <ActionBtn>
+              <Btn>
+                <img src={download} alt="" />
+                <p>Download</p>
+              </Btn>
+              <Btn>
+                <img src={reject} alt="" />
+                <p>Reject</p>
+              </Btn>
+              <Btn onClick={() => navigate("/sign-payment")}>
+                <img src={approve} alt="" />
+                <p>Approve</p>
+              </Btn>
+            </ActionBtn>
+            {/* table */}
+            <TableContainer
+              style={{
+                border: "1px solid #ddd",
+                borderRadius: "8px",
+                overflow: "hidden",
+              }}
+            >
+              <Table size="small">
+                <TableHead style={{ backgroundColor: "#f0f0f0" }}>
                   <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      style={{
-                        padding: 0,
-                        paddingLeft: "16px",
-                        borderTop: "1px solid #ddd",
-                      }}
-                    >
-                      <Collapse
-                        in={openRows.includes(payment.id)}
-                        timeout="auto"
-                        unmountOnExit
-                      >
-                        <Table size="small">
-                          <TableBody>
-                            {payment.subPayment.map((subCategory) => (
-                              <TableRow key={subCategory.id}>
-                                <TableCell>{subCategory.idNumber}</TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </Collapse>
+                    <TableCell>
+                      <Checkbox
+                        indeterminate={
+                          selected.length > 0 &&
+                          selected.length < payments.length
+                        }
+                        checked={selected.length === payments.length}
+                        onChange={handleSelectAllClick}
+                      />
+                      Category
                     </TableCell>
+                    <TableCell>Recipient</TableCell>
+                    <TableCell>Amount</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell></TableCell>
                   </TableRow>
-                </React.Fragment>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {payments.map((payment) => (
+                    <React.Fragment key={payment.id}>
+                      {payment.subPayment.length > 0 ? (
+                        <TableRow
+                          onClick={() => handleRowToggle(payment.id)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <TableCell
+                            colSpan={5}
+                            style={{
+                              padding: 0,
+                              paddingLeft: "16px",
+                              borderBottom: "1px solid #ddd",
+                              borderTop: "none",
+                              position: "relative",
+                            }}
+                          >
+                            <Checkbox
+                              checked={isSelected(payment.id)}
+                              onChange={(event) =>
+                                handleCheckboxClick(event, payment.id)
+                              }
+                            />
+                            {payment.idNumber}
+                            <IconButton
+                              aria-label="expand row"
+                              size="small"
+                              style={{
+                                position: "absolute",
+                                left: "200px",
+                              }}
+                            >
+                              {openRows.includes(payment.id) ? (
+                                <KeyboardArrowUpIcon />
+                              ) : (
+                                <KeyboardArrowDownIcon />
+                              )}
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        <TableRow>
+                          <TableCell
+                            style={{
+                              padding: 0,
+                              paddingLeft: "16px",
+                              borderBottom: "1px solid #ddd",
+                              borderTop: "none",
+                            }}
+                          >
+                            <Checkbox
+                              checked={isSelected(payment.id)}
+                              onChange={(event) =>
+                                handleCheckboxClick(event, payment.id)
+                              }
+                            />
+                            {payment.idNumber}
+                          </TableCell>
+                          <TableCell>{payment.category}</TableCell>
+                          <TableCell>{payment.amount}</TableCell>
+                          <TableCell>{payment.date}</TableCell>
+                          <TableCell>
+                            <Button
+                              variant="outlined"
+                              sx={{
+                                borderColor: "black",
+                                color: "black",
+                                textTransform: "lowercase",
+                              }}
+                              onClick={() =>
+                                navigate(`/payment-request/${payment.id}`)
+                              }
+                            >
+                              view more
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      <TableRow>
+                        <TableCell
+                          colSpan={5}
+                          style={{
+                            padding: 0,
+                            paddingLeft: "16px",
+                            borderTop: "1px solid #ddd",
+                          }}
+                        >
+                          <Collapse
+                            in={openRows.includes(payment.id)}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            <Table size="small">
+                              <TableBody>
+                                {payment.subPayment.map((subCategory) => (
+                                  <TableRow key={subCategory.id}>
+                                    <TableCell>
+                                      {subCategory.idNumber}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </PaymentRequestBody>
+        ) : (
+          <RejectSection>
+            <RejectDataTable />
+          </RejectSection>
+        )}
       </PaymentRequestContainer>
     </WorkspaceLayout>
   );
@@ -368,6 +391,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+const PaymentRequestBody = styled.div``;
 const ActionBtn = styled.div`
   display: flex;
   justify-content: end;
@@ -397,13 +421,18 @@ const Option = styled.div`
   gap: 5px;
 `;
 const ViewReject = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: var(--bg-primary);
-  padding: 6px 10px;
-  border-radius: 5px;
-  p {
-    font-size: 20px;
+  div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--bg-primary);
+    padding: 6px 10px;
+    border-radius: 5px;
+    p {
+      font-size: 20px;
+    }
   }
+`;
+const RejectSection = styled.div`
+  margin-top: 120px;
 `;
