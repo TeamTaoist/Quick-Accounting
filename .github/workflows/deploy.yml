@@ -33,6 +33,8 @@ jobs:
           rm tsconfig.json;
           rm yarn.lock;
           cp -R ./build/* .;
+          git config --global user.email "bot@taoist.com"
+          git config --global user.name "bot"
           git add .;
           git status;
           git commit -m "deploy";
