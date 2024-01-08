@@ -34,6 +34,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface SubPayment {
   id: number;
@@ -89,9 +90,11 @@ const payments: Payment[] = [
 ];
 
 const PaymentRequest = () => {
+  const navigate = useNavigate();
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
   const [openRows, setOpenRows] = useState<number[]>([]);
+  console.log(selected);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -208,7 +211,7 @@ const PaymentRequest = () => {
             <img src={reject} alt="" />
             <p>Reject</p>
           </Btn>
-          <Btn>
+          <Btn onClick={() => navigate("/sign-payment")}>
             <img src={approve} alt="" />
             <p>Approve</p>
           </Btn>
@@ -310,7 +313,9 @@ const PaymentRequest = () => {
                             color: "black",
                             textTransform: "lowercase",
                           }}
-                          onClick={() => console.log("Button Clicked")}
+                          onClick={() =>
+                            navigate(`/payment-request/${payment.id}`)
+                          }
                         >
                           view more
                         </Button>

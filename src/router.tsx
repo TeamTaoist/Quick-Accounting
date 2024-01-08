@@ -11,6 +11,8 @@ import Category from "./pages/workspace/category/Category";
 import Archived from "./pages/workspace/category/Archived";
 import PaymentRequest from "./pages/workspace/paymentRequest/PaymentRequest";
 import Settings from "./pages/workspace/settings/Settings";
+import PaymentRequestDetails from "./pages/workspace/paymentRequest/PaymentRequestDetails";
+import SignPaymentRequest from "./pages/workspace/paymentRequest/SignPaymentRequest";
 
 const RouterLink = () => {
   return (
@@ -31,7 +33,12 @@ const RouterLink = () => {
         <Route path="/category" element={<Category />}></Route>
         <Route path="/archived" element={<Archived />}></Route>
         <Route path="/payment-request" element={<PaymentRequest />}></Route>
+        <Route
+          path="/payment-request/:id"
+          element={<PaymentRequestDetails />}
+        ></Route>
         <Route path="/settings" element={<Settings />}></Route>
+        <Route path="/sign-payment" element={<SignPaymentRequest />}></Route>
       </Routes>
     </Router>
   );

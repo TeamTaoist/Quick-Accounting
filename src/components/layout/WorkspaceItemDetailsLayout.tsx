@@ -10,7 +10,7 @@ interface WorkspaceItemProps {
   subtitle?: string;
 }
 
-const WorkspaceItemLayout = ({
+const WorkspaceItemDetailsLayout = ({
   children,
   title,
   href,
@@ -33,7 +33,7 @@ const WorkspaceItemLayout = ({
   );
 };
 
-export default WorkspaceItemLayout;
+export default WorkspaceItemDetailsLayout;
 
 const WorkspaceItemContainer = styled.div`
   display: grid;

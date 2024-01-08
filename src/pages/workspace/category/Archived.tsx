@@ -1,5 +1,4 @@
 import Header from "../../../components/layout/header/Header";
-import WorkspaceItemLayout from "../../../components/layout/WorkspaceItemLayout";
 import { useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,6 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
 import archive from "../../../assets/workspace/archive.svg";
+import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
 
 interface Category {
   id: number;
@@ -50,7 +50,7 @@ const Archived = () => {
     selected.indexOf(categoryId) !== -1;
   return (
     <Header>
-      <WorkspaceItemLayout
+      <WorkspaceItemDetailsLayout
         title="Archived categories"
         href="/category"
         subtitle="These categories will continue to be applied to historical transfers."
@@ -103,7 +103,7 @@ const Archived = () => {
             </Table>
           </TableContainer>
         </ArchiveTable>
-      </WorkspaceItemLayout>
+      </WorkspaceItemDetailsLayout>
     </Header>
   );
 };
