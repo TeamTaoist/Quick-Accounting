@@ -31,6 +31,7 @@ jobs:
           rm package.json;
           rm tsconfig.json;
           rm yarn.lock;
+          rm package-lock.json;
           git checkout -b gh_pages origin/gh_pages;
           cp -R ./build/* .;
           git config --global user.email "bot@taoist.com"
