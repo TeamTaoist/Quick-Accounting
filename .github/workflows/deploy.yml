@@ -25,6 +25,7 @@ jobs:
 
      - name: Pushes to gh_pages branch
        run: |
+          git fetch --all;
           git checkout -b gh_pages origin/gh_pages;
           rm -rf ./src;
           rm -rf ./public;
