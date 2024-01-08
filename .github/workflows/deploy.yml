@@ -24,7 +24,7 @@ jobs:
          npm run build;
 
      - name: Pushes to gh_pages branch
-        run: |
+       run: |
           git checkout gh_pages;
           rm -rf ./src;
           rm -rf ./public;
