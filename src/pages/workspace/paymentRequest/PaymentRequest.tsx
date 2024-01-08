@@ -413,15 +413,16 @@ const Btn = styled.div`
     font-size: 20px;
   }
 `;
-const Image = styled.img`
+export const Image = styled.img`
   width: 20px;
 `;
 const Option = styled.div`
   display: flex;
   gap: 5px;
 `;
-const ViewReject = styled.div`
+export const ViewReject = styled.div`
   div {
+    cursor: pointer;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -433,6 +434,6 @@ const ViewReject = styled.div`
     }
   }
 `;
-const RejectSection = styled.div`
+export const RejectSection = styled.div`
   margin-top: 120px;
 `;
