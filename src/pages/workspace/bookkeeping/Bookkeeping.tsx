@@ -14,6 +14,7 @@ import download from "../../../assets/workspace/download.svg";
 import reject from "../../../assets/workspace/reject.svg";
 import back from "../../../assets/workspace/back.svg";
 import filterIcon from "../../../assets/workspace/filtering.svg";
+import rightArrow from "../../../assets/workspace/right-arrow.svg";
 
 // table
 import Table from "@mui/material/Table";
@@ -47,7 +48,9 @@ import {
   PaymentRequestContainer,
   RejectSection,
   ViewReject,
-} from "./paymentRequest.style";
+} from "../paymentRequest/paymentRequest.style";
+import data from "../../../data/tableData";
+import BookkeepingRejectTable from "../../../components/workspace/BookkeepingRejectTable";
 
 interface SubPayment {
   id: number;
@@ -101,17 +104,18 @@ const payments: Payment[] = [
     ],
   },
 ];
+const recipientFormate = (n: string) => {
+  return `${n.slice(0, 6)}...${n.slice(-4)}`;
+};
 
-const PaymentRequest = () => {
+const Bookkeeping = () => {
   const navigate = useNavigate();
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
-  const [openRows, setOpenRows] = useState<number[]>([]);
-  console.log(selected);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelected(payments.map((category) => category.id));
+      setSelected(data.map((c) => c.id));
     } else {
       setSelected([]);
     }
@@ -130,16 +134,9 @@ const PaymentRequest = () => {
     }
   };
 
-  const handleRowToggle = (categoryId: number) => {
-    setOpenRows((prevOpenRows) =>
-      prevOpenRows.includes(categoryId)
-        ? prevOpenRows.filter((id) => id !== categoryId)
-        : [...prevOpenRows, categoryId]
-    );
+  const isSelected = (categoryId: number) => {
+    return selected.indexOf(categoryId) !== -1;
   };
-
-  const isSelected = (categoryId: number) =>
-    selected.indexOf(categoryId) !== -1;
 
   // end
   const [hasCategory, setHasCategory] = useState(true);
@@ -154,6 +151,7 @@ const PaymentRequest = () => {
     setSelectedValue(event.target.value);
   };
   const [paymentRequest, setPaymentRequest] = useState(true);
+
   return (
     <WorkspaceLayout>
       <PaymentRequestContainer>
@@ -243,13 +241,9 @@ const PaymentRequest = () => {
             </ActionBtn>
             {/* table */}
             <TableContainer
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                overflow: "hidden",
-              }}
+              sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
             >
-              <Table size="small">
+              <Table>
                 <TableHead style={{ backgroundColor: "#f0f0f0" }}>
                   <TableRow>
                     <TableCell>
@@ -261,7 +255,7 @@ const PaymentRequest = () => {
                         checked={selected.length === payments.length}
                         onChange={handleSelectAllClick}
                       />
-                      Category
+                      Safe
                     </TableCell>
                     <TableCell>Recipient</TableCell>
                     <TableCell>Amount</TableCell>
@@ -270,113 +264,58 @@ const PaymentRequest = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {payments.map((payment) => (
-                    <React.Fragment key={payment.id}>
-                      {payment.subPayment.length > 0 ? (
-                        <TableRow
-                          onClick={() => handleRowToggle(payment.id)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <TableCell
-                            colSpan={5}
-                            style={{
-                              padding: 0,
-                              paddingLeft: "16px",
-                              borderBottom: "1px solid #ddd",
-                              borderTop: "none",
-                              position: "relative",
-                            }}
-                          >
-                            <Checkbox
-                              checked={isSelected(payment.id)}
-                              onChange={(event) =>
-                                handleCheckboxClick(event, payment.id)
-                              }
-                            />
-                            {payment.idNumber}
-                            <IconButton
-                              aria-label="expand row"
-                              size="small"
-                              style={{
-                                position: "absolute",
-                                left: "200px",
-                              }}
-                            >
-                              {openRows.includes(payment.id) ? (
-                                <KeyboardArrowUpIcon />
-                              ) : (
-                                <KeyboardArrowDownIcon />
-                              )}
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        <TableRow>
-                          <TableCell
-                            style={{
-                              padding: 0,
-                              paddingLeft: "16px",
-                              borderBottom: "1px solid #ddd",
-                              borderTop: "none",
-                            }}
-                          >
-                            <Checkbox
-                              checked={isSelected(payment.id)}
-                              onChange={(event) =>
-                                handleCheckboxClick(event, payment.id)
-                              }
-                            />
-                            {payment.idNumber}
-                          </TableCell>
-                          <TableCell>{payment.category}</TableCell>
-                          <TableCell>{payment.amount}</TableCell>
-                          <TableCell>{payment.date}</TableCell>
-                          <TableCell>
-                            <Button
-                              variant="outlined"
-                              sx={{
-                                borderColor: "black",
-                                color: "black",
-                                textTransform: "lowercase",
-                              }}
-                              onClick={() =>
-                                navigate(`/payment-request/${payment.id}`)
-                              }
-                            >
-                              view more
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      )}
+                  {data.map((book) => (
+                    <>
                       <TableRow>
                         <TableCell
-                          colSpan={5}
                           style={{
                             padding: 0,
                             paddingLeft: "16px",
-                            borderTop: "1px solid #ddd",
+                            borderBottom: "1px solid #ddd",
+                            borderTop: "none",
                           }}
                         >
-                          <Collapse
-                            in={openRows.includes(payment.id)}
-                            timeout="auto"
-                            unmountOnExit
+                          <SafeSection>
+                            <div>
+                              <Checkbox
+                                checked={isSelected(book.id)}
+                                onChange={(event) =>
+                                  handleCheckboxClick(event, book.id)
+                                }
+                              />
+                              {`${book.recipient.slice(
+                                0,
+                                6
+                              )}...${book.recipient.slice(-4)}`}
+                            </div>
+                            <Logo>
+                              <img src={rightArrow} alt="" />
+                            </Logo>
+                          </SafeSection>
+                        </TableCell>
+                        <TableCell>{`${book.recipient.slice(
+                          0,
+                          6
+                        )}...${book.recipient.slice(-4)}`}</TableCell>
+                        <TableCell>{book.amount}</TableCell>
+                        <TableCell>{book.date}</TableCell>
+                        <TableCell>
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              borderColor: "black",
+                              color: "black",
+                              textTransform: "lowercase",
+                            }}
+                            onClick={() =>
+                              navigate(`/payment-request/${book.id}`)
+                            }
                           >
-                            <Table size="small">
-                              <TableBody>
-                                {payment.subPayment.map((subCategory) => (
-                                  <TableRow key={subCategory.id}>
-                                    <TableCell>
-                                      {subCategory.idNumber}
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </Collapse>
+                            view more
+                          </Button>
                         </TableCell>
                       </TableRow>
-                    </React.Fragment>
+                    </>
                   ))}
                 </TableBody>
               </Table>
@@ -384,7 +323,8 @@ const PaymentRequest = () => {
           </PaymentRequestBody>
         ) : (
           <RejectSection>
-            <RejectDataTable />
+            {/* <RejectDataTable /> */}
+            <BookkeepingRejectTable />
           </RejectSection>
         )}
       </PaymentRequestContainer>
@@ -392,4 +332,16 @@ const PaymentRequest = () => {
   );
 };
 
-export default PaymentRequest;
+export default Bookkeeping;
+
+export const SafeSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+export const Logo = styled.div`
+  flex: 0 0 30%;
+  img {
+    width: 20px;
+  }
+`;

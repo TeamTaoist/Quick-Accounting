@@ -14,6 +14,7 @@ import Settings from "./pages/workspace/settings/Settings";
 import PaymentRequestDetails from "./pages/workspace/paymentRequest/PaymentRequestDetails";
 import SignPaymentRequest from "./pages/workspace/paymentRequest/SignPaymentRequest";
 import Queue from "./pages/workspace/queue/Queue";
+import Bookkeeping from "./pages/workspace/bookkeeping/Bookkeeping";
 
 const RouterLink = () => {
   return (
@@ -41,6 +42,7 @@ const RouterLink = () => {
         <Route path="/settings" element={<Settings />}></Route>
         <Route path="/sign-payment" element={<SignPaymentRequest />}></Route>
         <Route path="/queue" element={<Queue />}></Route>
+        <Route path="/bookkeeping" element={<Bookkeeping />}></Route>
       </Routes>
     </Router>
   );

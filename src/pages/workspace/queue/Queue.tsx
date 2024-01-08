@@ -21,12 +21,12 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import data from "../../../data/tableData";
 import { useNavigate } from "react-router-dom";
+import RejectDataTable from "../../../components/workspace/RejectDataTable";
 import {
   Image,
   RejectSection,
   ViewReject,
-} from "../paymentRequest/PaymentRequest";
-import RejectDataTable from "../../../components/workspace/RejectDataTable";
+} from "../paymentRequest/paymentRequest.style";
 
 const Queue = () => {
   const navigate = useNavigate();
