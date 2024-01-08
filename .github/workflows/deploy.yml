@@ -23,7 +23,7 @@ jobs:
          npm install;
          npm run build;
 
-     - name: Pushes to gh_pages branch
+     - name: Push to gh_pages branch
        run: |
           git fetch --all;
           git checkout -b gh_pages origin/gh_pages;
@@ -31,7 +31,7 @@ jobs:
           rm -rf ./public;
           rm package.json;
           rm tsconfig.json;
-          rm yarn.log;
+          rm yarn.lock;
           cp -R ./build/* .;
           git add .;
           git status;
