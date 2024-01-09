@@ -26,7 +26,7 @@ jobs:
      - name: Deploy
        uses: peaceiris/actions-gh-pages@v3
        with:
-         publish_branch: gh-pages  # default: gh-pages
+         github_token: ${{ secrets.GITHUB_TOKEN }}       
          publish_dir: ./build
          cname: qa.taoist.dev
 
