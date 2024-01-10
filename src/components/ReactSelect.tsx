@@ -52,6 +52,7 @@ export default function ReactSelect({
       styles={customStyles}
       onChange={onChange}
       menuPortalTarget={document.body}
+      // isClearable={false}
     />
   );
 }

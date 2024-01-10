@@ -25,7 +25,7 @@ import optionsIcon from "../../../assets/workspace/option.svg";
 import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
 
-const ShareWorkspacePaymentRequest = () => {
+const PaymentRequestPreview = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [selectedValue, setSelectedValue] = useState("Option1");
@@ -279,12 +279,10 @@ const ShareWorkspacePaymentRequest = () => {
                       </TableCell>
                       {/* add multi select */}
                       <TableCell>
-                        <ReactSelect
-                          value={selectedValues}
-                          onChange={handleSelectChange}
-                          options={options}
-                          defaultValues={[options[1]]}
-                        />
+                        <PropertyOption>
+                          <p>Option 1</p>
+                          <p>Option 1</p>
+                        </PropertyOption>
                       </TableCell>
                     </TableRow>
                     <TableRow
@@ -303,12 +301,11 @@ const ShareWorkspacePaymentRequest = () => {
                       </TableCell>
                       {/* add multi select */}
                       <TableCell>
-                        <ReactSelect
-                          value={selectedValues}
-                          onChange={handleSelectChange}
-                          options={options}
-                          defaultValues={[options[1], options[2]]}
-                        />
+                        <PropertyOption>
+                          <p>Option 1</p>
+                          <p>Option 1</p>
+                          <p>Option 1</p>
+                        </PropertyOption>
                       </TableCell>
                     </TableRow>
                     <TableRow
@@ -335,16 +332,7 @@ const ShareWorkspacePaymentRequest = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <DeleteBtn>Delete</DeleteBtn>
-              <AddBtn>+ Add</AddBtn>
-              <SubmitBtns>
-                <Save onClick={() => navigate("/payment-request-preview")}>
-                  Save
-                </Save>
-                <Submit onClick={() => navigate("/payment-request-preview")}>
-                  Submit
-                </Submit>
-              </SubmitBtns>
+              <AddBtn>View the progress of your payment request</AddBtn>
             </NoteInformation>
             {/* <ReactSelect /> */}
           </RequestDetails>
@@ -354,7 +342,7 @@ const ShareWorkspacePaymentRequest = () => {
   );
 };
 
-export default ShareWorkspacePaymentRequest;
+export default PaymentRequestPreview;
 
 const SharePaymentContainer = styled.div`
   display: grid;
@@ -399,65 +387,25 @@ export const NoteInfo = styled.div`
   display: flex;
   gap: 6px;
 `;
-export const RequestSubmit = styled.button`
-  background: var(--bg-primary);
-  border: none;
-  outline: none;
-  font-size: 18px;
-  font-weight: 400;
-  padding: 10px 0;
-  width: 100%;
-  border-radius: 4px;
-  margin-top: 21px;
-  cursor: pointer;
-  color: var(--text-primary);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  img {
-    width: 10px;
-  }
-`;
-const DeleteBtn = styled.button`
-  font-size: 18px;
-  width: 100%;
-  border: 1px solid var(--border-table);
-  padding: 8px 0;
-  border-radius: 0 0 7px 7px;
-  cursor: pointer;
-`;
 const AddBtn = styled.button`
-  background: transparent;
+  background: var(--bg-primary);
   font-size: 16px;
-  color: var(--text-secondary);
   width: 100%;
   padding: 8px 0;
   border: 1px solid var(--border-table);
-  border-style: dotted;
   border-radius: 7px;
   cursor: pointer;
   margin: 20px 0;
 `;
-const SubmitBtns = styled.div`
-  width: 100%;
+const PropertyOption = styled.div`
   display: flex;
-  gap: 10px;
-`;
-const Save = styled.button`
-  font-size: 18px;
-  width: 100%;
-  border: 1px solid var(--border-table);
-  padding: 8px 0;
-  border-radius: 7px;
-  cursor: pointer;
-`;
-const Submit = styled.button`
-  background: transparent;
-  font-size: 18px;
-  width: 100%;
-  padding: 8px 0;
-  border: 1px solid var(--border-table);
-  border-radius: 7px;
-  cursor: pointer;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  p {
+    font-size: 13px;
+    background: var(--bg-primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
 `;

@@ -17,6 +17,7 @@ import Queue from "./pages/workspace/queue/Queue";
 import Bookkeeping from "./pages/workspace/bookkeeping/Bookkeeping";
 import BookkeepingTransferDetails from "./pages/workspace/bookkeeping/BookkeepingTransferDetails";
 import ShareWorkspacePaymentRequest from "./pages/workspace/share/ShareWorkspacePaymentRequest";
+import PaymentRequestPreview from "./pages/workspace/share/PaymentRequestPreview";
 
 const RouterLink = () => {
   return (
@@ -52,6 +53,10 @@ const RouterLink = () => {
         <Route
           path="/new-workspace-payment-request"
           element={<ShareWorkspacePaymentRequest />}
+        />
+        <Route
+          path="/payment-request-preview"
+          element={<PaymentRequestPreview />}
         />
       </Routes>
     </Router>
