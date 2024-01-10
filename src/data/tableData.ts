@@ -5,6 +5,7 @@ interface FakeData {
   category: string;
   status: string;
   date: string;
+  currency: string;
 }
 
 const data: FakeData[] = [
@@ -15,6 +16,7 @@ const data: FakeData[] = [
     category: "Category name",
     status: "Rejected",
     date: "2022-01-05",
+    currency: "USDT",
   },
   {
     id: 2,
@@ -23,6 +25,7 @@ const data: FakeData[] = [
     category: "Category name",
     status: "Rejected",
     date: "2022-01-08",
+    currency: "USDT",
   },
   {
     id: 3,
@@ -31,6 +34,7 @@ const data: FakeData[] = [
     category: "Category name",
     status: "Rejected",
     date: "2022-01-10",
+    currency: "USDT",
   },
   {
     id: 4,
@@ -39,6 +43,7 @@ const data: FakeData[] = [
     category: "Category name",
     status: "Rejected",
     date: "2022-01-15",
+    currency: "USDT",
   },
 ];
 

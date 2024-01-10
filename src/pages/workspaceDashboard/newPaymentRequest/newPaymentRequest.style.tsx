@@ -64,6 +64,11 @@ export const AddPayment = styled.button`
 export const NoteInformation = styled.div`
   padding-inline: 46px;
   padding-top: 21px;
+  h3 {
+    font-size: 18px;
+    font-weight: 400;
+    padding-bottom: 8px;
+  }
 `;
 export const Image = styled.img`
   width: 16px;

@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import Navbar from "./components/layout/navbar/Navbar";
 import Home from "./pages/homePage/Home";
 import LoginPopup from "./pages/auth/login/LoginPopup";
@@ -15,6 +15,7 @@ import PaymentRequestDetails from "./pages/workspace/paymentRequest/PaymentReque
 import SignPaymentRequest from "./pages/workspace/paymentRequest/SignPaymentRequest";
 import Queue from "./pages/workspace/queue/Queue";
 import Bookkeeping from "./pages/workspace/bookkeeping/Bookkeeping";
+import BookkeepingTransferDetails from "./pages/workspace/bookkeeping/BookkeepingTransferDetails";
 
 const RouterLink = () => {
   return (
@@ -22,27 +23,31 @@ const RouterLink = () => {
       {/* <Navbar /> */}
       <Routes>
         {/* <Route path="/" element={<Home />}></Route> */}
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/login" element={<LoginPopup />}></Route>
-        <Route path="/user" element={<UserDashboard />}></Route>
-        <Route path="/create-workspace" element={<WorkSpaceForm />}></Route>
-        <Route path="/workspace" element={<WorkspaceDashboard />}></Route>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPopup />} />
+        <Route path="/user" element={<UserDashboard />} />
+        <Route path="/create-workspace" element={<WorkSpaceForm />} />
+        <Route path="/workspace" element={<WorkspaceDashboard />} />
         <Route
           path="/new-payment-request"
           element={<NewPaymentRequest />}
         ></Route>
-        <Route path="/assets" element={<Assets />}></Route>
-        <Route path="/category" element={<Category />}></Route>
-        <Route path="/archived" element={<Archived />}></Route>
-        <Route path="/payment-request" element={<PaymentRequest />}></Route>
+        <Route path="/assets" element={<Assets />} />
+        <Route path="/category" element={<Category />} />
+        <Route path="/archived" element={<Archived />} />
+        <Route path="/payment-request" element={<PaymentRequest />} />
         <Route
           path="/payment-request/:id"
           element={<PaymentRequestDetails />}
-        ></Route>
-        <Route path="/settings" element={<Settings />}></Route>
-        <Route path="/sign-payment" element={<SignPaymentRequest />}></Route>
-        <Route path="/queue" element={<Queue />}></Route>
-        <Route path="/bookkeeping" element={<Bookkeeping />}></Route>
+        />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/sign-payment" element={<SignPaymentRequest />} />
+        <Route path="/queue" element={<Queue />} />
+        <Route path="/bookkeeping" element={<Bookkeeping />} />
+        <Route
+          path="/bookkeeping/:id"
+          element={<BookkeepingTransferDetails />}
+        />
       </Routes>
     </Router>
   );

@@ -11,7 +11,9 @@ import archive from "../../../assets/workspace/archive.svg";
 import searchIcon from "../../../assets/workspace/search-icon.svg";
 import approve from "../../../assets/workspace/select.svg";
 import download from "../../../assets/workspace/download.svg";
-import reject from "../../../assets/workspace/reject.svg";
+import view from "../../../assets/workspace/view.svg";
+import importIcon from "../../../assets/workspace/import-icon.svg";
+import hide from "../../../assets/workspace/hide.svg";
 import back from "../../../assets/workspace/back.svg";
 import filterIcon from "../../../assets/workspace/filtering.svg";
 import rightArrow from "../../../assets/workspace/right-arrow.svg";
@@ -212,8 +214,8 @@ const Bookkeeping = () => {
           <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
             {paymentRequest ? (
               <div>
-                <Image src={reject} alt="" />
-                <p>View rejection</p>
+                <Image src={view} alt="" />
+                <p>View hidden</p>
               </div>
             ) : (
               <div>
@@ -227,16 +229,16 @@ const Bookkeeping = () => {
           <PaymentRequestBody>
             <ActionBtn>
               <Btn>
+                <img src={importIcon} alt="" />
+                <p>Import</p>
+              </Btn>
+              <Btn>
                 <img src={download} alt="" />
                 <p>Download</p>
               </Btn>
               <Btn>
-                <img src={reject} alt="" />
+                <img src={hide} alt="" />
                 <p>Reject</p>
-              </Btn>
-              <Btn onClick={() => navigate("/sign-payment")}>
-                <img src={approve} alt="" />
-                <p>Approve</p>
               </Btn>
             </ActionBtn>
             {/* table */}
@@ -307,9 +309,7 @@ const Bookkeeping = () => {
                               color: "black",
                               textTransform: "lowercase",
                             }}
-                            onClick={() =>
-                              navigate(`/payment-request/${book.id}`)
-                            }
+                            onClick={() => navigate(`/bookkeeping/${book.id}`)}
                           >
                             view more
                           </Button>
@@ -323,7 +323,6 @@ const Bookkeeping = () => {
           </PaymentRequestBody>
         ) : (
           <RejectSection>
-            {/* <RejectDataTable /> */}
             <BookkeepingRejectTable />
           </RejectSection>
         )}

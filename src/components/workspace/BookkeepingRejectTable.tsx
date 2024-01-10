@@ -17,6 +17,7 @@ import {
 } from "../../pages/workspace/bookkeeping/Bookkeeping";
 import { useState } from "react";
 import rightArrow from "../../assets/workspace/right-arrow.svg";
+import hide from "../../assets/workspace/hide.svg";
 import styled from "@emotion/styled";
 
 const recipientFormate = (n: string) => {
@@ -53,6 +54,12 @@ const BookkeepingRejectTable = () => {
   };
   return (
     <div>
+      <UnhideBtn>
+        <Btn>
+          <img src={hide} alt="" />
+          <p>Unhide</p>
+        </Btn>
+      </UnhideBtn>
       <TableContainer
         sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
       >
@@ -146,4 +153,23 @@ const CategoryCell = styled.div`
   font-size: 14px;
   text-align: center;
   border-radius: 5px;
+`;
+const UnhideBtn = styled.div`
+  display: flex;
+  justify-content: end;
+`;
+export const Btn = styled.div`
+  margin: 20px 0;
+  display: flex;
+  gap: 8px;
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #111;
+  img {
+    width: 22px;
+  }
+  p {
+    font-size: 20px;
+  }
 `;
