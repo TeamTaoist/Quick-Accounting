@@ -6,6 +6,7 @@ interface FakeData {
   status: string;
   date: string;
   currency: string;
+  workspaceName: string;
 }
 
 const data: FakeData[] = [
@@ -17,15 +18,17 @@ const data: FakeData[] = [
     status: "Rejected",
     date: "2022-01-05",
     currency: "USDT",
+    workspaceName: "workspace name",
   },
   {
     id: 2,
     recipient: "0x4d4bdsfsdf54322015",
     amount: 75,
     category: "Category name",
-    status: "Rejected",
+    status: "pending",
     date: "2022-01-08",
     currency: "USDT",
+    workspaceName: "workspace name",
   },
   {
     id: 3,
@@ -35,15 +38,17 @@ const data: FakeData[] = [
     status: "Rejected",
     date: "2022-01-10",
     currency: "USDT",
+    workspaceName: "workspace name",
   },
   {
     id: 4,
     recipient: "0x4d4bdsfsdf54322015",
     amount: 120,
     category: "Category name",
-    status: "Rejected",
+    status: "Executed",
     date: "2022-01-15",
     currency: "USDT",
+    workspaceName: "workspace name",
   },
 ];
 

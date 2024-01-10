@@ -14,16 +14,20 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
         </div>
         {/* workspace section */}
         <div className="workspace">
-          <div className="workspace-logo">
-            <img src={logo} alt="" />
-          </div>
+          <Link to="/assets">
+            <div className="workspace-logo">
+              <img src={logo} alt="" />
+            </div>
+          </Link>
           <Link to="/create-workspace">
             <img className="plus-icon" src={plus} alt="" />
           </Link>
         </div>
-        <div className="user">
-          <img src={avatar} alt="" />
-        </div>
+        <Link to="/user">
+          <div className="user">
+            <img src={avatar} alt="" />
+          </div>
+        </Link>
       </div>
       <div className="sidebar-details">{children}</div>
     </div>

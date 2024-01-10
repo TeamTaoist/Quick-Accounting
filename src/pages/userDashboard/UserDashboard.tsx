@@ -1,17 +1,20 @@
 import Sidebar from "../../components/layout/sidebar/Sidebar";
 import UserSidebar from "../../components/userDashboard/userSidebar/UserSidebar";
-import "./userDashboard.scss";
+import UserPaymentRequest from "./UserPaymentRequest";
+import { UserDashboardSection } from "./userDashboard.style";
 
 const UserDashboard = () => (
   <div>
     <Sidebar>
-      <div className="user-dashboard">
+      <UserDashboardSection>
         <UserSidebar>
-          <div className="details">
+          {/* <div className="details">
             <h2>You don't have any payment request</h2>
-          </div>
+          </div> */}
+          {/* payment table */}
+          <UserPaymentRequest />
         </UserSidebar>
-      </div>
+      </UserDashboardSection>
     </Sidebar>
   </div>
 );

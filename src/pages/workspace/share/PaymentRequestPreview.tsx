@@ -332,7 +332,9 @@ const PaymentRequestPreview = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <AddBtn>View the progress of your payment request</AddBtn>
+              <AddBtn onClick={() => navigate("/user")}>
+                View the progress of your payment request
+              </AddBtn>
             </NoteInformation>
             {/* <ReactSelect /> */}
           </RequestDetails>
