@@ -37,10 +37,12 @@ const WorkspaceSidebar = () => {
               <span>New</span>
             </RequestBtn>
           </Link>
-          <RequestBtn>
-            <img src={share} alt="" />
-            <span>Share</span>
-          </RequestBtn>
+          <Link to={"/new-workspace-payment-request"}>
+            <RequestBtn>
+              <img src={share} alt="" />
+              <span>Share</span>
+            </RequestBtn>
+          </Link>
         </PaymentRequest>
         {/* sidebar list */}
         <SidebarLinkList className="">

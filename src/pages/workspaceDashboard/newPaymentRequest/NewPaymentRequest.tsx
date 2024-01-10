@@ -64,7 +64,13 @@ const NewPaymentRequest = () => {
             <h1>New payment request</h1>
             <img src={cancel} alt="" />
           </RequestHeader>
-          <TableContainer sx={{ paddingInline: "46px", paddingTop: "30px" }}>
+          <TableContainer
+            sx={{
+              paddingInline: "46px",
+              paddingTop: "30px",
+              boxShadow: "none",
+            }}
+          >
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>

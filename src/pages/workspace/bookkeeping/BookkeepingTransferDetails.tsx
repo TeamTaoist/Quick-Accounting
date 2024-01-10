@@ -71,86 +71,12 @@ const BookkeepingTransferDetails = () => {
     <Header>
       <WorkspaceItemDetailsLayout title="Transfer Detail" href="/bookkeeping">
         <RequestDetails>
-          {/* <TableContainer sx={{ paddingInline: "46px", paddingTop: "30px" }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      width: 200,
-                      border: 0,
-                      paddingInline: 0,
-                    }}
-                  >
-                    Safe
-                  </TableCell>
-                  <TableCell sx={{ width: 150, border: 0, paddingInline: 0 }}>
-                    Counterparty
-                  </TableCell>
-                  <TableCell sx={{ width: 200, border: 0, paddingInline: 0 }}>
-                    Amount
-                  </TableCell>
-                  <TableCell sx={{ width: 200, border: 0, paddingInline: 0 }}>
-                    Currency
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.slice(0, 1).map((item) => (
-                  <TableRow
-                    key={item.id}
-                    sx={{
-                      maxHeight: "20px",
-                      // borderRadius: "20px",
-                      border: "1px solid red",
-                    }}
-                  >
-                    <TableCell
-                      sx={{
-                        // border: "1px solid var(--border)",
-                        padding: 0,
-                      }}
-                    >
-                      <SafeSection>
-                        <div>
-                          {`${item.recipient.slice(
-                            0,
-                            6
-                          )}...${item.recipient.slice(-4)}`}
-                        </div>
-                        <Logo>
-                          <img src={transferArrow} alt="" />
-                        </Logo>
-                      </SafeSection>
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        border: "1px solid var(--border)",
-                      }}
-                    >
-                      {item.recipient}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        border: "1px solid var(--border)",
-                      }}
-                    >
-                      {item.amount}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        border: "1px solid var(--border)",
-                      }}
-                    >
-                      {item.currency}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer> */}
           <TransferTable>
-            <TableContainer component={Paper} sx={{ boxShadow: "none" }}>
+            <TableContainer
+              // component={Paper}
+              // sx={{ boxShadow: "none", border: "1px solid var(--border)" }}
+              sx={{ boxShadow: "none" }}
+            >
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
@@ -165,9 +91,12 @@ const BookkeepingTransferDetails = () => {
                     <TableRow key={row.id}>
                       <TableCell
                         sx={{
-                          // borderLeft: "1px solid var(--border)",
+                          borderRight: "1px solid var(--border-table)",
+                          borderLeft: "1px solid var(--border-table)",
+                          borderBottom: "1px solid var(--border-table)",
                           // borderRadius: "7px",
                           padding: 0,
+                          paddingLeft: "12px",
                         }}
                       >
                         <SafeSection>
@@ -177,9 +106,39 @@ const BookkeepingTransferDetails = () => {
                           </Logo>
                         </SafeSection>
                       </TableCell>
-                      <TableCell>{row.amount}</TableCell>
-                      <TableCell>{row.category}</TableCell>
-                      <TableCell>{row.status}</TableCell>
+                      <TableCell
+                        sx={{
+                          borderRight: "1px solid var(--border-table)",
+                          borderBottom: "1px solid var(--border-table)",
+                          // borderRadius: "7px",
+                          padding: 0,
+                          paddingLeft: "12px",
+                        }}
+                      >
+                        {row.amount}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          borderRight: "1px solid var(--border-table)",
+                          borderBottom: "1px solid var(--border-table)",
+                          // borderRadius: "7px",
+                          padding: 0,
+                          paddingLeft: "12px",
+                        }}
+                      >
+                        {row.category}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          borderBottom: "1px solid var(--border-table)",
+                          borderRight: "1px solid var(--border-table)",
+                          // borderRadius: "7px",
+                          padding: 0,
+                          paddingLeft: "12px",
+                        }}
+                      >
+                        {row.status}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -340,7 +299,7 @@ const TransactionHash = styled.div`
     font-weight: 400;
   }
   div {
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-table);
     padding: 10px 14px;
     display: flex;
     justify-content: space-between;
