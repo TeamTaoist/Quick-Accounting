@@ -40,6 +40,7 @@ import RejectDataTable from "../../../components/workspace/RejectDataTable";
 import {
   ActionBtn,
   Btn,
+  CategoryCell,
   Header,
   Image,
   Option,
@@ -52,6 +53,9 @@ import {
 interface SubPayment {
   id: number;
   idNumber: string;
+  category: string;
+  amount: number;
+  date: string;
 }
 
 interface Payment {
@@ -68,36 +72,54 @@ const payments: Payment[] = [
     id: 1,
     idNumber: "0Xdf344...4324",
     amount: 100,
-    category: "John Doe",
-    date: "2022-01-01",
+    category: "category name",
+    date: "2024-01-01",
     subPayment: [],
   },
   {
     id: 2,
     idNumber: "0Xdf344...4324",
     amount: 150,
-    category: "Jane Doe",
-    date: "2022-01-02",
+    category: "category name",
+    date: "2024-01-02",
     subPayment: [],
   },
   {
     id: 3,
     idNumber: "0Xdf344...4324",
     amount: 200,
-    category: "Bob Smith",
-    date: "2022-01-03",
+    category: "category name",
+    date: "2024-01-03",
     subPayment: [],
   },
   {
     id: 4,
     idNumber: "0Xdf344...4324",
     amount: 120,
-    category: "Alice Johnson",
-    date: "2022-01-04",
+    category: "category name",
+    date: "2024-01-04",
     subPayment: [
-      { id: 31, idNumber: "Subcategory 3-1" },
-      { id: 32, idNumber: "Subcategory 3-2" },
-      { id: 33, idNumber: "Subcategory 3-3" },
+      {
+        id: 1,
+        idNumber: "0Xdf344...4324",
+        amount: 120,
+        category: "category name",
+        date: "2024-01-04",
+      },
+      {
+        id: 2,
+        idNumber: "0Xdf344...4324",
+        amount: 120,
+        category: "category name",
+        date: "2024-01-04",
+      },
+      {
+        id: 3,
+        idNumber: "0Xdf344...4324",
+        amount: 120,
+        category: "category name",
+        date: "2024-01-04",
+      },
     ],
   },
 ];
@@ -263,10 +285,10 @@ const PaymentRequest = () => {
                         checked={selected.length === payments.length}
                         onChange={handleSelectAllClick}
                       />
-                      Category
+                      Recipient
                     </TableCell>
-                    <TableCell>Recipient</TableCell>
                     <TableCell>Amount</TableCell>
+                    <TableCell>Category</TableCell>
                     <TableCell>Date</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
@@ -295,7 +317,7 @@ const PaymentRequest = () => {
                                 handleCheckboxClick(event, payment.id)
                               }
                             />
-                            {payment.idNumber}
+                            3 payment requests
                             <IconButton
                               aria-label="expand row"
                               size="small"
@@ -330,8 +352,10 @@ const PaymentRequest = () => {
                             />
                             {payment.idNumber}
                           </TableCell>
-                          <TableCell>{payment.category}</TableCell>
                           <TableCell>{payment.amount}</TableCell>
+                          <TableCell>
+                            <CategoryCell>{payment.category}</CategoryCell>
+                          </TableCell>
                           <TableCell>{payment.date}</TableCell>
                           <TableCell>
                             <Button
@@ -353,9 +377,9 @@ const PaymentRequest = () => {
                       <TableRow>
                         <TableCell
                           colSpan={5}
-                          style={{
+                          sx={{
                             padding: 0,
-                            paddingLeft: "16px",
+                            // paddingLeft: "16px",
                             borderTop: "1px solid #ddd",
                           }}
                         >
@@ -368,9 +392,19 @@ const PaymentRequest = () => {
                               <TableBody>
                                 {payment.subPayment.map((subCategory) => (
                                   <TableRow key={subCategory.id}>
-                                    <TableCell>
+                                    <TableCell
+                                      sx={{
+                                        paddingLeft: "58px",
+                                      }}
+                                    >
                                       {subCategory.idNumber}
                                     </TableCell>
+                                    <TableCell>{subCategory.amount}</TableCell>
+                                    <TableCell>
+                                      {subCategory.category}
+                                    </TableCell>
+                                    <TableCell>{subCategory.date}</TableCell>
+                                    <TableCell></TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>

@@ -39,9 +39,10 @@ const WorkspaceItemContainer = styled.div`
   display: grid;
   justify-content: center;
   align-items: center;
-  height: 85vh;
+  min-height: 100vh;
 `;
 export const Request = styled.div`
+  margin-top: 92px;
   width: 757px;
   border: 1px solid var(--border-table);
   border-radius: 10px;

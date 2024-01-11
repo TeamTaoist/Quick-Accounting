@@ -32,7 +32,7 @@ const WorkspaceSidebar = () => {
         </WorkspaceInfo>
         {/* payment request btn and share btn */}
         <PaymentRequest>
-          <Link to="/payment-request">
+          <Link to="/new-payment-request">
             <RequestBtn>
               <img src={add} alt="" />
               <span>New</span>

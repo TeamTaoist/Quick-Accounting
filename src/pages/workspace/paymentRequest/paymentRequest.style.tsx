@@ -7,6 +7,7 @@ export const PaymentRequestContainer = styled.div`
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
+  min-width: 940px;
 `;
 export const PaymentRequestBody = styled.div``;
 export const ActionBtn = styled.div`
@@ -53,4 +54,11 @@ export const ViewReject = styled.div`
 `;
 export const RejectSection = styled.div`
   margin-top: 120px;
+`;
+export const CategoryCell = styled.div`
+  background: var(--bg-primary);
+  padding: 4px;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 5px;
 `;

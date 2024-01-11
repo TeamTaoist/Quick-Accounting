@@ -5,6 +5,9 @@
   background: var(--bg-primary);
   padding-left: 38px;
   gap: 16px;
+  position: fixed;
+  left: 0;
+  right: 0;
   img {
     width: 70px;
   }

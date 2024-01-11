@@ -4,13 +4,15 @@ export const CreateRequest = styled.table`
   display: grid;
   justify-content: center;
   align-items: center;
-  height: 85vh;
+  min-height: 100vh;
 `;
 export const Request = styled.div`
+  margin-top: 92px;
   width: 757px;
-  outline: 1px solid gray;
-  height: 500px;
-  /* padding-inline: 26px; */
+  border: 1px solid var(--border-table);
+  padding-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
 `;
 export const RequestHeader = styled.div`
   display: flex;
@@ -27,8 +29,8 @@ export const RequestHeader = styled.div`
     width: 20px;
   }
 `;
-export const Table = styled.table`
-  /* width: 757px; */
+export const TableSection = styled.table`
+  /* padding-inline: 40px; */
 `;
 
 export const DeleteIcon = styled.div`
@@ -62,8 +64,8 @@ export const AddPayment = styled.button`
 `;
 
 export const NoteInformation = styled.div`
-  padding-inline: 46px;
   padding-top: 21px;
+  padding-inline: 40px;
   h3 {
     font-size: 18px;
     font-weight: 400;
@@ -76,6 +78,9 @@ export const Image = styled.img`
 export const NoteInfo = styled.div`
   display: flex;
   gap: 6px;
+`;
+export const Btn = styled.div`
+  padding-inline: 40px;
 `;
 export const RequestSubmit = styled.button`
   background: var(--bg-primary);
