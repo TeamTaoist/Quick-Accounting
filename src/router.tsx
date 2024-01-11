@@ -18,6 +18,7 @@ import Bookkeeping from "./pages/workspace/bookkeeping/Bookkeeping";
 import BookkeepingTransferDetails from "./pages/workspace/bookkeeping/BookkeepingTransferDetails";
 import ShareWorkspacePaymentRequest from "./pages/workspace/share/ShareWorkspacePaymentRequest";
 import PaymentRequestPreview from "./pages/workspace/share/PaymentRequestPreview";
+import Reports from "./pages/workspace/reports/Reports";
 
 const RouterLink = () => {
   return (
@@ -58,6 +59,7 @@ const RouterLink = () => {
           path="/payment-request-preview"
           element={<PaymentRequestPreview />}
         />
+        <Route path="/reports" element={<Reports />} />
       </Routes>
     </Router>
   );

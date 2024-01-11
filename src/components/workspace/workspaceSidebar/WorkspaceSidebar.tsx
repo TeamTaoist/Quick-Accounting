@@ -54,7 +54,7 @@ const WorkspaceSidebar = () => {
             name="Payment request"
             to="/payment-request"
           />
-          <SidebarLink icon={queue} name="Queue （Signing）" to="/queue" />
+          <SidebarLink icon={queue} name="Queue (Signing)" to="/queue" />
           <SidebarLink
             icon={bookkeeping}
             name="Bookkeeping"
