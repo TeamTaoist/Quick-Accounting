@@ -43,7 +43,9 @@ const WorkspaceItemContainer = styled.div`
 `;
 export const Request = styled.div`
   width: 757px;
-  outline: 1px solid gray;
+  border: 1px solid var(--border-table);
+  border-radius: 10px;
+  overflow: hidden;
 `;
 export const RequestHeader = styled.div`
   display: flex;

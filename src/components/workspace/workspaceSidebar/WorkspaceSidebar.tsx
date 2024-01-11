@@ -16,6 +16,7 @@ import paymentRequest from "../../../assets/workspace/payment-request.svg";
 import queue from "../../../assets/workspace/queue.svg";
 import bookkeeping from "../../../assets/workspace/bookkeeping.svg";
 import reports from "../../../assets/workspace/reports.svg";
+import setting from "../../../assets/workspace/setting.svg";
 import { Link } from "react-router-dom";
 
 const WorkspaceSidebar = () => {
@@ -60,6 +61,7 @@ const WorkspaceSidebar = () => {
             to="/bookkeeping"
           />
           <SidebarLink icon={reports} name="Reports" to="/reports" />
+          <SidebarLink icon={setting} name="Settings" to="/settings" />
         </SidebarLinkList>
       </SidebarContainer>
       {/* {children} */}

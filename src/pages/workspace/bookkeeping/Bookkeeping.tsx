@@ -185,6 +185,7 @@ const Bookkeeping = () => {
             value={searchTerm}
             onChange={handleChange}
             sx={{ width: 350 }}
+            size="small"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -199,6 +200,7 @@ const Bookkeeping = () => {
               onChange={handleDropdownChange}
               displayEmpty
               inputProps={{ "aria-label": "Select a value" }}
+              size="small"
             >
               <MenuItem value="" disabled>
                 <Option>
