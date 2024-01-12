@@ -165,11 +165,17 @@ const BookkeepingTransferDetails = () => {
           <NoteInformation>
             <h3>Note Information</h3>
 
-            <TableContainer>
+            <TableContainer sx={{ borderRadius: "7px" }}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
                   <TableRow
-                    sx={{ td: { border: 1, padding: 0, paddingInline: 1 } }}
+                    sx={{
+                      td: {
+                        border: "1px solid var(--border-table)",
+                        padding: 0,
+                        paddingInline: 1,
+                      },
+                    }}
                   >
                     <TableCell sx={{ height: 1, width: 200 }}>
                       <NoteInfo>
@@ -219,7 +225,13 @@ const BookkeepingTransferDetails = () => {
                     </TableCell>
                   </TableRow>
                   <TableRow
-                    sx={{ td: { border: 1, padding: 1, paddingInline: 1 } }}
+                    sx={{
+                      td: {
+                        border: "1px solid var(--border-table)",
+                        padding: 1,
+                        paddingInline: 1,
+                      },
+                    }}
                   >
                     <TableCell sx={{ height: 1, width: 200 }}>
                       <NoteInfo>
@@ -237,7 +249,13 @@ const BookkeepingTransferDetails = () => {
                     </TableCell>
                   </TableRow>
                   <TableRow
-                    sx={{ td: { border: 1, padding: 1, paddingInline: 1 } }}
+                    sx={{
+                      td: {
+                        border: "1px solid var(--border-table)",
+                        padding: 1,
+                        paddingInline: 1,
+                      },
+                    }}
                   >
                     <TableCell sx={{ height: 1, width: 200 }}>
                       <NoteInfo>
@@ -255,7 +273,13 @@ const BookkeepingTransferDetails = () => {
                     </TableCell>
                   </TableRow>
                   <TableRow
-                    sx={{ td: { border: 1, padding: 1, paddingInline: 1 } }}
+                    sx={{
+                      td: {
+                        border: "1px solid var(--border-table)",
+                        padding: 1,
+                        paddingInline: 1,
+                      },
+                    }}
                   >
                     <TableCell sx={{ height: 1, width: 200 }}>
                       <NoteInfo>

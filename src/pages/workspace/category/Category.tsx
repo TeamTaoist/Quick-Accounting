@@ -224,9 +224,11 @@ export const CreateBtn = styled.button`
     width: 14px;
   }
 `;
-const CategoryForm = styled.div``;
+const CategoryForm = styled.div`
+  margin-right: 40px;
+`;
 const CategoryOption = styled.div`
-  max-width: 900px;
+  min-width: 900px;
   margin: 60px 0;
 `;
 const Header = styled.div`

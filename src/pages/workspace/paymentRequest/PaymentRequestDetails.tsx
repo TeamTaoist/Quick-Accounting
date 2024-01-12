@@ -108,10 +108,8 @@ const PaymentRequestDetails = () => {
                     <TableCell
                       // size="small"
                       sx={{
-                        border: "1px solid var(--border)",
+                        border: "1px solid var(--border-table)",
                         padding: 0,
-                        borderTopLeftRadius: "10px !important",
-                        borderBottomLeftRadius: "10px !important",
                       }}
                     >
                       <TextField
@@ -129,7 +127,7 @@ const PaymentRequestDetails = () => {
                     </TableCell>
                     <TableCell
                       sx={{
-                        border: "1px solid var(--border)",
+                        border: "1px solid var(--border-table)",
                         borderRadius: "5px",
                         padding: 0,
                         paddingLeft: "10px",
@@ -140,10 +138,8 @@ const PaymentRequestDetails = () => {
                     </TableCell>
                     <TableCell
                       sx={{
-                        border: "1px solid var(--border)",
+                        border: "1px solid var(--border-table)",
                         padding: 0,
-                        borderTopRightRadius: "5px",
-                        borderBottomRightRadius: "5px",
                         // minHeight: "40px",
                       }}
                     >
@@ -190,11 +186,17 @@ const PaymentRequestDetails = () => {
           <NoteInformation>
             <h3>Note Information</h3>
 
-            <TableContainer>
+            <TableContainer sx={{ borderRadius: "7px" }}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
                   <TableRow
-                    sx={{ td: { border: 1, padding: 0, paddingInline: 1 } }}
+                    sx={{
+                      td: {
+                        border: "1px solid var(--border-table)",
+                        padding: 0,
+                        paddingInline: 1,
+                      },
+                    }}
                   >
                     <TableCell sx={{ height: 1, width: 200 }}>
                       <NoteInfo>
@@ -244,7 +246,13 @@ const PaymentRequestDetails = () => {
                     </TableCell>
                   </TableRow>
                   <TableRow
-                    sx={{ td: { border: 1, padding: 1, paddingInline: 1 } }}
+                    sx={{
+                      td: {
+                        border: "1px solid var(--border-table)",
+                        padding: 1,
+                        paddingInline: 1,
+                      },
+                    }}
                   >
                     <TableCell sx={{ height: 1, width: 200 }}>
                       <NoteInfo>
@@ -262,7 +270,13 @@ const PaymentRequestDetails = () => {
                     </TableCell>
                   </TableRow>
                   <TableRow
-                    sx={{ td: { border: 1, padding: 1, paddingInline: 1 } }}
+                    sx={{
+                      td: {
+                        border: "1px solid var(--border-table)",
+                        padding: 1,
+                        paddingInline: 1,
+                      },
+                    }}
                   >
                     <TableCell sx={{ height: 1, width: 200 }}>
                       <NoteInfo>
@@ -280,7 +294,13 @@ const PaymentRequestDetails = () => {
                     </TableCell>
                   </TableRow>
                   <TableRow
-                    sx={{ td: { border: 1, padding: 1, paddingInline: 1 } }}
+                    sx={{
+                      td: {
+                        border: "1px solid var(--border-table)",
+                        padding: 1,
+                        paddingInline: 1,
+                      },
+                    }}
                   >
                     <TableCell sx={{ height: 1, width: 200 }}>
                       <NoteInfo>

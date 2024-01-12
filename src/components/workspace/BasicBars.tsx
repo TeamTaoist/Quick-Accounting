@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 
 export default function BasicBars() {
   return (
-    <>
+    <BarChartContainer>
       <ReportTitle>Report 1: Balance sheet</ReportTitle>
       <BarChart
         xAxis={[
@@ -22,10 +22,13 @@ export default function BasicBars() {
         // width={800}
         height={500}
       />
-    </>
+    </BarChartContainer>
   );
 }
 
+const BarChartContainer = styled.div`
+  /* width: 30px; */
+`;
 const ReportTitle = styled.div`
   text-align: center;
   font-size: 20px;
