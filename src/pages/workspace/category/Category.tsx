@@ -21,9 +21,11 @@ import {
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Category = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [hasCategory, setHasCategory] = useState(true);
   const [selectedValue, setSelectedValue] = useState("Text");
 
@@ -40,11 +42,11 @@ const Category = () => {
             <CreateOptionButton>
               <CreateBtn>
                 <img src={add} alt="" />
-                <span>Create category</span>
+                <span>{t("category.CreateCategory")}</span>
               </CreateBtn>
               <CreateBtn>
                 <img src={archive} alt="" />
-                <span>View archive</span>
+                <span>{t("category.ViewArchives")}</span>
               </CreateBtn>
             </CreateOptionButton>
           </CategoryTitle>
@@ -243,11 +245,11 @@ const Header = styled.div`
 const CategoryProperties = styled.div`
   display: flex;
   height: 400px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-table);
 `;
 const Options = styled.div`
   width: 50%;
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--border-table);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -275,7 +277,7 @@ const Option = styled.div`
   }
 `;
 const OptionCreateButtons = styled.div`
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-table);
   display: flex;
   justify-content: center;
   min-height: 80px;
@@ -294,7 +296,7 @@ const OptionCreateButtons = styled.div`
     }
   }
   button:first-child {
-    border-right: 1px solid var(--border);
+    border-right: 1px solid var(--border-table);
   }
 `;
 const PropertyTitle = styled.div`
@@ -331,7 +333,7 @@ const DropdownOption = styled.div`
   }
 `;
 const PropertyCreateButtons = styled.div`
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-table);
   display: flex;
   gap: 10px;
   justify-content: center;
@@ -351,7 +353,7 @@ const CreateCategoryBtn = styled.button`
 const CancelBtn = styled.button`
   background: transparent;
   outline: none;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-table);
   font-size: 18px;
   padding: 8px 50px;
   border-radius: 10px;

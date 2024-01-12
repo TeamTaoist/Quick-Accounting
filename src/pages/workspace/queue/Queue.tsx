@@ -27,9 +27,11 @@ import {
   RejectSection,
   ViewReject,
 } from "../paymentRequest/paymentRequest.style";
+import { useTranslation } from "react-i18next";
 
 const Queue = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [hasCategory, setHasCategory] = useState(true);
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -53,12 +55,12 @@ const Queue = () => {
                 {paymentRequest ? (
                   <div>
                     <Image src={reject} alt="" />
-                    <p>View rejection</p>
+                    <p>{t("paymentRequest.ViewRejection")}</p>
                   </div>
                 ) : (
                   <div>
                     <Image src={back} alt="" />
-                    <p>Back</p>
+                    <p>{t("paymentRequest.Back")}</p>
                   </div>
                 )}
               </ViewReject>
@@ -66,7 +68,7 @@ const Queue = () => {
             {/*  */}
             {paymentRequest ? (
               <QueueNotice>
-                <h1>Next Up</h1>
+                <h1>{t("queue.NextUp")}</h1>
                 <Accordion>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -76,10 +78,10 @@ const Queue = () => {
                   >
                     <Header>
                       <HeaderTitle>
-                        <h6>Nonce: 1</h6>
+                        <h6>{t("queue.Nonce")}: 1</h6>
                         <p>On 24 Oct 2023 at 12:05</p>
                       </HeaderTitle>
-                      <h5>1 action</h5>
+                      <h5>1 {t("queue.Action")}</h5>
                     </Header>
                   </AccordionSummary>
                   <AccordionDetails sx={{ p: 0 }}>
@@ -89,8 +91,8 @@ const Queue = () => {
                         <h4>Approvals: 2/2</h4>
                         <p>0x4d4b...2915</p>
                         <p>0x4d4b...2915</p>
-                        <button disabled>Approve</button>
-                        <button disabled={false}>Execute</button>
+                        <button disabled>{t("queue.Approve")}</button>
+                        <button disabled={false}>{t("queue.Execute")}</button>
                       </Approvals>
                       <Approvals>
                         <h4>Rejections: 1/2</h4>

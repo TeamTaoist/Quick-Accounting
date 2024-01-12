@@ -53,6 +53,7 @@ import {
 } from "../paymentRequest/paymentRequest.style";
 import data from "../../../data/tableData";
 import BookkeepingRejectTable from "../../../components/workspace/BookkeepingRejectTable";
+import { useTranslation } from "react-i18next";
 
 interface SubPayment {
   id: number;
@@ -112,6 +113,7 @@ const recipientFormate = (n: string) => {
 
 const Bookkeeping = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
 
@@ -181,7 +183,7 @@ const Bookkeeping = () => {
           <TextField
             id="search"
             type="search"
-            placeholder="Search Token"
+            placeholder={t("paymentRequest.SearchToken")}
             value={searchTerm}
             onChange={handleChange}
             sx={{ width: 350 }}
@@ -205,7 +207,7 @@ const Bookkeeping = () => {
               <MenuItem value="" disabled>
                 <Option>
                   <Image src={filterIcon} alt="" />
-                  Filter by Category
+                  {t("paymentRequest.Filter")}
                 </Option>
               </MenuItem>
               <MenuItem value="option1">Option 1</MenuItem>
@@ -217,12 +219,12 @@ const Bookkeeping = () => {
             {paymentRequest ? (
               <div>
                 <Image src={view} alt="" />
-                <p>View hidden</p>
+                <p>{t("bookkeeping.ViewHidden")}</p>
               </div>
             ) : (
               <div>
                 <Image src={back} alt="" />
-                <p>Back</p>
+                <p>{t("paymentRequest.Back")}</p>
               </div>
             )}
           </ViewReject>
@@ -232,15 +234,15 @@ const Bookkeeping = () => {
             <ActionBtn>
               <Btn>
                 <img src={importIcon} alt="" />
-                <p>Import</p>
+                <p>{t("bookkeeping.Import")}</p>
               </Btn>
               <Btn>
                 <img src={download} alt="" />
-                <p>Download</p>
+                <p>{t("paymentRequest.Download")}</p>
               </Btn>
               <Btn>
                 <img src={hide} alt="" />
-                <p>Reject</p>
+                <p>{t("paymentRequest.Reject")}</p>
               </Btn>
             </ActionBtn>
             {/* table */}

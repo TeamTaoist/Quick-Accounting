@@ -49,6 +49,7 @@ import {
   RejectSection,
   ViewReject,
 } from "./paymentRequest.style";
+import { useTranslation } from "react-i18next";
 
 interface SubPayment {
   id: number;
@@ -126,6 +127,7 @@ const payments: Payment[] = [
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
   const [openRows, setOpenRows] = useState<number[]>([]);
@@ -203,7 +205,7 @@ const PaymentRequest = () => {
           <TextField
             id="search"
             type="search"
-            placeholder="Search Token"
+            placeholder={t("paymentRequest.SearchToken")}
             value={searchTerm}
             onChange={handleChange}
             sx={{ width: 350 }}
@@ -227,7 +229,7 @@ const PaymentRequest = () => {
               <MenuItem value="" disabled>
                 <Option>
                   <Image src={filterIcon} alt="" />
-                  Filter by Category
+                  {t("paymentRequest.Filter")}
                 </Option>
               </MenuItem>
               <MenuItem value="option1">Option 1</MenuItem>
@@ -239,12 +241,12 @@ const PaymentRequest = () => {
             {paymentRequest ? (
               <div>
                 <Image src={reject} alt="" />
-                <p>View rejection</p>
+                <p>{t("paymentRequest.ViewRejection")}</p>
               </div>
             ) : (
               <div>
                 <Image src={back} alt="" />
-                <p>Back</p>
+                <p>{t("paymentRequest.Back")}</p>
               </div>
             )}
           </ViewReject>
@@ -254,15 +256,15 @@ const PaymentRequest = () => {
             <ActionBtn>
               <Btn>
                 <img src={download} alt="" />
-                <p>Download</p>
+                <p>{t("paymentRequest.Download")}</p>
               </Btn>
               <Btn>
                 <img src={reject} alt="" />
-                <p>Reject</p>
+                <p>{t("paymentRequest.Reject")}</p>
               </Btn>
               <Btn onClick={() => navigate("/sign-payment")}>
                 <img src={approve} alt="" />
-                <p>Approve</p>
+                <p>{t("paymentRequest.Approve")}</p>
               </Btn>
             </ActionBtn>
             {/* table */}

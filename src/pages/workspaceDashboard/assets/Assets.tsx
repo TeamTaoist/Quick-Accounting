@@ -19,6 +19,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const tableData = [
   {
@@ -72,6 +73,7 @@ const recipientFormate = (n: string) => {
 };
 const Assets = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { t } = useTranslation();
 
   const handleChange = (event: any) => {
     setSearchTerm(event.target.value);
@@ -84,7 +86,7 @@ const Assets = () => {
           <TextField
             id="search"
             type="search"
-            placeholder="Search Token"
+            placeholder={t("assets.SearchPlaceholder")}
             value={searchTerm}
             onChange={handleChange}
             sx={{ width: 350 }}

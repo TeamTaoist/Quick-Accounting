@@ -18,8 +18,10 @@ import bookkeeping from "../../../assets/workspace/bookkeeping.svg";
 import reports from "../../../assets/workspace/reports.svg";
 import setting from "../../../assets/workspace/setting.svg";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const WorkspaceSidebar = () => {
+  const { t } = useTranslation();
   return (
     <>
       <SidebarContainer>
@@ -35,33 +37,49 @@ const WorkspaceSidebar = () => {
           <Link to="/new-payment-request">
             <RequestBtn>
               <img src={add} alt="" />
-              <span>New</span>
+              <span>{t("workspace.New")}</span>
             </RequestBtn>
           </Link>
           <Link to={"/new-workspace-payment-request"}>
             <RequestBtn>
               <img src={share} alt="" />
-              <span>Share</span>
+              <span>{t("workspace.Share")}</span>
             </RequestBtn>
           </Link>
         </PaymentRequest>
         {/* sidebar list */}
         <SidebarLinkList className="">
-          <SidebarLink icon={assets} name="Assets" to="/assets" />
-          <SidebarLink icon={category} name="Category" to="/category" />
+          <SidebarLink
+            icon={assets}
+            name={t("workspace.Assets")}
+            to="/assets"
+          />
+          <SidebarLink
+            icon={category}
+            name={t("workspace.Category")}
+            to="/category"
+          />
           <SidebarLink
             icon={paymentRequest}
-            name="Payment request"
+            name={t("workspace.PaymentRequest")}
             to="/payment-request"
           />
-          <SidebarLink icon={queue} name="Queue (Signing)" to="/queue" />
+          <SidebarLink icon={queue} name={t("workspace.Queue")} to="/queue" />
           <SidebarLink
             icon={bookkeeping}
-            name="Bookkeeping"
+            name={t("workspace.Bookkeeping")}
             to="/bookkeeping"
           />
-          <SidebarLink icon={reports} name="Reports" to="/reports" />
-          <SidebarLink icon={setting} name="Settings" to="/settings" />
+          <SidebarLink
+            icon={reports}
+            name={t("workspace.Reports")}
+            to="/reports"
+          />
+          <SidebarLink
+            icon={setting}
+            name={t("workspace.Settings")}
+            to="/settings"
+          />
         </SidebarLinkList>
       </SidebarContainer>
       {/* {children} */}

@@ -13,9 +13,11 @@ import {
   WorkspaceForm,
 } from "./WorkSpaceForm.style";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [age, setAge] = useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -28,18 +30,15 @@ const WorkSpaceForm = () => {
     <Header>
       <WorkspaceContainer>
         <WorkspaceForm>
-          <h3>Set up a workspace</h3>
-          <p>
-            A workspace is where you send, swap, and offramp crypto from your
-            Safe.
-          </p>
+          <h3>{t("workspaceForm.FormTitle")}</h3>
+          <p>{t("workspaceForm.FormDescription")}</p>
 
           <Safe className="safe">
             <InputLabel
               htmlFor="Workspace name"
               sx={{ pb: 1, color: "#111", fontSize: "18px" }}
             >
-              Workspace name
+              {t("workspaceForm.WorkspaceName")}
             </InputLabel>
             <TextField
               id="outlined-basic"
@@ -52,9 +51,9 @@ const WorkSpaceForm = () => {
               }}
             />
             <CreateSafe>
-              <p>Add a Safe</p>
+              <p>{t("workspaceForm.AssASafe")}</p>
               <a href="https://safe.global/" target="_blank" rel="noreferrer">
-                Create a Safe &gt;&gt;
+                {t("workspaceForm.CreateASafe")} &gt;&gt;
               </a>
             </CreateSafe>
             {/* select */}
@@ -77,7 +76,9 @@ const WorkSpaceForm = () => {
                 <MenuItem value={20}>Twenty</MenuItem>
               </Select>
             </FormControl>
-            <Button onClick={createWorkspace}>Set up workspace</Button>
+            <Button onClick={createWorkspace}>
+              {t("workspaceForm.FormSubmitBtn")}
+            </Button>
           </Safe>
         </WorkspaceForm>
       </WorkspaceContainer>

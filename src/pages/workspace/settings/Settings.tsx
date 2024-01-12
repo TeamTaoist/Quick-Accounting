@@ -1,18 +1,20 @@
 import styled from "@emotion/styled";
 import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
+import { useTranslation } from "react-i18next";
 
 const Settings = () => {
+  const { t } = useTranslation();
   return (
     <WorkspaceLayout>
       <SettingsContainer>
         <WorkspaceForm>
           <InputSection>
-            <label htmlFor="">Workspace name</label>
-            <input type="text" placeholder="workspace name" />
+            <label htmlFor="">{t("workspaceForm.WorkspaceName")}</label>
+            <input type="text" placeholder={t("workspaceForm.WorkspaceName")} />
           </InputSection>
         </WorkspaceForm>
         <MultiSigner>
-          <h3>Multi-signer</h3>
+          <h3>{t("settings.MultiSigner")}</h3>
           <p>0x4d4b78d37090ed3e1eae6779ba2c3d6728052915</p>
           <p>0x4d4b78d37090ed3e1eae6779ba2c3d6728052915</p>
           <p>0x4d4b78d37090ed3e1eae6779ba2c3d6728052915</p>
