@@ -22,11 +22,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import data from "../../../data/tableData";
 import { useNavigate } from "react-router-dom";
 import RejectDataTable from "../../../components/workspace/RejectDataTable";
-import {
-  Image,
-  RejectSection,
-  ViewReject,
-} from "../paymentRequest/paymentRequest.style";
+import { Image, ViewReject } from "../paymentRequest/paymentRequest.style";
 import { useTranslation } from "react-i18next";
 
 const Queue = () => {
@@ -110,7 +106,8 @@ const Queue = () => {
                       <Table stickyHeader>
                         <TableHead>
                           <TableRow>
-                            <TableCell>Recipient</TableCell>
+                            <TableCell>Safe</TableCell>
+                            <TableCell>Counterparty</TableCell>
                             <TableCell>Amount</TableCell>
                             <TableCell>Category</TableCell>
                             <TableCell>Date</TableCell>
@@ -118,12 +115,15 @@ const Queue = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {data.slice(0, 2).map((row) => (
+                          {data.slice(0, 1).map((row) => (
                             <TableRow key={row.id}>
+                              <TableCell>
+                                {recipientFormate(row.safe)}
+                              </TableCell>
                               <TableCell>
                                 {recipientFormate(row.recipient)}
                               </TableCell>
-                              <TableCell>{row.amount}</TableCell>
+                              <TableCell>{row.amount} USDT</TableCell>
                               <TableCell>
                                 <CategoryCell>{row.category}</CategoryCell>
                               </TableCell>
@@ -147,8 +147,8 @@ const Queue = () => {
                           ))}
                         </TableBody>
                       </Table>
+                      <TotalValue>Total value: $123.29</TotalValue>
                     </TableContainer>
-                    <TotalValue>Total value: $123.29</TotalValue>
                     {/* category property end */}
                   </AccordionDetails>
                 </Accordion>
@@ -167,7 +167,7 @@ const Queue = () => {
 
 export default Queue;
 const QueueContainer = styled.div`
-  padding: 50px 0;
+  padding: 30px 0;
 `;
 
 const QueueSection = styled.div`
@@ -193,10 +193,10 @@ const QueHeader = styled.div`
 //   }
 // `;
 const QueueNotice = styled.div`
-  margin-top: 50px;
+  margin-top: 30px;
   h1 {
     font-size: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     font-weight: 400;
   }
 `;
@@ -257,11 +257,14 @@ const TotalValue = styled.div`
   padding: 10px 0;
   text-align: center;
   background: var(--bg-primary);
-  margin-top: 20px;
+  /* margin-top: 20px; */
 `;
 const CategoryCell = styled.div`
   background: var(--bg-primary);
   padding: 4px 10px;
   text-align: center;
   border-radius: 4px;
+`;
+export const RejectSection = styled.div`
+  margin-top: 50px;
 `;

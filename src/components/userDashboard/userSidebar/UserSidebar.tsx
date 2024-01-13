@@ -1,6 +1,7 @@
 import "./userSidebar.scss";
 import addressCard from "../../../assets/dashboard/address-card.svg";
 import file from "../../../assets/dashboard/file.svg";
+import arrow from "../../../assets/workspace/arrow.svg";
 import { useTranslation } from "react-i18next";
 
 const UserSidebar = ({ children }: { children: React.ReactNode }) => {
@@ -8,6 +9,7 @@ const UserSidebar = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <div className="user-sidebar">
+        <img className="arrow-icon" src={arrow} alt="" />
         {/* user address */}
         <div className="user-address">
           <div className="address">

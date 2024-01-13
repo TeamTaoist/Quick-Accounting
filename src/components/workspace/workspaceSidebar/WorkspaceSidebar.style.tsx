@@ -32,7 +32,7 @@ export const WorkspaceInfo = styled.div`
 export const PaymentRequest = styled.div`
   display: grid;
   justify-content: center;
-  margin-top: 70px;
+  margin-top: 40px;
 `;
 export const RequestBtn = styled.button`
   border: none;
@@ -54,5 +54,5 @@ export const RequestBtn = styled.button`
   }
 `;
 export const SidebarLinkList = styled.div`
-  padding-top: 46px;
+  padding-top: 20px;
 `;

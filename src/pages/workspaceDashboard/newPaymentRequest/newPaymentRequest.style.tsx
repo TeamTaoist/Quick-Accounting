@@ -58,6 +58,7 @@ export const AddPayment = styled.button`
   justify-content: center;
   align-items: center;
   gap: 10px;
+  color: var(--text-secondary);
   img {
     width: 10px;
   }

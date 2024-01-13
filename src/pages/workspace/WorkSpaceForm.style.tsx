@@ -5,6 +5,7 @@ export const WorkspaceContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 85vh;
+  padding-top: 90px;
 `;
 export const WorkspaceForm = styled.div`
   width: 530px;

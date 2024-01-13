@@ -43,7 +43,7 @@ export const ViewReject = styled.div`
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
     background: var(--bg-primary);
     padding: 6px 10px;
     border-radius: 5px;

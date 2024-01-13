@@ -4,6 +4,7 @@ import {
   AssetHeader,
   AssetSection,
   AssetTable,
+  AssetValue,
   RowCell,
   RowLink,
 } from "./assets.style";
@@ -25,6 +26,24 @@ const tableData = [
   {
     assetsName: "USDT",
     asset: "Teather",
+    price: "2.22",
+    priceIncrease: "1.11",
+    currentBalance: "12423.34",
+    balance: "342.22",
+    link: "",
+  },
+  {
+    assetsName: "MATIC",
+    asset: "Polygon",
+    price: "2.22",
+    priceIncrease: "1.11",
+    currentBalance: "12423.34",
+    balance: "342.22",
+    link: "",
+  },
+  {
+    assetsName: "MATIC",
+    asset: "Polygon",
     price: "2.22",
     priceIncrease: "1.11",
     currentBalance: "12423.34",
@@ -99,10 +118,11 @@ const Assets = () => {
             }}
           />
         </AssetHeader>
+        <AssetValue>Value: $12,345</AssetValue>
         <AssetTable>
           <TableContainer
             component={Paper}
-            sx={{ maxHeight: 370, minWidth: 630 }}
+            sx={{ maxHeight: 500, minWidth: 630 }}
           >
             <Table stickyHeader>
               <TableHead>

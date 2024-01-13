@@ -202,41 +202,43 @@ const PaymentRequest = () => {
         )}
         {/* header */}
         <Header>
-          <TextField
-            id="search"
-            type="search"
-            placeholder={t("paymentRequest.SearchToken")}
-            value={searchTerm}
-            onChange={handleChange}
-            sx={{ width: 350 }}
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <img src={searchIcon} alt="" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <FormControl>
-            <Select
-              value={selectedValue}
-              onChange={handleDropdownChange}
-              displayEmpty
-              inputProps={{ "aria-label": "Select a value" }}
+          <div>
+            <TextField
+              id="search"
+              type="search"
+              placeholder={t("paymentRequest.SearchToken")}
+              value={searchTerm}
+              onChange={handleChange}
+              sx={{ width: 350 }}
               size="small"
-            >
-              <MenuItem value="" disabled>
-                <Option>
-                  <Image src={filterIcon} alt="" />
-                  {t("paymentRequest.Filter")}
-                </Option>
-              </MenuItem>
-              <MenuItem value="option1">Option 1</MenuItem>
-              <MenuItem value="option2">Option 2</MenuItem>
-              <MenuItem value="option3">Option 3</MenuItem>
-            </Select>
-          </FormControl>
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <img src={searchIcon} alt="" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <FormControl sx={{ marginLeft: "25px" }}>
+              <Select
+                value={selectedValue}
+                onChange={handleDropdownChange}
+                displayEmpty
+                inputProps={{ "aria-label": "Select a value" }}
+                size="small"
+              >
+                <MenuItem value="" disabled>
+                  <Option>
+                    <Image src={filterIcon} alt="" />
+                    {t("paymentRequest.Filter")}
+                  </Option>
+                </MenuItem>
+                <MenuItem value="option1">Option 1</MenuItem>
+                <MenuItem value="option2">Option 2</MenuItem>
+                <MenuItem value="option3">Option 3</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
           <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
             {paymentRequest ? (
               <div>
@@ -304,7 +306,7 @@ const PaymentRequest = () => {
                           style={{ cursor: "pointer" }}
                         >
                           <TableCell
-                            colSpan={5}
+                            colSpan={4}
                             style={{
                               padding: 0,
                               paddingLeft: "16px",
@@ -335,6 +337,21 @@ const PaymentRequest = () => {
                               )}
                             </IconButton>
                           </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="outlined"
+                              sx={{
+                                borderColor: "black",
+                                color: "black",
+                                textTransform: "lowercase",
+                              }}
+                              onClick={() =>
+                                navigate(`/payment-request/${payment.id}`)
+                              }
+                            >
+                              view more
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ) : (
                         <TableRow>
@@ -354,7 +371,7 @@ const PaymentRequest = () => {
                             />
                             {payment.idNumber}
                           </TableCell>
-                          <TableCell>{payment.amount}</TableCell>
+                          <TableCell>{payment.amount} USDT</TableCell>
                           <TableCell>
                             <CategoryCell>{payment.category}</CategoryCell>
                           </TableCell>
@@ -395,18 +412,34 @@ const PaymentRequest = () => {
                                 {payment.subPayment.map((subCategory) => (
                                   <TableRow key={subCategory.id}>
                                     <TableCell
+                                      // colSpan={1}
                                       sx={{
                                         paddingLeft: "58px",
+                                        maxWidth: "90px",
                                       }}
                                     >
                                       {subCategory.idNumber}
                                     </TableCell>
-                                    <TableCell>{subCategory.amount}</TableCell>
-                                    <TableCell>
-                                      {subCategory.category}
+                                    <TableCell
+                                      sx={{
+                                        maxWidth: "56px",
+                                      }}
+                                    >
+                                      {subCategory.amount} USDT
+                                    </TableCell>
+                                    <TableCell
+                                      sx={{
+                                        maxWidth: "78px",
+                                      }}
+                                    >
+                                      <CategoryCell>
+                                        {subCategory.category}
+                                      </CategoryCell>
                                     </TableCell>
                                     <TableCell>{subCategory.date}</TableCell>
-                                    <TableCell></TableCell>
+                                    <TableCell
+                                    // sx={{ width: "100px" }}
+                                    ></TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>

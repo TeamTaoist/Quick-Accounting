@@ -51,7 +51,7 @@ const WorkSpaceForm = () => {
               }}
             />
             <CreateSafe>
-              <p>{t("workspaceForm.AssASafe")}</p>
+              <p>{t("workspaceForm.AddASafe")}</p>
               <a href="https://safe.global/" target="_blank" rel="noreferrer">
                 {t("workspaceForm.CreateASafe")} &gt;&gt;
               </a>

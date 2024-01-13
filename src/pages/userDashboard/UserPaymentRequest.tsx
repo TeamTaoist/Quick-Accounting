@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import { useState } from "react";
 import searchIcon from "../../assets/workspace/search-icon.svg";
+import statusIcon from "../../assets/workspace/status-icon.svg";
+import { Status } from "../../components/workspace/RejectDataTable";
 
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -68,8 +70,13 @@ const UserPaymentRequest = () => {
                       <p>{recipientFormate(row.recipient)}</p>
                     </Safe>
                   </TableCell>
-                  <TableCell>{row.amount}</TableCell>
-                  <TableCell>{row.status}</TableCell>
+                  <TableCell>{row.amount} USDT</TableCell>
+                  <TableCell>
+                    <Status>
+                      <img src={statusIcon} alt="" />
+                      {row.status}
+                    </Status>
+                  </TableCell>
                   <TableCell>{row.date}</TableCell>
                   <TableCell>
                     <Button

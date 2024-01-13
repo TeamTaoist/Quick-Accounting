@@ -2,11 +2,15 @@ import styled from "@emotion/styled";
 
 export const AssetSection = styled.div`
   padding-top: 110px;
-  padding-left: 40px;
-  /* height: 100vh; */
+  padding-inline: 40px;
 `;
 export const AssetHeader = styled.div`
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
+`;
+export const AssetValue = styled.h3`
+  font-size: 20px;
+  font-weight: 500;
+  padding: 30px 0;
 `;
 export const AssetTable = styled.div`
   -ms-overflow-style: none;
@@ -30,6 +34,7 @@ export const RowCell = styled.div`
   }
   p {
     font-size: 13px;
+    color: var(--text-secondary);
   }
 `;
 export const RowLink = styled.div`

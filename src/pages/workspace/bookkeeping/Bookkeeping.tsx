@@ -43,6 +43,7 @@ import RejectDataTable from "../../../components/workspace/RejectDataTable";
 import {
   ActionBtn,
   Btn,
+  CategoryCell,
   Header,
   Image,
   Option,
@@ -247,9 +248,13 @@ const Bookkeeping = () => {
             </ActionBtn>
             {/* table */}
             <TableContainer
-              sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
+              sx={{
+                border: "1px solid var(--border)",
+                borderRadius: "10px",
+                maxHeight: 500,
+              }}
             >
-              <Table>
+              <Table stickyHeader>
                 <TableHead style={{ backgroundColor: "#f0f0f0" }}>
                   <TableRow>
                     <TableCell>
@@ -265,6 +270,7 @@ const Bookkeeping = () => {
                     </TableCell>
                     <TableCell>Recipient</TableCell>
                     <TableCell>Amount</TableCell>
+                    <TableCell>Category</TableCell>
                     <TableCell>Date</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
@@ -303,7 +309,10 @@ const Bookkeeping = () => {
                           0,
                           6
                         )}...${book.recipient.slice(-4)}`}</TableCell>
-                        <TableCell>{book.amount}</TableCell>
+                        <TableCell>{book.amount} USDT</TableCell>
+                        <TableCell>
+                          <CategoryCell>{book.category}</CategoryCell>
+                        </TableCell>
                         <TableCell>{book.date}</TableCell>
                         <TableCell>
                           <Button
