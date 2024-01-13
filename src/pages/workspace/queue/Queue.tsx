@@ -24,6 +24,8 @@ import { useNavigate } from "react-router-dom";
 import RejectDataTable from "../../../components/workspace/RejectDataTable";
 import { Image, ViewReject } from "../paymentRequest/paymentRequest.style";
 import { useTranslation } from "react-i18next";
+import CustomModal from "../../../utils/CustomModal";
+import PaymentRequestDetails from "../paymentRequest/PaymentRequestDetails";
 
 const Queue = () => {
   const navigate = useNavigate();
@@ -33,6 +35,11 @@ const Queue = () => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
   };
   const [paymentRequest, setPaymentRequest] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
   return (
     <WorkspaceLayout>
       <QueueSection>
@@ -136,12 +143,15 @@ const Queue = () => {
                                     color: "black",
                                     textTransform: "lowercase",
                                   }}
-                                  onClick={() =>
-                                    navigate(`/payment-request/${row.id}`)
-                                  }
+                                  onClick={handleOpenModal}
                                 >
                                   view more
                                 </Button>
+                                <CustomModal
+                                  open={openModal}
+                                  setOpen={setOpenModal}
+                                  component={PaymentRequestDetails}
+                                />
                               </TableCell>
                             </TableRow>
                           ))}

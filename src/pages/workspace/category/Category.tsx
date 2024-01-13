@@ -22,6 +22,10 @@ import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import CustomModal from "../../../utils/CustomModal";
+import Archived from "./Archived";
+// import CustomModal from "../../../utils/CustomModal";
+// import Archived from "./Archived";
 
 const Category = () => {
   const navigate = useNavigate();
@@ -32,6 +36,12 @@ const Category = () => {
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
   };
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
   return (
     <WorkspaceLayout>
       <CreateCategory>
@@ -59,10 +69,15 @@ const Category = () => {
               <img src={add} alt="" />
               <span>Create category</span>
             </CreateBtn>
-            <CreateBtn onClick={() => navigate("/archived")}>
+            <CreateBtn onClick={handleOpenModal}>
               <img src={archive} alt="" />
               <span>View archive</span>
             </CreateBtn>
+            <CustomModal
+              open={openModal}
+              setOpen={setOpenModal}
+              component={Archived}
+            />
           </CreateOptionButton>
           {/* category option */}
           <CategoryOption>

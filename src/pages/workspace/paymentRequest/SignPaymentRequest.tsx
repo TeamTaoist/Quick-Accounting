@@ -17,49 +17,49 @@ const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
 
-const SignPaymentRequest = () => {
+const SignPaymentRequest = ({ setOpen }: any) => {
   return (
-    <Header>
-      <WorkspaceItemDetailsLayout
-        title="Sign payment request on chain"
-        subtitle="Included actions will be grouped into a single transaction."
-        href="/payment-request"
-      >
-        <PaymentRequestChain>
-          <p>Transaction value：$21.99</p>
-          {/* table */}
-          <TableContainer
-            component={Paper}
-            sx={{ maxHeight: 200, width: "100%" }}
-          >
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Recipient</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell></TableCell>
+    // <Header>
+    <WorkspaceItemDetailsLayout
+      title="Sign payment request on chain"
+      subtitle="Included actions will be grouped into a single transaction."
+      setOpen={setOpen}
+    >
+      <PaymentRequestChain>
+        <p>Transaction value：$21.99</p>
+        {/* table */}
+        <TableContainer
+          component={Paper}
+          sx={{ maxHeight: 200, width: "100%" }}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Recipient</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>{recipientFormate(row.recipient)}</TableCell>
+                  <TableCell>{row.amount}</TableCell>
+                  <TableCell>
+                    <CategoryCell>{row.category}</CategoryCell>
+                  </TableCell>
+                  <TableCell>{row.date}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell>{recipientFormate(row.recipient)}</TableCell>
-                    <TableCell>{row.amount}</TableCell>
-                    <TableCell>
-                      <CategoryCell>{row.category}</CategoryCell>
-                    </TableCell>
-                    <TableCell>{row.date}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <SignToChain>Sign</SignToChain>
-        </PaymentRequestChain>
-      </WorkspaceItemDetailsLayout>
-    </Header>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <SignToChain>Sign</SignToChain>
+      </PaymentRequestChain>
+    </WorkspaceItemDetailsLayout>
+    // </Header>
   );
 };
 

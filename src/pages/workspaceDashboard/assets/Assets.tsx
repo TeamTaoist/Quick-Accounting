@@ -33,8 +33,17 @@ const tableData = [
     link: "",
   },
   {
-    assetsName: "MATIC",
+    assetsName: "Polygon",
     asset: "Polygon",
+    price: "2.22",
+    priceIncrease: "1.11",
+    currentBalance: "12423.34",
+    balance: "342.22",
+    link: "",
+  },
+  {
+    assetsName: "ETH",
+    asset: "ETH",
     price: "2.22",
     priceIncrease: "1.11",
     currentBalance: "12423.34",
@@ -60,16 +69,7 @@ const tableData = [
     link: "",
   },
   {
-    assetsName: "MATIC",
-    asset: "Polygon",
-    price: "2.22",
-    priceIncrease: "1.11",
-    currentBalance: "12423.34",
-    balance: "342.22",
-    link: "",
-  },
-  {
-    assetsName: "MATIC",
+    assetsName: "ETH",
     asset: "Polygon",
     price: "2.22",
     priceIncrease: "1.11",
@@ -97,6 +97,12 @@ const Assets = () => {
   const handleChange = (event: any) => {
     setSearchTerm(event.target.value);
   };
+  console.log(searchTerm);
+
+  // filter table data
+  const filterData = tableData.filter((data) =>
+    data.assetsName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   //table
   return (
     <WorkspaceLayout>
@@ -127,36 +133,60 @@ const Assets = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ textAlign: "center" }}>Assets</TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                      background: "var(--bg-primary)",
+                    }}
+                  >
+                    Assets
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                      background: "var(--bg-primary)",
+                    }}
+                  >
                     Current price
                   </TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>Balance</TableCell>
-                  <TableCell sx={{ textAlign: "center" }}></TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                      background: "var(--bg-primary)",
+                    }}
+                  >
+                    Balance
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                      background: "var(--bg-primary)",
+                    }}
+                  ></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {tableData.map((row) => (
-                  <TableRow key={row.assetsName}>
+                {filterData.map((data, i) => (
+                  <TableRow key={i}>
                     <TableCell>
                       {/* {recipientFormate(row.assetsName)} */}
                       <RowCell>
-                        <h6>{row.assetsName}</h6>
-                        <p>{row.asset}</p>
+                        <h6>{data.assetsName}</h6>
+                        <p>{data.asset}</p>
                       </RowCell>
                     </TableCell>
                     <TableCell>
                       <RowCell>
-                        <h6>$ {row.currentBalance}</h6>
-                        <p style={{ color: "#2F82CF" }}>(+{row.balance}%)</p>
+                        <h6>$ {data.currentBalance}</h6>
+                        <p style={{ color: "#2F82CF" }}>(+{data.balance}%)</p>
                       </RowCell>
                     </TableCell>
                     <TableCell>
                       <RowCell>
                         <h6>
-                          {row.price} {row.assetsName}
+                          {data.price} {data.assetsName}
                         </h6>
-                        <p>{row.priceIncrease}</p>
+                        <p>{data.priceIncrease}</p>
                       </RowCell>
                     </TableCell>
                     <TableCell>

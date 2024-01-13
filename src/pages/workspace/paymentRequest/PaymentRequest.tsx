@@ -50,6 +50,9 @@ import {
   ViewReject,
 } from "./paymentRequest.style";
 import { useTranslation } from "react-i18next";
+import CustomModal from "../../../utils/CustomModal";
+import PaymentRequestDetails from "./PaymentRequestDetails";
+import SignPaymentRequest from "./SignPaymentRequest";
 
 interface SubPayment {
   id: number;
@@ -178,6 +181,18 @@ const PaymentRequest = () => {
     setSelectedValue(event.target.value);
   };
   const [paymentRequest, setPaymentRequest] = useState(true);
+  // modal
+  const [openModal, setOpenModal] = useState(false);
+  const [openSignPaymentModal, setSignPaymentModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  // modal end
   return (
     <WorkspaceLayout>
       <PaymentRequestContainer>
@@ -264,10 +279,15 @@ const PaymentRequest = () => {
                 <img src={reject} alt="" />
                 <p>{t("paymentRequest.Reject")}</p>
               </Btn>
-              <Btn onClick={() => navigate("/sign-payment")}>
+              <Btn onClick={() => setSignPaymentModal(true)}>
                 <img src={approve} alt="" />
                 <p>{t("paymentRequest.Approve")}</p>
               </Btn>
+              <CustomModal
+                open={openSignPaymentModal}
+                setOpen={setSignPaymentModal}
+                component={SignPaymentRequest}
+              />
             </ActionBtn>
             {/* table */}
             <TableContainer
@@ -345,12 +365,16 @@ const PaymentRequest = () => {
                                 color: "black",
                                 textTransform: "lowercase",
                               }}
-                              onClick={() =>
-                                navigate(`/payment-request/${payment.id}`)
-                              }
+                              onClick={handleOpenModal}
                             >
                               view more
                             </Button>
+                            {/* modal */}
+                            {/* <CustomModal
+                              open={openModal}
+                              setOpen={setOpenModal}
+                              component={PaymentRequestDetails}
+                            /> */}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -384,12 +408,16 @@ const PaymentRequest = () => {
                                 color: "black",
                                 textTransform: "lowercase",
                               }}
-                              onClick={() =>
-                                navigate(`/payment-request/${payment.id}`)
-                              }
+                              onClick={handleOpenModal}
                             >
                               view more
                             </Button>
+                            {/* modal */}
+                            <CustomModal
+                              open={openModal}
+                              setOpen={setOpenModal}
+                              component={PaymentRequestDetails}
+                            />
                           </TableCell>
                         </TableRow>
                       )}

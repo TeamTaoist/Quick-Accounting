@@ -22,7 +22,7 @@ const categories: Category[] = [
   { id: 3, name: "Category 3" },
 ];
 
-const Archived = () => {
+const Archived = ({ setOpen }: any) => {
   const [selected, setSelected] = useState<number[]>([]);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,62 +49,61 @@ const Archived = () => {
   const isSelected = (categoryId: number) =>
     selected.indexOf(categoryId) !== -1;
   return (
-    <Header>
-      <WorkspaceItemDetailsLayout
-        title="Archived categories"
-        href="/category"
-        subtitle="These categories will continue to be applied to historical transfers."
-      >
-        <Unarchive>
-          <div>
-            <img src={archive} alt="" />
-            <p>Unarchive</p>
-          </div>
-        </Unarchive>
-        <ArchiveTable>
-          <TableContainer
-            sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
-          >
-            <Table>
-              <TableHead
-                style={{
-                  background: "var(--bg-secondary)",
-                }}
-              >
-                <TableRow>
-                  <TableCell>
+    // <Header>
+    <WorkspaceItemDetailsLayout
+      title="Archived categories"
+      subtitle="These categories will continue to be applied to historical transfers."
+      setOpen={setOpen}
+    >
+      <Unarchive>
+        <div>
+          <img src={archive} alt="" />
+          <p>Unarchive</p>
+        </div>
+      </Unarchive>
+      <ArchiveTable>
+        <TableContainer
+          sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
+        >
+          <Table>
+            <TableHead
+              style={{
+                background: "var(--bg-secondary)",
+              }}
+            >
+              <TableRow>
+                <TableCell>
+                  <Checkbox
+                    indeterminate={
+                      selected.length > 0 && selected.length < categories.length
+                    }
+                    checked={selected.length === categories.length}
+                    onChange={handleSelectAllClick}
+                  />
+                  Category
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {categories.map((category) => (
+                <TableRow key={category.id}>
+                  <TableCell sx={{ display: "flex", alignItems: "center" }}>
                     <Checkbox
-                      indeterminate={
-                        selected.length > 0 &&
-                        selected.length < categories.length
+                      checked={isSelected(category.id)}
+                      onChange={(event) =>
+                        handleCheckboxClick(event, category.id)
                       }
-                      checked={selected.length === categories.length}
-                      onChange={handleSelectAllClick}
                     />
-                    Category
+                    <CellValue>{category.name}</CellValue>
                   </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {categories.map((category) => (
-                  <TableRow key={category.id}>
-                    <TableCell sx={{ display: "flex", alignItems: "center" }}>
-                      <Checkbox
-                        checked={isSelected(category.id)}
-                        onChange={(event) =>
-                          handleCheckboxClick(event, category.id)
-                        }
-                      />
-                      <CellValue>{category.name}</CellValue>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </ArchiveTable>
-      </WorkspaceItemDetailsLayout>
-    </Header>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </ArchiveTable>
+    </WorkspaceItemDetailsLayout>
+    // </Header>
   );
 };
 

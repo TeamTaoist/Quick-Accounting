@@ -6,8 +6,9 @@ import { useNavigate } from "react-router-dom";
 interface WorkspaceItemProps {
   children: React.ReactNode;
   title: string;
-  href: string;
+  href?: string;
   subtitle?: string;
+  setOpen: (open: boolean) => void;
 }
 
 const WorkspaceItemDetailsLayout = ({
@@ -15,6 +16,7 @@ const WorkspaceItemDetailsLayout = ({
   title,
   href,
   subtitle,
+  setOpen,
 }: WorkspaceItemProps) => {
   const navigate = useNavigate();
   return (
@@ -25,7 +27,7 @@ const WorkspaceItemDetailsLayout = ({
             <h1>{title}</h1>
             <p>{subtitle}</p>
           </div>
-          <img onClick={() => navigate(href)} src={cancel} alt="" />
+          <img onClick={() => setOpen(false)} src={cancel} alt="" />
         </RequestHeader>
         {children}
       </Request>
@@ -47,6 +49,7 @@ export const Request = styled.div`
   border: 1px solid var(--border-table);
   border-radius: 10px;
   overflow: hidden;
+  background: #fff;
 `;
 export const RequestHeader = styled.div`
   display: flex;

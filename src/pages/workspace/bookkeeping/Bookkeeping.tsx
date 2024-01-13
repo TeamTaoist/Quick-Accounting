@@ -55,6 +55,8 @@ import {
 import data from "../../../data/tableData";
 import BookkeepingRejectTable from "../../../components/workspace/BookkeepingRejectTable";
 import { useTranslation } from "react-i18next";
+import CustomModal from "../../../utils/CustomModal";
+import BookkeepingTransferDetails from "./BookkeepingTransferDetails";
 
 interface SubPayment {
   id: number;
@@ -157,6 +159,18 @@ const Bookkeeping = () => {
   };
   const [paymentRequest, setPaymentRequest] = useState(true);
 
+  // modal
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  // modal end
+
   return (
     <WorkspaceLayout>
       <PaymentRequestContainer>
@@ -257,7 +271,7 @@ const Bookkeeping = () => {
               <Table stickyHeader>
                 <TableHead style={{ backgroundColor: "#f0f0f0" }}>
                   <TableRow>
-                    <TableCell>
+                    <TableCell sx={{ background: "var(--bg-primary)" }}>
                       <Checkbox
                         indeterminate={
                           selected.length > 0 &&
@@ -268,11 +282,21 @@ const Bookkeeping = () => {
                       />
                       Safe
                     </TableCell>
-                    <TableCell>Recipient</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell></TableCell>
+                    <TableCell sx={{ background: "var(--bg-primary)" }}>
+                      Recipient
+                    </TableCell>
+                    <TableCell sx={{ background: "var(--bg-primary)" }}>
+                      Amount
+                    </TableCell>
+                    <TableCell sx={{ background: "var(--bg-primary)" }}>
+                      Category
+                    </TableCell>
+                    <TableCell sx={{ background: "var(--bg-primary)" }}>
+                      Date
+                    </TableCell>
+                    <TableCell
+                      sx={{ background: "var(--bg-primary)" }}
+                    ></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -322,10 +346,16 @@ const Bookkeeping = () => {
                               color: "black",
                               textTransform: "lowercase",
                             }}
-                            onClick={() => navigate(`/bookkeeping/${book.id}`)}
+                            onClick={handleOpenModal}
                           >
                             view more
                           </Button>
+                          {/* modal */}
+                          <CustomModal
+                            open={openModal}
+                            setOpen={setOpenModal}
+                            component={BookkeepingTransferDetails}
+                          />
                         </TableCell>
                       </TableRow>
                     </>
