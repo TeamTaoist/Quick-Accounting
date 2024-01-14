@@ -81,7 +81,7 @@ const WorkSpaceForm = () => {
                 onChange={handleChange}
               >
                 {safeList.map((item) => (
-                  <MenuItem value={item}>{item}</MenuItem>
+                  <MenuItem value={item} key={item}>{item}</MenuItem>
                 ))}
               </Select>
             </FormControl>
