@@ -21,72 +21,25 @@ import {
   Paper,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import useAsync from "../../../hooks/useAsync";
+import {
+  getBalances,
+  SafeBalanceResponse,
+} from "@safe-global/safe-gateway-typescript-sdk";
+import { formatBalance, getShortDisplay } from "../../../utils/number";
 
-const tableData = [
-  {
-    assetsName: "USDT",
-    asset: "Teather",
-    price: "2.22",
-    priceIncrease: "1.11",
-    currentBalance: "12423.34",
-    balance: "342.22",
-    link: "",
-  },
-  {
-    assetsName: "Polygon",
-    asset: "Polygon",
-    price: "2.22",
-    priceIncrease: "1.11",
-    currentBalance: "12423.34",
-    balance: "342.22",
-    link: "",
-  },
-  {
-    assetsName: "ETH",
-    asset: "ETH",
-    price: "2.22",
-    priceIncrease: "1.11",
-    currentBalance: "12423.34",
-    balance: "342.22",
-    link: "",
-  },
-  {
-    assetsName: "MATIC",
-    asset: "Polygon",
-    price: "2.22",
-    priceIncrease: "1.11",
-    currentBalance: "12423.34",
-    balance: "342.22",
-    link: "",
-  },
-  {
-    assetsName: "MATIC",
-    asset: "Polygon",
-    price: "2.22",
-    priceIncrease: "1.11",
-    currentBalance: "12423.34",
-    balance: "342.22",
-    link: "",
-  },
-  {
-    assetsName: "ETH",
-    asset: "Polygon",
-    price: "2.22",
-    priceIncrease: "1.11",
-    currentBalance: "12423.34",
-    balance: "342.22",
-    link: "",
-  },
-  {
-    assetsName: "MATIC",
-    asset: "Polygon",
-    price: "2.22",
-    priceIncrease: "1.11",
-    currentBalance: "12423.34",
-    balance: "342.22",
-    link: "",
-  },
-];
+type AssetType = {
+  name: string;
+  symbol: string;
+  price: string;
+  priceIncrease: string;
+  balance: string;
+  balanceDisplay: string;
+  balanceUSD: string;
+  address: string;
+  link: string;
+};
+
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
@@ -99,10 +52,34 @@ const Assets = () => {
   };
   console.log(searchTerm);
 
-  // filter table data
-  const filterData = tableData.filter((data) =>
-    data.assetsName.toLowerCase().includes(searchTerm.toLowerCase())
+  const [data, error, loading] = useAsync<SafeBalanceResponse>(
+    () => {
+      // TODO hardcode
+      return getBalances("137", "0x4876eaD85CE358133fb80276EB3631D192196e24");
+    },
+    [],
+    false
   );
+  const totalValue = getShortDisplay(data?.fiatTotal || 0);
+  console.log(data, error, loading);
+
+  const filterList: AssetType[] =
+    data?.items
+      ?.map((item) => ({
+        name: item.tokenInfo.name,
+        symbol: item.tokenInfo.symbol,
+        price: item.fiatConversion,
+        priceIncrease: "0", // TODO not found data
+        balance: item.balance,
+        balanceDisplay: formatBalance(item.balance, item.tokenInfo.decimals),
+        balanceUSD: Number(item.fiatBalance).format(),
+        address: item.tokenInfo.address,
+        link: "", // TODO check current safe chain
+      }))
+      .filter((data) =>
+        data.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || [];
+
   //table
   return (
     <WorkspaceLayout>
@@ -124,7 +101,7 @@ const Assets = () => {
             }}
           />
         </AssetHeader>
-        <AssetValue>Value: $12,345</AssetValue>
+        <AssetValue>Value: ${totalValue}</AssetValue>
         <AssetTable>
           <TableContainer
             component={Paper}
@@ -166,32 +143,34 @@ const Assets = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filterData.map((data, i) => (
+                {filterList.map((data, i) => (
                   <TableRow key={i}>
                     <TableCell>
                       {/* {recipientFormate(row.assetsName)} */}
                       <RowCell>
-                        <h6>{data.assetsName}</h6>
-                        <p>{data.asset}</p>
+                        <h6>{data.symbol}</h6>
+                        <p>{data.name}</p>
                       </RowCell>
                     </TableCell>
                     <TableCell>
                       <RowCell>
-                        <h6>$ {data.currentBalance}</h6>
-                        <p style={{ color: "#2F82CF" }}>(+{data.balance}%)</p>
+                        <h6>$ {data.price}</h6>
+                        <p style={{ color: "#2F82CF" }}>
+                          (+{data.priceIncrease}%)
+                        </p>
                       </RowCell>
                     </TableCell>
                     <TableCell>
                       <RowCell>
                         <h6>
-                          {data.price} {data.assetsName}
+                          {data.balanceDisplay} {data.symbol}
                         </h6>
-                        <p>{data.priceIncrease}</p>
+                        <p>${data.balanceUSD}</p>
                       </RowCell>
                     </TableCell>
                     <TableCell>
                       <RowLink>
-                        <a href="">
+                        <a href={data.link} target="_blank" rel="noreferrer">
                           <img src={linkIcon} alt="" />
                         </a>
                       </RowLink>
