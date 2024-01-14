@@ -17,6 +17,8 @@ import { useState } from "react";
 import searchIcon from "../../assets/workspace/search-icon.svg";
 import statusIcon from "../../assets/workspace/status-icon.svg";
 import { Status } from "../../components/workspace/RejectDataTable";
+import CustomModal from "../../utils/CustomModal";
+import PaymentRequestDetails from "../workspace/paymentRequest/PaymentRequestDetails";
 
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -28,6 +30,18 @@ const UserPaymentRequest = () => {
 
   const handleChange = (event: any) => {
     setSearchTerm(event.target.value);
+  };
+
+  // filter table data
+  const filterData = data.filter((d) =>
+    d.workspaceName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // modal
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
   };
   return (
     <UserPaymentContainer>
@@ -62,7 +76,7 @@ const UserPaymentRequest = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row) => (
+              {filterData.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell>
                     <Safe>
@@ -86,10 +100,16 @@ const UserPaymentRequest = () => {
                         color: "black",
                         textTransform: "lowercase",
                       }}
-                      onClick={() => navigate(`/payment-request/${row.id}`)}
+                      onClick={handleOpenModal}
                     >
                       view more
                     </Button>
+                    {/* modal */}
+                    <CustomModal
+                      open={openModal}
+                      setOpen={setOpenModal}
+                      component={PaymentRequestDetails}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
