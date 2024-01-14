@@ -1,10 +1,11 @@
 import RouterLink from "./router";
+import WagmiProvider from "./providers/wagmiProvider";
 
 const App = () => {
   return (
-    <div>
+    <WagmiProvider>
       <RouterLink />
-    </div>
+    </WagmiProvider>
   );
 };
 
