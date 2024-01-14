@@ -38,10 +38,16 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useNavigate } from "react-router-dom";
 import ReactSelect from "../../../components/ReactSelect";
+
+interface SubmitRowData {
+  recipient: string;
+  amount: string;
+  currency: string;
+}
 
 const NewPaymentRequest = () => {
   const navigate = useNavigate();
@@ -58,18 +64,36 @@ const NewPaymentRequest = () => {
   };
 
   // add new payment request
-  const [rows, setRows] = useState([{ id: 1 }]);
+  const [rows, setRows] = useState([
+    { recipient: "", amount: "", currency: "" },
+  ]);
 
+  // const handleAddPayment = () => {
+  //   // const newRow = { id: rows.length + 1 };
+  //   // setRows([...rows, newRow]);
+  // };
   const handleAddPayment = () => {
-    const newRow = { id: rows.length + 1 };
-    setRows([...rows, newRow]);
+    setRows([...rows, { recipient: "", amount: "", currency: "" }]);
   };
-
   const [selectedValues, setSelectedValues] = useState([]);
 
   const handleSelectChange = (selectedOptions: any) => {
     setSelectedValues(selectedOptions);
   };
+  const handleServiceChange = (
+    e:
+      | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<string>,
+    index: number,
+    property: string
+  ) => {
+    const { value } = e.target as { value: string };
+    const list = [...rows];
+    list[index][property as keyof SubmitRowData] = value;
+    setRows(list);
+  };
+  console.log(rows);
+
   const options = [
     { value: "option 1", label: "Options 1" },
     { value: "option 2", label: "Options 2" },
@@ -117,9 +141,9 @@ const NewPaymentRequest = () => {
                 </TableHead>
                 <TableBody>
                   {/* <TableRow sx={{ td: { border: 1, padding: 0 } }}> */}
-                  {rows.map((row) => (
+                  {rows.map((row, index) => (
                     <TableRow
-                      key={row.id}
+                      key={index}
                       sx={{
                         height: "30px",
                         // borderRadius: "10px",
@@ -142,6 +166,13 @@ const NewPaymentRequest = () => {
                           InputProps={{
                             style: { padding: 0 },
                           }}
+                          name={`service-${index}`}
+                          type="text"
+                          id={`service-${index}`}
+                          value={row.recipient}
+                          onChange={(e) =>
+                            handleServiceChange(e, index, "recipient")
+                          }
                         />
                       </TableCell>
                       <TableCell
@@ -153,7 +184,25 @@ const NewPaymentRequest = () => {
                           // minHeight: "40px",
                         }}
                       >
-                        0.00
+                        <TextField
+                          sx={{
+                            "& fieldset": { border: "none" },
+                          }}
+                          size="small"
+                          fullWidth
+                          // id="fullWidth"
+                          placeholder="0.00"
+                          InputProps={{
+                            style: { padding: 0 },
+                          }}
+                          name={`service-${index}`}
+                          type="text"
+                          id={`service-${index}`}
+                          value={row.amount}
+                          onChange={(e) =>
+                            handleServiceChange(e, index, "amount")
+                          }
+                        />
                       </TableCell>
                       <TableCell
                         sx={{

@@ -58,58 +58,44 @@ import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import BookkeepingTransferDetails from "./BookkeepingTransferDetails";
 
-interface SubPayment {
-  id: number;
-  idNumber: string;
-}
-
-interface Payment {
-  id: number;
-  idNumber: string;
-  category: string;
-  amount: number;
-  date: string;
-  subPayment: SubPayment[];
-}
-
-const payments: Payment[] = [
-  {
-    id: 1,
-    idNumber: "0Xdf344...4324",
-    amount: 100,
-    category: "John Doe",
-    date: "2022-01-01",
-    subPayment: [],
-  },
-  {
-    id: 2,
-    idNumber: "0Xdf344...4324",
-    amount: 150,
-    category: "Jane Doe",
-    date: "2022-01-02",
-    subPayment: [],
-  },
-  {
-    id: 3,
-    idNumber: "0Xdf344...4324",
-    amount: 200,
-    category: "Bob Smith",
-    date: "2022-01-03",
-    subPayment: [],
-  },
-  {
-    id: 4,
-    idNumber: "0Xdf344...4324",
-    amount: 120,
-    category: "Alice Johnson",
-    date: "2022-01-04",
-    subPayment: [
-      { id: 31, idNumber: "Subcategory 3-1" },
-      { id: 32, idNumber: "Subcategory 3-2" },
-      { id: 33, idNumber: "Subcategory 3-3" },
-    ],
-  },
-];
+// const payments: Payment[] = [
+//   {
+//     id: 1,
+//     idNumber: "0Xdf344...4324",
+//     amount: 100,
+//     category: "John Doe",
+//     date: "2022-01-01",
+//     subPayment: [],
+//   },
+//   {
+//     id: 2,
+//     idNumber: "0Xdf344...4324",
+//     amount: 150,
+//     category: "Jane Doe",
+//     date: "2022-01-02",
+//     subPayment: [],
+//   },
+//   {
+//     id: 3,
+//     idNumber: "0Xdf344...4324",
+//     amount: 200,
+//     category: "Bob Smith",
+//     date: "2022-01-03",
+//     subPayment: [],
+//   },
+//   {
+//     id: 4,
+//     idNumber: "0Xdf344...4324",
+//     amount: 120,
+//     category: "Alice Johnson",
+//     date: "2022-01-04",
+//     subPayment: [
+//       { id: 31, idNumber: "Subcategory 3-1" },
+//       { id: 32, idNumber: "Subcategory 3-2" },
+//       { id: 33, idNumber: "Subcategory 3-3" },
+//     ],
+//   },
+// ];
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
@@ -147,6 +133,17 @@ const Bookkeeping = () => {
 
   // end
   const [hasCategory, setHasCategory] = useState(true);
+  const [paymentRequest, setPaymentRequest] = useState(true);
+
+  // modal
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  // modal end
+  // filter
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (event: any) => {
@@ -157,19 +154,23 @@ const Bookkeeping = () => {
   const handleDropdownChange = (event: any) => {
     setSelectedValue(event.target.value);
   };
-  const [paymentRequest, setPaymentRequest] = useState(true);
+  // hide the selected table row
+  const [hiddenRows, setHiddenRows] = useState<number[]>([]);
+  const handleHideClick = () => {
+    const updatedHiddenRows = [...hiddenRows, ...selected];
+    setHiddenRows(updatedHiddenRows);
 
-  // modal
-  const [openModal, setOpenModal] = useState(false);
-
-  const handleOpenModal = () => {
-    setOpenModal(true);
+    setSelected([]);
+    // console.log("hidden");
   };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-  // modal end
+  // filter table data
+  const filterData = data.filter((f) => {
+    const searchItem = f.safe.toLowerCase().includes(searchTerm.toLowerCase());
+    const filterByCategory =
+      selectedValue === "" || f.category === selectedValue;
+    return searchItem && filterByCategory;
+  });
+  console.log(hiddenRows);
 
   return (
     <WorkspaceLayout>
@@ -225,9 +226,9 @@ const Bookkeeping = () => {
                   {t("paymentRequest.Filter")}
                 </Option>
               </MenuItem>
-              <MenuItem value="option1">Option 1</MenuItem>
-              <MenuItem value="option2">Option 2</MenuItem>
-              <MenuItem value="option3">Option 3</MenuItem>
+              <MenuItem value="category 1">Category 1</MenuItem>
+              <MenuItem value="category 2">Category 2</MenuItem>
+              <MenuItem value="category 3">Category 3</MenuItem>
             </Select>
           </FormControl>
           <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
@@ -255,9 +256,9 @@ const Bookkeeping = () => {
                 <img src={download} alt="" />
                 <p>{t("paymentRequest.Download")}</p>
               </Btn>
-              <Btn>
+              <Btn onClick={handleHideClick}>
                 <img src={hide} alt="" />
-                <p>{t("paymentRequest.Reject")}</p>
+                <p>{t("paymentRequest.Hide")}</p>
               </Btn>
             </ActionBtn>
             {/* table */}
@@ -274,10 +275,9 @@ const Bookkeeping = () => {
                     <TableCell sx={{ background: "var(--bg-primary)" }}>
                       <Checkbox
                         indeterminate={
-                          selected.length > 0 &&
-                          selected.length < payments.length
+                          selected.length > 0 && selected.length < data.length
                         }
-                        checked={selected.length === payments.length}
+                        checked={selected.length === data.length}
                         onChange={handleSelectAllClick}
                       />
                       Safe
@@ -300,64 +300,66 @@ const Bookkeeping = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data.map((book) => (
+                  {filterData.map((book) => (
                     <>
-                      <TableRow>
-                        <TableCell
-                          style={{
-                            padding: 0,
-                            paddingLeft: "16px",
-                            borderBottom: "1px solid #ddd",
-                            borderTop: "none",
-                          }}
-                        >
-                          <SafeSection>
-                            <div>
-                              <Checkbox
-                                checked={isSelected(book.id)}
-                                onChange={(event) =>
-                                  handleCheckboxClick(event, book.id)
-                                }
-                              />
-                              {`${book.recipient.slice(
-                                0,
-                                6
-                              )}...${book.recipient.slice(-4)}`}
-                            </div>
-                            <Logo>
-                              <img src={rightArrow} alt="" />
-                            </Logo>
-                          </SafeSection>
-                        </TableCell>
-                        <TableCell>{`${book.recipient.slice(
-                          0,
-                          6
-                        )}...${book.recipient.slice(-4)}`}</TableCell>
-                        <TableCell>{book.amount} USDT</TableCell>
-                        <TableCell>
-                          <CategoryCell>{book.category}</CategoryCell>
-                        </TableCell>
-                        <TableCell>{book.date}</TableCell>
-                        <TableCell>
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              borderColor: "black",
-                              color: "black",
-                              textTransform: "lowercase",
+                      {!hiddenRows.includes(book.id) && (
+                        <TableRow key={book.id}>
+                          <TableCell
+                            style={{
+                              padding: 0,
+                              paddingLeft: "16px",
+                              borderBottom: "1px solid #ddd",
+                              borderTop: "none",
                             }}
-                            onClick={handleOpenModal}
                           >
-                            view more
-                          </Button>
-                          {/* modal */}
-                          <CustomModal
-                            open={openModal}
-                            setOpen={setOpenModal}
-                            component={BookkeepingTransferDetails}
-                          />
-                        </TableCell>
-                      </TableRow>
+                            <SafeSection>
+                              <div>
+                                <Checkbox
+                                  checked={isSelected(book.id)}
+                                  onChange={(event) =>
+                                    handleCheckboxClick(event, book.id)
+                                  }
+                                />
+                                {`${book.recipient.slice(
+                                  0,
+                                  6
+                                )}...${book.recipient.slice(-4)}`}
+                              </div>
+                              <Logo>
+                                <img src={rightArrow} alt="" />
+                              </Logo>
+                            </SafeSection>
+                          </TableCell>
+                          <TableCell>{`${book.recipient.slice(
+                            0,
+                            6
+                          )}...${book.recipient.slice(-4)}`}</TableCell>
+                          <TableCell>{book.amount} USDT</TableCell>
+                          <TableCell>
+                            <CategoryCell>{book.category}</CategoryCell>
+                          </TableCell>
+                          <TableCell>{book.date}</TableCell>
+                          <TableCell>
+                            <Button
+                              variant="outlined"
+                              sx={{
+                                borderColor: "black",
+                                color: "black",
+                                textTransform: "lowercase",
+                              }}
+                              onClick={handleOpenModal}
+                            >
+                              view more
+                            </Button>
+                            {/* modal */}
+                            <CustomModal
+                              open={openModal}
+                              setOpen={setOpenModal}
+                              component={BookkeepingTransferDetails}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      )}
                     </>
                   ))}
                 </TableBody>
@@ -366,7 +368,7 @@ const Bookkeeping = () => {
           </PaymentRequestBody>
         ) : (
           <RejectSection>
-            <BookkeepingRejectTable />
+            <BookkeepingRejectTable hiddenRows={hiddenRows} />
           </RejectSection>
         )}
       </PaymentRequestContainer>

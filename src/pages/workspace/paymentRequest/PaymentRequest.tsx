@@ -76,7 +76,7 @@ const payments: Payment[] = [
     id: 1,
     idNumber: "0Xdf344...4324",
     amount: 100,
-    category: "category name",
+    category: "category 1",
     date: "2024-01-01",
     subPayment: [],
   },
@@ -84,7 +84,7 @@ const payments: Payment[] = [
     id: 2,
     idNumber: "0Xdf344...4324",
     amount: 150,
-    category: "category name",
+    category: "category 2",
     date: "2024-01-02",
     subPayment: [],
   },
@@ -92,7 +92,7 @@ const payments: Payment[] = [
     id: 3,
     idNumber: "0Xdf344...4324",
     amount: 200,
-    category: "category name",
+    category: "category 1",
     date: "2024-01-03",
     subPayment: [],
   },
@@ -100,7 +100,7 @@ const payments: Payment[] = [
     id: 4,
     idNumber: "0Xdf344...4324",
     amount: 120,
-    category: "category name",
+    category: "category 3",
     date: "2024-01-04",
     subPayment: [
       {
@@ -170,16 +170,6 @@ const PaymentRequest = () => {
 
   // end
   const [hasCategory, setHasCategory] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleChange = (event: any) => {
-    setSearchTerm(event.target.value);
-  };
-  const [selectedValue, setSelectedValue] = useState<string>("");
-
-  const handleDropdownChange = (event: any) => {
-    setSelectedValue(event.target.value);
-  };
   const [paymentRequest, setPaymentRequest] = useState(true);
   // modal
   const [openModal, setOpenModal] = useState(false);
@@ -188,11 +178,25 @@ const PaymentRequest = () => {
   const handleOpenModal = () => {
     setOpenModal(true);
   };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
   // modal end
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleChange = (event: any) => {
+    setSearchTerm(event.target.value);
+  };
+  const [selectedValue, setSelectedValue] = useState<string>("");
+
+  const handleDropdownChange = (event: any) => {
+    setSelectedValue(event.target.value);
+  };
+  // filter table data
+  const filterData = payments.filter((data: Payment) => {
+    const searchItem = data.idNumber
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const filterByCategory =
+      selectedValue === "" || data.category === selectedValue;
+    return searchItem && filterByCategory;
+  });
   return (
     <WorkspaceLayout>
       <PaymentRequestContainer>
@@ -248,9 +252,9 @@ const PaymentRequest = () => {
                     {t("paymentRequest.Filter")}
                   </Option>
                 </MenuItem>
-                <MenuItem value="option1">Option 1</MenuItem>
-                <MenuItem value="option2">Option 2</MenuItem>
-                <MenuItem value="option3">Option 3</MenuItem>
+                <MenuItem value="category 1">Category 1</MenuItem>
+                <MenuItem value="category 2">Category 2</MenuItem>
+                <MenuItem value="category 3">Category 3</MenuItem>
               </Select>
             </FormControl>
           </div>
@@ -318,7 +322,7 @@ const PaymentRequest = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {payments.map((payment) => (
+                  {filterData.map((payment) => (
                     <React.Fragment key={payment.id}>
                       {payment.subPayment.length > 0 ? (
                         <TableRow

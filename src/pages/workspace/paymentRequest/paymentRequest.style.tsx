@@ -30,6 +30,7 @@ export const Btn = styled.div`
   p {
     font-size: 20px;
   }
+  cursor: pointer;
 `;
 export const Image = styled.img`
   width: 20px;

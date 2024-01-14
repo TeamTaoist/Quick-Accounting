@@ -20,10 +20,13 @@ import rightArrow from "../../assets/workspace/right-arrow.svg";
 import hide from "../../assets/workspace/hide.svg";
 import styled from "@emotion/styled";
 
+interface RejectTableProps {
+  hiddenRows: number[];
+}
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
-const BookkeepingRejectTable = () => {
+const BookkeepingRejectTable = ({ hiddenRows }: RejectTableProps) => {
   const navigate = useNavigate();
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
@@ -86,56 +89,58 @@ const BookkeepingRejectTable = () => {
           <TableBody>
             {data.map((book) => (
               <>
-                <TableRow>
-                  <TableCell
-                    style={{
-                      padding: 0,
-                      paddingLeft: "16px",
-                      borderBottom: "1px solid #ddd",
-                      borderTop: "none",
-                    }}
-                  >
-                    <SafeSection>
-                      <div>
-                        <Checkbox
-                          checked={isSelected(book.id)}
-                          onChange={(event) =>
-                            handleCheckboxClick(event, book.id)
-                          }
-                        />
-                        {`${book.recipient.slice(
-                          0,
-                          6
-                        )}...${book.recipient.slice(-4)}`}
-                      </div>
-                      <Logo>
-                        <img src={rightArrow} alt="" />
-                      </Logo>
-                    </SafeSection>
-                  </TableCell>
-                  <TableCell>{`${book.recipient.slice(
-                    0,
-                    6
-                  )}...${book.recipient.slice(-4)}`}</TableCell>
-                  <TableCell>{book.amount}</TableCell>
-                  <TableCell>
-                    <CategoryCell>{book.category}</CategoryCell>
-                  </TableCell>
-                  <TableCell>{book.date}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        borderColor: "black",
-                        color: "black",
-                        textTransform: "lowercase",
+                {hiddenRows.includes(book.id) ? (
+                  <TableRow key={book.id}>
+                    <TableCell
+                      style={{
+                        padding: 0,
+                        paddingLeft: "16px",
+                        borderBottom: "1px solid #ddd",
+                        borderTop: "none",
                       }}
-                      onClick={() => navigate(`/payment-request/${book.id}`)}
                     >
-                      view more
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                      <SafeSection>
+                        <div>
+                          <Checkbox
+                            checked={isSelected(book.id)}
+                            onChange={(event) =>
+                              handleCheckboxClick(event, book.id)
+                            }
+                          />
+                          {`${book.recipient.slice(
+                            0,
+                            6
+                          )}...${book.recipient.slice(-4)}`}
+                        </div>
+                        <Logo>
+                          <img src={rightArrow} alt="" />
+                        </Logo>
+                      </SafeSection>
+                    </TableCell>
+                    <TableCell>{`${book.recipient.slice(
+                      0,
+                      6
+                    )}...${book.recipient.slice(-4)}`}</TableCell>
+                    <TableCell>{book.amount}</TableCell>
+                    <TableCell>
+                      <CategoryCell>{book.category}</CategoryCell>
+                    </TableCell>
+                    <TableCell>{book.date}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          borderColor: "black",
+                          color: "black",
+                          textTransform: "lowercase",
+                        }}
+                        onClick={() => navigate(`/payment-request/${book.id}`)}
+                      >
+                        view more
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ) : null}
               </>
             ))}
           </TableBody>

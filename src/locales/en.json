@@ -48,7 +48,8 @@
     "Download": "Download",
     "Reject": "Reject",
     "Approve": "Approve",
-    "Back": "Back"
+    "Back": "Back",
+    "Hide": "Hide"
   },
   "queue": {
     "NextUp": "Next Up",
