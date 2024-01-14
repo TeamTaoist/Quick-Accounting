@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
 import reject from "../../../assets/workspace/reject.svg";
 import back from "../../../assets/workspace/back.svg";
-import { CategoryTitle } from "../category/Category";
+import { CategoryTitle } from "../category/category.style";
 import { useState } from "react";
 import {
   Accordion,

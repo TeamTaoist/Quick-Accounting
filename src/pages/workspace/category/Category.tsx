@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
-import styled from "@emotion/styled";
 import add from "../../../assets/workspace/add.svg";
 import archive from "../../../assets/workspace/archive.svg";
 import property1 from "../../../assets/workspace/property1.svg";
@@ -24,15 +23,44 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import Archived from "./Archived";
+import {
+  CancelBtn,
+  CategoryForm,
+  CategoryOption,
+  CategoryProperties,
+  CategoryTitle,
+  CreateBtn,
+  CreateCategory,
+  CreateCategoryBtn,
+  CreateOptionButton,
+  Details,
+  DetailsInput,
+  DropdownOption,
+  Header,
+  Option,
+  OptionCreateButtons,
+  Options,
+  PropertyCreateButtons,
+  PropertyInput,
+  PropertyTitle,
+} from "./category.style";
 // import CustomModal from "../../../utils/CustomModal";
 // import Archived from "./Archived";
+
+interface Service {
+  property: string;
+  dropdownValue: string;
+}
+
+interface FormField {
+  categories: Service[];
+}
 
 const Category = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [hasCategory, setHasCategory] = useState(true);
   const [selectedValue, setSelectedValue] = useState("Text");
-
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
   };
@@ -41,6 +69,50 @@ const Category = () => {
   const handleOpenModal = () => {
     setOpenModal(true);
   };
+  const [formFields, setFormFields] = useState<FormField[]>([]);
+
+  const [selectedServiceIndexes, setSelectedServiceIndexes] = useState<
+    (number | null)[]
+  >([0]);
+
+  const handleServiceChange = (
+    e:
+      | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<string>,
+    formIndex: number,
+    serviceIndex: number,
+    property: string
+  ) => {
+    const { value } = e.target as { value: string };
+    const fields = [...formFields];
+    fields[formIndex].categories[serviceIndex][property as keyof Service] =
+      value;
+    setFormFields(fields);
+  };
+
+  const handleServiceSubmit = (formIndex: number, serviceIndex: number) => {
+    const selectedService = formFields[formIndex].categories[serviceIndex];
+  };
+
+  const handleAddServiceList = (formIndex: number) => {
+    const fields = [...formFields];
+    fields[formIndex].categories = [
+      ...fields[formIndex].categories,
+      { property: "Default property", dropdownValue: "Text" },
+    ];
+    setFormFields(fields);
+    setSelectedServiceIndexes((prevIndexes) => [...prevIndexes, null]);
+  };
+
+  const handleAddFormField = () => {
+    setFormFields((prevFormFields) => [
+      ...prevFormFields,
+      { categories: [{ property: "", dropdownValue: "" }] },
+    ]);
+    setSelectedServiceIndexes((prevIndexes) => [...prevIndexes, 0]);
+  };
+  // end
+  console.log(formFields);
 
   return (
     <WorkspaceLayout>
@@ -65,7 +137,7 @@ const Category = () => {
         <CategoryForm>
           {/* header btn */}
           <CreateOptionButton>
-            <CreateBtn>
+            <CreateBtn onClick={handleAddFormField}>
               <img src={add} alt="" />
               <span>Create category</span>
             </CreateBtn>
@@ -80,116 +152,155 @@ const Category = () => {
             />
           </CreateOptionButton>
           {/* category option */}
-          <CategoryOption>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                sx={{ backgroundColor: "var(--hover-bg)" }}
-              >
-                <Header>
-                  <Typography
-                    sx={{
-                      borderRadius: "7px",
-                      padding: 1,
-                      paddingInline: "16px",
-                      backgroundColor: "var(--bg-primary)",
-                    }}
-                  >
-                    Category name
-                  </Typography>
-                  <img src={archive} alt="" />
-                </Header>
-              </AccordionSummary>
-              <AccordionDetails sx={{ p: 0 }}>
-                {/* category property */}
-                <CategoryProperties>
-                  <Options>
-                    <div>
-                      <h4>ADD PROPERTIES</h4>
-                      <Option>
-                        <PropertyTitle>
-                          <img src={property1} alt="" />
-                          <p>Property name</p>
-                        </PropertyTitle>
-                        <img src={archive} alt="" />
-                      </Option>
-                    </div>
-
-                    <OptionCreateButtons>
-                      <button>
-                        <img src={add} alt="" />
-                        <span>Create property</span>
-                      </button>
-                      <button>
-                        <img src={archive} alt="" />
-                        <span>View archive</span>
-                      </button>
-                    </OptionCreateButtons>
-                  </Options>
-                  <Details>
-                    <DetailsInput>
-                      <h3>Property name</h3>
-                      <PropertyInput type="text" placeholder="Property name" />
-                      <h3>Property Type</h3>
-                      <Select
-                        labelId="demo-select-small-label"
-                        id="demo-select-small"
-                        value={selectedValue}
-                        onChange={handleChange}
-                        size="small"
-                        IconComponent={() => (
-                          <InputAdornment position="start">
-                            <img
-                              src={arrowBottom}
-                              alt="Custom Arrow Icon"
-                              style={{ marginRight: "20px" }}
-                            />
-                          </InputAdornment>
+          {formFields.map((formField, formIndex) => (
+            <CategoryOption key={formIndex}>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  sx={{ backgroundColor: "var(--hover-bg)" }}
+                >
+                  <Header>
+                    <Typography
+                      sx={{
+                        borderRadius: "7px",
+                        padding: 1,
+                        paddingInline: "16px",
+                        backgroundColor: "var(--bg-primary)",
+                      }}
+                    >
+                      Category name
+                    </Typography>
+                    <img src={archive} alt="" />
+                  </Header>
+                </AccordionSummary>
+                <AccordionDetails sx={{ p: 0 }}>
+                  {/* category property */}
+                  <CategoryProperties>
+                    <Options>
+                      <div>
+                        <h4>ADD PROPERTIES</h4>
+                        {formField.categories.map(
+                          (singleService, serviceIndex) => (
+                            <Option
+                              key={serviceIndex}
+                              onClick={() =>
+                                setSelectedServiceIndexes((prevIndexes) => {
+                                  const newIndexes = [...prevIndexes];
+                                  newIndexes[formIndex] = serviceIndex;
+                                  return newIndexes;
+                                })
+                              }
+                            >
+                              <PropertyTitle>
+                                <img src={property1} alt="" />
+                                <p>{singleService.property}</p>
+                              </PropertyTitle>
+                              <img src={archive} alt="" />
+                            </Option>
+                          )
                         )}
-                        sx={{
-                          minWidth: "100%",
-                          "& fieldset": { border: 1 },
-                        }}
-                      >
-                        <MenuItem
-                          value="Text"
-                          sx={{
-                            "&:hover": { backgroundColor: "var(--hover-bg)" },
-                            "&.Mui-selected": {
-                              backgroundColor: "var(--hover-bg)",
-                            },
-                          }}
-                        >
-                          <DropdownOption>
-                            <img src={option} alt="" /> Text
-                          </DropdownOption>
-                        </MenuItem>
-                        <MenuItem value="single-select">
-                          <DropdownOption>
-                            <img src={select} alt="" /> Single-select
-                          </DropdownOption>
-                        </MenuItem>
-                        <MenuItem value="multi-select">
-                          <DropdownOption>
-                            <img src={multiSelect} alt="" />
-                            Multi-select
-                          </DropdownOption>
-                        </MenuItem>
-                      </Select>
-                    </DetailsInput>
+                      </div>
 
-                    <PropertyCreateButtons>
-                      <CreateCategoryBtn>Create</CreateCategoryBtn>
-                      <CancelBtn>Cancel</CancelBtn>
-                    </PropertyCreateButtons>
-                  </Details>
-                </CategoryProperties>
-                {/* category property end */}
-              </AccordionDetails>
-            </Accordion>
-          </CategoryOption>
+                      <OptionCreateButtons>
+                        <button onClick={() => handleAddServiceList(formIndex)}>
+                          <img src={add} alt="" />
+                          <span>Create property</span>
+                        </button>
+                        <button>
+                          <img src={archive} alt="" />
+                          <span>View archive</span>
+                        </button>
+                      </OptionCreateButtons>
+                    </Options>
+                    <Details>
+                      {formField.categories.map(
+                        (singleService, serviceIndex) => (
+                          <>
+                            {selectedServiceIndexes[formIndex] ===
+                              serviceIndex && (
+                              <DetailsInput>
+                                <h3>Property name</h3>
+                                <PropertyInput
+                                  placeholder="Property name"
+                                  name={`service-${formIndex}-${serviceIndex}`}
+                                  type="text"
+                                  id={`service-${formIndex}-${serviceIndex}`}
+                                  value={singleService.property}
+                                  onChange={(e) =>
+                                    handleServiceChange(
+                                      e,
+                                      formIndex,
+                                      serviceIndex,
+                                      "property"
+                                    )
+                                  }
+                                />
+                                <h3>Property Type</h3>
+                                <Select
+                                  labelId="demo-select-small-label"
+                                  id="demo-select-small"
+                                  value={selectedValue}
+                                  onChange={handleChange}
+                                  size="small"
+                                  IconComponent={() => (
+                                    <InputAdornment position="start">
+                                      <img
+                                        src={arrowBottom}
+                                        alt="Custom Arrow Icon"
+                                        style={{ marginRight: "20px" }}
+                                      />
+                                    </InputAdornment>
+                                  )}
+                                  sx={{
+                                    minWidth: "100%",
+                                    "& fieldset": { border: 1 },
+                                  }}
+                                >
+                                  <MenuItem
+                                    value="Text"
+                                    sx={{
+                                      "&:hover": {
+                                        backgroundColor: "var(--hover-bg)",
+                                      },
+                                      "&.Mui-selected": {
+                                        backgroundColor: "var(--hover-bg)",
+                                      },
+                                    }}
+                                  >
+                                    <DropdownOption>
+                                      <img src={option} alt="" /> Text
+                                    </DropdownOption>
+                                  </MenuItem>
+                                  <MenuItem value="single-select">
+                                    <DropdownOption>
+                                      <img src={select} alt="" /> Single-select
+                                    </DropdownOption>
+                                  </MenuItem>
+                                  <MenuItem value="multi-select">
+                                    <DropdownOption>
+                                      <img src={multiSelect} alt="" />
+                                      Multi-select
+                                    </DropdownOption>
+                                  </MenuItem>
+                                </Select>
+                              </DetailsInput>
+                            )}
+                          </>
+                        )
+                      )}
+                      <PropertyCreateButtons>
+                        <CreateCategoryBtn>Create</CreateCategoryBtn>
+                        <CancelBtn>Cancel</CancelBtn>
+                      </PropertyCreateButtons>
+                    </Details>
+                  </CategoryProperties>
+                  {/* category property end */}
+                </AccordionDetails>
+              </Accordion>
+            </CategoryOption>
+          ))}
         </CategoryForm>
       </CreateCategory>
     </WorkspaceLayout>
@@ -197,179 +308,3 @@ const Category = () => {
 };
 
 export default Category;
-
-const CreateCategory = styled.div`
-  padding-top: 30px;
-  margin-left: 40px;
-`;
-export const CategoryTitle = styled.div`
-  height: 100vh;
-  /* border: 1px solid var(--border); */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  h3 {
-    font-size: 30px;
-    font-weight: 500;
-  }
-  p {
-    font-size: 18px;
-    padding: 30px 0;
-  }
-`;
-export const CreateOptionButton = styled.div`
-  display: flex;
-  gap: 50px;
-`;
-export const CreateBtn = styled.button`
-  background: var(--bg-primary);
-  outline: none;
-  border: none;
-  font-size: 20px;
-  font-weight: 400;
-  padding: 10px 50px;
-  border-radius: 4px;
-  margin-top: 21px;
-  cursor: pointer;
-  color: var(--text-primary);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  img {
-    width: 14px;
-  }
-`;
-const CategoryForm = styled.div`
-  margin-right: 40px;
-`;
-const CategoryOption = styled.div`
-  min-width: 900px;
-  margin: 60px 0;
-`;
-const Header = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  img {
-    width: 24px;
-    margin-right: 30px;
-  }
-`;
-const CategoryProperties = styled.div`
-  display: flex;
-  height: 400px;
-  border: 1px solid var(--border-table);
-`;
-const Options = styled.div`
-  width: 50%;
-  border-right: 1px solid var(--border-table);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  h4 {
-    font-size: 14px;
-    font-weight: 500;
-    padding-left: 10px;
-    margin-top: 10px;
-    color: #7c7777;
-  }
-`;
-const Option = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 12px;
-  margin-top: 20px;
-  background: var(--bg-primary);
-
-  img {
-    width: 24px;
-  }
-  p {
-    font-size: 18px;
-  }
-`;
-const OptionCreateButtons = styled.div`
-  border-top: 1px solid var(--border-table);
-  display: flex;
-  justify-content: center;
-  min-height: 80px;
-  button {
-    display: flex;
-    background: transparent;
-    gap: 7px;
-    padding: 28px 40px;
-    border: none;
-    outline: none;
-    img {
-      width: 16px;
-    }
-    span {
-      font-size: 16px;
-    }
-  }
-  button:first-child {
-    border-right: 1px solid var(--border-table);
-  }
-`;
-const PropertyTitle = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  img {
-    width: 20px;
-  }
-`;
-const Details = styled.div`
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-const DetailsInput = styled.div`
-  padding: 10px;
-  h3 {
-    font-size: 18px;
-    font-weight: 400;
-    padding: 10px 0;
-  }
-`;
-const PropertyInput = styled.input`
-  padding: 10px;
-  width: 100%;
-`;
-const DropdownOption = styled.div`
-  display: flex;
-  gap: 14px;
-  img {
-    width: 16px;
-  }
-`;
-const PropertyCreateButtons = styled.div`
-  border-top: 1px solid var(--border-table);
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  height: 60px;
-  min-height: 80px;
-`;
-const CreateCategoryBtn = styled.button`
-  /* margin: 10px 40px; */
-  padding: 8px 50px;
-  background: var(--bg-primary);
-  font-size: 18px;
-  border: none;
-  outline: none;
-  border-radius: 10px;
-`;
-const CancelBtn = styled.button`
-  background: transparent;
-  outline: none;
-  border: 1px solid var(--border-table);
-  font-size: 18px;
-  padding: 8px 50px;
-  border-radius: 10px;
-`;

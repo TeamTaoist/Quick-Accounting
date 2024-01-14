@@ -5,7 +5,7 @@ import {
   CategoryTitle,
   CreateBtn,
   CreateOptionButton,
-} from "../category/Category";
+} from "../category/category.style";
 import add from "../../../assets/workspace/add.svg";
 import archive from "../../../assets/workspace/archive.svg";
 import searchIcon from "../../../assets/workspace/search-icon.svg";
