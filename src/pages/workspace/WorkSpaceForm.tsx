@@ -14,11 +14,27 @@ import {
 } from "./WorkSpaceForm.style";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import {
+  getOwnedSafes,
+  OwnedSafes,
+} from "@safe-global/safe-gateway-typescript-sdk";
+import useAsync from "../../hooks/useAsync";
 
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [age, setAge] = useState("");
+
+  const [data, error, loading] = useAsync<OwnedSafes>(
+    () => {
+      // TODO hardcode
+      return getOwnedSafes("137", "0x8C913aEc7443FE2018639133398955e0E17FB0C1");
+    },
+    [],
+    false
+  );
+  console.log(data, error, loading);
+  const safeList = data?.safes || [];
 
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
@@ -64,16 +80,9 @@ const WorkSpaceForm = () => {
                 value={age}
                 onChange={handleChange}
               >
-                <MenuItem
-                  value={10}
-                  sx={{
-                    "&:hover": { backgroundColor: "var(--hover-bg)" },
-                    "&.Mui-selected": { backgroundColor: "var(--hover-bg)" },
-                  }}
-                >
-                  Ten
-                </MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
+                {safeList.map((item) => (
+                  <MenuItem value={item}>{item}</MenuItem>
+                ))}
               </Select>
             </FormControl>
             <Button onClick={createWorkspace}>
