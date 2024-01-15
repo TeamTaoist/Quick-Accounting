@@ -11,9 +11,17 @@ import {
   Safe,
   WorkspaceContainer,
   WorkspaceForm,
+  ChainMenuItem,
+  SelectBox,
 } from "./WorkSpaceForm.style";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import {
+  getOwnedSafes,
+  OwnedSafes,
+} from "@safe-global/safe-gateway-typescript-sdk";
+import useAsync from "../../hooks/useAsync";
+import CHAINS from "../../utils/chain";
 import { useWorkspace } from "../../store/useWorkspace";
 import { useLoading } from "../../store/useLoading";
 import Loading from "../../utils/Loading";
@@ -22,14 +30,29 @@ const WorkSpaceForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { createWorkspace } = useWorkspace();
-  const { isLoading } = useLoading();
 
-  const [workspaceName, setWorkspaceName] = useState("");
   const [safe, setSafe] = useState("");
+  const [workspaceName, setWorkspaceName] = useState("");
+  const [selectChainId, setSelectChanId] = useState(137);
 
-  const handleChange = (e: SelectChangeEvent) => {
-    setSafe(e.target.value);
+  const [data, error, loading] = useAsync<OwnedSafes>(
+    () => {
+      return getOwnedSafes(
+        String(selectChainId),
+        "0x8C913aEc7443FE2018639133398955e0E17FB0C1" // hardcode, just for test, it should be the user's address
+      );
+    },
+    [selectChainId],
+    false
+  );
+  console.log(data, error, loading);
+  const safeList = loading ? [] : data?.safes || [];
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setSafe(event.target.value);
   };
+  console.log();
+
   const formData = {
     chain_id: 1,
     name: workspaceName,
@@ -39,9 +62,14 @@ const WorkSpaceForm = () => {
     createWorkspace(formData, navigate);
   };
 
+  const onSelectChain = (e: any) => {
+    setSelectChanId(e.target.value);
+  };
+  console.log(formData);
+
   return (
     <Header>
-      {isLoading && <Loading />}
+      {/* {isLoading && <Loading />} */}
       <WorkspaceContainer>
         <WorkspaceForm>
           <h3>{t("workspaceForm.FormTitle")}</h3>
@@ -73,24 +101,25 @@ const WorkSpaceForm = () => {
               </a>
             </CreateSafe>
             {/* select */}
-            <FormControl sx={{ minWidth: "100%" }} size="small">
-              <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small"
-                value={safe}
-                onChange={handleChange}
-              >
-                <MenuItem
-                  value="0xB1eFff6F17eD9a8c7b14851805A625eeCF35004C"
-                  sx={{
-                    "&:hover": { backgroundColor: "var(--hover-bg)" },
-                    "&.Mui-selected": { backgroundColor: "var(--hover-bg)" },
-                  }}
-                >
-                  0xB1eFff6F17eD9a8c7b14851805A625eeCF35004C
-                </MenuItem>
+            <SelectBox>
+              <Select value={selectChainId} onChange={onSelectChain}>
+                {CHAINS.map((item) => (
+                  <MenuItem value={item.chainId} key={item.chainId}>
+                    <ChainMenuItem>
+                      <img src={item.logoPath} alt="" />
+                      {item.chainName}
+                    </ChainMenuItem>
+                  </MenuItem>
+                ))}
               </Select>
-            </FormControl>
+              <Select fullWidth value={safe} onChange={handleChange}>
+                {safeList.map((item) => (
+                  <MenuItem value={item} key={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </Select>
+            </SelectBox>
             <Button onClick={handleCreateWorkspace}>
               {t("workspaceForm.FormSubmitBtn")}
             </Button>

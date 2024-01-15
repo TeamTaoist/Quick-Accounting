@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axiosClient from "../utils/axios";
 import { useLoading } from "./useLoading";
-import { LoginForm } from "../pages/auth/login/LoginPopup";
+// import { LoginForm } from "../pages/auth/login/LoginPopup";
 
 interface AuthResponse {
   wallet: string;
@@ -14,7 +14,7 @@ interface AuthResponse {
 interface Auth {
   user: AuthResponse;
   setAuthData: (data: AuthResponse) => void;
-  loginAsync: (formValue: LoginForm, navigate: any) => void;
+  loginAsync: (formValue: any, navigate: any) => void;
   logout: (navigate: any) => void;
 }
 
@@ -36,6 +36,8 @@ export const useAuthStore = create<Auth>((set) => {
         setLoading(true);
         const { data } = await axiosClient.post("/user/login2", { formValue });
         set({ user: data.data });
+        console.log(data);
+
         localStorage.setItem("token", data.data.token);
       } catch (error: any) {
         console.log(error);

@@ -49,3 +49,17 @@ export const Button = styled.button`
   cursor: pointer;
   color: var(--text-primary);
 `;
+
+export const ChainMenuItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  img {
+    width: 28px;
+  }
+`;
+
+export const SelectBox = styled.div`
+  display: flex;
+  gap: 12px;
+`
