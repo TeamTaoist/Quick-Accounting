@@ -1,22 +1,44 @@
+import { useEffect } from "react";
 import Sidebar from "../../components/layout/sidebar/Sidebar";
 import UserSidebar from "../../components/userDashboard/userSidebar/UserSidebar";
+import { useUserPayment } from "../../store/useUserPayment";
 import UserPaymentRequest from "./UserPaymentRequest";
-import { UserDashboardSection } from "./userDashboard.style";
+import { Details, UserDashboardSection } from "./userDashboard.style";
+import { useLoading } from "../../store/useLoading";
+import Loading from "../../utils/Loading";
 
-const UserDashboard = () => (
-  <div>
-    <Sidebar>
-      <UserDashboardSection>
-        <UserSidebar>
-          {/* <div className="details">
-            <h2>You don't have any payment request</h2>
-          </div> */}
-          {/* payment table */}
-          <UserPaymentRequest />
-        </UserSidebar>
-      </UserDashboardSection>
-    </Sidebar>
-  </div>
-);
+const UserDashboard = () => {
+  const { getUserPayment, userPayment } = useUserPayment();
+  const { isLoading } = useLoading();
+  // get user payment request
+  const getUserPaymentRequest = () => {
+    getUserPayment();
+  };
+  useEffect(() => {
+    getUserPaymentRequest();
+  }, []);
+  console.log(userPayment);
+  return (
+    <div>
+      {isLoading && <Loading />}
+      <Sidebar>
+        <UserDashboardSection>
+          <UserSidebar>
+            {userPayment.total === 0 ? (
+              <Details>
+                <h2>
+                  You don't have any payment <br /> request
+                </h2>
+              </Details>
+            ) : (
+              /* payment table */
+              <UserPaymentRequest />
+            )}
+          </UserSidebar>
+        </UserDashboardSection>
+      </Sidebar>
+    </div>
+  );
+};
 
 export default UserDashboard;

@@ -32,7 +32,7 @@ const LoginPopup = () => {
   };
   return (
     <Header>
-      {!isLoading && <Loading />}
+      {isLoading && <Loading />}
       <div className="login">
         <div className="popup">
           <Link to="/">

@@ -13,19 +13,19 @@ import {
 import data from "../../data/tableData";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import searchIcon from "../../assets/workspace/search-icon.svg";
 import statusIcon from "../../assets/workspace/status-icon.svg";
 import { Status } from "../../components/workspace/RejectDataTable";
 import CustomModal from "../../utils/CustomModal";
 import PaymentRequestDetails from "../workspace/paymentRequest/PaymentRequestDetails";
+import { useUserPayment } from "../../store/useUserPayment";
 
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
 
 const UserPaymentRequest = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (event: any) => {
