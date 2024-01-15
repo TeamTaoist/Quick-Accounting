@@ -26,7 +26,7 @@ import CHAINS from "../../utils/chain";
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [age, setAge] = useState("");
+  const [safe, setSafe] = useState("");
   const [selectChainId, setSelectChanId] = useState(137);
 
   const [data, error, loading] = useAsync<OwnedSafes>(
@@ -43,7 +43,7 @@ const WorkSpaceForm = () => {
   const safeList = loading ? [] : data?.safes || [];
 
   const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+    setSafe(event.target.value);
   };
   const createWorkspace = () => {
     navigate("/assets");
@@ -94,7 +94,7 @@ const WorkSpaceForm = () => {
                   </MenuItem>
                 ))}
               </Select>
-              <Select fullWidth value={age} onChange={handleChange}>
+              <Select fullWidth value={safe} onChange={handleChange}>
                 {safeList.map((item) => (
                   <MenuItem value={item} key={item}>
                     {item}
