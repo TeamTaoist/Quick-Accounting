@@ -14,20 +14,34 @@ import {
 } from "./WorkSpaceForm.style";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useWorkspace } from "../../store/useWorkspace";
+import { useLoading } from "../../store/useLoading";
+import Loading from "../../utils/Loading";
 
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [age, setAge] = useState("");
+  const { createWorkspace } = useWorkspace();
+  const { isLoading } = useLoading();
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+  const [workspaceName, setWorkspaceName] = useState("");
+  const [safe, setSafe] = useState("");
+
+  const handleChange = (e: SelectChangeEvent) => {
+    setSafe(e.target.value);
   };
-  const createWorkspace = () => {
-    navigate("/assets");
+  const formData = {
+    chain_id: 1,
+    name: workspaceName,
+    vault_wallet: safe,
   };
+  const handleCreateWorkspace = () => {
+    createWorkspace(formData, navigate);
+  };
+
   return (
     <Header>
+      {isLoading && <Loading />}
       <WorkspaceContainer>
         <WorkspaceForm>
           <h3>{t("workspaceForm.FormTitle")}</h3>
@@ -46,6 +60,8 @@ const WorkSpaceForm = () => {
               placeholder="Eenter your workspace name"
               size="small"
               sx={{ minWidth: "100%" }}
+              value={workspaceName}
+              onChange={(e) => setWorkspaceName(e.target.value)}
               inputProps={{
                 maxLength: 10,
               }}
@@ -61,22 +77,21 @@ const WorkSpaceForm = () => {
               <Select
                 labelId="demo-select-small-label"
                 id="demo-select-small"
-                value={age}
+                value={safe}
                 onChange={handleChange}
               >
                 <MenuItem
-                  value={10}
+                  value="0xB1eFff6F17eD9a8c7b14851805A625eeCF35004C"
                   sx={{
                     "&:hover": { backgroundColor: "var(--hover-bg)" },
                     "&.Mui-selected": { backgroundColor: "var(--hover-bg)" },
                   }}
                 >
-                  Ten
+                  0xB1eFff6F17eD9a8c7b14851805A625eeCF35004C
                 </MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
               </Select>
             </FormControl>
-            <Button onClick={createWorkspace}>
+            <Button onClick={handleCreateWorkspace}>
               {t("workspaceForm.FormSubmitBtn")}
             </Button>
           </Safe>

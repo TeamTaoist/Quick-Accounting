@@ -4,12 +4,11 @@ export const WorkspaceContainer = styled.div`
   display: grid;
   justify-content: center;
   align-items: center;
-  height: 85vh;
+  height: 100vh;
   padding-top: 90px;
 `;
 export const WorkspaceForm = styled.div`
   width: 530px;
-  // padding-inline: 20px;
 
   h3 {
     font-size: 32px;
