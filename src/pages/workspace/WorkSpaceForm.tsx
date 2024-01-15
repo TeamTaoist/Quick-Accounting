@@ -11,6 +11,8 @@ import {
   Safe,
   WorkspaceContainer,
   WorkspaceForm,
+  ChainMenuItem,
+  SelectBox,
 } from "./WorkSpaceForm.style";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -19,28 +21,36 @@ import {
   OwnedSafes,
 } from "@safe-global/safe-gateway-typescript-sdk";
 import useAsync from "../../hooks/useAsync";
+import CHAINS from "../../utils/chain";
 
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [age, setAge] = useState("");
+  const [selectChainId, setSelectChanId] = useState(137);
 
   const [data, error, loading] = useAsync<OwnedSafes>(
     () => {
-      // TODO hardcode
-      return getOwnedSafes("137", "0x8C913aEc7443FE2018639133398955e0E17FB0C1");
+      return getOwnedSafes(
+        String(selectChainId),
+        "0x8C913aEc7443FE2018639133398955e0E17FB0C1" // hardcode, just for test, it should be the user's address
+      );
     },
-    [],
+    [selectChainId],
     false
   );
   console.log(data, error, loading);
-  const safeList = data?.safes || [];
+  const safeList = loading ? [] : data?.safes || [];
 
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
   };
   const createWorkspace = () => {
     navigate("/assets");
+  };
+
+  const onSelectChain = (e: any) => {
+    setSelectChanId(e.target.value);
   };
   return (
     <Header>
@@ -73,18 +83,25 @@ const WorkSpaceForm = () => {
               </a>
             </CreateSafe>
             {/* select */}
-            <FormControl sx={{ minWidth: "100%" }} size="small">
-              <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small"
-                value={age}
-                onChange={handleChange}
-              >
-                {safeList.map((item) => (
-                  <MenuItem value={item} key={item}>{item}</MenuItem>
+            <SelectBox>
+              <Select value={selectChainId} onChange={onSelectChain}>
+                {CHAINS.map((item) => (
+                  <MenuItem value={item.chainId} key={item.chainId}>
+                    <ChainMenuItem>
+                      <img src={item.logoPath} alt="" />
+                      {item.chainName}
+                    </ChainMenuItem>
+                  </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+              <Select fullWidth value={age} onChange={handleChange}>
+                {safeList.map((item) => (
+                  <MenuItem value={item} key={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </Select>
+            </SelectBox>
             <Button onClick={createWorkspace}>
               {t("workspaceForm.FormSubmitBtn")}
             </Button>
