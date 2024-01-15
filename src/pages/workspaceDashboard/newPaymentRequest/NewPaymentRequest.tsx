@@ -101,6 +101,8 @@ const NewPaymentRequest = () => {
     { value: "option 4", label: "Options 4" },
     { value: "option 5", label: "Options 5" },
   ];
+  console.log(rows);
+
   return (
     <Header>
       <CreateRequest>
@@ -214,10 +216,12 @@ const NewPaymentRequest = () => {
                         }}
                       >
                         <Select
-                          labelId="demo-select-small-label"
-                          id="demo-select-small"
-                          value={selectedValue}
-                          onChange={handleChange}
+                          labelId={`dropdown-${index}-label`}
+                          id={`dropdown-${index}`}
+                          value={row.currency}
+                          onChange={(e) =>
+                            handleServiceChange(e, index, "currency")
+                          }
                           size="small"
                           IconComponent={() => (
                             <InputAdornment position="start">

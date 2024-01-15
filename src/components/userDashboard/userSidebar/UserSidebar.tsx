@@ -3,9 +3,17 @@ import addressCard from "../../../assets/dashboard/address-card.svg";
 import file from "../../../assets/dashboard/file.svg";
 import arrow from "../../../assets/workspace/arrow.svg";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 const UserSidebar = ({ children }: { children: React.ReactNode }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  // handle logout
+  const { logout } = useAuthStore();
+  const handleLogout = () => {
+    logout(navigate);
+  };
   return (
     <>
       <div className="user-sidebar">
@@ -16,7 +24,9 @@ const UserSidebar = ({ children }: { children: React.ReactNode }) => {
             <img src={addressCard} alt="" />
             <p>0x4dgf...2915</p>
           </div>
-          <button className="disconnect">{t("user.Disconnect")}</button>
+          <button onClick={handleLogout} className="disconnect">
+            {t("user.Disconnect")}
+          </button>
         </div>
         {/* user payment request */}
         <div className="payment-request">

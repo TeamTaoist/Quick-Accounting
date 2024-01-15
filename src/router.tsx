@@ -19,11 +19,23 @@ import BookkeepingTransferDetails from "./pages/workspace/bookkeeping/Bookkeepin
 import ShareWorkspacePaymentRequest from "./pages/workspace/share/ShareWorkspacePaymentRequest";
 import PaymentRequestPreview from "./pages/workspace/share/PaymentRequestPreview";
 import Reports from "./pages/workspace/reports/Reports";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RouterLink = () => {
   return (
     <Router>
-      {/* <Navbar /> */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Routes>
         {/* <Route path="/" element={<Home />}></Route> */}
         <Route path="/" element={<Home />} />
