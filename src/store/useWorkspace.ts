@@ -105,8 +105,9 @@ export const useWorkspace = create<UseWorkspace>((set) => {
           vault_wallet,
         });
         set({ workspace: data.data });
+
         if (data.msg === "success" && data.code === 200) {
-          navigate("/assets");
+          // navigate(`${data.data.ID}/assets`);
         }
       } catch (error: any) {
         console.log(error);
@@ -136,7 +137,8 @@ export const useWorkspace = create<UseWorkspace>((set) => {
         const { data } = await axiosClient.get(`/workspace/${workspaceId}`);
         set({ workspace: data.data });
         if (data.msg === "success" && data.code === 200) {
-          navigate("/assets");
+          // navigate("/assets");
+          navigate(`/workspace/${data.data.ID}/assets`);
         }
       } catch (error: any) {
         console.log(error);

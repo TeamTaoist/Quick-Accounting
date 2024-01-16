@@ -42,23 +42,26 @@ const RouterLink = () => {
         <Route path="/login" element={<LoginPopup />} />
         <Route path="/user" element={<UserDashboard />} />
         <Route path="/create-workspace" element={<WorkSpaceForm />} />
-        <Route path="/workspace" element={<WorkspaceDashboard />} />
+        {/* <Route path="/workspace" element={<WorkspaceDashboard />} /> */}
         <Route
           path="/new-payment-request"
           element={<NewPaymentRequest />}
         ></Route>
-        <Route path="/assets" element={<Assets />} />
-        <Route path="/category" element={<Category />} />
+        <Route path="/workspace/:id/assets" element={<Assets />} />
+        <Route path="/workspace/:id/category" element={<Category />} />
         <Route path="/archived" element={<Archived />} />
-        <Route path="/payment-request" element={<PaymentRequest />} />
+        <Route
+          path="/workspace/:id/payment-request"
+          element={<PaymentRequest />}
+        />
         <Route
           path="/payment-request/:id"
           element={<PaymentRequestDetails />}
         />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/workspace/:id/settings" element={<Settings />} />
         <Route path="/sign-payment" element={<SignPaymentRequest />} />
-        <Route path="/queue" element={<Queue />} />
-        <Route path="/bookkeeping" element={<Bookkeeping />} />
+        <Route path="/workspace/:id/queue" element={<Queue />} />
+        <Route path="/workspace/:id/bookkeeping" element={<Bookkeeping />} />
         <Route
           path="/bookkeeping/:id"
           element={<BookkeepingTransferDetails />}
@@ -71,7 +74,7 @@ const RouterLink = () => {
           path="/payment-request-preview"
           element={<PaymentRequestPreview />}
         />
-        <Route path="/reports" element={<Reports />} />
+        <Route path="/workspace/:id/reports" element={<Reports />} />
       </Routes>
     </Router>
   );

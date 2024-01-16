@@ -17,11 +17,12 @@ import queue from "../../../assets/workspace/queue.svg";
 import bookkeeping from "../../../assets/workspace/bookkeeping.svg";
 import reports from "../../../assets/workspace/reports.svg";
 import setting from "../../../assets/workspace/setting.svg";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const WorkspaceSidebar = () => {
   const { t } = useTranslation();
+  const { id } = useParams<string>();
   return (
     <>
       <SidebarContainer>
@@ -52,33 +53,37 @@ const WorkspaceSidebar = () => {
           <SidebarLink
             icon={assets}
             name={t("workspace.Assets")}
-            to="/assets"
+            to={`/workspace/${id}/assets`}
           />
           <SidebarLink
             icon={category}
             name={t("workspace.Category")}
-            to="/category"
+            to={`/workspace/${id}/category`}
           />
           <SidebarLink
             icon={paymentRequest}
             name={t("workspace.PaymentRequest")}
-            to="/payment-request"
+            to={`/workspace/${id}/payment-request`}
           />
-          <SidebarLink icon={queue} name={t("workspace.Queue")} to="/queue" />
+          <SidebarLink
+            icon={queue}
+            name={t("workspace.Queue")}
+            to={`/workspace/${id}/queue`}
+          />
           <SidebarLink
             icon={bookkeeping}
             name={t("workspace.Bookkeeping")}
-            to="/bookkeeping"
+            to={`/workspace/${id}/bookkeeping`}
           />
           <SidebarLink
             icon={reports}
             name={t("workspace.Reports")}
-            to="/reports"
+            to={`/workspace/${id}/reports`}
           />
           <SidebarLink
             icon={setting}
             name={t("workspace.Settings")}
-            to="/settings"
+            to={`/workspace/${id}/settings`}
           />
         </SidebarLinkList>
       </SidebarContainer>

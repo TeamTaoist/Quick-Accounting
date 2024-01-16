@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
 import add from "../../../assets/workspace/add.svg";
 import archive from "../../../assets/workspace/archive.svg";
@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import Archived from "./Archived";
@@ -44,6 +44,9 @@ import {
   PropertyInput,
   PropertyTitle,
 } from "./category.style";
+import { useCategory } from "../../../store/useCategory";
+import { useLoading } from "../../../store/useLoading";
+import Loading from "../../../utils/Loading";
 // import CustomModal from "../../../utils/CustomModal";
 // import Archived from "./Archived";
 
@@ -59,6 +62,11 @@ interface FormField {
 const Category = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { id } = useParams();
+
+  const { getWorkspaceCategories } = useCategory();
+  const { isLoading } = useLoading();
+
   const [hasCategory, setHasCategory] = useState(true);
   const [selectedValue, setSelectedValue] = useState("Text");
   const handleChange = (event: SelectChangeEvent) => {
@@ -113,9 +121,14 @@ const Category = () => {
   };
   // end
   console.log(formFields);
+  // get all categories
+  useEffect(() => {
+    getWorkspaceCategories(id || "");
+  }, [getWorkspaceCategories, id]);
 
   return (
     <WorkspaceLayout>
+      {/* {isLoading && <Loading />} */}
       <CreateCategory>
         {!hasCategory && (
           <CategoryTitle>
