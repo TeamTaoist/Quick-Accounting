@@ -10,12 +10,12 @@ import {
   useAccount,
   useSignMessage,
   useChainId,
-  useDisconnect,
   ConnectorAlreadyConnectedError,
 } from "wagmi";
 import { useLoading } from "../../../store/useLoading";
 import { useAuthStore } from "../../../store/useAuthStore";
 import Loading from "../../../utils/Loading";
+import { createSiweMessage } from "../../../utils";
 
 const LoginPopup = () => {
   const { t } = useTranslation();
@@ -26,36 +26,50 @@ const LoginPopup = () => {
   const { signMessageAsync, isLoading: signLoading } = useSignMessage();
 
   const [clickConnectFlag, setClickConnectFlag] = useState(false);
-  const [loginLoading, setLoginLoading] = useState(false);
 
-  let loading = false;
-
-  const formValue = {
-    domain: "",
-    message: "",
-    signature: "",
-    wallet: "",
-  };
   const { isLoading, setLoading } = useLoading();
-  const { loginAsync } = useAuthStore();
+  const { loginAsync, refreshNounce } = useAuthStore();
+
+  console.log("loading", isLoading);
 
   useEffect(() => {
-    if (connectLoading || signLoading || loginLoading) {
-      if (!loading) {
-        // TODO show loading
-        setLoading(true);
-      }
-    } else if (loading) {
-      // TODO hide loading
-      setLoading(false);
-    }
-  }, [connectLoading, signLoading, loginLoading, loading, setLoading]);
+    setLoading(connectLoading || signLoading);
+  }, [connectLoading, signLoading, setLoading]);
 
   useEffect(() => {
     if (isConnected && address && clickConnectFlag) {
-      // TODO sign
-      // TODO login
-      loginAsync(formValue, navigate);
+      const signAndLogin = async () => {
+        // get nonce
+        let nonce: string = "";
+        try {
+          nonce = await refreshNounce(address);
+        } catch (error) {
+          setClickConnectFlag(false);
+          return;
+        }
+        // sign message
+        try {
+          const msg = createSiweMessage(
+            address,
+            chainId,
+            nonce,
+            "Welcom Quick Accounting"
+          );
+          const signResult = await signMessageAsync({ message: msg });
+          await loginAsync(
+            {
+              domain: window.location.origin,
+              message: msg,
+              signature: signResult,
+              wallet: address,
+            },
+            navigate
+          );
+        } catch (error) {
+          setClickConnectFlag(false);
+        }
+      };
+      signAndLogin();
     }
   }, [isConnected, address, clickConnectFlag]);
 
