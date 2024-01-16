@@ -2,6 +2,7 @@ import { create } from "zustand";
 import axiosClient from "../utils/axios";
 import { useLoading } from "./useLoading";
 // import { LoginForm } from "../pages/auth/login/LoginPopup";
+import { toast } from "react-toastify";
 
 interface AuthResponse {
   wallet: string;
@@ -16,6 +17,7 @@ interface Auth {
   setAuthData: (data: AuthResponse) => void;
   loginAsync: (formValue: any, navigate: any) => void;
   logout: (navigate: any) => void;
+  refreshNounce: (wallet: string) => Promise<string>;
 }
 
 export const useAuthStore = create<Auth>((set) => {
@@ -34,7 +36,7 @@ export const useAuthStore = create<Auth>((set) => {
     loginAsync: async (formValue, navigate) => {
       try {
         setLoading(true);
-        const { data } = await axiosClient.post("/user/login2", { formValue });
+        const { data } = await axiosClient.post("/user/login2", formValue);
         set({ user: data.data });
         console.log(data);
 
@@ -42,6 +44,8 @@ export const useAuthStore = create<Auth>((set) => {
         navigate("/user");
       } catch (error: any) {
         console.log(error);
+        toast.error(error?.data?.msg || error?.status || error);
+        throw error;
       } finally {
         setLoading(false);
         // navigate("/user");
@@ -60,6 +64,20 @@ export const useAuthStore = create<Auth>((set) => {
       });
       localStorage.removeItem("token");
       navigate("/");
+    },
+    // get new nonce
+    refreshNounce: async (wallet: string): Promise<string> => {
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.get(`/user/refresh_nonce/${wallet}`);
+        return data?.nonce;
+      } catch (error: any) {
+        console.error(error);
+        toast.error(error?.data?.msg || error?.status || error);
+        throw error;
+      } finally {
+        setLoading(false);
+      }
     },
   };
 });
