@@ -29,11 +29,17 @@ interface UserWorkspaces {
     rows: Workspace[];
   };
 }
+// interface WorkspaceDetails {
+//   code: number;
+//   msg: string;
+//   data: Workspace;
+// }
 interface UseWorkspace {
   workspace: Workspace;
   userWorkspaces: UserWorkspaces;
   createWorkspace: (formData: FormData, navigate: any) => void;
   getUserWorkspace: () => void;
+  getWorkspaceDetails: (workspaceId: number, navigate: any) => void;
 }
 
 export const useWorkspace = create<UseWorkspace>((set) => {
@@ -72,6 +78,22 @@ export const useWorkspace = create<UseWorkspace>((set) => {
         ],
       },
     },
+    // workspace details
+    workspaceDetails: {
+      code: 0,
+      msg: "",
+      data: {
+        ID: 0,
+        CreatedAt: "",
+        UpdatedAt: "",
+        DeletedAt: "",
+        name: "",
+        avatar: "",
+        vault_wallet: "",
+        chain_id: 0,
+        creator: "",
+      },
+    },
     createWorkspace: async (formData, navigate) => {
       const { chain_id, name, vault_wallet } = formData;
 
@@ -106,6 +128,20 @@ export const useWorkspace = create<UseWorkspace>((set) => {
       } finally {
         setLoading(false);
         // navigate("/assets");
+      }
+    },
+    getWorkspaceDetails: async (workspaceId, navigate) => {
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.get(`/workspace/${workspaceId}`);
+        set({ workspace: data.data });
+        if (data.msg === "success" && data.code === 200) {
+          navigate("/assets");
+        }
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
     },
   };

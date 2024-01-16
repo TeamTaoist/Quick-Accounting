@@ -2,20 +2,27 @@ import logo from "../../../assets/navbar/logo.svg";
 import plus from "../../../assets/dashboard/plus.svg";
 import avatar from "../../../assets/dashboard/avatar.svg";
 import "./sidebar.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useEffect } from "react";
 import { useLoading } from "../../../store/useLoading";
 import Loading from "../../../utils/Loading";
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
-  const { getUserWorkspace, userWorkspaces } = useWorkspace();
+  const navigate = useNavigate();
+  const { getUserWorkspace, userWorkspaces, getWorkspaceDetails, workspace } =
+    useWorkspace();
   const { isLoading } = useLoading();
 
   useEffect(() => {
     getUserWorkspace();
   }, [getUserWorkspace]);
-  console.log(userWorkspaces.data.rows);
+
+  // fetch single workspace
+  const handleFetchWorkspaceDetails = (workspaceId: number) => {
+    getWorkspaceDetails(workspaceId, navigate);
+  };
+  console.log(workspace);
 
   return (
     <div className="sidebar-container">
@@ -30,11 +37,14 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
           {/* user workspaces */}
           <div className="user-workspaces">
             {userWorkspaces.data.rows.map((workspace) => (
-              <Link to="/assets">
-                <div className="workspace-logo">
-                  <img src={workspace.avatar} alt={workspace.name} />
-                </div>
-              </Link>
+              // <Link to="/assets">
+              <div
+                className="workspace-logo"
+                onClick={() => handleFetchWorkspaceDetails(workspace.ID)}
+              >
+                <img src={workspace.avatar} alt={workspace.name} />
+              </div>
+              // </Link>
             ))}
           </div>
           <Link to="/create-workspace">
