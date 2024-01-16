@@ -55,16 +55,20 @@ interface Service {
   dropdownValue: string;
 }
 
-interface FormField {
-  categories: Service[];
-}
+// interface FormField {
+//   categories: Service[];
+// }
 
 const Category = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { id } = useParams();
 
-  const { getWorkspaceCategories } = useCategory();
+  const {
+    getWorkspaceCategories,
+    workspaceCategories,
+    createWorkspaceCategory,
+  } = useCategory();
   const { isLoading } = useLoading();
 
   const [hasCategory, setHasCategory] = useState(true);
@@ -77,7 +81,7 @@ const Category = () => {
   const handleOpenModal = () => {
     setOpenModal(true);
   };
-  const [formFields, setFormFields] = useState<FormField[]>([]);
+  const [formFields, setFormFields] = useState<Service[]>([]);
 
   const [selectedServiceIndexes, setSelectedServiceIndexes] = useState<
     (number | null)[]
@@ -88,49 +92,65 @@ const Category = () => {
       | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
       | SelectChangeEvent<string>,
     formIndex: number,
-    serviceIndex: number,
+    // serviceIndex: number,
     property: string
   ) => {
     const { value } = e.target as { value: string };
     const fields = [...formFields];
-    fields[formIndex].categories[serviceIndex][property as keyof Service] =
-      value;
+    // fields[formIndex].categories[serviceIndex][property as keyof Service] =
+    //   value;
+    fields[formIndex][property as keyof Service] = value;
     setFormFields(fields);
   };
 
-  const handleServiceSubmit = (formIndex: number, serviceIndex: number) => {
-    const selectedService = formFields[formIndex].categories[serviceIndex];
-  };
+  // const handleServiceSubmit = (formIndex: number, serviceIndex: number) => {
+  //   const selectedService = formFields[formIndex].categories[serviceIndex];
+  // };
 
-  const handleAddServiceList = (formIndex: number) => {
-    const fields = [...formFields];
-    fields[formIndex].categories = [
-      ...fields[formIndex].categories,
-      { property: "Default property", dropdownValue: "Text" },
-    ];
-    setFormFields(fields);
-    setSelectedServiceIndexes((prevIndexes) => [...prevIndexes, null]);
-  };
+  // const handleAddServiceList = (formIndex: number) => {
+  //   // const fields = [...formFields];
+  //   // fields[formIndex].categories = [
+  //   //   ...fields[formIndex].categories,
+  //   //   { property: "Default property", dropdownValue: "Text" },
+  //   // ];
+  //   // setFormFields(fields);
+  //   setFormFields([...formFields, { property: "Default property", dropdownValue: "Text" }]);
+  //   setSelectedServiceIndexes((prevIndexes) => [...prevIndexes, null]);
+  // };
 
   const handleAddFormField = () => {
-    setFormFields((prevFormFields) => [
-      ...prevFormFields,
-      { categories: [{ property: "", dropdownValue: "" }] },
+    // setFormFields((prevFormFields) => [
+    //   ...prevFormFields,
+    //   { categories: [{ property: "", dropdownValue: "" }] },
+    // ]);
+    setFormFields([
+      ...formFields,
+      { property: "Default property", dropdownValue: "Text" },
     ]);
     setSelectedServiceIndexes((prevIndexes) => [...prevIndexes, 0]);
   };
   // end
   console.log(formFields);
+  const [categoryLoading, setCategoryLoading] = useState<boolean>(false);
   // get all categories
   useEffect(() => {
     getWorkspaceCategories(id || "");
-  }, [getWorkspaceCategories, id]);
+  }, [getWorkspaceCategories, id, categoryLoading]);
+  // create new workspace category
+  const createCategoryFormData = {
+    name: "Category name",
+    workspace_id: Number(id),
+  };
+  const handleCreateCategory = () => {
+    createWorkspaceCategory(createCategoryFormData);
+    setCategoryLoading(!categoryLoading);
+  };
 
   return (
     <WorkspaceLayout>
       {/* {isLoading && <Loading />} */}
       <CreateCategory>
-        {!hasCategory && (
+        {workspaceCategories.data.total === 0 && (
           <CategoryTitle>
             <h3>You don't have any categories.</h3>
             <p>Standardize your payments and bookkeeping with categories.</p>
@@ -150,7 +170,7 @@ const Category = () => {
         <CategoryForm>
           {/* header btn */}
           <CreateOptionButton>
-            <CreateBtn onClick={handleAddFormField}>
+            <CreateBtn onClick={handleCreateCategory}>
               <img src={add} alt="" />
               <span>Create category</span>
             </CreateBtn>
@@ -165,8 +185,8 @@ const Category = () => {
             />
           </CreateOptionButton>
           {/* category option */}
-          {formFields.map((formField, formIndex) => (
-            <CategoryOption key={formIndex}>
+          {workspaceCategories.data.rows.map((category) => (
+            <CategoryOption>
               <Accordion>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
@@ -194,30 +214,28 @@ const Category = () => {
                     <Options>
                       <div>
                         <h4>ADD PROPERTIES</h4>
-                        {formField.categories.map(
-                          (singleService, serviceIndex) => (
-                            <Option
-                              key={serviceIndex}
-                              onClick={() =>
-                                setSelectedServiceIndexes((prevIndexes) => {
-                                  const newIndexes = [...prevIndexes];
-                                  newIndexes[formIndex] = serviceIndex;
-                                  return newIndexes;
-                                })
-                              }
-                            >
-                              <PropertyTitle>
-                                <img src={property1} alt="" />
-                                <p>{singleService.property}</p>
-                              </PropertyTitle>
-                              <img src={archive} alt="" />
-                            </Option>
-                          )
-                        )}
+                        {formFields.map((singleService, serviceIndex) => (
+                          <Option
+                            key={serviceIndex}
+                            onClick={() =>
+                              setSelectedServiceIndexes((prevIndexes) => {
+                                const newIndexes = [...prevIndexes];
+                                newIndexes[serviceIndex] = serviceIndex;
+                                return newIndexes;
+                              })
+                            }
+                          >
+                            <PropertyTitle>
+                              <img src={property1} alt="" />
+                              <p>{singleService.property}</p>
+                            </PropertyTitle>
+                            <img src={archive} alt="" />
+                          </Option>
+                        ))}
                       </div>
 
                       <OptionCreateButtons>
-                        <button onClick={() => handleAddServiceList(formIndex)}>
+                        <button onClick={handleAddFormField}>
                           <img src={add} alt="" />
                           <span>Create property</span>
                         </button>
@@ -228,81 +246,79 @@ const Category = () => {
                       </OptionCreateButtons>
                     </Options>
                     <Details>
-                      {formField.categories.map(
-                        (singleService, serviceIndex) => (
-                          <>
-                            {selectedServiceIndexes[formIndex] ===
-                              serviceIndex && (
-                              <DetailsInput>
-                                <h3>Property name</h3>
-                                <PropertyInput
-                                  placeholder="Property name"
-                                  name={`service-${formIndex}-${serviceIndex}`}
-                                  type="text"
-                                  id={`service-${formIndex}-${serviceIndex}`}
-                                  value={singleService.property}
-                                  onChange={(e) =>
-                                    handleServiceChange(
-                                      e,
-                                      formIndex,
-                                      serviceIndex,
-                                      "property"
-                                    )
-                                  }
-                                />
-                                <h3>Property Type</h3>
-                                <Select
-                                  labelId="demo-select-small-label"
-                                  id="demo-select-small"
-                                  value={selectedValue}
-                                  onChange={handleChange}
-                                  size="small"
-                                  IconComponent={() => (
-                                    <InputAdornment position="start">
-                                      <img
-                                        src={arrowBottom}
-                                        alt="Custom Arrow Icon"
-                                        style={{ marginRight: "20px" }}
-                                      />
-                                    </InputAdornment>
-                                  )}
+                      {formFields.map((singleService, serviceIndex) => (
+                        <>
+                          {selectedServiceIndexes[serviceIndex] ===
+                            serviceIndex && (
+                            <DetailsInput>
+                              <h3>Property name</h3>
+                              <PropertyInput
+                                placeholder="Property name"
+                                name={`service-${serviceIndex}-${serviceIndex}`}
+                                type="text"
+                                id={`service-${serviceIndex}-${serviceIndex}`}
+                                value={singleService.property}
+                                onChange={(e) =>
+                                  handleServiceChange(
+                                    e,
+                                    // serviceIndex,
+                                    serviceIndex,
+                                    "property"
+                                  )
+                                }
+                              />
+                              <h3>Property Type</h3>
+                              <Select
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={selectedValue}
+                                onChange={handleChange}
+                                size="small"
+                                IconComponent={() => (
+                                  <InputAdornment position="start">
+                                    <img
+                                      src={arrowBottom}
+                                      alt="Custom Arrow Icon"
+                                      style={{ marginRight: "20px" }}
+                                    />
+                                  </InputAdornment>
+                                )}
+                                sx={{
+                                  minWidth: "100%",
+                                  "& fieldset": { border: 1 },
+                                }}
+                              >
+                                <MenuItem
+                                  value="Text"
                                   sx={{
-                                    minWidth: "100%",
-                                    "& fieldset": { border: 1 },
+                                    "&:hover": {
+                                      backgroundColor: "var(--hover-bg)",
+                                    },
+                                    "&.Mui-selected": {
+                                      backgroundColor: "var(--hover-bg)",
+                                    },
                                   }}
                                 >
-                                  <MenuItem
-                                    value="Text"
-                                    sx={{
-                                      "&:hover": {
-                                        backgroundColor: "var(--hover-bg)",
-                                      },
-                                      "&.Mui-selected": {
-                                        backgroundColor: "var(--hover-bg)",
-                                      },
-                                    }}
-                                  >
-                                    <DropdownOption>
-                                      <img src={option} alt="" /> Text
-                                    </DropdownOption>
-                                  </MenuItem>
-                                  <MenuItem value="single-select">
-                                    <DropdownOption>
-                                      <img src={select} alt="" /> Single-select
-                                    </DropdownOption>
-                                  </MenuItem>
-                                  <MenuItem value="multi-select">
-                                    <DropdownOption>
-                                      <img src={multiSelect} alt="" />
-                                      Multi-select
-                                    </DropdownOption>
-                                  </MenuItem>
-                                </Select>
-                              </DetailsInput>
-                            )}
-                          </>
-                        )
-                      )}
+                                  <DropdownOption>
+                                    <img src={option} alt="" /> Text
+                                  </DropdownOption>
+                                </MenuItem>
+                                <MenuItem value="single-select">
+                                  <DropdownOption>
+                                    <img src={select} alt="" /> Single-select
+                                  </DropdownOption>
+                                </MenuItem>
+                                <MenuItem value="multi-select">
+                                  <DropdownOption>
+                                    <img src={multiSelect} alt="" />
+                                    Multi-select
+                                  </DropdownOption>
+                                </MenuItem>
+                              </Select>
+                            </DetailsInput>
+                          )}
+                        </>
+                      ))}
                       <PropertyCreateButtons>
                         <CreateCategoryBtn>Create</CreateCategoryBtn>
                         <CancelBtn>Cancel</CancelBtn>

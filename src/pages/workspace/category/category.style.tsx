@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 export const CreateCategory = styled.div`
   padding-top: 30px;
   margin-left: 40px;
+  min-width: 600px;
 `;
 export const CategoryTitle = styled.div`
   height: 100vh;
