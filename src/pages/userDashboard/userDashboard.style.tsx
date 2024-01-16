@@ -9,6 +9,7 @@ export const Details = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 500px;
   h2 {
     font-size: 30px;
     font-weight: 500;
