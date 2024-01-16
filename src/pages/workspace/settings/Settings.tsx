@@ -1,16 +1,44 @@
 import styled from "@emotion/styled";
 import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+import { useWorkspace } from "../../../store/useWorkspace";
+import { useParams } from "react-router-dom";
 
 const Settings = () => {
   const { t } = useTranslation();
+  const { id } = useParams<string>();
+
+  const { updateWorkspaceName, workspace, getWorkspaceDetails } =
+    useWorkspace();
+  const [workspaceName, setWorkspaceName] = useState<string>("");
+  // handle workspace name update
+  useEffect(() => {
+    getWorkspaceDetails(id || "");
+  }, [id]);
+  const handleWorkspaceNameUpdate = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedName = e.target.value;
+    setWorkspaceName(updatedName);
+    if (id) {
+      updateWorkspaceName(id, updatedName);
+    }
+  };
+  console.log(workspace);
+
   return (
     <WorkspaceLayout>
       <SettingsContainer>
         <WorkspaceForm>
           <InputSection>
             <label htmlFor="">{t("workspaceForm.WorkspaceName")}</label>
-            <input type="text" placeholder={t("workspaceForm.WorkspaceName")} />
+            <input
+              type="text"
+              placeholder={t("workspaceForm.WorkspaceName")}
+              value={workspaceName}
+              onChange={handleWorkspaceNameUpdate}
+            />
           </InputSection>
         </WorkspaceForm>
         <MultiSigner>

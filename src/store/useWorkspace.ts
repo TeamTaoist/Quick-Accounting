@@ -39,7 +39,8 @@ interface UseWorkspace {
   userWorkspaces: UserWorkspaces;
   createWorkspace: (formData: FormData, navigate: any) => void;
   getUserWorkspace: () => void;
-  getWorkspaceDetails: (workspaceId: number, navigate: any) => void;
+  getWorkspaceDetails: (workspaceId: number | string, navigate?: any) => void;
+  updateWorkspaceName: (workspaceId: string, workspaceName: string) => void;
 }
 
 export const useWorkspace = create<UseWorkspace>((set) => {
@@ -131,6 +132,7 @@ export const useWorkspace = create<UseWorkspace>((set) => {
         // navigate("/assets");
       }
     },
+    // get single workspace details
     getWorkspaceDetails: async (workspaceId, navigate) => {
       try {
         setLoading(true);
@@ -144,6 +146,20 @@ export const useWorkspace = create<UseWorkspace>((set) => {
         console.log(error);
       } finally {
         setLoading(false);
+      }
+    },
+
+    // update workspace name
+    updateWorkspaceName: async (workspaceId, workspaceName) => {
+      try {
+        const { data } = await axiosClient.put(`/workspace/${workspaceId}`, {
+          name: workspaceName,
+        });
+        console.log(data.msg);
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        // setLoading(false);
       }
     },
   };

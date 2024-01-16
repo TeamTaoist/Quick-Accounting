@@ -22,7 +22,6 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const handleFetchWorkspaceDetails = (workspaceId: number) => {
     getWorkspaceDetails(workspaceId, navigate);
   };
-  console.log(workspace);
 
   return (
     <div className="sidebar-container">
@@ -39,6 +38,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             {userWorkspaces.data.rows.map((workspace) => (
               // <Link to="/assets">
               <div
+                key={workspace.ID}
                 className="workspace-logo"
                 onClick={() => handleFetchWorkspaceDetails(workspace.ID)}
               >
