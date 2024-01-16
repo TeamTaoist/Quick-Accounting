@@ -30,6 +30,7 @@ const WorkSpaceForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { createWorkspace } = useWorkspace();
+  const { isLoading } = useLoading();
 
   const [safe, setSafe] = useState("");
   const [workspaceName, setWorkspaceName] = useState("");
@@ -51,7 +52,6 @@ const WorkSpaceForm = () => {
   const handleChange = (event: SelectChangeEvent) => {
     setSafe(event.target.value);
   };
-  console.log();
 
   const formData = {
     chain_id: 1,
@@ -69,7 +69,7 @@ const WorkSpaceForm = () => {
 
   return (
     <Header>
-      {/* {isLoading && <Loading />} */}
+      {isLoading && <Loading />}
       <WorkspaceContainer>
         <WorkspaceForm>
           <h3>{t("workspaceForm.FormTitle")}</h3>

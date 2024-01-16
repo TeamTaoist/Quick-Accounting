@@ -15,6 +15,7 @@ import {
 } from "wagmi";
 import { useLoading } from "../../../store/useLoading";
 import { useAuthStore } from "../../../store/useAuthStore";
+import Loading from "../../../utils/Loading";
 
 const LoginPopup = () => {
   const { t } = useTranslation();
@@ -35,18 +36,20 @@ const LoginPopup = () => {
     signature: "",
     wallet: "",
   };
-  const { isLoading } = useLoading();
+  const { isLoading, setLoading } = useLoading();
   const { loginAsync } = useAuthStore();
 
   useEffect(() => {
     if (connectLoading || signLoading || loginLoading) {
       if (!loading) {
         // TODO show loading
+        setLoading(true);
       }
     } else if (loading) {
       // TODO hide loading
+      setLoading(false);
     }
-  }, [connectLoading, signLoading, loginLoading, loading]);
+  }, [connectLoading, signLoading, loginLoading, loading, setLoading]);
 
   useEffect(() => {
     if (isConnected && address && clickConnectFlag) {
@@ -76,6 +79,7 @@ const LoginPopup = () => {
   };
   return (
     <Header>
+      {isLoading && <Loading />}
       <div className="login">
         <div className="popup">
           <Link to="/">

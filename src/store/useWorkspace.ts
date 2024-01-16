@@ -39,11 +39,15 @@ export const useWorkspace = create<CreateWorkspace>((set) => {
       creator: "",
     },
     createWorkspace: async (formData, navigate) => {
-      console.log(formData);
+      const { chain_id, name, vault_wallet } = formData;
 
       try {
         setLoading(true);
-        const { data } = await axiosClient.post("/workspace", { formData });
+        const { data } = await axiosClient.post("/workspace", {
+          chain_id,
+          name,
+          vault_wallet,
+        });
         set({ workspace: data.data });
         if (data.msg === "success" && data.code === 200) {
           navigate("/assets");

@@ -1,15 +1,14 @@
 import axios from "axios";
-import { useAuthStore } from "../store/useAuthStore";
-
-// const { user } = useAuthStore.getState();
-const token = localStorage.getItem("token") || "";
 
 const axiosClient = axios.create({
   baseURL: `https://quick-accounting-be.vercel.app`,
 });
 
 axiosClient.interceptors.request.use((config) => {
-  config.headers.Authorization = `Bearer ${token}`;
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 

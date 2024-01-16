@@ -11,12 +11,9 @@ const UserDashboard = () => {
   const { getUserPayment, userPayment } = useUserPayment();
   const { isLoading } = useLoading();
   // get user payment request
-  const getUserPaymentRequest = () => {
-    getUserPayment();
-  };
   useEffect(() => {
-    getUserPaymentRequest();
-  }, []);
+    getUserPayment();
+  }, [getUserPayment]);
   return (
     <div>
       {isLoading && <Loading />}

@@ -39,11 +39,12 @@ export const useAuthStore = create<Auth>((set) => {
         console.log(data);
 
         localStorage.setItem("token", data.data.token);
+        navigate("/user");
       } catch (error: any) {
         console.log(error);
       } finally {
         setLoading(false);
-        navigate("/user");
+        // navigate("/user");
       }
     },
     // logout

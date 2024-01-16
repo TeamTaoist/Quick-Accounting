@@ -5,10 +5,17 @@ import arrow from "../../../assets/workspace/arrow.svg";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { getShortAddress } from "../../../utils/index";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 const UserSidebar = ({ children }: { children: React.ReactNode }) => {
   const { t } = useTranslation();
   const { address } = useAccount();
+  const navigate = useNavigate();
+  const { logout } = useAuthStore();
+  const handleLogout = () => {
+    logout(navigate);
+  };
   return (
     <>
       <div className="user-sidebar">
@@ -19,7 +26,9 @@ const UserSidebar = ({ children }: { children: React.ReactNode }) => {
             <img src={addressCard} alt="" />
             <p>{getShortAddress(address || "")}</p>
           </div>
-          <button className="disconnect">{t("user.Disconnect")}</button>
+          <button onClick={handleLogout} className="disconnect">
+            {t("user.Disconnect")}
+          </button>
         </div>
         {/* user payment request */}
         <div className="payment-request">
