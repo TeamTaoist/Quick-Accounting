@@ -27,6 +27,7 @@ import {
   SafeBalanceResponse,
 } from "@safe-global/safe-gateway-typescript-sdk";
 import { formatBalance, getShortDisplay } from "../../../utils/number";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 type AssetType = {
   name: string;
@@ -51,11 +52,11 @@ const Assets = () => {
     setSearchTerm(event.target.value);
   };
   console.log(searchTerm);
+  const { workspace } = useWorkspace();
 
   const [data, error, loading] = useAsync<SafeBalanceResponse>(
     () => {
-      // TODO hardcode
-      return getBalances("137", "0x4876eaD85CE358133fb80276EB3631D192196e24");
+      return getBalances(String(workspace?.chain_id), workspace?.vault_wallet);
     },
     [],
     false
