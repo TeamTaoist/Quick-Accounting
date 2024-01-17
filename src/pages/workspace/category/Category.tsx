@@ -58,6 +58,8 @@ const Category = () => {
     getWorkspaceCategories,
     workspaceCategories,
     createWorkspaceCategory,
+    getWorkspaceCategoryDetails,
+    workspaceCategory,
   } = useCategory();
   const { isLoading } = useLoading();
 
@@ -86,6 +88,12 @@ const Category = () => {
     createWorkspaceCategory(createCategoryFormData);
     setCategoryLoading(!categoryLoading);
   };
+  //get workspace category details
+  const handleCategory = (workspaceCategoryId: number) => {
+    getWorkspaceCategoryDetails(workspaceCategoryId);
+  };
+  // console.log(workspaceCategory);
+  // console.log(workspaceCategories.data.rows);
 
   return (
     <WorkspaceLayout>
@@ -128,7 +136,7 @@ const Category = () => {
           {/* category option */}
           {workspaceCategories.data.rows.map((category) => (
             <CategoryOption>
-              <Accordion>
+              <Accordion onClick={() => handleCategory(category.ID)}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"

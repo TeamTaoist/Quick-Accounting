@@ -4,14 +4,14 @@ import axiosClient from "../utils/axios";
 
 interface WorkspaceCategory {
   archived: boolean;
-  createdAt: string;
-  deletedAt: {
+  CreatedAt: string;
+  DeletedAt: {
     time: string;
     valid: boolean;
   };
-  id: number;
+  ID: number;
   name: string;
-  updatedAt: string;
+  UpdatedAt: string;
   workspace_id: number;
 }
 interface WorkspaceCategories {
@@ -19,19 +19,35 @@ interface WorkspaceCategories {
   msg: string;
   data: {
     page: number;
-    rows: [];
+    rows: [
+      {
+        CreatedAt: string;
+        DeleteAt: {
+          time: string;
+          valid: string;
+        };
+        ID: number;
+        UpdatedAt: string;
+        archived: boolean;
+        name: string;
+        workspace_id: number;
+      }
+    ];
     size: number;
     total: number;
-    data: WorkspaceCategory;
   };
+}
+interface CreateCategoryForm {
+  name: string;
+  workspace_id: number;
 }
 
 interface UseCategory {
   workspaceCategories: WorkspaceCategories;
   workspaceCategory: WorkspaceCategory;
   getWorkspaceCategories: (workspaceId: string) => void;
-  // TODO: ADD FORM TYPE
-  createWorkspaceCategory: (createCategoryFormData: any) => void;
+  createWorkspaceCategory: (createCategoryFormData: CreateCategoryForm) => void;
+  getWorkspaceCategoryDetails: (workspaceCategoryId: number) => void;
 }
 
 export const useCategory = create<UseCategory>((set) => {
@@ -42,33 +58,34 @@ export const useCategory = create<UseCategory>((set) => {
       msg: "",
       data: {
         page: 0,
-        rows: [],
+        rows: [
+          {
+            CreatedAt: "",
+            DeleteAt: {
+              time: "",
+              valid: "",
+            },
+            ID: 0,
+            UpdatedAt: "",
+            archived: false,
+            name: "",
+            workspace_id: 0,
+          },
+        ],
         size: 0,
         total: 0,
-        data: {
-          archived: false,
-          createdAt: "",
-          deletedAt: {
-            time: "",
-            valid: false,
-          },
-          id: 0,
-          name: "",
-          updatedAt: "",
-          workspace_id: 0,
-        },
       },
     },
     workspaceCategory: {
       archived: false,
-      createdAt: "",
-      deletedAt: {
+      CreatedAt: "",
+      DeletedAt: {
         time: "",
         valid: false,
       },
-      id: 0,
+      ID: 0,
       name: "",
-      updatedAt: "",
+      UpdatedAt: "",
       workspace_id: 0,
     },
     getWorkspaceCategories: async (workspaceId) => {
@@ -78,9 +95,6 @@ export const useCategory = create<UseCategory>((set) => {
           `/workspace_categories/categories_by_workspace_id/${workspaceId}`
         );
         set({ workspaceCategories: data });
-        // if (data.msg === "success" && data.code === 200) {
-        //   navigate("/assets");
-        // }
       } catch (error: any) {
         console.log(error);
       } finally {
@@ -97,9 +111,20 @@ export const useCategory = create<UseCategory>((set) => {
           workspace_id,
         });
         set({ workspaceCategory: data.data });
-        // if (data.msg === "success" && data.code === 200) {
-        //   navigate("/");
-        // }
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    // get workspace category details
+    getWorkspaceCategoryDetails: async (workspaceCategoryId) => {
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.get(
+          `/workspace_category/${workspaceCategoryId}`
+        );
+        set({ workspaceCategory: data.data });
       } catch (error: any) {
         console.log(error);
       } finally {
