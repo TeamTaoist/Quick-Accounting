@@ -61,6 +61,7 @@ const Category = () => {
     getWorkspaceCategoryDetails,
     workspaceCategory,
     updateCategoryName,
+    updateCategoryArchive,
   } = useCategory();
   const { isLoading } = useLoading();
 
@@ -76,10 +77,7 @@ const Category = () => {
 
   // end
   const [categoryLoading, setCategoryLoading] = useState<boolean>(false);
-  // get all categories
-  useEffect(() => {
-    getWorkspaceCategories(id || "");
-  }, [getWorkspaceCategories, id, categoryLoading]);
+
   // create new workspace category
   const createCategoryFormData = {
     name: "Category name",
@@ -114,7 +112,24 @@ const Category = () => {
     setCategoryName(e.target.value);
     updateCategoryName(workspaceId, categoryId, categoryName);
   };
+
+  // update archive workspace category
+  const handelArchiveCategory = (
+    e: any,
+    workspaceId: number,
+    categoryId: number
+  ) => {
+    e.stopPropagation();
+    updateCategoryArchive(workspaceId, categoryId);
+    setCategoryLoading(!categoryLoading);
+    console.log("update archive");
+  };
+
   console.log(categoryNameEditable);
+  // get all categories
+  useEffect(() => {
+    getWorkspaceCategories(id || "");
+  }, [getWorkspaceCategories, id, categoryLoading]);
 
   return (
     <WorkspaceLayout>
@@ -195,7 +210,17 @@ const Category = () => {
                       )}
                     </div>
 
-                    <img src={archive} alt="" />
+                    <img
+                      onClick={(e) =>
+                        handelArchiveCategory(
+                          e,
+                          category.workspace_id,
+                          category.ID
+                        )
+                      }
+                      src={archive}
+                      alt=""
+                    />
                   </Header>
                 </AccordionSummary>
                 <AccordionDetails sx={{ p: 0 }}>
