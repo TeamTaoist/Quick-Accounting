@@ -63,14 +63,12 @@ export const Header = styled.div`
 `;
 export const CategoryProperties = styled.div`
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   height: 400px;
-  border: 1px solid var(--border-table);
 `;
 export const Options = styled.div`
-  width: 50%;
-  border-right: 1px solid var(--border-table);
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
 
   h4 {
@@ -80,6 +78,12 @@ export const Options = styled.div`
     margin-top: 10px;
     color: #7c7777;
   }
+`;
+export const PropertyOptions = styled.div`
+  border-right: 1px solid var(--border-table);
+  width: 50%;
+  height: 326px;
+  flex: 1;
 `;
 export const Option = styled.div`
   display: flex;
@@ -95,11 +99,17 @@ export const Option = styled.div`
     font-size: 18px;
   }
 `;
-export const OptionCreateButtons = styled.div`
-  border-top: 1px solid var(--border-table);
+export const PropertyBtns = styled.div`
   display: flex;
-  justify-content: center;
-  min-height: 80px;
+  justify-content: space-between;
+  border: 1px solid var(--border-table);
+`;
+export const OptionCreateButtons = styled.div`
+  border-right: 1px solid var(--border-table);
+  display: flex;
+  justify-content: space-evenly;
+  /* min-height: 80px; */
+  width: 50%;
   button {
     display: flex;
     background: transparent;
@@ -153,13 +163,14 @@ export const DropdownOption = styled.div`
   }
 `;
 export const PropertyCreateButtons = styled.div`
-  border-top: 1px solid var(--border-table);
   display: flex;
   gap: 10px;
   justify-content: center;
   align-items: center;
-  height: 60px;
-  min-height: 80px;
+  /* height: 60px;
+  min-height: 80px; */
+  width: 50%;
+  padding: 0 20px;
 `;
 export const CreateCategoryBtn = styled.button`
   /* margin: 10px 40px; */
@@ -169,6 +180,7 @@ export const CreateCategoryBtn = styled.button`
   border: none;
   outline: none;
   border-radius: 10px;
+  width: 100%;
 `;
 export const CancelBtn = styled.button`
   background: transparent;
@@ -177,4 +189,5 @@ export const CancelBtn = styled.button`
   font-size: 18px;
   padding: 8px 50px;
   border-radius: 10px;
+  width: 100%;
 `;

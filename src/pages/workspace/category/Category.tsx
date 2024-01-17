@@ -40,25 +40,15 @@ import {
   Option,
   OptionCreateButtons,
   Options,
+  PropertyBtns,
   PropertyCreateButtons,
   PropertyInput,
+  PropertyOptions,
   PropertyTitle,
 } from "./category.style";
 import { useCategory } from "../../../store/useCategory";
 import { useLoading } from "../../../store/useLoading";
 import Loading from "../../../utils/Loading";
-// import CustomModal from "../../../utils/CustomModal";
-// import Archived from "./Archived";
-
-interface Service {
-  property: string;
-  dropdownValue: string;
-}
-
-// interface FormField {
-//   categories: Service[];
-// }
-
 const Category = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -71,7 +61,6 @@ const Category = () => {
   } = useCategory();
   const { isLoading } = useLoading();
 
-  const [hasCategory, setHasCategory] = useState(true);
   const [selectedValue, setSelectedValue] = useState("Text");
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
@@ -81,56 +70,8 @@ const Category = () => {
   const handleOpenModal = () => {
     setOpenModal(true);
   };
-  const [formFields, setFormFields] = useState<Service[]>([]);
 
-  const [selectedServiceIndexes, setSelectedServiceIndexes] = useState<
-    (number | null)[]
-  >([0]);
-
-  const handleServiceChange = (
-    e:
-      | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
-      | SelectChangeEvent<string>,
-    formIndex: number,
-    // serviceIndex: number,
-    property: string
-  ) => {
-    const { value } = e.target as { value: string };
-    const fields = [...formFields];
-    // fields[formIndex].categories[serviceIndex][property as keyof Service] =
-    //   value;
-    fields[formIndex][property as keyof Service] = value;
-    setFormFields(fields);
-  };
-
-  // const handleServiceSubmit = (formIndex: number, serviceIndex: number) => {
-  //   const selectedService = formFields[formIndex].categories[serviceIndex];
-  // };
-
-  // const handleAddServiceList = (formIndex: number) => {
-  //   // const fields = [...formFields];
-  //   // fields[formIndex].categories = [
-  //   //   ...fields[formIndex].categories,
-  //   //   { property: "Default property", dropdownValue: "Text" },
-  //   // ];
-  //   // setFormFields(fields);
-  //   setFormFields([...formFields, { property: "Default property", dropdownValue: "Text" }]);
-  //   setSelectedServiceIndexes((prevIndexes) => [...prevIndexes, null]);
-  // };
-
-  const handleAddFormField = () => {
-    // setFormFields((prevFormFields) => [
-    //   ...prevFormFields,
-    //   { categories: [{ property: "", dropdownValue: "" }] },
-    // ]);
-    setFormFields([
-      ...formFields,
-      { property: "Default property", dropdownValue: "Text" },
-    ]);
-    setSelectedServiceIndexes((prevIndexes) => [...prevIndexes, 0]);
-  };
   // end
-  console.log(formFields);
   const [categoryLoading, setCategoryLoading] = useState<boolean>(false);
   // get all categories
   useEffect(() => {
@@ -212,30 +153,78 @@ const Category = () => {
                   {/* category property */}
                   <CategoryProperties>
                     <Options>
-                      <div>
+                      <PropertyOptions>
                         <h4>ADD PROPERTIES</h4>
-                        {formFields.map((singleService, serviceIndex) => (
-                          <Option
-                            key={serviceIndex}
-                            onClick={() =>
-                              setSelectedServiceIndexes((prevIndexes) => {
-                                const newIndexes = [...prevIndexes];
-                                newIndexes[serviceIndex] = serviceIndex;
-                                return newIndexes;
-                              })
-                            }
-                          >
-                            <PropertyTitle>
-                              <img src={property1} alt="" />
-                              <p>{singleService.property}</p>
-                            </PropertyTitle>
-                            <img src={archive} alt="" />
-                          </Option>
-                        ))}
-                      </div>
-
+                        <Option>
+                          <PropertyTitle>
+                            <img src={property1} alt="" />
+                            <p>Property</p>
+                          </PropertyTitle>
+                          <img src={archive} alt="" />
+                        </Option>
+                      </PropertyOptions>
+                      {/* property input section */}
+                      <Details>
+                        <>
+                          <DetailsInput>
+                            <h3>Property name</h3>
+                            <PropertyInput placeholder="Property name" />
+                            <h3>Property Type</h3>
+                            <Select
+                              labelId="demo-select-small-label"
+                              id="demo-select-small"
+                              value={selectedValue}
+                              onChange={handleChange}
+                              size="small"
+                              IconComponent={() => (
+                                <InputAdornment position="start">
+                                  <img
+                                    src={arrowBottom}
+                                    alt="Custom Arrow Icon"
+                                    style={{ marginRight: "20px" }}
+                                  />
+                                </InputAdornment>
+                              )}
+                              sx={{
+                                minWidth: "100%",
+                                "& fieldset": { border: 1 },
+                              }}
+                            >
+                              <MenuItem
+                                value="Text"
+                                sx={{
+                                  "&:hover": {
+                                    backgroundColor: "var(--hover-bg)",
+                                  },
+                                  "&.Mui-selected": {
+                                    backgroundColor: "var(--hover-bg)",
+                                  },
+                                }}
+                              >
+                                <DropdownOption>
+                                  <img src={option} alt="" /> Text
+                                </DropdownOption>
+                              </MenuItem>
+                              <MenuItem value="single-select">
+                                <DropdownOption>
+                                  <img src={select} alt="" /> Single-select
+                                </DropdownOption>
+                              </MenuItem>
+                              <MenuItem value="multi-select">
+                                <DropdownOption>
+                                  <img src={multiSelect} alt="" />
+                                  Multi-select
+                                </DropdownOption>
+                              </MenuItem>
+                            </Select>
+                          </DetailsInput>
+                        </>
+                      </Details>
+                    </Options>
+                    {/* property button section */}
+                    <PropertyBtns>
                       <OptionCreateButtons>
-                        <button onClick={handleAddFormField}>
+                        <button>
                           <img src={add} alt="" />
                           <span>Create property</span>
                         </button>
@@ -244,86 +233,11 @@ const Category = () => {
                           <span>View archive</span>
                         </button>
                       </OptionCreateButtons>
-                    </Options>
-                    <Details>
-                      {formFields.map((singleService, serviceIndex) => (
-                        <>
-                          {selectedServiceIndexes[serviceIndex] ===
-                            serviceIndex && (
-                            <DetailsInput>
-                              <h3>Property name</h3>
-                              <PropertyInput
-                                placeholder="Property name"
-                                name={`service-${serviceIndex}-${serviceIndex}`}
-                                type="text"
-                                id={`service-${serviceIndex}-${serviceIndex}`}
-                                value={singleService.property}
-                                onChange={(e) =>
-                                  handleServiceChange(
-                                    e,
-                                    // serviceIndex,
-                                    serviceIndex,
-                                    "property"
-                                  )
-                                }
-                              />
-                              <h3>Property Type</h3>
-                              <Select
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                value={selectedValue}
-                                onChange={handleChange}
-                                size="small"
-                                IconComponent={() => (
-                                  <InputAdornment position="start">
-                                    <img
-                                      src={arrowBottom}
-                                      alt="Custom Arrow Icon"
-                                      style={{ marginRight: "20px" }}
-                                    />
-                                  </InputAdornment>
-                                )}
-                                sx={{
-                                  minWidth: "100%",
-                                  "& fieldset": { border: 1 },
-                                }}
-                              >
-                                <MenuItem
-                                  value="Text"
-                                  sx={{
-                                    "&:hover": {
-                                      backgroundColor: "var(--hover-bg)",
-                                    },
-                                    "&.Mui-selected": {
-                                      backgroundColor: "var(--hover-bg)",
-                                    },
-                                  }}
-                                >
-                                  <DropdownOption>
-                                    <img src={option} alt="" /> Text
-                                  </DropdownOption>
-                                </MenuItem>
-                                <MenuItem value="single-select">
-                                  <DropdownOption>
-                                    <img src={select} alt="" /> Single-select
-                                  </DropdownOption>
-                                </MenuItem>
-                                <MenuItem value="multi-select">
-                                  <DropdownOption>
-                                    <img src={multiSelect} alt="" />
-                                    Multi-select
-                                  </DropdownOption>
-                                </MenuItem>
-                              </Select>
-                            </DetailsInput>
-                          )}
-                        </>
-                      ))}
                       <PropertyCreateButtons>
                         <CreateCategoryBtn>Create</CreateCategoryBtn>
                         <CancelBtn>Cancel</CancelBtn>
                       </PropertyCreateButtons>
-                    </Details>
+                    </PropertyBtns>
                   </CategoryProperties>
                   {/* category property end */}
                 </AccordionDetails>
