@@ -55,6 +55,7 @@ interface UseCategory {
     categoryName: string
   ) => void;
   updateCategoryArchive: (workspaceId: number, categoryIds: number) => void;
+  unArchiveCategory: (workspaceId: number, categoryIds: number[]) => void;
 }
 
 export const useCategory = create<UseCategory>((set) => {
@@ -158,11 +159,27 @@ export const useCategory = create<UseCategory>((set) => {
           `/workspace_category/${workspaceId}/archive?ids=${categoryIds}`
         );
         if (data.msg === "success" && data.code === 200) {
-          toast("Archive category successfully updated");
+          toast("Archive updated successfully");
         }
       } catch (error: any) {
         console.log(error);
       } finally {
+      }
+    },
+    // un-archive workspace category
+    unArchiveCategory: async (workspaceId, categoryIds) => {
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.put(
+          `/workspace_category/${workspaceId}/unarchive?ids=${categoryIds}`
+        );
+        if (data.msg === "success" && data.code === 200) {
+          toast("Archive updated successfully");
+        }
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
     },
   };

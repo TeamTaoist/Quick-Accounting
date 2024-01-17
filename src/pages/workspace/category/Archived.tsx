@@ -12,24 +12,17 @@ import archive from "../../../assets/workspace/archive.svg";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
 import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
-
-// interface Category {
-//   id: number;
-//   name: string;
-// }
-
-// const categories: Category[] = [
-//   { id: 1, name: "Category Name" },
-//   { id: 2, name: "Category 2" },
-//   { id: 3, name: "Category 3" },
-// ];
+import { useLoading } from "../../../store/useLoading";
+import Loading from "../../../utils/Loading";
 
 const Archived = ({ setOpen }: any) => {
   const { id } = useParams();
   const [selected, setSelected] = useState<number[]>([]);
+  const [categoryLoading, setCategoryLoading] = useState<boolean>(false);
 
-  const { getWorkspaceCategories, workspaceCategories } = useCategory();
-
+  const { getWorkspaceCategories, workspaceCategories, unArchiveCategory } =
+    useCategory();
+  const { isLoading } = useLoading();
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       setSelected(workspaceCategories.data.rows.map((category) => category.ID));
@@ -54,72 +47,80 @@ const Archived = ({ setOpen }: any) => {
   const isSelected = (categoryId: number) =>
     selected.indexOf(categoryId) !== -1;
 
+  // un archive category
+  const workspaceId = Number(id);
+  const categoryIds = selected;
+  const handleUnArchive = () => {
+    unArchiveCategory(workspaceId, categoryIds);
+    setCategoryLoading(!categoryLoading);
+  };
+
   // get workspace un-archive category
   const archiveQuery = true;
   useEffect(() => {
     getWorkspaceCategories(id || "", archiveQuery);
-  }, [getWorkspaceCategories, id, archiveQuery]);
+  }, [getWorkspaceCategories, id, archiveQuery, categoryLoading]);
   console.log(selected);
 
   return (
-    // <Header>
-    <WorkspaceItemDetailsLayout
-      title="Archived categories"
-      subtitle="These categories will continue to be applied to historical transfers."
-      setOpen={setOpen}
-    >
-      <Unarchive>
-        <div>
-          <img src={archive} alt="" />
-          <p>Unarchive</p>
-        </div>
-      </Unarchive>
-      <ArchiveTable>
-        <TableContainer
-          sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
-        >
-          <Table>
-            <TableHead
-              style={{
-                background: "var(--bg-secondary)",
-              }}
-            >
-              <TableRow>
-                <TableCell>
-                  <Checkbox
-                    indeterminate={
-                      selected.length > 0 &&
-                      selected.length < workspaceCategories.data.rows.length
-                    }
-                    checked={
-                      selected.length === workspaceCategories.data.rows.length
-                    }
-                    onChange={handleSelectAllClick}
-                  />
-                  Category
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {workspaceCategories.data.rows.map((category) => (
-                <TableRow key={category.ID}>
-                  <TableCell sx={{ display: "flex", alignItems: "center" }}>
+    <>
+      <WorkspaceItemDetailsLayout
+        title="Archived categories"
+        subtitle="These categories will continue to be applied to historical transfers."
+        setOpen={setOpen}
+      >
+        <Unarchive>
+          <div onClick={handleUnArchive}>
+            <img src={archive} alt="" />
+            <p>Unarchive</p>
+          </div>
+        </Unarchive>
+        <ArchiveTable>
+          <TableContainer
+            sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
+          >
+            <Table>
+              <TableHead
+                style={{
+                  background: "var(--bg-secondary)",
+                }}
+              >
+                <TableRow>
+                  <TableCell>
                     <Checkbox
-                      checked={isSelected(category.ID)}
-                      onChange={(event) =>
-                        handleCheckboxClick(event, category.ID)
+                      indeterminate={
+                        selected.length > 0 &&
+                        selected.length < workspaceCategories.data.rows.length
                       }
+                      checked={
+                        selected.length === workspaceCategories.data.rows.length
+                      }
+                      onChange={handleSelectAllClick}
                     />
-                    <CellValue>{category.name}</CellValue>
+                    Category
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </ArchiveTable>
-    </WorkspaceItemDetailsLayout>
-    // </Header>
+              </TableHead>
+              <TableBody>
+                {workspaceCategories.data.rows.map((category) => (
+                  <TableRow key={category.ID}>
+                    <TableCell sx={{ display: "flex", alignItems: "center" }}>
+                      <Checkbox
+                        checked={isSelected(category.ID)}
+                        onChange={(event) =>
+                          handleCheckboxClick(event, category.ID)
+                        }
+                      />
+                      <CellValue>{category.name}</CellValue>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </ArchiveTable>
+      </WorkspaceItemDetailsLayout>
+    </>
   );
 };
 
@@ -139,6 +140,7 @@ const Unarchive = styled.div`
     border-radius: 5px;
     background: var(--bg-primary);
     font-size: 20px;
+    cursor: pointer;
     img {
       width: 20px;
     }
