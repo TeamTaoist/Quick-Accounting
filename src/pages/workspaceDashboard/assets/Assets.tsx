@@ -28,6 +28,7 @@ import {
 } from "@safe-global/safe-gateway-typescript-sdk";
 import { formatBalance, getShortDisplay } from "../../../utils/number";
 import { useWorkspace } from "../../../store/useWorkspace";
+import CHAINS from "../../../utils/chain";
 
 type AssetType = {
   name: string;
@@ -63,6 +64,7 @@ const Assets = () => {
   );
   const totalValue = getShortDisplay(data?.fiatTotal || 0);
   console.log(data, error, loading);
+  const chainData = CHAINS.find((c) => c.chainId === workspace?.chain_id);
 
   const filterList: AssetType[] =
     data?.items
@@ -75,7 +77,10 @@ const Assets = () => {
         balanceDisplay: formatBalance(item.balance, item.tokenInfo.decimals),
         balanceUSD: Number(item.fiatBalance).format(),
         address: item.tokenInfo.address,
-        link: "", // TODO check current safe chain
+        link:
+          item.tokenInfo.type === "NATIVE_TOKEN"
+            ? ""
+            : `${chainData?.explore}/token/${item.tokenInfo.address}`, // TODO check current safe chain
       }))
       .filter((data) =>
         data.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -170,11 +175,13 @@ const Assets = () => {
                       </RowCell>
                     </TableCell>
                     <TableCell>
-                      <RowLink>
-                        <a href={data.link} target="_blank" rel="noreferrer">
-                          <img src={linkIcon} alt="" />
-                        </a>
-                      </RowLink>
+                      {data.link && (
+                        <RowLink>
+                          <a href={data.link} target="_blank" rel="noreferrer">
+                            <img src={linkIcon} alt="" />
+                          </a>
+                        </RowLink>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
