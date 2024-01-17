@@ -60,6 +60,7 @@ const Category = () => {
     createWorkspaceCategory,
     getWorkspaceCategoryDetails,
     workspaceCategory,
+    updateCategoryName,
   } = useCategory();
   const { isLoading } = useLoading();
 
@@ -88,10 +89,32 @@ const Category = () => {
     createWorkspaceCategory(createCategoryFormData);
     setCategoryLoading(!categoryLoading);
   };
+
+  const [editableCategoryId, setEditableCategoryId] = useState<number>();
+  const [categoryNameEditable, setCategoryNameEditable] =
+    useState<boolean>(false);
+  const [categoryName, setCategoryName] = useState<string>("");
+
   //get workspace category details
   const handleCategory = (workspaceCategoryId: number) => {
     getWorkspaceCategoryDetails(workspaceCategoryId);
+    setCategoryNameEditable(false);
   };
+  // update category name
+  const handleCategoryName = (e: any, categoryId: number) => {
+    e.stopPropagation();
+    setEditableCategoryId(categoryId);
+    setCategoryNameEditable(true);
+  };
+  const handleUpdateCategoryName = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    workspaceId: number,
+    categoryId: number
+  ) => {
+    setCategoryName(e.target.value);
+    updateCategoryName(workspaceId, categoryId, categoryName);
+  };
+  console.log(categoryNameEditable);
 
   return (
     <WorkspaceLayout>
@@ -133,7 +156,7 @@ const Category = () => {
           </CreateOptionButton>
           {/* category option */}
           {workspaceCategories.data.rows.map((category) => (
-            <CategoryOption>
+            <CategoryOption key={category.ID}>
               <Accordion onClick={() => handleCategory(category.ID)}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
@@ -142,16 +165,36 @@ const Category = () => {
                   sx={{ backgroundColor: "var(--hover-bg)" }}
                 >
                   <Header>
-                    <Typography
-                      sx={{
-                        borderRadius: "7px",
-                        padding: 1,
-                        paddingInline: "16px",
-                        backgroundColor: "var(--bg-primary)",
-                      }}
-                    >
-                      Category name
-                    </Typography>
+                    <div onClick={(e) => handleCategoryName(e, category.ID)}>
+                      {editableCategoryId === category.ID &&
+                      categoryNameEditable ? (
+                        <input
+                          type="text"
+                          value={categoryName}
+                          placeholder="Category Name"
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) =>
+                            handleUpdateCategoryName(
+                              e,
+                              category.workspace_id,
+                              category.ID
+                            )
+                          }
+                        />
+                      ) : (
+                        <Typography
+                          sx={{
+                            borderRadius: "7px",
+                            padding: 1,
+                            paddingInline: "16px",
+                            backgroundColor: "var(--bg-primary)",
+                          }}
+                        >
+                          {category.name}
+                        </Typography>
+                      )}
+                    </div>
+
                     <img src={archive} alt="" />
                   </Header>
                 </AccordionSummary>

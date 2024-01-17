@@ -56,6 +56,12 @@ export const Header = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    padding: 5px 10px;
+  }
   img {
     width: 24px;
     margin-right: 30px;
@@ -124,7 +130,10 @@ export const OptionCreateButtons = styled.div`
       font-size: 16px;
     }
   }
-  button:first-child {
+  /* button:first-child {
+    border-right: 1px solid var(--border-table);
+  } */
+  button:first-of-type {
     border-right: 1px solid var(--border-table);
   }
 `;

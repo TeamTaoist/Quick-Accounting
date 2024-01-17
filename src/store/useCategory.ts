@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { useLoading } from "./useLoading";
 import axiosClient from "../utils/axios";
+import { toast } from "react-toastify";
 
 interface WorkspaceCategory {
   archived: boolean;
@@ -48,6 +49,11 @@ interface UseCategory {
   getWorkspaceCategories: (workspaceId: string) => void;
   createWorkspaceCategory: (createCategoryFormData: CreateCategoryForm) => void;
   getWorkspaceCategoryDetails: (workspaceCategoryId: number) => void;
+  updateCategoryName: (
+    workspaceId: number,
+    categoryId: number,
+    categoryName: string
+  ) => void;
 }
 
 export const useCategory = create<UseCategory>((set) => {
@@ -120,7 +126,6 @@ export const useCategory = create<UseCategory>((set) => {
     // get workspace category details
     getWorkspaceCategoryDetails: async (workspaceCategoryId) => {
       try {
-        setLoading(true);
         const { data } = await axiosClient.get(
           `/workspace_category/${workspaceCategoryId}`
         );
@@ -128,7 +133,21 @@ export const useCategory = create<UseCategory>((set) => {
       } catch (error: any) {
         console.log(error);
       } finally {
-        setLoading(false);
+      }
+    },
+    // get workspace category details
+    updateCategoryName: async (workspaceId, categoryId, categoryName) => {
+      try {
+        const { data } = await axiosClient.put(
+          `/workspace_category/${workspaceId}/update/${categoryId}`,
+          { name: categoryName }
+        );
+        if (data.msg === "success" && data.code === 200) {
+          // toast("Category updated");
+        }
+      } catch (error: any) {
+        console.log(error);
+      } finally {
       }
     },
   };
