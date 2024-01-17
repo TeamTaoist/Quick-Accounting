@@ -4,6 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useParams } from "react-router-dom";
+import useAsync from "../../../hooks/useAsync";
+import {
+  getSafeInfo,
+  SafeInfo,
+} from "@safe-global/safe-gateway-typescript-sdk";
 
 const Settings = () => {
   const { t } = useTranslation();
@@ -27,6 +32,14 @@ const Settings = () => {
   };
   console.log(workspace);
 
+  const [data, error, loading] = useAsync<SafeInfo>(
+    () => {
+      return getSafeInfo(String(workspace?.chain_id), workspace?.vault_wallet);
+    },
+    [workspace],
+    false
+  );
+
   return (
     <WorkspaceLayout>
       <SettingsContainer>
@@ -43,9 +56,9 @@ const Settings = () => {
         </WorkspaceForm>
         <MultiSigner>
           <h3>{t("settings.MultiSigner")}</h3>
-          <p>0x4d4b78d37090ed3e1eae6779ba2c3d6728052915</p>
-          <p>0x4d4b78d37090ed3e1eae6779ba2c3d6728052915</p>
-          <p>0x4d4b78d37090ed3e1eae6779ba2c3d6728052915</p>
+          {data?.owners?.map((owner) => (
+            <p key={owner.value}>{owner.value}</p>
+          ))}
         </MultiSigner>
       </SettingsContainer>
     </WorkspaceLayout>

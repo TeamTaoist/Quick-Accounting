@@ -59,7 +59,7 @@ const Assets = () => {
     () => {
       return getBalances(String(workspace?.chain_id), workspace?.vault_wallet);
     },
-    [],
+    [workspace],
     false
   );
   const totalValue = getShortDisplay(data?.fiatTotal || 0);
