@@ -92,8 +92,6 @@ const Category = () => {
   const handleCategory = (workspaceCategoryId: number) => {
     getWorkspaceCategoryDetails(workspaceCategoryId);
   };
-  // console.log(workspaceCategory);
-  // console.log(workspaceCategories.data.rows);
 
   return (
     <WorkspaceLayout>

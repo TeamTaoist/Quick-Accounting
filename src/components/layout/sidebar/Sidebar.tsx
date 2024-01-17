@@ -42,7 +42,11 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
                 className="workspace-logo"
                 onClick={() => handleFetchWorkspaceDetails(workspace.ID)}
               >
-                <img src={workspace.avatar} alt={workspace.name} />
+                {workspace.avatar === "" ? (
+                  <p>{workspace.name.slice(0, 1)}</p>
+                ) : (
+                  <img src={workspace.avatar} alt={workspace.name} />
+                )}
               </div>
               // </Link>
             ))}
