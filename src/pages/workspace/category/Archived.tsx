@@ -1,5 +1,5 @@
 import Header from "../../../components/layout/header/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,24 +10,29 @@ import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
 import archive from "../../../assets/workspace/archive.svg";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
+import { useParams } from "react-router-dom";
+import { useCategory } from "../../../store/useCategory";
 
-interface Category {
-  id: number;
-  name: string;
-}
+// interface Category {
+//   id: number;
+//   name: string;
+// }
 
-const categories: Category[] = [
-  { id: 1, name: "Category Name" },
-  { id: 2, name: "Category 2" },
-  { id: 3, name: "Category 3" },
-];
+// const categories: Category[] = [
+//   { id: 1, name: "Category Name" },
+//   { id: 2, name: "Category 2" },
+//   { id: 3, name: "Category 3" },
+// ];
 
 const Archived = ({ setOpen }: any) => {
+  const { id } = useParams();
   const [selected, setSelected] = useState<number[]>([]);
+
+  const { getWorkspaceCategories, workspaceCategories } = useCategory();
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelected(categories.map((category) => category.id));
+      setSelected(workspaceCategories.data.rows.map((category) => category.ID));
     } else {
       setSelected([]);
     }
@@ -48,6 +53,14 @@ const Archived = ({ setOpen }: any) => {
 
   const isSelected = (categoryId: number) =>
     selected.indexOf(categoryId) !== -1;
+
+  // get workspace un-archive category
+  const archiveQuery = true;
+  useEffect(() => {
+    getWorkspaceCategories(id || "", archiveQuery);
+  }, [getWorkspaceCategories, id, archiveQuery]);
+  console.log(selected);
+
   return (
     // <Header>
     <WorkspaceItemDetailsLayout
@@ -75,9 +88,12 @@ const Archived = ({ setOpen }: any) => {
                 <TableCell>
                   <Checkbox
                     indeterminate={
-                      selected.length > 0 && selected.length < categories.length
+                      selected.length > 0 &&
+                      selected.length < workspaceCategories.data.rows.length
                     }
-                    checked={selected.length === categories.length}
+                    checked={
+                      selected.length === workspaceCategories.data.rows.length
+                    }
                     onChange={handleSelectAllClick}
                   />
                   Category
@@ -85,13 +101,13 @@ const Archived = ({ setOpen }: any) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {categories.map((category) => (
-                <TableRow key={category.id}>
+              {workspaceCategories.data.rows.map((category) => (
+                <TableRow key={category.ID}>
                   <TableCell sx={{ display: "flex", alignItems: "center" }}>
                     <Checkbox
-                      checked={isSelected(category.id)}
+                      checked={isSelected(category.ID)}
                       onChange={(event) =>
-                        handleCheckboxClick(event, category.id)
+                        handleCheckboxClick(event, category.ID)
                       }
                     />
                     <CellValue>{category.name}</CellValue>

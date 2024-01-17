@@ -46,7 +46,7 @@ interface CreateCategoryForm {
 interface UseCategory {
   workspaceCategories: WorkspaceCategories;
   workspaceCategory: WorkspaceCategory;
-  getWorkspaceCategories: (workspaceId: string) => void;
+  getWorkspaceCategories: (workspaceId: string, archiveQuery?: boolean) => void;
   createWorkspaceCategory: (createCategoryFormData: CreateCategoryForm) => void;
   getWorkspaceCategoryDetails: (workspaceCategoryId: number) => void;
   updateCategoryName: (
@@ -95,11 +95,11 @@ export const useCategory = create<UseCategory>((set) => {
       UpdatedAt: "",
       workspace_id: 0,
     },
-    getWorkspaceCategories: async (workspaceId) => {
+    getWorkspaceCategories: async (workspaceId, archiveQuery) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
-          `/workspace_categories/categories_by_workspace_id/${workspaceId}`
+          `/workspace_categories/categories_by_workspace_id/${workspaceId}?archived=${archiveQuery}`
         );
         set({ workspaceCategories: data });
       } catch (error: any) {

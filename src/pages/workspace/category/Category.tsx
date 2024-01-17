@@ -127,9 +127,10 @@ const Category = () => {
 
   console.log(categoryNameEditable);
   // get all categories
+  const archiveQuery = false;
   useEffect(() => {
-    getWorkspaceCategories(id || "");
-  }, [getWorkspaceCategories, id, categoryLoading]);
+    getWorkspaceCategories(id || "", archiveQuery);
+  }, [getWorkspaceCategories, id, categoryLoading, archiveQuery]);
 
   return (
     <WorkspaceLayout>
