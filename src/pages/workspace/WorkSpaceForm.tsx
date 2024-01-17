@@ -25,25 +25,24 @@ import CHAINS from "../../utils/chain";
 import { useWorkspace } from "../../store/useWorkspace";
 import { useLoading } from "../../store/useLoading";
 import Loading from "../../utils/Loading";
+import { useAccount } from "wagmi";
 
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { createWorkspace } = useWorkspace();
   const { isLoading } = useLoading();
+  const { address } = useAccount();
 
   const [safe, setSafe] = useState("");
   const [workspaceName, setWorkspaceName] = useState("");
-  const [selectChainId, setSelectChanId] = useState(137);
+  const [selectChainId, setSelectChanId] = useState(CHAINS[0].chainId);
 
   const [data, error, loading] = useAsync<OwnedSafes>(
     () => {
-      return getOwnedSafes(
-        String(selectChainId),
-        "0x8C913aEc7443FE2018639133398955e0E17FB0C1" // hardcode, just for test, it should be the user's address
-      );
+      return getOwnedSafes(String(selectChainId), address!);
     },
-    [selectChainId],
+    [selectChainId, address],
     false
   );
   console.log(data, error, loading);
@@ -54,7 +53,7 @@ const WorkSpaceForm = () => {
   };
 
   const formData = {
-    chain_id: 1,
+    chain_id: selectChainId,
     name: workspaceName,
     vault_wallet: safe,
   };

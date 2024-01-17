@@ -1,6 +1,11 @@
 const SafePathPrefix = "https://app.safe.global/images/networks";
 const CHAINS = [
   {
+    chainId: 11155111,
+    chainName: "Sepolia",
+    logoPath: `${SafePathPrefix}/sep.png`,
+  },
+  {
     chainId: 1,
     chainName: "Ethereum",
     logoPath: `${SafePathPrefix}/mainnet.svg`,

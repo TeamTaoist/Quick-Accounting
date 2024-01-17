@@ -108,7 +108,7 @@ export const useWorkspace = create<UseWorkspace>((set) => {
         set({ workspace: data.data });
 
         if (data.msg === "success" && data.code === 200) {
-          // navigate(`${data.data.ID}/assets`);
+          navigate(`/workspace/${data.data.ID}/assets`);
         }
       } catch (error: any) {
         console.log(error);
