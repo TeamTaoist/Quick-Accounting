@@ -49,6 +49,7 @@ import {
 import { useCategory } from "../../../store/useCategory";
 import { useLoading } from "../../../store/useLoading";
 import Loading from "../../../utils/Loading";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
 const Category = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -64,6 +65,9 @@ const Category = () => {
     updateCategoryArchive,
   } = useCategory();
   const { isLoading } = useLoading();
+
+  const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
+    useCategoryProperty();
 
   const [selectedValue, setSelectedValue] = useState("Text");
   const handleChange = (event: SelectChangeEvent) => {
@@ -126,11 +130,26 @@ const Category = () => {
   };
 
   console.log(categoryNameEditable);
+
+  // dynamic category properties
+  const [categoryProperties, setCategoryProperties] = useState([]);
+
   // get all categories
   const archiveQuery = false;
+  const workspaceId = Number(id);
   useEffect(() => {
-    getWorkspaceCategories(id || "", archiveQuery);
-  }, [getWorkspaceCategories, id, categoryLoading, archiveQuery]);
+    getWorkspaceCategories(workspaceId, archiveQuery);
+    // get workspace category properties
+    getWorkspaceCategoryProperties(workspaceId);
+  }, [
+    getWorkspaceCategories,
+    workspaceId,
+    categoryLoading,
+    archiveQuery,
+    getWorkspaceCategoryProperties,
+    openModal,
+  ]);
+  console.log(workspaceCategoryProperties);
 
   return (
     <WorkspaceLayout>
@@ -173,8 +192,9 @@ const Category = () => {
           {/* category option */}
           {workspaceCategories.data.rows.map((category) => (
             <CategoryOption key={category.ID}>
-              <Accordion onClick={() => handleCategory(category.ID)}>
+              <Accordion>
                 <AccordionSummary
+                  onClick={() => handleCategory(category.ID)}
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"

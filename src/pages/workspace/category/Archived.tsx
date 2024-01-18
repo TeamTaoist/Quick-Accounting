@@ -58,8 +58,8 @@ const Archived = ({ setOpen }: any) => {
   // get workspace un-archive category
   const archiveQuery = true;
   useEffect(() => {
-    getWorkspaceCategories(id || "", archiveQuery);
-  }, [getWorkspaceCategories, id, archiveQuery, categoryLoading]);
+    getWorkspaceCategories(workspaceId, archiveQuery);
+  }, [getWorkspaceCategories, workspaceId, archiveQuery, categoryLoading]);
   console.log(selected);
 
   return (

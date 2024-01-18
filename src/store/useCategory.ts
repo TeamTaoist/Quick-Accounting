@@ -46,7 +46,7 @@ interface CreateCategoryForm {
 interface UseCategory {
   workspaceCategories: WorkspaceCategories;
   workspaceCategory: WorkspaceCategory;
-  getWorkspaceCategories: (workspaceId: string, archiveQuery?: boolean) => void;
+  getWorkspaceCategories: (workspaceId: number, archiveQuery?: boolean) => void;
   createWorkspaceCategory: (createCategoryFormData: CreateCategoryForm) => void;
   getWorkspaceCategoryDetails: (workspaceCategoryId: number) => void;
   updateCategoryName: (
