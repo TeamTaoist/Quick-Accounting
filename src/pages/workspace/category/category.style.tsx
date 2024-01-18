@@ -164,6 +164,11 @@ export const PropertyInput = styled.input`
   padding: 10px;
   width: 100%;
 `;
+export const PropertyInputValue = styled.input`
+  padding: 10px;
+  width: 100%;
+  margin-top: 10px;
+`;
 export const DropdownOption = styled.div`
   display: flex;
   gap: 14px;

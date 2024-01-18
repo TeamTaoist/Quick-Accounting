@@ -2,9 +2,30 @@ import { create } from "zustand";
 import { useLoading } from "./useLoading";
 import axiosClient from "../utils/axios";
 import { toast } from "react-toastify";
-
+interface CategoryProperties {
+  ID: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string;
+  workspace_id: number;
+  name: string;
+  archived: boolean;
+  properties?: [
+    {
+      ID: number;
+      CreatedAt: string;
+      UpdatedAt: string;
+      DeletedAt: string;
+      workspace_id: number;
+      category_id: number;
+      name: string;
+      type: string;
+      values: string;
+    }
+  ];
+}
 interface UseCategoryProperty {
-  workspaceCategoryProperties: any;
+  workspaceCategoryProperties: CategoryProperties[];
   getWorkspaceCategoryProperties: (workspaceId: number) => void;
 }
 
