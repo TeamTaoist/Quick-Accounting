@@ -44,7 +44,7 @@ const RouterLink = () => {
         <Route path="/create-workspace" element={<WorkSpaceForm />} />
         {/* <Route path="/workspace" element={<WorkspaceDashboard />} /> */}
         <Route
-          path="/new-payment-request"
+          path="/workspace/:id/new-payment-request"
           element={<NewPaymentRequest />}
         ></Route>
         <Route path="/workspace/:id/assets" element={<Assets />} />

@@ -35,7 +35,7 @@ const WorkspaceSidebar = () => {
         </WorkspaceInfo>
         {/* payment request btn and share btn */}
         <PaymentRequest>
-          <Link to="/new-payment-request">
+          <Link to={`/workspace/${id}/new-payment-request`}>
             <RequestBtn>
               <img src={add} alt="" />
               <span>{t("workspace.New")}</span>

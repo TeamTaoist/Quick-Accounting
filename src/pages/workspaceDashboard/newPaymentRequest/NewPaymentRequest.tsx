@@ -38,10 +38,11 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ReactSelect from "../../../components/ReactSelect";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
 interface SubmitRowData {
   recipient: string;
@@ -51,17 +52,20 @@ interface SubmitRowData {
 
 const NewPaymentRequest = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [selectedValue, setSelectedValue] = useState("Option1");
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
   };
 
-  const [age, setAge] = useState("Category");
+  const [age, setAge] = useState("");
 
   const handleCategoryChange = (event: SelectChangeEvent) => {
     setAge(event.target.value as string);
+    console.log(event.target.value);
   };
+  // console.log(age);
 
   // add new payment request
   const [rows, setRows] = useState([
@@ -92,16 +96,33 @@ const NewPaymentRequest = () => {
     list[index][property as keyof SubmitRowData] = value;
     setRows(list);
   };
-  console.log(rows);
+  const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
+    useCategoryProperty();
+  const [selectedCategoryID, setSelectedCategoryID] = useState<number>();
 
-  const options = [
-    { value: "option 1", label: "Options 1" },
-    { value: "option 2", label: "Options 2" },
-    { value: "option 3", label: "Options 3" },
-    { value: "option 4", label: "Options 4" },
-    { value: "option 5", label: "Options 5" },
-  ];
-  console.log(rows);
+  const selectedCategory = workspaceCategoryProperties.find(
+    (f) => f.ID === selectedCategoryID
+  );
+  // const options = selectedCategory
+  //   ? selectedCategory?.properties?.map((property) => ({
+  //       value: property.name,
+  //       label: property.name,
+  //     }))
+  //   : [];
+  // const singleSelect = selectedCategory
+  // console.log(rows);
+  const handleDeletePayment = (index: number) => {
+    const updatedRows = rows.filter((_, i) => i !== index);
+    setRows(updatedRows);
+  };
+
+  const workspaceId = Number(id);
+  useEffect(() => {
+    getWorkspaceCategoryProperties(workspaceId);
+  }, [getWorkspaceCategoryProperties, workspaceId]);
+
+  console.log(selectedValues);
+  console.log(selectedCategory);
 
   return (
     <Header>
@@ -109,7 +130,7 @@ const NewPaymentRequest = () => {
         <Request>
           <RequestHeader>
             <h1>New payment request</h1>
-            <img onClick={() => navigate("/assets")} src={cancel} alt="" />
+            <img onClick={() => navigate(-1)} src={cancel} alt="" />
           </RequestHeader>
           <TableSection>
             <TableContainer
@@ -258,7 +279,7 @@ const NewPaymentRequest = () => {
                           // minHeight: "40px",
                         }}
                       >
-                        <DeleteIcon>
+                        <DeleteIcon onClick={() => handleDeletePayment(index)}>
                           <img src={trash} alt="" />
                         </DeleteIcon>
                       </TableCell>
@@ -297,8 +318,10 @@ const NewPaymentRequest = () => {
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            value={age}
-                            label="Age"
+                            // value={age}
+                            // value={selectedCategory}
+                            // label="Age"
+                            label="Category"
                             size="small"
                             onChange={handleCategoryChange}
                             IconComponent={() => (
@@ -318,102 +341,149 @@ const NewPaymentRequest = () => {
                             <MenuItem disabled value="Category">
                               Category name
                             </MenuItem>
-                            <MenuItem
-                              value={10}
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                                "&.Mui-selected": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                              }}
-                            >
-                              Ten
-                            </MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
+                            {workspaceCategoryProperties.map((property) => (
+                              <MenuItem
+                                onClick={() =>
+                                  setSelectedCategoryID(property.ID)
+                                }
+                                value={property.name}
+                                sx={{
+                                  "&:hover": {
+                                    backgroundColor: "var(--hover-bg)",
+                                  },
+                                  "&.Mui-selected": {
+                                    backgroundColor: "var(--hover-bg)",
+                                  },
+                                }}
+                              >
+                                {property.name}
+                              </MenuItem>
+                            ))}
+
+                            {/* <MenuItem value={20}>Twenty</MenuItem> */}
                           </Select>
                         </FormControl>
                       </TableCell>
                     </TableRow>
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
-                        <NoteInfo>
-                          <Image src={selectIcon} alt="" /> Property name
-                        </NoteInfo>
-                      </TableCell>
-                      {/* add multi select */}
-                      <TableCell>
-                        <ReactSelect
-                          value={selectedValues}
-                          onChange={handleSelectChange}
-                          options={options}
-                          defaultValues={[options[1]]}
-                        />
-                      </TableCell>
-                    </TableRow>
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
-                        <NoteInfo>
-                          <Image src={multiSelect} alt="" /> Property name
-                        </NoteInfo>
-                      </TableCell>
-                      {/* add multi select */}
-                      <TableCell>
-                        <ReactSelect
-                          value={selectedValues}
-                          onChange={handleSelectChange}
-                          options={options}
-                          defaultValues={[options[1], options[2]]}
-                        />
-                      </TableCell>
-                    </TableRow>
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
-                        <NoteInfo>
-                          <Image src={optionsIcon} alt="" /> Property name
-                        </NoteInfo>
-                      </TableCell>
-                      {/* add multi select */}
-                      <TableCell>
-                        <TextField
-                          sx={{
-                            "& fieldset": { border: "none" },
-                          }}
-                          size="small"
-                          fullWidth
-                          // id="fullWidth"
-                          placeholder="Enter content"
-                          InputProps={{
-                            style: { padding: 0 },
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
+                    {selectedCategory?.properties?.map((property) => (
+                      <>
+                        {property.type === "single-select" && (
+                          <TableRow
+                            sx={{
+                              td: {
+                                border: "1px solid var(--border-table)",
+                                padding: 0,
+                                paddingInline: "16px",
+                              },
+                            }}
+                          >
+                            <TableCell sx={{ height: 1, width: 200 }}>
+                              <NoteInfo>
+                                <Image src={selectIcon} alt="" />{" "}
+                                {property.name}
+                              </NoteInfo>
+                            </TableCell>
+                            {/* add multi select */}
+                            <TableCell>
+                              <ReactSelect
+                                // value={selectedValues}
+                                value={selectedValues}
+                                onChange={handleSelectChange}
+                                // options={property.values}
+                                options={[
+                                  {
+                                    value: property.values,
+                                    label: property.values,
+                                  },
+                                ]}
+                                isMulti={false}
+                                // defaultValues={[options[1]]}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </>
+                    ))}
+                    {selectedCategory?.properties?.map((property) => (
+                      <>
+                        {property.type === "multi-select" && (
+                          <TableRow
+                            sx={{
+                              td: {
+                                border: "1px solid var(--border-table)",
+                                padding: 0,
+                                paddingInline: "16px",
+                              },
+                            }}
+                          >
+                            <TableCell sx={{ height: 1, width: 200 }}>
+                              <NoteInfo>
+                                <Image src={multiSelect} alt="" />{" "}
+                                {property.name}
+                              </NoteInfo>
+                            </TableCell>
+                            {/* add multi select */}
+                            <TableCell>
+                              <ReactSelect
+                                value={selectedValues}
+                                onChange={handleSelectChange}
+                                options={[
+                                  {
+                                    value: property.values,
+                                    label: property.values,
+                                  },
+                                  {
+                                    value: property.values,
+                                    label: property.values,
+                                  },
+                                ]}
+                                // defaultValues={[options[1], options[2]]}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </>
+                    ))}
+
+                    {/* single select */}
+                    {selectedCategory?.properties?.map((property) => (
+                      <>
+                        {property.type === "Text" && (
+                          <TableRow
+                            sx={{
+                              td: {
+                                border: "1px solid var(--border-table)",
+                                padding: 0,
+                                paddingInline: "16px",
+                              },
+                            }}
+                          >
+                            <TableCell sx={{ height: 1, width: 200 }}>
+                              <NoteInfo>
+                                <Image src={optionsIcon} alt="" />{" "}
+                                {property.name}
+                              </NoteInfo>
+                            </TableCell>
+                            {/* add multi select */}
+                            <TableCell>
+                              <TextField
+                                sx={{
+                                  "& fieldset": { border: "none" },
+                                }}
+                                size="small"
+                                fullWidth
+                                value={property.values}
+                                // id="fullWidth"
+                                placeholder="Enter content"
+                                InputProps={{
+                                  style: { padding: 0 },
+                                }}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
