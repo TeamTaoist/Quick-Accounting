@@ -116,6 +116,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
           }
         );
         set({ categoryProperty: data });
+        toast.success("Property created successfully");
       } catch (error: any) {
         console.log(error);
       } finally {

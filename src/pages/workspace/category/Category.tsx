@@ -114,7 +114,7 @@ const Category = () => {
 
   //get workspace category details
   const handleCategory = (workspaceCategoryId: number) => {
-    getWorkspaceCategoryDetails(workspaceCategoryId);
+    // getWorkspaceCategoryDetails(workspaceCategoryId);
     setCategoryNameEditable(false);
   };
   // update category name
@@ -212,10 +212,10 @@ const Category = () => {
     });
   };
 
-  const [showProperty, setShowProperty] = useState<number>(0);
+  const [showProperty, setShowProperty] = useState<number | null>();
 
   const handleCreateProperty = (categoryId: number, propertyIndex: number) => {
-    const propertyFormValues = categoryProperties[categoryId][showProperty];
+    const propertyFormValues = categoryProperties[categoryId][showProperty!];
     const propertyValues = {
       category_id: categoryId,
       name: propertyFormValues.name,
@@ -224,14 +224,12 @@ const Category = () => {
       workspace_id: Number(id),
     };
     createWorkspaceCategoryProperties(propertyValues);
-    // if (categoryProperty.code === 200 && categoryProperty.msg === "success") {
-    //   setShowProperty(0)
-    //   // setCategoryProperties({});
-    // }
+    if (categoryProperty.code === 200 && categoryProperty.msg === "success") {
+      setShowProperty(null);
+      // setCategoryProperties({});
+    }
   };
-  // console.log(categoryProperties);
-  // console.log(workspaceCategoryProperties);
-  console.log(showProperty);
+  // console.log(showProperty);
 
   return (
     <WorkspaceLayout>
@@ -333,7 +331,7 @@ const Category = () => {
                       <PropertyOptions>
                         <h4>ADD PROPERTIES</h4>
                         {category.properties?.map((property, index) => (
-                          <div onClick={() => setShowProperty(index)}>
+                          <div onClick={() => setShowProperty(property.ID)}>
                             <Option>
                               <PropertyTitle>
                                 <img src={property1} alt="" />
@@ -361,9 +359,9 @@ const Category = () => {
                         <>
                           {category.properties?.map((property, index) => (
                             <div>
-                              {showProperty === index && (
+                              {showProperty === property.ID && (
                                 <DetailsInput>
-                                  <h3>Property name {index}</h3>
+                                  <h3>Property name</h3>
                                   <PropertyInput
                                     placeholder="Property name"
                                     value={property.name}
