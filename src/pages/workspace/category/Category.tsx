@@ -77,8 +77,12 @@ const Category = () => {
   } = useCategory();
   const { isLoading } = useLoading();
 
-  const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
-    useCategoryProperty();
+  const {
+    getWorkspaceCategoryProperties,
+    workspaceCategoryProperties,
+    createWorkspaceCategoryProperties,
+    categoryProperty,
+  } = useCategoryProperty();
 
   const [selectedValue, setSelectedValue] = useState("Text");
   const handleChange = (event: SelectChangeEvent) => {
@@ -182,6 +186,18 @@ const Category = () => {
       [categoryId]: updatedProperties,
     });
   };
+  const handlePropertyValueChange = (
+    categoryId: number,
+    index: number,
+    newName: string
+  ) => {
+    const updatedProperties = [...categoryProperties[categoryId]];
+    updatedProperties[index].value = newName;
+    setCategoryProperties({
+      ...categoryProperties,
+      [categoryId]: updatedProperties,
+    });
+  };
 
   const handlePropertyTypeChange = (
     categoryId: number,
@@ -195,8 +211,27 @@ const Category = () => {
       [categoryId]: updatedProperties,
     });
   };
-  console.log(categoryProperties);
-  console.log(workspaceCategoryProperties);
+
+  const [showProperty, setShowProperty] = useState<number>(0);
+
+  const handleCreateProperty = (categoryId: number, propertyIndex: number) => {
+    const propertyFormValues = categoryProperties[categoryId][showProperty];
+    const propertyValues = {
+      category_id: categoryId,
+      name: propertyFormValues.name,
+      type: propertyFormValues.type,
+      values: propertyFormValues.value,
+      workspace_id: Number(id),
+    };
+    createWorkspaceCategoryProperties(propertyValues);
+    // if (categoryProperty.code === 200 && categoryProperty.msg === "success") {
+    //   setShowProperty(0)
+    //   // setCategoryProperties({});
+    // }
+  };
+  // console.log(categoryProperties);
+  // console.log(workspaceCategoryProperties);
+  console.log(showProperty);
 
   return (
     <WorkspaceLayout>
@@ -237,7 +272,7 @@ const Category = () => {
             />
           </CreateOptionButton>
           {/* category option */}
-          {workspaceCategoryProperties.map((category) => (
+          {workspaceCategoryProperties.map((category, index) => (
             <CategoryOption key={category.ID}>
               <Accordion>
                 <AccordionSummary
@@ -297,29 +332,36 @@ const Category = () => {
                     <Options>
                       <PropertyOptions>
                         <h4>ADD PROPERTIES</h4>
-                        {/* {categoryProperties[category.ID] &&
+                        {category.properties?.map((property, index) => (
+                          <div onClick={() => setShowProperty(index)}>
+                            <Option>
+                              <PropertyTitle>
+                                <img src={property1} alt="" />
+                                <p>{property.name}</p>
+                              </PropertyTitle>
+                              <img src={archive} alt="" />
+                            </Option>
+                          </div>
+                        ))}
+                        {categoryProperties[category.ID] &&
                           categoryProperties[category.ID].map(
                             (property, index) => (
-                              <Option>
+                              <Option onClick={() => setShowProperty(index)}>
                                 <PropertyTitle>
                                   <img src={property1} alt="" />
-                                  <p>
-                                    {property.name} {index}
-                                  </p>
+                                  <p>{property.name}</p>
                                 </PropertyTitle>
                                 <img src={archive} alt="" />
                               </Option>
                             )
-                          )} */}
-                        {}
+                          )}
                       </PropertyOptions>
                       {/* property input section */}
                       <Details>
                         <>
-                          {/*  */}
-                          {categoryProperties[category.ID] &&
-                            categoryProperties[category.ID].map(
-                              (property, index) => (
+                          {category.properties?.map((property, index) => (
+                            <div>
+                              {showProperty === index && (
                                 <DetailsInput>
                                   <h3>Property name {index}</h3>
                                   <PropertyInput
@@ -389,10 +431,10 @@ const Category = () => {
                                     </MenuItem>
                                   </Select>
                                   {/* property value */}
-                                  {property.type !== "" && (
+                                  {property.type !== "Text" && (
                                     <PropertyInputValue
                                       placeholder=""
-                                      value={property.value}
+                                      value={property.values}
                                       onChange={(e) =>
                                         handlePropertyNameChange(
                                           category.ID,
@@ -403,6 +445,102 @@ const Category = () => {
                                     />
                                   )}
                                 </DetailsInput>
+                              )}
+                            </div>
+                          ))}
+                          {/*  */}
+                          {categoryProperties[category.ID] &&
+                            categoryProperties[category.ID].map(
+                              (property, index) => (
+                                <div>
+                                  {showProperty === index && (
+                                    <DetailsInput>
+                                      <h3>Property name</h3>
+                                      <PropertyInput
+                                        placeholder="Property name"
+                                        value={property.name}
+                                        onChange={(e) =>
+                                          handlePropertyNameChange(
+                                            category.ID,
+                                            index,
+                                            e.target.value
+                                          )
+                                        }
+                                      />
+                                      <h3>Property Type</h3>
+                                      <Select
+                                        labelId={`property-type-label-${index}`}
+                                        id={`property-type-${index}`}
+                                        value={property.type}
+                                        onChange={(e) =>
+                                          handlePropertyTypeChange(
+                                            category.ID,
+                                            index,
+                                            e.target.value
+                                          )
+                                        }
+                                        size="small"
+                                        IconComponent={() => (
+                                          <InputAdornment position="start">
+                                            <img
+                                              src={arrowBottom}
+                                              alt="Custom Arrow Icon"
+                                              style={{ marginRight: "20px" }}
+                                            />
+                                          </InputAdornment>
+                                        )}
+                                        sx={{
+                                          minWidth: "100%",
+                                          "& fieldset": { border: 1 },
+                                        }}
+                                      >
+                                        <MenuItem
+                                          value="Text"
+                                          sx={{
+                                            "&:hover": {
+                                              backgroundColor:
+                                                "var(--hover-bg)",
+                                            },
+                                            "&.Mui-selected": {
+                                              backgroundColor:
+                                                "var(--hover-bg)",
+                                            },
+                                          }}
+                                        >
+                                          <DropdownOption>
+                                            <img src={option} alt="" /> Text
+                                          </DropdownOption>
+                                        </MenuItem>
+                                        <MenuItem value="single-select">
+                                          <DropdownOption>
+                                            <img src={select} alt="" />{" "}
+                                            Single-select
+                                          </DropdownOption>
+                                        </MenuItem>
+                                        <MenuItem value="multi-select">
+                                          <DropdownOption>
+                                            <img src={multiSelect} alt="" />
+                                            Multi-select
+                                          </DropdownOption>
+                                        </MenuItem>
+                                      </Select>
+                                      {/* property value */}
+                                      {property.type !== "Text" && (
+                                        <PropertyInputValue
+                                          placeholder=""
+                                          value={property.value}
+                                          onChange={(e) =>
+                                            handlePropertyValueChange(
+                                              category.ID,
+                                              index,
+                                              e.target.value
+                                            )
+                                          }
+                                        />
+                                      )}
+                                    </DetailsInput>
+                                  )}
+                                </div>
                               )
                             )}
                         </>
@@ -421,7 +559,13 @@ const Category = () => {
                         </button>
                       </OptionCreateButtons>
                       <PropertyCreateButtons>
-                        <CreateCategoryBtn>Create</CreateCategoryBtn>
+                        <CreateCategoryBtn
+                          onClick={() =>
+                            handleCreateProperty(category.ID, index)
+                          }
+                        >
+                          Create
+                        </CreateCategoryBtn>
                         <CancelBtn>Cancel</CancelBtn>
                       </PropertyCreateButtons>
                     </PropertyBtns>

@@ -147,9 +147,9 @@ export const PropertyTitle = styled.div`
 `;
 export const Details = styled.div`
   width: 50%;
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-between; */
   /* align-items: flex-end; */
 `;
 export const DetailsInput = styled.div`
