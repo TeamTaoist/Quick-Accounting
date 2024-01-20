@@ -17,3 +17,21 @@ declare interface IPaymentRequest {
   status: number;
   hide: boolean;
 }
+
+declare interface ICategoryProperties {
+  name: string;
+  type: string;
+  values: string;
+}
+declare interface IRows {
+  amount: string;
+  currency_name: string;
+  recipient: string;
+  currency_contract_address?: string;
+}
+declare interface IPaymentRequestBody {
+  category_id?: number;
+  category_name?: string;
+  category_properties?: ICategoryProperties[];
+  rows: IRows[];
+}

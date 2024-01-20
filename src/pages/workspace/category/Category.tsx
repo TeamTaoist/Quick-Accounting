@@ -240,7 +240,7 @@ const Category = () => {
             <h3>You don't have any categories.</h3>
             <p>Standardize your payments and bookkeeping with categories.</p>
             <CreateOptionButton>
-              <CreateBtn>
+              <CreateBtn onClick={handleCreateCategory}>
                 <img src={add} alt="" />
                 <span>{t("category.CreateCategory")}</span>
               </CreateBtn>
@@ -270,7 +270,7 @@ const Category = () => {
             />
           </CreateOptionButton>
           {/* category option */}
-          {workspaceCategoryProperties.map((category, index) => (
+          {workspaceCategoryProperties?.map((category, index) => (
             <CategoryOption key={category.ID}>
               <Accordion>
                 <AccordionSummary

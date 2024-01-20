@@ -7,6 +7,10 @@ import { toast } from "react-toastify";
 interface IPaymentsStore {
   paymentRequestList: IPaymentRequest[];
   getPaymentRequestList: (page: number, size: number) => void;
+  createPaymentRequest: (
+    paymentRequestBody: IPaymentRequestBody,
+    navigate: any
+  ) => void;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set) => {
@@ -23,6 +27,24 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
           { page, size }
         );
         set({ paymentRequestList: data.data.rows });
+      } catch (error: any) {
+        toast.error(error?.data.msg || error?.status || error);
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    // create payment request
+    createPaymentRequest: async (paymentRequestBody, navigate) => {
+      setLoading(true);
+      try {
+        const { data } = await axiosClient.post(
+          `/payment_request/${workspace.ID}`,
+          paymentRequestBody
+        );
+        if (data.msg === "success" && data.code === 200) {
+          navigate("/workspace/8/payment-request");
+        }
       } catch (error: any) {
         toast.error(error?.data.msg || error?.status || error);
         console.error(error);

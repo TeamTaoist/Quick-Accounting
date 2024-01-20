@@ -43,47 +43,77 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactSelect from "../../../components/ReactSelect";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import { useWorkspace } from "../../../store/useWorkspace";
+import useAsync from "../../../hooks/useAsync";
+import {
+  SafeBalanceResponse,
+  getBalances,
+} from "@safe-global/safe-gateway-typescript-sdk";
+import usePaymentsStore from "../../../store/usePayments";
 
 interface SubmitRowData {
   recipient: string;
   amount: string;
   currency: string;
 }
+interface ReactSelectOption {
+  value: string;
+  label: string;
+}
 
 const NewPaymentRequest = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [selectedValue, setSelectedValue] = useState("Option1");
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedValue(event.target.value);
-  };
+  const { createPaymentRequest } = usePaymentsStore();
 
-  const [age, setAge] = useState("");
+  const [category, setCategory] = useState("");
 
   const handleCategoryChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
-    console.log(event.target.value);
+    setCategory(event.target.value as string);
   };
-  // console.log(age);
 
   // add new payment request
   const [rows, setRows] = useState([
     { recipient: "", amount: "", currency: "" },
   ]);
 
-  // const handleAddPayment = () => {
-  //   // const newRow = { id: rows.length + 1 };
-  //   // setRows([...rows, newRow]);
-  // };
   const handleAddPayment = () => {
     setRows([...rows, { recipient: "", amount: "", currency: "" }]);
   };
-  const [selectedValues, setSelectedValues] = useState([]);
+  // react select values
+  const [selectSingleValue, setSelectSingleValue] =
+    useState<ReactSelectOption>();
+  const [selectedValues, setSelectedValues] = useState<ReactSelectOption[]>([]);
 
-  const handleSelectChange = (selectedOptions: any) => {
+  // property values
+  const [propertyValues, setPropertyValues] = useState<any>({});
+  const [propertyMultiValues, setPropertyMultiValues] = useState<any>({});
+
+  const handleSelectChange = (
+    selectedOptions: ReactSelectOption[],
+    name: string,
+    type: string
+  ) => {
     setSelectedValues(selectedOptions);
+    console.log(selectedOptions, name, type);
+    const v = selectedOptions?.map((p) => p.value);
+    setPropertyMultiValues({
+      name: name,
+      type: type,
+      values: v.join(";"),
+    });
   };
+
+  const handleSelectSingleChange = (
+    selectedOption: ReactSelectOption,
+    name: string,
+    type: string
+  ) => {
+    setSelectSingleValue(selectedOption);
+    setPropertyValues({ name: name, type: type, values: selectedOption.value });
+  };
+
   const handleServiceChange = (
     e:
       | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
@@ -100,17 +130,10 @@ const NewPaymentRequest = () => {
     useCategoryProperty();
   const [selectedCategoryID, setSelectedCategoryID] = useState<number>();
 
-  const selectedCategory = workspaceCategoryProperties.find(
+  const selectedCategory = workspaceCategoryProperties?.find(
     (f) => f.ID === selectedCategoryID
   );
-  // const options = selectedCategory
-  //   ? selectedCategory?.properties?.map((property) => ({
-  //       value: property.name,
-  //       label: property.name,
-  //     }))
-  //   : [];
-  // const singleSelect = selectedCategory
-  // console.log(rows);
+
   const handleDeletePayment = (index: number) => {
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
@@ -121,8 +144,49 @@ const NewPaymentRequest = () => {
     getWorkspaceCategoryProperties(workspaceId);
   }, [getWorkspaceCategoryProperties, workspaceId]);
 
-  console.log(selectedValues);
-  console.log(selectedCategory);
+  // safe balance from assets
+  const { workspace } = useWorkspace();
+
+  const [data, error, loading] = useAsync<SafeBalanceResponse>(
+    () => {
+      return getBalances(String(workspace?.chain_id), workspace?.vault_wallet);
+    },
+    [workspace],
+    false
+  );
+
+  // property text content
+  const [propertyContent, setPropertyContent] = useState<string>("");
+  const [proPertyTextValue, setPropertyTextValue] = useState<any>({});
+  const handlePropertyText = (e: any, name: string, type: string) => {
+    setPropertyContent(e.target.value);
+    setPropertyTextValue({
+      name: name,
+      type: type,
+      values: propertyContent,
+    });
+  };
+
+  const paymentRequestBody = {
+    category_id: selectedCategory?.ID,
+    category_name: selectedCategory?.name,
+    category_properties: [
+      propertyValues,
+      propertyMultiValues,
+      proPertyTextValue,
+    ],
+    rows: rows.map((row) => ({
+      amount: row.amount,
+      currency_contract_address: row.currency,
+      currency_name: row.currency,
+      recipient: row.recipient,
+    })),
+  };
+  console.log(paymentRequestBody);
+  // submit
+  const handlePaymentRequestSubmit = () => {
+    createPaymentRequest(paymentRequestBody, navigate);
+  };
 
   return (
     <Header>
@@ -164,7 +228,7 @@ const NewPaymentRequest = () => {
                 </TableHead>
                 <TableBody>
                   {/* <TableRow sx={{ td: { border: 1, padding: 0 } }}> */}
-                  {rows.map((row, index) => (
+                  {rows?.map((row, index) => (
                     <TableRow
                       key={index}
                       sx={{
@@ -258,18 +322,23 @@ const NewPaymentRequest = () => {
                             "& fieldset": { border: "none" },
                           }}
                         >
-                          <MenuItem
-                            value="Option1"
-                            sx={{
-                              "&:hover": { backgroundColor: "var(--hover-bg)" },
-                              "&.Mui-selected": {
-                                backgroundColor: "var(--hover-bg)",
-                              },
-                            }}
-                          >
-                            Ten
-                          </MenuItem>
-                          <MenuItem value="Option2">Twenty</MenuItem>
+                          {data?.items.map((item) => (
+                            <MenuItem
+                              value={item.tokenInfo.symbol}
+                              sx={{
+                                "&:hover": {
+                                  backgroundColor: "var(--hover-bg)",
+                                },
+                                "&.Mui-selected": {
+                                  backgroundColor: "var(--hover-bg)",
+                                },
+                              }}
+                            >
+                              {item.tokenInfo.symbol}
+                            </MenuItem>
+                          ))}
+
+                          {/* <MenuItem value="Option2">Twenty</MenuItem> */}
                         </Select>
                       </TableCell>
                       <TableCell
@@ -318,10 +387,8 @@ const NewPaymentRequest = () => {
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            // value={age}
-                            // value={selectedCategory}
-                            // label="Age"
-                            label="Category"
+                            value={category}
+                            label={category}
                             size="small"
                             onChange={handleCategoryChange}
                             IconComponent={() => (
@@ -341,7 +408,7 @@ const NewPaymentRequest = () => {
                             <MenuItem disabled value="Category">
                               Category name
                             </MenuItem>
-                            {workspaceCategoryProperties.map((property) => (
+                            {workspaceCategoryProperties?.map((property) => (
                               <MenuItem
                                 onClick={() =>
                                   setSelectedCategoryID(property.ID)
@@ -387,9 +454,17 @@ const NewPaymentRequest = () => {
                             <TableCell>
                               <ReactSelect
                                 // value={selectedValues}
-                                value={selectedValues}
-                                onChange={handleSelectChange}
+                                value={selectSingleValue}
+                                // onChange={handleSelectSingleChange}
+                                onChange={(selectedOption: ReactSelectOption) =>
+                                  handleSelectSingleChange(
+                                    selectedOption,
+                                    property.name,
+                                    property.type
+                                  )
+                                }
                                 // options={property.values}
+
                                 options={[
                                   {
                                     value: property.values,
@@ -400,7 +475,15 @@ const NewPaymentRequest = () => {
                                 // defaultValues={[options[1]]}
                               />
                             </TableCell>
+                            {/* {propertyObjects.push({
+                              type: property.type,
+                              name: property.name,
+                              values: property.values,
+                            })} */}
                           </TableRow>
+                          // {
+                          //   propertyObjects
+                          // }
                         )}
                       </>
                     ))}
@@ -422,21 +505,26 @@ const NewPaymentRequest = () => {
                                 {property.name}
                               </NoteInfo>
                             </TableCell>
+                            {}
                             {/* add multi select */}
                             <TableCell>
                               <ReactSelect
                                 value={selectedValues}
-                                onChange={handleSelectChange}
-                                options={[
-                                  {
-                                    value: property.values,
-                                    label: property.values,
-                                  },
-                                  {
-                                    value: property.values,
-                                    label: property.values,
-                                  },
-                                ]}
+                                onChange={(
+                                  selectedOptions: ReactSelectOption[]
+                                ) =>
+                                  handleSelectChange(
+                                    selectedOptions,
+                                    property.name,
+                                    property.type
+                                  )
+                                }
+                                options={property.values
+                                  .split(";")
+                                  .map((v) => ({
+                                    value: v,
+                                    label: v,
+                                  }))}
                                 // defaultValues={[options[1], options[2]]}
                               />
                             </TableCell>
@@ -472,9 +560,16 @@ const NewPaymentRequest = () => {
                                 }}
                                 size="small"
                                 fullWidth
-                                value={property.values}
+                                value={propertyContent}
                                 // id="fullWidth"
                                 placeholder="Enter content"
+                                onChange={(e) =>
+                                  handlePropertyText(
+                                    e,
+                                    property.name,
+                                    property.type
+                                  )
+                                }
                                 InputProps={{
                                   style: { padding: 0 },
                                 }}
@@ -489,7 +584,9 @@ const NewPaymentRequest = () => {
               </TableContainer>
             </NoteInformation>
             <Btn>
-              <RequestSubmit>Submit</RequestSubmit>
+              <RequestSubmit onClick={handlePaymentRequestSubmit}>
+                Submit
+              </RequestSubmit>
             </Btn>
           </TableSection>
         </Request>
