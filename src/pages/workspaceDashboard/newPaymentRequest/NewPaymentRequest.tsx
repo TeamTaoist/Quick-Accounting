@@ -166,7 +166,7 @@ const NewPaymentRequest = () => {
       values: propertyContent,
     });
   };
-
+  // TODO: send single category_properties if object in empty
   const paymentRequestBody = {
     category_id: selectedCategory?.ID,
     category_name: selectedCategory?.name,

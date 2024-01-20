@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   CategoryTitle,
   CreateBtn,
@@ -35,7 +35,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import RejectDataTable from "../../../components/workspace/RejectDataTable";
 import {
   ActionBtn,
@@ -53,6 +53,7 @@ import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import PaymentRequestDetails from "./PaymentRequestDetails";
 import SignPaymentRequest from "./SignPaymentRequest";
+import usePaymentsStore from "../../../store/usePayments";
 
 interface SubPayment {
   id: number;
@@ -130,7 +131,10 @@ const payments: Payment[] = [
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const { t } = useTranslation();
+
+  const { getPaymentRequestList } = usePaymentsStore();
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
   const [openRows, setOpenRows] = useState<number[]>([]);
@@ -197,6 +201,11 @@ const PaymentRequest = () => {
       selectedValue === "" || data.category === selectedValue;
     return searchItem && filterByCategory;
   });
+  // fetch payment request
+  const workspaceId = Number(id);
+  useEffect(() => {
+    getPaymentRequestList(workspaceId, 0, 10);
+  }, [getPaymentRequestList, workspaceId]);
   return (
     <WorkspaceLayout>
       <PaymentRequestContainer>
