@@ -42,9 +42,6 @@ type AssetType = {
   link: string;
 };
 
-const recipientFormate = (n: string) => {
-  return `${n.slice(0, 6)}...${n.slice(-4)}`;
-};
 const Assets = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { t } = useTranslation();

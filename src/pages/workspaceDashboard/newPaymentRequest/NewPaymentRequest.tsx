@@ -103,6 +103,9 @@ const NewPaymentRequest = () => {
       type: type,
       values: v.join(";"),
     });
+    if (v.length === 0) {
+      setPropertyMultiValues({});
+    }
   };
 
   const handleSelectSingleChange = (
@@ -112,6 +115,9 @@ const NewPaymentRequest = () => {
   ) => {
     setSelectSingleValue(selectedOption);
     setPropertyValues({ name: name, type: type, values: selectedOption.value });
+    if (selectedOption.value === "") {
+      setPropertyMultiValues({});
+    }
   };
 
   const handleServiceChange = (
@@ -163,17 +169,23 @@ const NewPaymentRequest = () => {
     setPropertyTextValue({
       name: name,
       type: type,
-      values: propertyContent,
+      values: e.target.value,
     });
+    if (e.target.value === "") {
+      setPropertyTextValue({});
+    }
   };
-  // TODO: send single category_properties if object in empty
   const paymentRequestBody = {
     category_id: selectedCategory?.ID,
     category_name: selectedCategory?.name,
     category_properties: [
-      propertyValues,
-      propertyMultiValues,
-      proPertyTextValue,
+      ...(Object.keys(propertyValues).length !== 0 ? [propertyValues] : []),
+      ...(Object.keys(propertyMultiValues).length !== 0
+        ? [propertyMultiValues]
+        : []),
+      ...(Object.keys(proPertyTextValue).length !== 0
+        ? [proPertyTextValue]
+        : []),
     ],
     rows: rows.map((row) => ({
       amount: row.amount,
