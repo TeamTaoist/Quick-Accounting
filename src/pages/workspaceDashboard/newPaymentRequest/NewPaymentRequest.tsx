@@ -197,7 +197,7 @@ const NewPaymentRequest = () => {
   console.log(paymentRequestBody);
   // submit
   const handlePaymentRequestSubmit = () => {
-    createPaymentRequest(paymentRequestBody, navigate);
+    createPaymentRequest(Number(id), paymentRequestBody, navigate);
   };
 
   return (

@@ -13,6 +13,7 @@ interface IPaymentsStore {
     size: number
   ) => void;
   createPaymentRequest: (
+    workspaceId: number,
     paymentRequestBody: IPaymentRequestBody,
     navigate: any
   ) => void;
@@ -44,11 +45,11 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
       }
     },
     // create payment request
-    createPaymentRequest: async (paymentRequestBody, navigate) => {
+    createPaymentRequest: async (workspaceId, paymentRequestBody, navigate) => {
       setLoading(true);
       try {
         const { data } = await axiosClient.post(
-          `/payment_request/${workspace.ID}`,
+          `/payment_request/${workspaceId}`,
           paymentRequestBody
         );
         if (data.msg === "success" && data.code === 200) {
