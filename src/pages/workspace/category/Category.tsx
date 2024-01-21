@@ -6,6 +6,8 @@ import property1 from "../../../assets/workspace/property1.svg";
 import option from "../../../assets/workspace/option.svg";
 import select from "../../../assets/workspace/select.svg";
 import multiSelect from "../../../assets/workspace/multi-select.svg";
+import propertyAdd from "../../../assets/workspace/property-add.svg";
+import propertyDelete from "../../../assets/workspace/property-delete.svg";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -45,6 +47,8 @@ import {
   PropertyInput,
   PropertyInputValue,
   PropertyOptions,
+  PropertyOptionsValue,
+  PropertyOptionsValueBtn,
   PropertyTitle,
 } from "./category.style";
 import { useCategory } from "../../../store/useCategory";
@@ -55,7 +59,7 @@ import { useCategoryProperty } from "../../../store/useCategoryProperty";
 interface CategoryProperty {
   name: string;
   type: string;
-  value: string;
+  value: "";
 }
 interface CategoryPropertiesState {
   [categoryId: number]: CategoryProperty[];
@@ -148,7 +152,7 @@ const Category = () => {
   const archiveQuery = false;
   const workspaceId = Number(id);
   useEffect(() => {
-    getWorkspaceCategories(workspaceId, archiveQuery);
+    // getWorkspaceCategories(workspaceId, archiveQuery);
     // get workspace category properties
     getWorkspaceCategoryProperties(workspaceId);
   }, [
@@ -186,18 +190,39 @@ const Category = () => {
       [categoryId]: updatedProperties,
     });
   };
-  const handlePropertyValueChange = (
+
+  // properties types values
+  const [propertyValues, setPropertyValues] = useState<string[]>([]);
+
+  const handleAddButtonClick = (categoryId: number, index: number) => {
+    setPropertyValues((prevValues) => [...prevValues, ""]);
+  };
+  const handleDeleteProperty = (index: number) => {
+    const updatedProperty = propertyValues.filter((_, i) => i !== index);
+    setPropertyValues(updatedProperty);
+  };
+  const handlePropertyValueChang = (
     categoryId: number,
     index: number,
-    newName: string
+    newValue: string
   ) => {
-    const updatedProperties = [...categoryProperties[categoryId]];
-    updatedProperties[index].value = newName;
-    setCategoryProperties({
-      ...categoryProperties,
-      [categoryId]: updatedProperties,
-    });
+    const updatedValues = [...propertyValues];
+    updatedValues[index] = newValue;
+    setPropertyValues(updatedValues);
   };
+  console.log(propertyValues);
+  // const handlePropertyValueChange = (
+  //   categoryId: number,
+  //   index: number,
+  //   newName: string
+  // ) => {
+  //   const updatedProperties = [...categoryProperties[categoryId]];
+  //   updatedProperties[index].value = newName;
+  //   setCategoryProperties({
+  //     ...categoryProperties,
+  //     [categoryId]: updatedProperties,
+  //   });
+  // };
 
   const handlePropertyTypeChange = (
     categoryId: number,
@@ -216,26 +241,27 @@ const Category = () => {
 
   const handleCreateProperty = (categoryId: number, propertyIndex: number) => {
     const propertyFormValues = categoryProperties[categoryId][showProperty!];
-    const propertyValues = {
+    const propertyValue = {
       category_id: categoryId,
       name: propertyFormValues.name,
       type: propertyFormValues.type,
-      values: propertyFormValues.value,
+      values: propertyValues.join(";"),
       workspace_id: Number(id),
     };
-    createWorkspaceCategoryProperties(propertyValues);
+    createWorkspaceCategoryProperties(propertyValue);
     if (categoryProperty.code === 200 && categoryProperty.msg === "success") {
       setShowProperty(null);
       // setCategoryProperties({});
+      setPropertyValues([]);
     }
   };
-  // console.log(showProperty);
+  console.log(categoryProperties);
 
   return (
     <WorkspaceLayout>
       {/* {isLoading && <Loading />} */}
       <CreateCategory>
-        {workspaceCategories.data.total === 0 && (
+        {workspaceCategoryProperties.length === 0 && (
           <CategoryTitle>
             <h3>You don't have any categories.</h3>
             <p>Standardize your payments and bookkeeping with categories.</p>
@@ -429,19 +455,24 @@ const Category = () => {
                                     </MenuItem>
                                   </Select>
                                   {/* property value */}
-                                  {property.type !== "Text" && (
-                                    <PropertyInputValue
-                                      placeholder=""
-                                      value={property.values}
-                                      onChange={(e) =>
-                                        handlePropertyNameChange(
-                                          category.ID,
-                                          index,
-                                          e.target.value
-                                        )
-                                      }
-                                    />
-                                  )}
+                                  {/* {property.type !== "Text" && (
+                                    <>
+                                      <PropertyInputValue
+                                        placeholder=""
+                                        value={property.values}
+                                        onChange={(e) =>
+                                          handlePropertyNameChange(
+                                            category.ID,
+                                            index,
+                                            e.target.value
+                                          )
+                                        }
+                                      />
+                                      <button onClick={handleAddButtonClick}>
+                                        Add
+                                      </button>
+                                    </>
+                                  )} */}
                                 </DetailsInput>
                               )}
                             </div>
@@ -524,17 +555,57 @@ const Category = () => {
                                       </Select>
                                       {/* property value */}
                                       {property.type !== "Text" && (
-                                        <PropertyInputValue
-                                          placeholder=""
-                                          value={property.value}
-                                          onChange={(e) =>
-                                            handlePropertyValueChange(
-                                              category.ID,
-                                              index,
-                                              e.target.value
+                                        <>
+                                          {/* <PropertyInputValue
+                                            placeholder=""
+                                            value={property.value}
+                                            onChange={(e) =>
+                                              handlePropertyValueChange(
+                                                category.ID,
+                                                index,
+                                                e.target.value
+                                              )
+                                            }
+                                          /> */}
+                                          {propertyValues.map(
+                                            (value, valueIndex) => (
+                                              <PropertyOptionsValue>
+                                                <img src={propertyAdd} alt="" />
+                                                <PropertyInputValue
+                                                  key={valueIndex}
+                                                  placeholder=""
+                                                  value={value}
+                                                  onChange={(e) =>
+                                                    handlePropertyValueChang(
+                                                      category.ID,
+                                                      valueIndex,
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                />
+                                                <img
+                                                  onClick={() =>
+                                                    handleDeleteProperty(
+                                                      valueIndex
+                                                    )
+                                                  }
+                                                  src={propertyDelete}
+                                                  alt=""
+                                                />
+                                              </PropertyOptionsValue>
                                             )
-                                          }
-                                        />
+                                          )}
+                                          <PropertyOptionsValueBtn
+                                            onClick={() =>
+                                              handleAddButtonClick(
+                                                category.ID,
+                                                index
+                                              )
+                                            }
+                                          >
+                                            + Add option
+                                          </PropertyOptionsValueBtn>
+                                        </>
                                       )}
                                     </DetailsInput>
                                   )}

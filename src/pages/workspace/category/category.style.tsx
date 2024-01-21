@@ -164,10 +164,29 @@ export const PropertyInput = styled.input`
   padding: 10px;
   width: 100%;
 `;
+export const PropertyOptionsValue = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+
+  img {
+    width: 20px;
+  }
+`;
+export const PropertyOptionsValueBtn = styled.button`
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 18px;
+  margin-left: 7px;
+  cursor: pointer;
+  margin-top: 16px;
+`;
+
 export const PropertyInputValue = styled.input`
   padding: 10px;
   width: 100%;
-  margin-top: 10px;
 `;
 export const DropdownOption = styled.div`
   display: flex;
