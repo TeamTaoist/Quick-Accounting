@@ -134,7 +134,11 @@ const PaymentRequest = () => {
   const { id } = useParams();
   const { t } = useTranslation();
 
-  const { getPaymentRequestList, paymentRequestList } = usePaymentsStore();
+  const {
+    getPaymentRequestList,
+    paymentRequestList,
+    getPaymentRequestDetails,
+  } = usePaymentsStore();
   // table logic
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -145,7 +149,7 @@ const PaymentRequest = () => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelected(payments.map((category) => category.id));
+      setSelected(paymentRequestList.map((payment) => payment.ID));
     } else {
       setSelected([]);
     }
@@ -182,8 +186,9 @@ const PaymentRequest = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openSignPaymentModal, setSignPaymentModal] = useState(false);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (paymentRequestId: number) => {
     setOpenModal(true);
+    getPaymentRequestDetails(Number(id), paymentRequestId);
   };
   // modal end
   const [searchTerm, setSearchTerm] = useState("");
@@ -196,19 +201,23 @@ const PaymentRequest = () => {
     setSelectedValue(event.target.value);
   };
   // filter table data
-  const filterData = payments.filter((data: Payment) => {
-    const searchItem = data.idNumber
+  const filterData = paymentRequestList.filter((data) => {
+    const searchItem = data.recipient
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    const filterByCategory =
-      selectedValue === "" || data.category === selectedValue;
-    return searchItem && filterByCategory;
+    // const filterByCategory =
+    //   selectedValue === "" || data.category_name === selectedValue;
+    // return searchItem && filterByCategory;
+    return searchItem;
   });
   // fetch payment request
   const workspaceId = Number(id);
   useEffect(() => {
     getPaymentRequestList(workspaceId, 0, 10);
   }, [getPaymentRequestList, workspaceId]);
+  console.log(filterData);
+  console.log(searchTerm);
+
   return (
     <WorkspaceLayout>
       <PaymentRequestContainer>
@@ -335,7 +344,7 @@ const PaymentRequest = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {paymentRequestList.map((payment) => (
+                  {filterData.map((payment) => (
                     <React.Fragment key={payment.ID}>
                       {/* {payment.subPayment.length > 0 ? ( */}
                       <TableRow
@@ -425,7 +434,9 @@ const PaymentRequest = () => {
                               color: "black",
                               textTransform: "lowercase",
                             }}
-                            onClick={handleOpenModal}
+                            onClick={() =>
+                              handleOpenModal(payment.payment_request_id)
+                            }
                           >
                             view more
                           </Button>
@@ -434,6 +445,9 @@ const PaymentRequest = () => {
                             open={openModal}
                             setOpen={setOpenModal}
                             component={PaymentRequestDetails}
+                            additionalProps={{
+                              paymentRequestId: payment.payment_request_id,
+                            }}
                           />
                         </TableCell>
                       </TableRow>

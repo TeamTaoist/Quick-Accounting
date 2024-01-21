@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 interface IPaymentsStore {
   paymentRequestList: IPaymentRequest[];
+  paymentRequestDetails: any;
   getPaymentRequestList: (
     workspaceId: number,
     page: number,
@@ -15,6 +16,10 @@ interface IPaymentsStore {
     paymentRequestBody: IPaymentRequestBody,
     navigate: any
   ) => void;
+  getPaymentRequestDetails: (
+    workspaceId: number,
+    paymentRequestId: number
+  ) => void;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set) => {
@@ -23,6 +28,7 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
 
   return {
     paymentRequestList: [],
+    paymentRequestDetails: {},
     getPaymentRequestList: async (workspaceId, page: number, size: number) => {
       setLoading(true);
       try {
@@ -56,23 +62,20 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
       }
     },
     // get payment request details
-    // getPaymentRequestDetails: async (workspaceId, paymentRequestId) => {
-    //   setLoading(true);
-    //   try {
-    //     const { data } = await axiosClient.post(
-    //       `/payment_request/${workspace.ID}`,
-    //       paymentRequestBody
-    //     );
-    //     if (data.msg === "success" && data.code === 200) {
-    //       navigate("/workspace/8/payment-request");
-    //     }
-    //   } catch (error: any) {
-    //     toast.error(error?.data.msg || error?.status || error);
-    //     console.error(error);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // },
+    getPaymentRequestDetails: async (workspaceId, paymentRequestId) => {
+      setLoading(true);
+      try {
+        const { data } = await axiosClient.get(
+          `/payment_request/${workspaceId}/${paymentRequestId}`
+        );
+        set({ paymentRequestDetails: data.data });
+      } catch (error: any) {
+        toast.error(error?.data.msg || error?.status || error);
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    },
   };
 });
 

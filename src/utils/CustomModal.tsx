@@ -4,12 +4,14 @@ interface CustomModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   component: any;
+  additionalProps?: any;
 }
 
 const CustomModal = ({
   open,
   setOpen,
   component: Component,
+  additionalProps,
 }: CustomModalProps) => {
   return (
     <div>
@@ -28,7 +30,7 @@ const CustomModal = ({
             width: 450,
           }}
         >
-          <Component setOpen={setOpen} />
+          <Component setOpen={setOpen} {...additionalProps} />
           {/* {Component} */}
         </Box>
       </Modal>

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import Header from "../../../components/layout/header/Header";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FormControl,
   InputAdornment,
@@ -31,10 +31,14 @@ import {
 } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
+import usePaymentsStore from "../../../store/usePayments";
 
-const PaymentRequestDetails = ({ setOpen }: any) => {
+const PaymentRequestDetails = ({ setOpen, paymentRequestId }: any) => {
   const { id } = useParams();
+
   const [selectedValue, setSelectedValue] = useState("Option1");
+
+  const { paymentRequestDetails } = usePaymentsStore();
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
@@ -66,6 +70,12 @@ const PaymentRequestDetails = ({ setOpen }: any) => {
     { value: "option 4", label: "Options 4" },
     { value: "option 5", label: "Options 5" },
   ];
+
+  // get payment request details
+  //   useEffect(() => {
+  // getPaymentRequestDetails()
+  //   },[])
+  console.log(paymentRequestDetails);
 
   return (
     // <Header>
