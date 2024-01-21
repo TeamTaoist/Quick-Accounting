@@ -3,7 +3,7 @@ import { Modal, Box } from "@mui/material";
 interface CustomModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  component: any;
+  component: React.ComponentType<{ setOpen: (open: boolean) => void }>;
   additionalProps?: any;
 }
 

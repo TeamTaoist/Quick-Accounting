@@ -186,9 +186,9 @@ const PaymentRequest = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openSignPaymentModal, setSignPaymentModal] = useState(false);
 
-  const handleOpenModal = (paymentRequestId: number) => {
+  const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
     setOpenModal(true);
-    getPaymentRequestDetails(Number(id), paymentRequestId);
+    getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
   };
   // modal end
   const [searchTerm, setSearchTerm] = useState("");
@@ -205,18 +205,16 @@ const PaymentRequest = () => {
     const searchItem = data.recipient
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    // const filterByCategory =
-    //   selectedValue === "" || data.category_name === selectedValue;
-    // return searchItem && filterByCategory;
-    return searchItem;
+    const filterByCategory =
+      selectedValue === "" || data.category_name === selectedValue;
+    return searchItem && filterByCategory;
+    // return searchItem;
   });
   // fetch payment request
   const workspaceId = Number(id);
   useEffect(() => {
     getPaymentRequestList(workspaceId, 0, 10);
   }, [getPaymentRequestList, workspaceId]);
-  console.log(filterData);
-  console.log(searchTerm);
 
   return (
     <WorkspaceLayout>
@@ -241,6 +239,20 @@ const PaymentRequest = () => {
           </CategoryTitle>
         )}
         {/* header */}
+        <CustomModal
+          open={openModal}
+          setOpen={setOpenModal}
+          component={PaymentRequestDetails}
+          // additionalProps={{
+          //   paymentRequestId: payment.payment_request_id,
+          // }}
+        />
+        {/* payment request modal */}
+        <CustomModal
+          open={openSignPaymentModal}
+          setOpen={setSignPaymentModal}
+          component={SignPaymentRequest}
+        />
         <Header>
           <div>
             <TextField
@@ -273,9 +285,11 @@ const PaymentRequest = () => {
                     {t("paymentRequest.Filter")}
                   </Option>
                 </MenuItem>
-                <MenuItem value="category 1">Category 1</MenuItem>
-                <MenuItem value="category 2">Category 2</MenuItem>
-                <MenuItem value="category 3">Category 3</MenuItem>
+                {paymentRequestList.map((payment) => (
+                  <MenuItem value={payment.category_name} key={payment.ID}>
+                    {payment.category_name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </div>
@@ -308,11 +322,6 @@ const PaymentRequest = () => {
                 <img src={approve} alt="" />
                 <p>{t("paymentRequest.Approve")}</p>
               </Btn>
-              <CustomModal
-                open={openSignPaymentModal}
-                setOpen={setSignPaymentModal}
-                component={SignPaymentRequest}
-              />
             </ActionBtn>
             {/* table */}
             <TableContainer
@@ -435,20 +444,23 @@ const PaymentRequest = () => {
                               textTransform: "lowercase",
                             }}
                             onClick={() =>
-                              handleOpenModal(payment.payment_request_id)
+                              handleOpenModal(
+                                payment.payment_request_id,
+                                payment.ID
+                              )
                             }
                           >
                             view more
                           </Button>
                           {/* modal */}
-                          <CustomModal
+                          {/* <CustomModal
                             open={openModal}
                             setOpen={setOpenModal}
                             component={PaymentRequestDetails}
-                            additionalProps={{
-                              paymentRequestId: payment.payment_request_id,
-                            }}
-                          />
+                            // additionalProps={{
+                            //   paymentRequestId: payment.payment_request_id,
+                            // }}
+                          /> */}
                         </TableCell>
                       </TableRow>
                       {/* )} */}

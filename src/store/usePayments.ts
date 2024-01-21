@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 interface IPaymentsStore {
   paymentRequestList: IPaymentRequest[];
-  paymentRequestDetails: any;
+  paymentRequestDetails: IPaymentRequest;
   getPaymentRequestList: (
     workspaceId: number,
     page: number,
@@ -19,7 +19,8 @@ interface IPaymentsStore {
   ) => void;
   getPaymentRequestDetails: (
     workspaceId: number,
-    paymentRequestId: number
+    paymentRequestId: number,
+    paymentId: number
   ) => void;
 }
 
@@ -29,7 +30,25 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
 
   return {
     paymentRequestList: [],
-    paymentRequestDetails: {},
+    paymentRequestDetails: {
+      ID: 0,
+      CreatedAt: "",
+      UpdatedAt: "",
+      DeletedAt: "",
+      payment_request_id: 0,
+      recipient: "",
+      amount: "",
+      currency_name: "",
+      currency_contract_address: "",
+      category_id: 0,
+      category_name: "",
+      category_properties: "",
+      safe_id: "",
+      tx: "",
+      tx_timestamp: 0,
+      status: 0,
+      hide: false,
+    },
     getPaymentRequestList: async (workspaceId, page: number, size: number) => {
       setLoading(true);
       try {
@@ -63,11 +82,15 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
       }
     },
     // get payment request details
-    getPaymentRequestDetails: async (workspaceId, paymentRequestId) => {
+    getPaymentRequestDetails: async (
+      workspaceId,
+      paymentRequestId,
+      paymentId
+    ) => {
       setLoading(true);
       try {
         const { data } = await axiosClient.get(
-          `/payment_request/${workspaceId}/${paymentRequestId}`
+          `/payment_request/${workspaceId}/${paymentRequestId}/item/${paymentId}`
         );
         set({ paymentRequestDetails: data.data });
       } catch (error: any) {

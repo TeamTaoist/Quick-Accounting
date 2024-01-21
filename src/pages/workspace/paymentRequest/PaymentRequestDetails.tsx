@@ -35,7 +35,11 @@ import usePaymentsStore from "../../../store/usePayments";
 import { useLoading } from "../../../store/useLoading";
 import Loading from "../../../utils/Loading";
 
-const PaymentRequestDetails = ({ setOpen, paymentRequestId }: any) => {
+interface PaymentRequestDetailsProps {
+  setOpen: (open: boolean) => void;
+}
+
+const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   const { id } = useParams();
 
   const [selectedValue, setSelectedValue] = useState("Option1");
@@ -53,34 +57,22 @@ const PaymentRequestDetails = ({ setOpen, paymentRequestId }: any) => {
     setAge(event.target.value as string);
   };
 
-  // add new payment request
-  const [rows, setRows] = useState([{ id: 1 }]);
-
-  const handleAddPayment = () => {
-    const newRow = { id: rows.length + 1 };
-    setRows([...rows, newRow]);
-  };
-
   const [selectedValues, setSelectedValues] = useState([]);
 
   const handleSelectChange = (selectedOptions: any) => {
     setSelectedValues(selectedOptions);
   };
+  if (isLoading) return <p></p>;
 
-  const paymentDetails = paymentRequestDetails[0];
   let parseCategoryProperties;
-  if (paymentDetails) {
-    const categoryProperties = paymentDetails.category_properties;
+  if (paymentRequestDetails) {
+    const categoryProperties = paymentRequestDetails?.category_properties;
     parseCategoryProperties = JSON.parse(categoryProperties);
   }
-
-  console.log(paymentDetails);
-  console.log(parseCategoryProperties);
-  if (isLoading) return <p>Loading...</p>;
   return (
     <>
       <WorkspaceItemDetailsLayout
-        title="Payment request detail"
+        title="Payment request details"
         setOpen={setOpen}
       >
         <RequestDetails>
@@ -124,7 +116,7 @@ const PaymentRequestDetails = ({ setOpen, paymentRequestId }: any) => {
                         "& fieldset": { border: "none" },
                       }}
                       size="small"
-                      value={paymentDetails.recipient}
+                      value={paymentRequestDetails.recipient}
                       fullWidth
                       // id="fullWidth"
                       placeholder="Enter wallet address"
@@ -142,7 +134,7 @@ const PaymentRequestDetails = ({ setOpen, paymentRequestId }: any) => {
                       // minHeight: "40px",
                     }}
                   >
-                    {paymentDetails.amount}
+                    {paymentRequestDetails.amount}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -180,7 +172,7 @@ const PaymentRequestDetails = ({ setOpen, paymentRequestId }: any) => {
                           },
                         }}
                       >
-                        {paymentDetails.currency_name}
+                        {paymentRequestDetails.currency_name}
                       </MenuItem>
                       {/* <MenuItem value="Option2">Twenty</MenuItem> */}
                     </Select>
@@ -235,18 +227,7 @@ const PaymentRequestDetails = ({ setOpen, paymentRequestId }: any) => {
                           }}
                         >
                           <MenuItem disabled value="Category">
-                            {paymentDetails.category_name}
-                          </MenuItem>
-                          <MenuItem
-                            value={10}
-                            sx={{
-                              "&:hover": { backgroundColor: "var(--hover-bg)" },
-                              "&.Mui-selected": {
-                                backgroundColor: "var(--hover-bg)",
-                              },
-                            }}
-                          >
-                            Ten
+                            {paymentRequestDetails.category_name}
                           </MenuItem>
                           {/* <MenuItem value={20}>Twenty</MenuItem> */}
                         </Select>

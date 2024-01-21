@@ -60,6 +60,11 @@ interface ReactSelectOption {
   value: string;
   label: string;
 }
+interface PropertyValues {
+  name?: string;
+  type?: string;
+  values?: string;
+}
 
 const NewPaymentRequest = () => {
   const navigate = useNavigate();
@@ -87,8 +92,9 @@ const NewPaymentRequest = () => {
   const [selectedValues, setSelectedValues] = useState<ReactSelectOption[]>([]);
 
   // property values
-  const [propertyValues, setPropertyValues] = useState<any>({});
-  const [propertyMultiValues, setPropertyMultiValues] = useState<any>({});
+  const [propertyValues, setPropertyValues] = useState<PropertyValues>({});
+  const [propertyMultiValues, setPropertyMultiValues] =
+    useState<PropertyValues>({});
 
   const handleSelectChange = (
     selectedOptions: ReactSelectOption[],
@@ -194,7 +200,7 @@ const NewPaymentRequest = () => {
       recipient: row.recipient,
     })),
   };
-  console.log(paymentRequestBody);
+
   // submit
   const handlePaymentRequestSubmit = () => {
     createPaymentRequest(Number(id), paymentRequestBody, navigate);

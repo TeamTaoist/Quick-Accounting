@@ -54,10 +54,6 @@ const RouterLink = () => {
           path="/workspace/:id/payment-request"
           element={<PaymentRequest />}
         />
-        <Route
-          path="/payment-request/:id"
-          element={<PaymentRequestDetails />}
-        />
         <Route path="/workspace/:id/settings" element={<Settings />} />
         <Route path="/sign-payment" element={<SignPaymentRequest />} />
         <Route path="/workspace/:id/queue" element={<Queue />} />
