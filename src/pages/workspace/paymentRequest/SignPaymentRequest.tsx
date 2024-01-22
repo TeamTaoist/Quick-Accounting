@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import data from "../../../data/tableData";
 import usePaymentsStore from "../../../store/usePayments";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface SignPaymentRequestProps {
   setOpen: (open: boolean) => void;
@@ -24,18 +25,23 @@ const recipientFormate = (n: string) => {
 };
 
 const SignPaymentRequest = ({ setOpen, selectedItem }: any) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const { paymentRequestList, approvePaymentRequest } = usePaymentsStore();
-  const paymentRequestId = selectedItem.join(",");
+  const paymentRequestIds = selectedItem.join(",");
   // get selected payments for sign to chain
   const signItems = paymentRequestList.filter((payment) =>
-    paymentRequestId.includes(payment.payment_request_id)
+    paymentRequestIds.includes(payment.payment_request_id)
   );
-  console.log(selectedItem, paymentRequestId);
-  console.log(signItems);
+
   const totalTransactionValue = signItems.reduce(
     (acc, value) => acc + parseFloat(value.amount),
     0
   );
+  // approve payment request
+  const handleApproveRequest = () => {
+    approvePaymentRequest(id, paymentRequestIds, navigate);
+  };
 
   return (
     // <Header>
@@ -75,7 +81,7 @@ const SignPaymentRequest = ({ setOpen, selectedItem }: any) => {
             </TableBody>
           </Table>
         </TableContainer>
-        <SignToChain>Sign</SignToChain>
+        <SignToChain onClick={handleApproveRequest}>Sign</SignToChain>
       </PaymentRequestChain>
     </WorkspaceItemDetailsLayout>
     // </Header>

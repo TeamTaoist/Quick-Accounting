@@ -23,8 +23,10 @@ interface IPaymentsStore {
     paymentId: number
   ) => void;
   approvePaymentRequest: (
-    paymentRequestIds: number,
-    safeTxHash: string
+    workspaceId: string | undefined,
+    paymentRequestIds: string,
+    navigate: any,
+    safeTxHash?: string
   ) => void;
 }
 
@@ -105,15 +107,21 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
       }
     },
     // approve payment request
-    approvePaymentRequest: async (paymentRequestIds, safeTxHash) => {
+    approvePaymentRequest: async (
+      workspaceId,
+      paymentRequestIds,
+      navigate,
+      safeTxHash
+    ) => {
       setLoading(true);
       try {
         const { data } = await axiosClient.post(
-          `/payment_requests/${workspace.ID}/approve?ids=${paymentRequestIds}&safe_tx_hash=${safeTxHash}`
+          `/payment_requests/${workspaceId}/approve?ids=${paymentRequestIds}&safe_tx_hash=${safeTxHash}`
         );
-        // if (data.msg === "success" && data.code === 200) {
-        //   navigate("/workspace/8/payment-request");
-        // }
+        if (data.msg === "success" && data.code === 200) {
+          toast.success("Payment request on chain successfully");
+          navigate("/workspace/8/queue");
+        }
       } catch (error: any) {
         toast.error(error?.data.msg || error?.status || error);
         console.error(error);
