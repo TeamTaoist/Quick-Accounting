@@ -36,19 +36,19 @@ const RouterLink = () => {
         <Route path="/login" element={<LoginPopup />} />
         <Route path="/create-workspace" element={<WorkSpaceForm />} />
         <Route
-          path="/workspace/:id/payment-request"
-          element={<PaymentRequest />}
-        />
-
-        <Route path="/" element={<Home />} />
-        <Route path="/user" element={<UserDashboard />} />
-        <Route
           path="/workspace/:id/new-payment-request"
           element={<NewPaymentRequest />}
         ></Route>
+
+        <Route path="/" element={<Home />} />
+        <Route path="/user" element={<UserDashboard />} />
+
         <Route path="/workspace/:id/assets" element={<Assets />} />
         <Route path="/workspace/:id/category" element={<Category />} />
-
+        <Route
+          path="/workspace/:id/payment-request"
+          element={<PaymentRequest />}
+        />
         <Route path="/workspace/:id/settings" element={<Settings />} />
         <Route path="/workspace/:id/queue" element={<Queue />} />
         <Route path="/workspace/:id/bookkeeping" element={<Bookkeeping />} />
