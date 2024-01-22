@@ -16,6 +16,7 @@ import styled from "@emotion/styled";
 import CustomModal from "../../utils/CustomModal";
 import PaymentRequestDetails from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
 import { useState } from "react";
+import usePaymentsStore from "../../store/usePayments";
 
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -23,6 +24,8 @@ const recipientFormate = (n: string) => {
 const RejectDataTable = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
+
+  const { paymentRequestList } = usePaymentsStore();
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -52,20 +55,20 @@ const RejectDataTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{recipientFormate(row.recipient)}</TableCell>
-                <TableCell>{row.amount} USDT</TableCell>
+            {paymentRequestList?.map((payment) => (
+              <TableRow key={payment.ID}>
+                <TableCell>{recipientFormate(payment.recipient)}</TableCell>
+                <TableCell>{payment.amount} USDT</TableCell>
                 <TableCell>
-                  <CategoryCell>{row.category}</CategoryCell>
+                  <CategoryCell>{payment.category_name}</CategoryCell>
                 </TableCell>
                 <TableCell>
                   <Status>
                     <img src={statusIcon} alt="" />
-                    {row.status}
+                    {payment.status === 1 && "Rejected"}
                   </Status>
                 </TableCell>
-                <TableCell>{row.date}</TableCell>
+                <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
                 <TableCell>
                   <Button
                     variant="outlined"

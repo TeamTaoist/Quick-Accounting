@@ -9,8 +9,9 @@ interface IPaymentsStore {
   paymentRequestDetails: IPaymentRequest;
   getPaymentRequestList: (
     workspaceId: number,
-    page: number,
-    size: number
+    isRejected?: boolean,
+    page?: number,
+    size?: number
   ) => void;
   createPaymentRequest: (
     workspaceId: number,
@@ -59,11 +60,16 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
       status: 0,
       hide: false,
     },
-    getPaymentRequestList: async (workspaceId, page: number, size: number) => {
+    getPaymentRequestList: async (
+      workspaceId,
+      isRejected = false,
+      page = 0,
+      size = 10
+    ) => {
       setLoading(true);
       try {
         const { data } = await axiosClient.get(
-          `/payment_request/${workspaceId}?page=${page}&size=${size}`
+          `/payment_request/${workspaceId}?rejected=${isRejected}&page=${page}&size=${size}`
         );
         set({ paymentRequestList: data.data.rows });
       } catch (error: any) {

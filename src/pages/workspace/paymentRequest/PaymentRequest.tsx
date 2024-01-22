@@ -217,7 +217,7 @@ const PaymentRequest = () => {
   const [paymentLoading, setPaymentLoading] = useState<boolean>(false);
   const workspaceId = Number(id);
   useEffect(() => {
-    getPaymentRequestList(workspaceId, 0, 10);
+    getPaymentRequestList(workspaceId);
   }, [getPaymentRequestList, workspaceId, paymentLoading]);
   // payment_request_id
 
@@ -243,10 +243,15 @@ const PaymentRequest = () => {
     setPaymentLoading(!paymentLoading);
   };
 
+  // get rejected payments
+  const handleRejectedPayments = () => {
+    getPaymentRequestList(workspaceId, true);
+  };
+
   return (
     <WorkspaceLayout>
       <PaymentRequestContainer>
-        {!hasCategory && (
+        {paymentRequestList.length === 0 ? (
           <CategoryTitle>
             <h3>No payment request yet.</h3>
             <p style={{ width: "509px", textAlign: "center" }}>
@@ -264,211 +269,161 @@ const PaymentRequest = () => {
               </CreateBtn>
             </CreateOptionButton>
           </CategoryTitle>
-        )}
-        {/* header */}
-        <CustomModal
-          open={openModal}
-          setOpen={setOpenModal}
-          component={PaymentRequestDetails}
-        />
-        {/* payment request modal */}
-        <CustomModal
-          open={openSignPaymentModal}
-          setOpen={setSignPaymentModal}
-          component={SignPaymentRequest}
-          additionalProps={{
-            selectedItem: selected,
-          }}
-        />
-        <Header>
-          <div>
-            <TextField
-              id="search"
-              type="search"
-              placeholder={t("paymentRequest.SearchToken")}
-              value={searchTerm}
-              onChange={handleChange}
-              sx={{ width: 350 }}
-              size="small"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <img src={searchIcon} alt="" />
-                  </InputAdornment>
-                ),
+        ) : (
+          <>
+            {/* header */}
+            <CustomModal
+              open={openModal}
+              setOpen={setOpenModal}
+              component={PaymentRequestDetails}
+            />
+            {/* payment request modal */}
+            <CustomModal
+              open={openSignPaymentModal}
+              setOpen={setSignPaymentModal}
+              component={SignPaymentRequest}
+              additionalProps={{
+                selectedItem: selected,
               }}
             />
-            <FormControl sx={{ marginLeft: "25px" }}>
-              <Select
-                value={selectedValue}
-                onChange={handleDropdownChange}
-                displayEmpty
-                inputProps={{ "aria-label": "Select a value" }}
-                size="small"
-              >
-                <MenuItem value="" disabled>
-                  <Option>
-                    <Image src={filterIcon} alt="" />
-                    {t("paymentRequest.Filter")}
-                  </Option>
-                </MenuItem>
-                {paymentRequestList.map((payment) => (
-                  <MenuItem value={payment.category_name} key={payment.ID}>
-                    {payment.category_name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-          <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
+            <Header>
+              <div>
+                <TextField
+                  id="search"
+                  type="search"
+                  placeholder={t("paymentRequest.SearchToken")}
+                  value={searchTerm}
+                  onChange={handleChange}
+                  sx={{ width: 350 }}
+                  size="small"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <img src={searchIcon} alt="" />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <FormControl sx={{ marginLeft: "25px" }}>
+                  <Select
+                    value={selectedValue}
+                    onChange={handleDropdownChange}
+                    displayEmpty
+                    inputProps={{ "aria-label": "Select a value" }}
+                    size="small"
+                  >
+                    <MenuItem value="" disabled>
+                      <Option>
+                        <Image src={filterIcon} alt="" />
+                        {t("paymentRequest.Filter")}
+                      </Option>
+                    </MenuItem>
+                    {paymentRequestList.map((payment) => (
+                      <MenuItem value={payment.category_name} key={payment.ID}>
+                        {payment.category_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
+                {paymentRequest ? (
+                  <div onClick={handleRejectedPayments}>
+                    <Image src={reject} alt="" />
+                    <p>{t("paymentRequest.ViewRejection")}</p>
+                  </div>
+                ) : (
+                  <div onClick={() => setPaymentLoading(!paymentLoading)}>
+                    <Image src={back} alt="" />
+                    <p>{t("paymentRequest.Back")}</p>
+                  </div>
+                )}
+              </ViewReject>
+            </Header>
             {paymentRequest ? (
-              <div>
-                <Image src={reject} alt="" />
-                <p>{t("paymentRequest.ViewRejection")}</p>
-              </div>
-            ) : (
-              <div>
-                <Image src={back} alt="" />
-                <p>{t("paymentRequest.Back")}</p>
-              </div>
-            )}
-          </ViewReject>
-        </Header>
-        {paymentRequest ? (
-          <PaymentRequestBody>
-            <ActionBtn>
-              <Btn>
-                <img src={download} alt="" />
-                <p>{t("paymentRequest.Download")}</p>
-              </Btn>
-              <Btn onClick={handleRejectPaymentRequest}>
-                <img src={reject} alt="" />
-                <p>{t("paymentRequest.Reject")}</p>
-              </Btn>
-              <Btn onClick={() => handlePaymentRequestChaiModal()}>
-                <img src={approve} alt="" />
-                <p>{t("paymentRequest.Approve")}</p>
-              </Btn>
-            </ActionBtn>
-            {/* table */}
-            <TableContainer
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                overflow: "hidden",
-                minWidth: "800px",
-              }}
-            >
-              <Table size="small">
-                <TableHead style={{ backgroundColor: "#f0f0f0" }}>
-                  <TableRow>
-                    <TableCell>
-                      <Checkbox
-                        indeterminate={
-                          selected.length > 0 &&
-                          selected.length < payments.length
-                        }
-                        checked={selected.length === payments.length}
-                        onChange={handleSelectAllClick}
-                      />
-                      Recipient
-                    </TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Object.entries(groupedData).map(([id, items], index) => (
-                    <React.Fragment key={index}>
-                      {items.length > 1 ? (
-                        <TableRow
-                          onClick={() => handleRowToggle(Number(id))}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <TableCell
-                            colSpan={4}
-                            style={{
-                              padding: 0,
-                              paddingLeft: "16px",
-                              borderBottom: "1px solid #ddd",
-                              borderTop: "none",
-                              position: "relative",
-                            }}
-                          >
-                            <Checkbox
-                              checked={isSelected(Number(id))}
-                              onChange={(event) =>
-                                handleCheckboxClick(event, Number(id))
-                              }
-                            />
-                            {items.length} payment requests
-                            <IconButton
-                              aria-label="expand row"
-                              size="small"
-                              style={{
-                                position: "absolute",
-                                left: "200px",
-                              }}
+              <PaymentRequestBody>
+                <ActionBtn>
+                  <Btn>
+                    <img src={download} alt="" />
+                    <p>{t("paymentRequest.Download")}</p>
+                  </Btn>
+                  <Btn onClick={handleRejectPaymentRequest}>
+                    <img src={reject} alt="" />
+                    <p>{t("paymentRequest.Reject")}</p>
+                  </Btn>
+                  <Btn onClick={() => handlePaymentRequestChaiModal()}>
+                    <img src={approve} alt="" />
+                    <p>{t("paymentRequest.Approve")}</p>
+                  </Btn>
+                </ActionBtn>
+                {/* table */}
+                <TableContainer
+                  style={{
+                    border: "1px solid #ddd",
+                    borderRadius: "8px",
+                    overflow: "hidden",
+                    minWidth: "800px",
+                  }}
+                >
+                  <Table size="small">
+                    <TableHead style={{ backgroundColor: "#f0f0f0" }}>
+                      <TableRow>
+                        <TableCell>
+                          <Checkbox
+                            indeterminate={
+                              selected.length > 0 &&
+                              selected.length < payments.length
+                            }
+                            checked={selected.length === payments.length}
+                            onChange={handleSelectAllClick}
+                          />
+                          Recipient
+                        </TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Category</TableCell>
+                        <TableCell>Date</TableCell>
+                        <TableCell></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {Object.entries(groupedData).map(([id, items], index) => (
+                        <React.Fragment key={index}>
+                          {items.length > 1 ? (
+                            <TableRow
+                              onClick={() => handleRowToggle(Number(id))}
+                              style={{ cursor: "pointer" }}
                             >
-                              {openRows.includes(Number(id)) ? (
-                                <KeyboardArrowUpIcon />
-                              ) : (
-                                <KeyboardArrowDownIcon />
-                              )}
-                            </IconButton>
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              variant="outlined"
-                              sx={{
-                                borderColor: "black",
-                                color: "black",
-                                textTransform: "lowercase",
-                              }}
-                              // onClick={handleOpenModal}
-                            >
-                              view more
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        // )}
-                        <>
-                          {items.map((payment) => (
-                            <TableRow key={payment.ID}>
                               <TableCell
+                                colSpan={4}
                                 style={{
                                   padding: 0,
                                   paddingLeft: "16px",
                                   borderBottom: "1px solid #ddd",
                                   borderTop: "none",
+                                  position: "relative",
                                 }}
                               >
                                 <Checkbox
-                                  checked={isSelected(
-                                    payment.payment_request_id
-                                  )}
+                                  checked={isSelected(Number(id))}
                                   onChange={(event) =>
-                                    handleCheckboxClick(
-                                      event,
-                                      payment.payment_request_id
-                                    )
+                                    handleCheckboxClick(event, Number(id))
                                   }
                                 />
-                                {recipientFormate(payment.recipient)}
-                              </TableCell>
-                              <TableCell>
-                                {payment.amount} {payment.currency_name}
-                              </TableCell>
-                              <TableCell>
-                                <CategoryCell>
-                                  {payment.category_name}
-                                </CategoryCell>
-                              </TableCell>
-                              <TableCell>
-                                {payment.CreatedAt.slice(0, 10)}
+                                {items.length} payment requests
+                                <IconButton
+                                  aria-label="expand row"
+                                  size="small"
+                                  style={{
+                                    position: "absolute",
+                                    left: "200px",
+                                  }}
+                                >
+                                  {openRows.includes(Number(id)) ? (
+                                    <KeyboardArrowUpIcon />
+                                  ) : (
+                                    <KeyboardArrowDownIcon />
+                                  )}
+                                </IconButton>
                               </TableCell>
                               <TableCell>
                                 <Button
@@ -478,86 +433,140 @@ const PaymentRequest = () => {
                                     color: "black",
                                     textTransform: "lowercase",
                                   }}
-                                  onClick={() =>
-                                    handleOpenModal(
-                                      payment.payment_request_id,
-                                      payment.ID
-                                    )
-                                  }
+                                  // onClick={handleOpenModal}
                                 >
                                   view more
                                 </Button>
                               </TableCell>
                             </TableRow>
-                          ))}
-                        </>
-                      )}
-                      <TableRow>
-                        <TableCell
-                          colSpan={5}
-                          sx={{
-                            padding: 0,
-                            // paddingLeft: "16px",
-                            borderTop: "1px solid #ddd",
-                          }}
-                        >
-                          <Collapse
-                            in={openRows.includes(Number(id))}
-                            timeout="auto"
-                            unmountOnExit
-                          >
-                            <Table size="small">
-                              <TableBody>
-                                {items.map((payments) => (
-                                  <TableRow>
-                                    <TableCell
-                                      // colSpan={1}
+                          ) : (
+                            // )}
+                            <>
+                              {items.map((payment) => (
+                                <TableRow key={payment.ID}>
+                                  <TableCell
+                                    style={{
+                                      padding: 0,
+                                      paddingLeft: "16px",
+                                      borderBottom: "1px solid #ddd",
+                                      borderTop: "none",
+                                    }}
+                                  >
+                                    <Checkbox
+                                      checked={isSelected(
+                                        payment.payment_request_id
+                                      )}
+                                      onChange={(event) =>
+                                        handleCheckboxClick(
+                                          event,
+                                          payment.payment_request_id
+                                        )
+                                      }
+                                    />
+                                    {recipientFormate(payment.recipient)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {payment.amount} {payment.currency_name}
+                                  </TableCell>
+                                  <TableCell>
+                                    <CategoryCell>
+                                      {payment.category_name}
+                                    </CategoryCell>
+                                  </TableCell>
+                                  <TableCell>
+                                    {payment.CreatedAt.slice(0, 10)}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button
+                                      variant="outlined"
                                       sx={{
-                                        paddingLeft: "58px",
-                                        maxWidth: "112px",
+                                        borderColor: "black",
+                                        color: "black",
+                                        textTransform: "lowercase",
                                       }}
+                                      onClick={() =>
+                                        handleOpenModal(
+                                          payment.payment_request_id,
+                                          payment.ID
+                                        )
+                                      }
                                     >
-                                      {recipientFormate(payments.recipient)}
-                                    </TableCell>
-                                    <TableCell
-                                      sx={{
-                                        maxWidth: "50px",
-                                      }}
-                                    >
-                                      {payments.amount} {payments.currency_name}
-                                    </TableCell>
-                                    <TableCell
-                                      sx={{
-                                        maxWidth: "78px",
-                                      }}
-                                    >
-                                      <CategoryCell>
-                                        {payments.category_name}
-                                      </CategoryCell>
-                                    </TableCell>
-                                    <TableCell>
-                                      {payments.CreatedAt.slice(0, 10)}
-                                    </TableCell>
-                                    <TableCell
-                                    // sx={{ width: "100px" }}
-                                    ></TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </Collapse>
-                        </TableCell>
-                      </TableRow>
-                    </React.Fragment>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </PaymentRequestBody>
-        ) : (
-          <RejectSection>
-            <RejectDataTable />
-          </RejectSection>
+                                      view more
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </>
+                          )}
+                          <TableRow>
+                            <TableCell
+                              colSpan={5}
+                              sx={{
+                                padding: 0,
+                                // paddingLeft: "16px",
+                                borderTop: "1px solid #ddd",
+                              }}
+                            >
+                              <Collapse
+                                in={openRows.includes(Number(id))}
+                                timeout="auto"
+                                unmountOnExit
+                              >
+                                <Table size="small">
+                                  <TableBody>
+                                    {items.map((payments) => (
+                                      <TableRow>
+                                        <TableCell
+                                          // colSpan={1}
+                                          sx={{
+                                            paddingLeft: "58px",
+                                            maxWidth: "112px",
+                                          }}
+                                        >
+                                          {recipientFormate(payments.recipient)}
+                                        </TableCell>
+                                        <TableCell
+                                          sx={{
+                                            maxWidth: "50px",
+                                          }}
+                                        >
+                                          {payments.amount}{" "}
+                                          {payments.currency_name}
+                                        </TableCell>
+                                        <TableCell
+                                          sx={{
+                                            maxWidth: "78px",
+                                          }}
+                                        >
+                                          <CategoryCell>
+                                            {payments.category_name}
+                                          </CategoryCell>
+                                        </TableCell>
+                                        <TableCell>
+                                          {payments.CreatedAt.slice(0, 10)}
+                                        </TableCell>
+                                        <TableCell
+                                        // sx={{ width: "100px" }}
+                                        ></TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </Collapse>
+                            </TableCell>
+                          </TableRow>
+                        </React.Fragment>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </PaymentRequestBody>
+            ) : (
+              <RejectSection>
+                <RejectDataTable />
+              </RejectSection>
+            )}
+          </>
         )}
       </PaymentRequestContainer>
     </WorkspaceLayout>
