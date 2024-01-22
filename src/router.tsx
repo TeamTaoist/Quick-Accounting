@@ -1,6 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-// import Navbar from "./components/layout/navbar/Navbar";
-import Home from "./pages/homePage/Home";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import LoginPopup from "./pages/auth/login/LoginPopup";
 import UserDashboard from "./pages/userDashboard/UserDashboard";
 import WorkSpaceForm from "./pages/workspace/WorkSpaceForm";
@@ -33,14 +36,14 @@ const RouterLink = () => {
       />
       <Routes>
         {/* TODO convert to the dialog */}
-        <Route path="/login" element={<LoginPopup />} />
         <Route path="/create-workspace" element={<WorkSpaceForm />} />
         <Route
           path="/workspace/:id/new-payment-request"
           element={<NewPaymentRequest />}
         ></Route>
 
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<LoginPopup />} />
         <Route path="/user" element={<UserDashboard />} />
 
         <Route path="/workspace/:id/assets" element={<Assets />} />

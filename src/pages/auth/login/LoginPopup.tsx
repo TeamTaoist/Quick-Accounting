@@ -1,5 +1,6 @@
 import Header from "../../../components/layout/header/Header";
 import metamask from "../../../assets/auth/metamask.svg";
+import logo from "../../../assets/auth/logo.jpg";
 import "./loginPopup.scss";
 import cancelIcon from "../../../assets/auth/cancel.svg";
 import { Link, useNavigate } from "react-router-dom";
@@ -24,6 +25,7 @@ const LoginPopup = () => {
   const { isConnected, address } = useAccount();
   const chainId = useChainId();
   const { signMessageAsync, isLoading: signLoading } = useSignMessage();
+  const [loginVidible, setLoginVisible] = useState(false);
 
   const [clickConnectFlag, setClickConnectFlag] = useState(false);
 
@@ -94,18 +96,31 @@ const LoginPopup = () => {
   return (
     <Header>
       {isLoading && <Loading />}
-      <div className="login">
-        <div className="popup">
-          <Link to="/">
-            <img className="close-btn" src={cancelIcon} alt="" />
-          </Link>
-          <h3>{t("login.LoginTitle")}</h3>
-          <button className="btn" onClick={onClickConnect}>
-            <img src={metamask} alt="" />
-            <span>{t("login.MetaMask")}</span>
-          </button>
+      {loginVidible ? (
+        <div className="login">
+          <div className="popup">
+            <span onClick={() => setLoginVisible(false)}>
+              <img className="close-btn" src={cancelIcon} alt="" />
+            </span>
+            <h3>{t("login.LoginTitle")}</h3>
+            <button className="btn" onClick={onClickConnect}>
+              <img src={metamask} alt="" />
+              <span>{t("login.MetaMask")}</span>
+            </button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="home-container">
+          <div className="home">
+            <img src={logo} alt="" />
+            <h3 className="home-title">{t("home.HomeTitle")}</h3>
+            <p className="home-description">{t("home.HomeDescription")}</p>
+            <span className="connect-btn" onClick={() => setLoginVisible(true)}>
+              {t("home.ConnectBtn")}
+            </span>
+          </div>
+        </div>
+      )}
     </Header>
   );
 };
