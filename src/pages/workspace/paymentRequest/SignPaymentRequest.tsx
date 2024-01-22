@@ -12,12 +12,31 @@ import {
   Paper,
 } from "@mui/material";
 import data from "../../../data/tableData";
+import usePaymentsStore from "../../../store/usePayments";
+
+interface SignPaymentRequestProps {
+  setOpen: (open: boolean) => void;
+  selectedItem: [];
+}
 
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
 
-const SignPaymentRequest = ({ setOpen }: any) => {
+const SignPaymentRequest = ({ setOpen, selectedItem }: any) => {
+  const { paymentRequestList, approvePaymentRequest } = usePaymentsStore();
+  const paymentRequestId = selectedItem.join(",");
+  // get selected payments for sign to chain
+  const signItems = paymentRequestList.filter((payment) =>
+    paymentRequestId.includes(payment.payment_request_id)
+  );
+  console.log(selectedItem, paymentRequestId);
+  console.log(signItems);
+  const totalTransactionValue = signItems.reduce(
+    (acc, value) => acc + parseFloat(value.amount),
+    0
+  );
+
   return (
     // <Header>
     <WorkspaceItemDetailsLayout
@@ -26,7 +45,7 @@ const SignPaymentRequest = ({ setOpen }: any) => {
       setOpen={setOpen}
     >
       <PaymentRequestChain>
-        <p>Transaction value：$21.99</p>
+        <p>Transaction value: ${totalTransactionValue}</p>
         {/* table */}
         <TableContainer
           component={Paper}
@@ -43,14 +62,14 @@ const SignPaymentRequest = ({ setOpen }: any) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{recipientFormate(row.recipient)}</TableCell>
-                  <TableCell>{row.amount}</TableCell>
+              {signItems.map((payment) => (
+                <TableRow key={payment.ID}>
+                  <TableCell>{recipientFormate(payment.recipient)}</TableCell>
+                  <TableCell>{payment.amount}</TableCell>
                   <TableCell>
-                    <CategoryCell>{row.category}</CategoryCell>
+                    <CategoryCell>{payment.currency_name}</CategoryCell>
                   </TableCell>
-                  <TableCell>{row.date}</TableCell>
+                  <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

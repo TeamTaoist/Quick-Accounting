@@ -22,6 +22,10 @@ interface IPaymentsStore {
     paymentRequestId: number,
     paymentId: number
   ) => void;
+  approvePaymentRequest: (
+    paymentRequestIds: number,
+    safeTxHash: string
+  ) => void;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set) => {
@@ -93,6 +97,23 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
           `/payment_request/${workspaceId}/${paymentRequestId}/item/${paymentId}`
         );
         set({ paymentRequestDetails: data.data });
+      } catch (error: any) {
+        toast.error(error?.data.msg || error?.status || error);
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    // approve payment request
+    approvePaymentRequest: async (paymentRequestIds, safeTxHash) => {
+      setLoading(true);
+      try {
+        const { data } = await axiosClient.post(
+          `/payment_requests/${workspace.ID}/approve?ids=${paymentRequestIds}&safe_tx_hash=${safeTxHash}`
+        );
+        // if (data.msg === "success" && data.code === 200) {
+        //   navigate("/workspace/8/payment-request");
+        // }
       } catch (error: any) {
         toast.error(error?.data.msg || error?.status || error);
         console.error(error);

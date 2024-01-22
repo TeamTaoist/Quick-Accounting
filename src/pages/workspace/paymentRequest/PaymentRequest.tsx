@@ -138,6 +138,7 @@ const PaymentRequest = () => {
     getPaymentRequestList,
     paymentRequestList,
     getPaymentRequestDetails,
+    approvePaymentRequest,
   } = usePaymentsStore();
   // table logic
   const recipientFormate = (n: string) => {
@@ -145,7 +146,6 @@ const PaymentRequest = () => {
   };
   const [selected, setSelected] = useState<number[]>([]);
   const [openRows, setOpenRows] = useState<number[]>([]);
-  console.log(openRows);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -192,6 +192,7 @@ const PaymentRequest = () => {
     setOpenModal(true);
     getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
   };
+
   // modal end
   const [searchTerm, setSearchTerm] = useState("");
   const handleChange = (event: any) => {
@@ -228,7 +229,11 @@ const PaymentRequest = () => {
     return acc;
   }, {} as Record<number, IPaymentRequest[]>);
 
-  console.log(selected);
+  // approve modal
+  const handlePaymentRequestChaiModal = () => {
+    setSignPaymentModal(true);
+    console.log(selected);
+  };
 
   return (
     <WorkspaceLayout>
@@ -257,15 +262,15 @@ const PaymentRequest = () => {
           open={openModal}
           setOpen={setOpenModal}
           component={PaymentRequestDetails}
-          // additionalProps={{
-          //   paymentRequestId: payment.payment_request_id,
-          // }}
         />
         {/* payment request modal */}
         <CustomModal
           open={openSignPaymentModal}
           setOpen={setSignPaymentModal}
           component={SignPaymentRequest}
+          additionalProps={{
+            selectedItem: selected,
+          }}
         />
         <Header>
           <div>
@@ -332,7 +337,7 @@ const PaymentRequest = () => {
                 <img src={reject} alt="" />
                 <p>{t("paymentRequest.Reject")}</p>
               </Btn>
-              <Btn onClick={() => setSignPaymentModal(true)}>
+              <Btn onClick={() => handlePaymentRequestChaiModal()}>
                 <img src={approve} alt="" />
                 <p>{t("paymentRequest.Approve")}</p>
               </Btn>
@@ -444,8 +449,7 @@ const PaymentRequest = () => {
                                     )
                                   }
                                 />
-                                {recipientFormate(payment.recipient)} id:{" "}
-                                {payment.payment_request_id}
+                                {recipientFormate(payment.recipient)}
                               </TableCell>
                               <TableCell>
                                 {payment.amount} {payment.currency_name}
@@ -502,14 +506,14 @@ const PaymentRequest = () => {
                                       // colSpan={1}
                                       sx={{
                                         paddingLeft: "58px",
-                                        maxWidth: "90px",
+                                        maxWidth: "112px",
                                       }}
                                     >
                                       {recipientFormate(payments.recipient)}
                                     </TableCell>
                                     <TableCell
                                       sx={{
-                                        maxWidth: "56px",
+                                        maxWidth: "50px",
                                       }}
                                     >
                                       {payments.amount} {payments.currency_name}
