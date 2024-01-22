@@ -145,11 +145,13 @@ const PaymentRequest = () => {
   };
   const [selected, setSelected] = useState<number[]>([]);
   const [openRows, setOpenRows] = useState<number[]>([]);
-  console.log(selected);
+  console.log(openRows);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelected(paymentRequestList.map((payment) => payment.ID));
+      setSelected(
+        paymentRequestList.map((payment) => payment.payment_request_id)
+      );
     } else {
       setSelected([]);
     }
@@ -215,6 +217,18 @@ const PaymentRequest = () => {
   useEffect(() => {
     getPaymentRequestList(workspaceId, 0, 10);
   }, [getPaymentRequestList, workspaceId]);
+  // payment_request_id
+
+  const groupedData = filterData.reduce((acc, item) => {
+    const paymentRequestId = item.payment_request_id;
+    if (!acc[paymentRequestId]) {
+      acc[paymentRequestId] = [];
+    }
+    acc[paymentRequestId].push(item);
+    return acc;
+  }, {} as Record<number, IPaymentRequest[]>);
+
+  console.log(selected);
 
   return (
     <WorkspaceLayout>
@@ -353,118 +367,120 @@ const PaymentRequest = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filterData.map((payment) => (
-                    <React.Fragment key={payment.ID}>
-                      {/* {payment.subPayment.length > 0 ? ( */}
-                      <TableRow
-                        onClick={() => handleRowToggle(payment.ID)}
-                        style={{ cursor: "pointer" }}
-                      >
-                        {/* <TableCell
-                          colSpan={4}
-                          style={{
-                            padding: 0,
-                            paddingLeft: "16px",
-                            borderBottom: "1px solid #ddd",
-                            borderTop: "none",
-                            position: "relative",
-                          }}
+                  {Object.entries(groupedData).map(([id, items], index) => (
+                    <React.Fragment key={index}>
+                      {items.length > 1 ? (
+                        <TableRow
+                          onClick={() => handleRowToggle(Number(id))}
+                          style={{ cursor: "pointer" }}
                         >
-                          <Checkbox
-                            checked={isSelected(payment.ID)}
-                            onChange={(event) =>
-                              handleCheckboxClick(event, payment.ID)
-                            }
-                          />
-                          3 payment requests
-                          <IconButton
-                            aria-label="expand row"
-                            size="small"
+                          <TableCell
+                            colSpan={4}
                             style={{
-                              position: "absolute",
-                              left: "200px",
+                              padding: 0,
+                              paddingLeft: "16px",
+                              borderBottom: "1px solid #ddd",
+                              borderTop: "none",
+                              position: "relative",
                             }}
                           >
-                            {openRows.includes(payment.ID) ? (
-                              <KeyboardArrowUpIcon />
-                            ) : (
-                              <KeyboardArrowDownIcon />
-                            )}
-                          </IconButton>
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              borderColor: "black",
-                              color: "black",
-                              textTransform: "lowercase",
-                            }}
-                            onClick={handleOpenModal}
-                          >
-                            view more
-                          </Button> */}
-                        {/* modal */}
-                        {/* <CustomModal
-                              open={openModal}
-                              setOpen={setOpenModal}
-                              component={PaymentRequestDetails}
-                            /> */}
-                        {/* </TableCell> */}
-                      </TableRow>
-                      {/* ) : ( */}
+                            <Checkbox
+                              checked={isSelected(Number(id))}
+                              onChange={(event) =>
+                                handleCheckboxClick(event, Number(id))
+                              }
+                            />
+                            {items.length} payment requests
+                            <IconButton
+                              aria-label="expand row"
+                              size="small"
+                              style={{
+                                position: "absolute",
+                                left: "200px",
+                              }}
+                            >
+                              {openRows.includes(Number(id)) ? (
+                                <KeyboardArrowUpIcon />
+                              ) : (
+                                <KeyboardArrowDownIcon />
+                              )}
+                            </IconButton>
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="outlined"
+                              sx={{
+                                borderColor: "black",
+                                color: "black",
+                                textTransform: "lowercase",
+                              }}
+                              // onClick={handleOpenModal}
+                            >
+                              view more
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        // )}
+                        <>
+                          {items.map((payment) => (
+                            <TableRow key={payment.ID}>
+                              <TableCell
+                                style={{
+                                  padding: 0,
+                                  paddingLeft: "16px",
+                                  borderBottom: "1px solid #ddd",
+                                  borderTop: "none",
+                                }}
+                              >
+                                <Checkbox
+                                  checked={isSelected(
+                                    payment.payment_request_id
+                                  )}
+                                  onChange={(event) =>
+                                    handleCheckboxClick(
+                                      event,
+                                      payment.payment_request_id
+                                    )
+                                  }
+                                />
+                                {recipientFormate(payment.recipient)} id:{" "}
+                                {payment.payment_request_id}
+                              </TableCell>
+                              <TableCell>
+                                {payment.amount} {payment.currency_name}
+                              </TableCell>
+                              <TableCell>
+                                <CategoryCell>
+                                  {payment.category_name}
+                                </CategoryCell>
+                              </TableCell>
+                              <TableCell>
+                                {payment.CreatedAt.slice(0, 10)}
+                              </TableCell>
+                              <TableCell>
+                                <Button
+                                  variant="outlined"
+                                  sx={{
+                                    borderColor: "black",
+                                    color: "black",
+                                    textTransform: "lowercase",
+                                  }}
+                                  onClick={() =>
+                                    handleOpenModal(
+                                      payment.payment_request_id,
+                                      payment.ID
+                                    )
+                                  }
+                                >
+                                  view more
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </>
+                      )}
                       <TableRow>
-                        <TableCell
-                          style={{
-                            padding: 0,
-                            paddingLeft: "16px",
-                            borderBottom: "1px solid #ddd",
-                            borderTop: "none",
-                          }}
-                        >
-                          <Checkbox
-                            checked={isSelected(payment.ID)}
-                            onChange={(event) =>
-                              handleCheckboxClick(event, payment.ID)
-                            }
-                          />
-                          {recipientFormate(payment.recipient)}
-                        </TableCell>
-                        <TableCell>{payment.amount} USDT</TableCell>
-                        <TableCell>
-                          <CategoryCell>{payment.category_name}</CategoryCell>
-                        </TableCell>
-                        <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
-                        <TableCell>
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              borderColor: "black",
-                              color: "black",
-                              textTransform: "lowercase",
-                            }}
-                            onClick={() =>
-                              handleOpenModal(
-                                payment.payment_request_id,
-                                payment.ID
-                              )
-                            }
-                          >
-                            view more
-                          </Button>
-                          {/* modal */}
-                          {/* <CustomModal
-                            open={openModal}
-                            setOpen={setOpenModal}
-                            component={PaymentRequestDetails}
-                            // additionalProps={{
-                            //   paymentRequestId: payment.payment_request_id,
-                            // }}
-                          /> */}
-                        </TableCell>
-                      </TableRow>
-                      {/* )} */}
-                      {/* <TableRow>
                         <TableCell
                           colSpan={5}
                           sx={{
@@ -474,14 +490,14 @@ const PaymentRequest = () => {
                           }}
                         >
                           <Collapse
-                            in={openRows.includes(payment.id)}
+                            in={openRows.includes(Number(id))}
                             timeout="auto"
                             unmountOnExit
                           >
                             <Table size="small">
                               <TableBody>
-                                {payment.subPayment.map((subCategory) => (
-                                  <TableRow key={subCategory.id}>
+                                {items.map((payments) => (
+                                  <TableRow>
                                     <TableCell
                                       // colSpan={1}
                                       sx={{
@@ -489,14 +505,14 @@ const PaymentRequest = () => {
                                         maxWidth: "90px",
                                       }}
                                     >
-                                      {subCategory.idNumber}
+                                      {recipientFormate(payments.recipient)}
                                     </TableCell>
                                     <TableCell
                                       sx={{
                                         maxWidth: "56px",
                                       }}
                                     >
-                                      {subCategory.amount} USDT
+                                      {payments.amount} {payments.currency_name}
                                     </TableCell>
                                     <TableCell
                                       sx={{
@@ -504,10 +520,12 @@ const PaymentRequest = () => {
                                       }}
                                     >
                                       <CategoryCell>
-                                        {subCategory.category}
+                                        {payments.category_name}
                                       </CategoryCell>
                                     </TableCell>
-                                    <TableCell>{subCategory.date}</TableCell>
+                                    <TableCell>
+                                      {payments.CreatedAt.slice(0, 10)}
+                                    </TableCell>
                                     <TableCell
                                     // sx={{ width: "100px" }}
                                     ></TableCell>
@@ -517,7 +535,7 @@ const PaymentRequest = () => {
                             </Table>
                           </Collapse>
                         </TableCell>
-                      </TableRow> */}
+                      </TableRow>
                     </React.Fragment>
                   ))}
                 </TableBody>
