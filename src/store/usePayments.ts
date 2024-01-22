@@ -28,6 +28,10 @@ interface IPaymentsStore {
     navigate: any,
     safeTxHash?: string
   ) => void;
+  rejectPaymentRequest: (
+    workspaceId: string | undefined,
+    paymentRequestIds: string
+  ) => void;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set) => {
@@ -121,6 +125,23 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
         if (data.msg === "success" && data.code === 200) {
           toast.success("Payment request on chain successfully");
           navigate("/workspace/8/queue");
+        }
+      } catch (error: any) {
+        toast.error(error?.data.msg || error?.status || error);
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    // approve payment request
+    rejectPaymentRequest: async (workspaceId, paymentRequestIds) => {
+      setLoading(true);
+      try {
+        const { data } = await axiosClient.post(
+          `/payment_requests/${workspaceId}/reject?ids=${paymentRequestIds}`
+        );
+        if (data.msg === "success" && data.code === 200) {
+          toast.success("Payment request rejected successfully");
         }
       } catch (error: any) {
         toast.error(error?.data.msg || error?.status || error);

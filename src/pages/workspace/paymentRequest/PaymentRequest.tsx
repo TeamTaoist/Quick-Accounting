@@ -138,7 +138,7 @@ const PaymentRequest = () => {
     getPaymentRequestList,
     paymentRequestList,
     getPaymentRequestDetails,
-    approvePaymentRequest,
+    rejectPaymentRequest,
   } = usePaymentsStore();
   // table logic
   const recipientFormate = (n: string) => {
@@ -214,10 +214,11 @@ const PaymentRequest = () => {
     // return searchItem;
   });
   // fetch payment request
+  const [paymentLoading, setPaymentLoading] = useState<boolean>(false);
   const workspaceId = Number(id);
   useEffect(() => {
     getPaymentRequestList(workspaceId, 0, 10);
-  }, [getPaymentRequestList, workspaceId]);
+  }, [getPaymentRequestList, workspaceId, paymentLoading]);
   // payment_request_id
 
   const groupedData = filterData.reduce((acc, item) => {
@@ -233,6 +234,13 @@ const PaymentRequest = () => {
   const handlePaymentRequestChaiModal = () => {
     setSignPaymentModal(true);
     console.log(selected);
+  };
+
+  // reject payment request
+  const paymentRequestIds = selected.join(",");
+  const handleRejectPaymentRequest = () => {
+    rejectPaymentRequest(id, paymentRequestIds);
+    setPaymentLoading(!paymentLoading);
   };
 
   return (
@@ -333,7 +341,7 @@ const PaymentRequest = () => {
                 <img src={download} alt="" />
                 <p>{t("paymentRequest.Download")}</p>
               </Btn>
-              <Btn>
+              <Btn onClick={handleRejectPaymentRequest}>
                 <img src={reject} alt="" />
                 <p>{t("paymentRequest.Reject")}</p>
               </Btn>
