@@ -85,109 +85,107 @@ const Assets = () => {
 
   //table
   return (
-    <WorkspaceLayout>
-      <AssetSection>
-        <AssetHeader>
-          <TextField
-            id="search"
-            type="search"
-            placeholder={t("assets.SearchPlaceholder")}
-            value={searchTerm}
-            onChange={handleChange}
-            sx={{ width: 350 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <img src={searchIcon} alt="" />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </AssetHeader>
-        <AssetValue>Value: ${totalValue}</AssetValue>
-        <AssetTable>
-          <TableContainer
-            component={Paper}
-            sx={{ maxHeight: 500, minWidth: 630 }}
-          >
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                      background: "var(--bg-primary)",
-                    }}
-                  >
-                    Assets
+    <AssetSection>
+      <AssetHeader>
+        <TextField
+          id="search"
+          type="search"
+          placeholder={t("assets.SearchPlaceholder")}
+          value={searchTerm}
+          onChange={handleChange}
+          sx={{ width: 350 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <img src={searchIcon} alt="" />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </AssetHeader>
+      <AssetValue>Value: ${totalValue}</AssetValue>
+      <AssetTable>
+        <TableContainer
+          component={Paper}
+          sx={{ maxHeight: 500, minWidth: 630 }}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    textAlign: "center",
+                    background: "var(--bg-primary)",
+                  }}
+                >
+                  Assets
+                </TableCell>
+                <TableCell
+                  sx={{
+                    textAlign: "center",
+                    background: "var(--bg-primary)",
+                  }}
+                >
+                  Current price
+                </TableCell>
+                <TableCell
+                  sx={{
+                    textAlign: "center",
+                    background: "var(--bg-primary)",
+                  }}
+                >
+                  Balance
+                </TableCell>
+                <TableCell
+                  sx={{
+                    textAlign: "center",
+                    background: "var(--bg-primary)",
+                  }}
+                ></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filterList.map((data, i) => (
+                <TableRow key={i}>
+                  <TableCell>
+                    {/* {recipientFormate(row.assetsName)} */}
+                    <RowCell>
+                      <h6>{data.symbol}</h6>
+                      <p>{data.name}</p>
+                    </RowCell>
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                      background: "var(--bg-primary)",
-                    }}
-                  >
-                    Current price
+                  <TableCell>
+                    <RowCell>
+                      <h6>$ {data.price}</h6>
+                      <p style={{ color: "#2F82CF" }}>
+                        (+{data.priceIncrease}%)
+                      </p>
+                    </RowCell>
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                      background: "var(--bg-primary)",
-                    }}
-                  >
-                    Balance
+                  <TableCell>
+                    <RowCell>
+                      <h6>
+                        {data.balanceDisplay} {data.symbol}
+                      </h6>
+                      <p>${data.balanceUSD}</p>
+                    </RowCell>
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                      background: "var(--bg-primary)",
-                    }}
-                  ></TableCell>
+                  <TableCell>
+                    {data.link && (
+                      <RowLink>
+                        <a href={data.link} target="_blank" rel="noreferrer">
+                          <img src={linkIcon} alt="" />
+                        </a>
+                      </RowLink>
+                    )}
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {filterList.map((data, i) => (
-                  <TableRow key={i}>
-                    <TableCell>
-                      {/* {recipientFormate(row.assetsName)} */}
-                      <RowCell>
-                        <h6>{data.symbol}</h6>
-                        <p>{data.name}</p>
-                      </RowCell>
-                    </TableCell>
-                    <TableCell>
-                      <RowCell>
-                        <h6>$ {data.price}</h6>
-                        <p style={{ color: "#2F82CF" }}>
-                          (+{data.priceIncrease}%)
-                        </p>
-                      </RowCell>
-                    </TableCell>
-                    <TableCell>
-                      <RowCell>
-                        <h6>
-                          {data.balanceDisplay} {data.symbol}
-                        </h6>
-                        <p>${data.balanceUSD}</p>
-                      </RowCell>
-                    </TableCell>
-                    <TableCell>
-                      {data.link && (
-                        <RowLink>
-                          <a href={data.link} target="_blank" rel="noreferrer">
-                            <img src={linkIcon} alt="" />
-                          </a>
-                        </RowLink>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </AssetTable>
-      </AssetSection>
-    </WorkspaceLayout>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </AssetTable>
+    </AssetSection>
   );
 };
 

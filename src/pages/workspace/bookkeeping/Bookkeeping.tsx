@@ -173,206 +173,204 @@ const Bookkeeping = () => {
   console.log(hiddenRows);
 
   return (
-    <WorkspaceLayout>
-      <PaymentRequestContainer>
-        {!hasCategory && (
-          <CategoryTitle>
-            <h3>No payment request yet.</h3>
-            <p style={{ width: "509px", textAlign: "center" }}>
-              Payments requests are requested by share link or drafted directly
-              by multi-signer will show up here.
-            </p>
-            <CreateOptionButton>
-              <CreateBtn>
-                <img src={add} alt="" />
-                <span>Create category</span>
-              </CreateBtn>
-              <CreateBtn>
-                <img src={archive} alt="" />
-                <span>View archive</span>
-              </CreateBtn>
-            </CreateOptionButton>
-          </CategoryTitle>
-        )}
-        {/* header */}
-        <Header>
-          <TextField
-            id="search"
-            type="search"
-            placeholder={t("paymentRequest.SearchToken")}
-            value={searchTerm}
-            onChange={handleChange}
-            sx={{ width: 350 }}
+    <PaymentRequestContainer>
+      {!hasCategory && (
+        <CategoryTitle>
+          <h3>No payment request yet.</h3>
+          <p style={{ width: "509px", textAlign: "center" }}>
+            Payments requests are requested by share link or drafted directly by
+            multi-signer will show up here.
+          </p>
+          <CreateOptionButton>
+            <CreateBtn>
+              <img src={add} alt="" />
+              <span>Create category</span>
+            </CreateBtn>
+            <CreateBtn>
+              <img src={archive} alt="" />
+              <span>View archive</span>
+            </CreateBtn>
+          </CreateOptionButton>
+        </CategoryTitle>
+      )}
+      {/* header */}
+      <Header>
+        <TextField
+          id="search"
+          type="search"
+          placeholder={t("paymentRequest.SearchToken")}
+          value={searchTerm}
+          onChange={handleChange}
+          sx={{ width: 350 }}
+          size="small"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <img src={searchIcon} alt="" />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <FormControl>
+          <Select
+            value={selectedValue}
+            onChange={handleDropdownChange}
+            displayEmpty
+            inputProps={{ "aria-label": "Select a value" }}
             size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <img src={searchIcon} alt="" />
-                </InputAdornment>
-              ),
+          >
+            <MenuItem value="" disabled>
+              <Option>
+                <Image src={filterIcon} alt="" />
+                {t("paymentRequest.Filter")}
+              </Option>
+            </MenuItem>
+            <MenuItem value="category 1">Category 1</MenuItem>
+            <MenuItem value="category 2">Category 2</MenuItem>
+            <MenuItem value="category 3">Category 3</MenuItem>
+          </Select>
+        </FormControl>
+        <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
+          {paymentRequest ? (
+            <div>
+              <Image src={view} alt="" />
+              <p>{t("bookkeeping.ViewHidden")}</p>
+            </div>
+          ) : (
+            <div>
+              <Image src={back} alt="" />
+              <p>{t("paymentRequest.Back")}</p>
+            </div>
+          )}
+        </ViewReject>
+      </Header>
+      {paymentRequest ? (
+        <PaymentRequestBody>
+          <ActionBtn>
+            <Btn>
+              <img src={importIcon} alt="" />
+              <p>{t("bookkeeping.Import")}</p>
+            </Btn>
+            <Btn>
+              <img src={download} alt="" />
+              <p>{t("paymentRequest.Download")}</p>
+            </Btn>
+            <Btn onClick={handleHideClick}>
+              <img src={hide} alt="" />
+              <p>{t("paymentRequest.Hide")}</p>
+            </Btn>
+          </ActionBtn>
+          {/* table */}
+          <TableContainer
+            sx={{
+              border: "1px solid var(--border)",
+              borderRadius: "10px",
+              maxHeight: 500,
             }}
-          />
-          <FormControl>
-            <Select
-              value={selectedValue}
-              onChange={handleDropdownChange}
-              displayEmpty
-              inputProps={{ "aria-label": "Select a value" }}
-              size="small"
-            >
-              <MenuItem value="" disabled>
-                <Option>
-                  <Image src={filterIcon} alt="" />
-                  {t("paymentRequest.Filter")}
-                </Option>
-              </MenuItem>
-              <MenuItem value="category 1">Category 1</MenuItem>
-              <MenuItem value="category 2">Category 2</MenuItem>
-              <MenuItem value="category 3">Category 3</MenuItem>
-            </Select>
-          </FormControl>
-          <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
-            {paymentRequest ? (
-              <div>
-                <Image src={view} alt="" />
-                <p>{t("bookkeeping.ViewHidden")}</p>
-              </div>
-            ) : (
-              <div>
-                <Image src={back} alt="" />
-                <p>{t("paymentRequest.Back")}</p>
-              </div>
-            )}
-          </ViewReject>
-        </Header>
-        {paymentRequest ? (
-          <PaymentRequestBody>
-            <ActionBtn>
-              <Btn>
-                <img src={importIcon} alt="" />
-                <p>{t("bookkeeping.Import")}</p>
-              </Btn>
-              <Btn>
-                <img src={download} alt="" />
-                <p>{t("paymentRequest.Download")}</p>
-              </Btn>
-              <Btn onClick={handleHideClick}>
-                <img src={hide} alt="" />
-                <p>{t("paymentRequest.Hide")}</p>
-              </Btn>
-            </ActionBtn>
-            {/* table */}
-            <TableContainer
-              sx={{
-                border: "1px solid var(--border)",
-                borderRadius: "10px",
-                maxHeight: 500,
-              }}
-            >
-              <Table stickyHeader>
-                <TableHead style={{ backgroundColor: "#f0f0f0" }}>
-                  <TableRow>
-                    <TableCell sx={{ background: "var(--bg-primary)" }}>
-                      <Checkbox
-                        indeterminate={
-                          selected.length > 0 && selected.length < data.length
-                        }
-                        checked={selected.length === data.length}
-                        onChange={handleSelectAllClick}
-                      />
-                      Safe
-                    </TableCell>
-                    <TableCell sx={{ background: "var(--bg-primary)" }}>
-                      Recipient
-                    </TableCell>
-                    <TableCell sx={{ background: "var(--bg-primary)" }}>
-                      Amount
-                    </TableCell>
-                    <TableCell sx={{ background: "var(--bg-primary)" }}>
-                      Category
-                    </TableCell>
-                    <TableCell sx={{ background: "var(--bg-primary)" }}>
-                      Date
-                    </TableCell>
-                    <TableCell
-                      sx={{ background: "var(--bg-primary)" }}
-                    ></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filterData.map((book) => (
-                    <>
-                      {!hiddenRows.includes(book.id) && (
-                        <TableRow key={book.id}>
-                          <TableCell
-                            style={{
-                              padding: 0,
-                              paddingLeft: "16px",
-                              borderBottom: "1px solid #ddd",
-                              borderTop: "none",
+          >
+            <Table stickyHeader>
+              <TableHead style={{ backgroundColor: "#f0f0f0" }}>
+                <TableRow>
+                  <TableCell sx={{ background: "var(--bg-primary)" }}>
+                    <Checkbox
+                      indeterminate={
+                        selected.length > 0 && selected.length < data.length
+                      }
+                      checked={selected.length === data.length}
+                      onChange={handleSelectAllClick}
+                    />
+                    Safe
+                  </TableCell>
+                  <TableCell sx={{ background: "var(--bg-primary)" }}>
+                    Recipient
+                  </TableCell>
+                  <TableCell sx={{ background: "var(--bg-primary)" }}>
+                    Amount
+                  </TableCell>
+                  <TableCell sx={{ background: "var(--bg-primary)" }}>
+                    Category
+                  </TableCell>
+                  <TableCell sx={{ background: "var(--bg-primary)" }}>
+                    Date
+                  </TableCell>
+                  <TableCell
+                    sx={{ background: "var(--bg-primary)" }}
+                  ></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filterData.map((book) => (
+                  <>
+                    {!hiddenRows.includes(book.id) && (
+                      <TableRow key={book.id}>
+                        <TableCell
+                          style={{
+                            padding: 0,
+                            paddingLeft: "16px",
+                            borderBottom: "1px solid #ddd",
+                            borderTop: "none",
+                          }}
+                        >
+                          <SafeSection>
+                            <div>
+                              <Checkbox
+                                checked={isSelected(book.id)}
+                                onChange={(event) =>
+                                  handleCheckboxClick(event, book.id)
+                                }
+                              />
+                              {`${book.recipient.slice(
+                                0,
+                                6
+                              )}...${book.recipient.slice(-4)}`}
+                            </div>
+                            <Logo>
+                              <img src={rightArrow} alt="" />
+                            </Logo>
+                          </SafeSection>
+                        </TableCell>
+                        <TableCell>{`${book.recipient.slice(
+                          0,
+                          6
+                        )}...${book.recipient.slice(-4)}`}</TableCell>
+                        <TableCell>{book.amount} USDT</TableCell>
+                        <TableCell>
+                          <CategoryCell>{book.category}</CategoryCell>
+                        </TableCell>
+                        <TableCell>{book.date}</TableCell>
+                        <TableCell>
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              borderColor: "black",
+                              color: "black",
+                              textTransform: "lowercase",
                             }}
+                            onClick={handleOpenModal}
                           >
-                            <SafeSection>
-                              <div>
-                                <Checkbox
-                                  checked={isSelected(book.id)}
-                                  onChange={(event) =>
-                                    handleCheckboxClick(event, book.id)
-                                  }
-                                />
-                                {`${book.recipient.slice(
-                                  0,
-                                  6
-                                )}...${book.recipient.slice(-4)}`}
-                              </div>
-                              <Logo>
-                                <img src={rightArrow} alt="" />
-                              </Logo>
-                            </SafeSection>
-                          </TableCell>
-                          <TableCell>{`${book.recipient.slice(
-                            0,
-                            6
-                          )}...${book.recipient.slice(-4)}`}</TableCell>
-                          <TableCell>{book.amount} USDT</TableCell>
-                          <TableCell>
-                            <CategoryCell>{book.category}</CategoryCell>
-                          </TableCell>
-                          <TableCell>{book.date}</TableCell>
-                          <TableCell>
-                            <Button
-                              variant="outlined"
-                              sx={{
-                                borderColor: "black",
-                                color: "black",
-                                textTransform: "lowercase",
-                              }}
-                              onClick={handleOpenModal}
-                            >
-                              view more
-                            </Button>
-                            {/* modal */}
-                            <CustomModal
-                              open={openModal}
-                              setOpen={setOpenModal}
-                              component={BookkeepingTransferDetails}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </PaymentRequestBody>
-        ) : (
-          <RejectSection>
-            <BookkeepingRejectTable hiddenRows={hiddenRows} />
-          </RejectSection>
-        )}
-      </PaymentRequestContainer>
-    </WorkspaceLayout>
+                            view more
+                          </Button>
+                          {/* modal */}
+                          <CustomModal
+                            open={openModal}
+                            setOpen={setOpenModal}
+                            component={BookkeepingTransferDetails}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </PaymentRequestBody>
+      ) : (
+        <RejectSection>
+          <BookkeepingRejectTable hiddenRows={hiddenRows} />
+        </RejectSection>
+      )}
+    </PaymentRequestContainer>
   );
 };
 

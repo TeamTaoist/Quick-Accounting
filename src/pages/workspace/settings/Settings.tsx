@@ -41,27 +41,25 @@ const Settings = () => {
   );
 
   return (
-    <WorkspaceLayout>
-      <SettingsContainer>
-        <WorkspaceForm>
-          <InputSection>
-            <label htmlFor="">{t("workspaceForm.WorkspaceName")}</label>
-            <input
-              type="text"
-              placeholder={t("workspaceForm.WorkspaceName")}
-              value={workspaceName}
-              onChange={handleWorkspaceNameUpdate}
-            />
-          </InputSection>
-        </WorkspaceForm>
-        <MultiSigner>
-          <h3>{t("settings.MultiSigner")}</h3>
-          {data?.owners?.map((owner) => (
-            <p key={owner.value}>{owner.value}</p>
-          ))}
-        </MultiSigner>
-      </SettingsContainer>
-    </WorkspaceLayout>
+    <SettingsContainer>
+      <WorkspaceForm>
+        <InputSection>
+          <label htmlFor="">{t("workspaceForm.WorkspaceName")}</label>
+          <input
+            type="text"
+            placeholder={t("workspaceForm.WorkspaceName")}
+            value={workspaceName}
+            onChange={handleWorkspaceNameUpdate}
+          />
+        </InputSection>
+      </WorkspaceForm>
+      <MultiSigner>
+        <h3>{t("settings.MultiSigner")}</h3>
+        {data?.owners?.map((owner) => (
+          <p key={owner.value}>{owner.value}</p>
+        ))}
+      </MultiSigner>
+    </SettingsContainer>
   );
 };
 

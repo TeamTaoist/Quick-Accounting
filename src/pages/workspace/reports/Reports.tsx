@@ -7,16 +7,14 @@ import { useTranslation } from "react-i18next";
 const Reports = () => {
   const { t } = useTranslation();
   return (
-    <WorkspaceLayout>
-      <ReportsContainer>
-        <ReportHeader>
-          <p>{t("reports.Report")} 1</p>
-          <p>{t("reports.Report")} 2</p>
-          <p>{t("reports.Report")} 3</p>
-        </ReportHeader>
-        <BasicBars />
-      </ReportsContainer>
-    </WorkspaceLayout>
+    <ReportsContainer>
+      <ReportHeader>
+        <p>{t("reports.Report")} 1</p>
+        <p>{t("reports.Report")} 2</p>
+        <p>{t("reports.Report")} 3</p>
+      </ReportHeader>
+      <BasicBars />
+    </ReportsContainer>
   );
 };
 

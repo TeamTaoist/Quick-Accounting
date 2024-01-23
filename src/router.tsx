@@ -19,6 +19,7 @@ import PaymentRequestPreview from "./pages/workspace/share/PaymentRequestPreview
 import Reports from "./pages/workspace/reports/Reports";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import WorkspaceIndex from "./pages/workspace";
 
 const RouterLink = () => {
   return (
@@ -45,17 +46,18 @@ const RouterLink = () => {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPopup />} />
         <Route path="/user" element={<UserDashboard />} />
-
-        <Route path="/workspace/:id/assets" element={<Assets />} />
-        <Route path="/workspace/:id/category" element={<Category />} />
-        <Route
-          path="/workspace/:id/payment-request"
-          element={<PaymentRequest />}
-        />
-        <Route path="/workspace/:id/settings" element={<Settings />} />
-        <Route path="/workspace/:id/queue" element={<Queue />} />
-        <Route path="/workspace/:id/bookkeeping" element={<Bookkeeping />} />
-        <Route path="/workspace/:id/reports" element={<Reports />} />
+        <Route path="/workspace/:id" element={<WorkspaceIndex />}>
+          <Route path="assets" element={<Assets />} />
+          <Route path="category" element={<Category />} />
+          <Route
+            path="payment-request"
+            element={<PaymentRequest />}
+          />
+          <Route path="settings" element={<Settings />} />
+          <Route path="queue" element={<Queue />} />
+          <Route path="bookkeeping" element={<Bookkeeping />} />
+          <Route path="reports" element={<Reports />} />
+        </Route>
 
         <Route
           path="/new-workspace-payment-request"

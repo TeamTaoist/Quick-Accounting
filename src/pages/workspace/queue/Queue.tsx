@@ -41,137 +41,133 @@ const Queue = () => {
     setOpenModal(true);
   };
   return (
-    <WorkspaceLayout>
-      <QueueSection>
-        {!hasCategory ? (
-          <CategoryTitle>
-            <h3>You don't have any transactions.</h3>
-            <p style={{ width: "450px", textAlign: "center" }}>
-              Transactions that add tokens to or remove tokens from your Safe
-              will show up here.
-            </p>
-          </CategoryTitle>
-        ) : (
-          <QueueContainer>
-            <QueHeader>
-              <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
-                {paymentRequest ? (
-                  <div>
-                    <Image src={reject} alt="" />
-                    <p>{t("paymentRequest.ViewRejection")}</p>
-                  </div>
-                ) : (
-                  <div>
-                    <Image src={back} alt="" />
-                    <p>{t("paymentRequest.Back")}</p>
-                  </div>
-                )}
-              </ViewReject>
-            </QueHeader>
-            {/*  */}
-            {paymentRequest ? (
-              <QueueNotice>
-                <h1>{t("queue.NextUp")}</h1>
-                <Accordion>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                    sx={{ backgroundColor: "var(--hover-bg)" }}
+    <QueueSection>
+      {!hasCategory ? (
+        <CategoryTitle>
+          <h3>You don't have any transactions.</h3>
+          <p style={{ width: "450px", textAlign: "center" }}>
+            Transactions that add tokens to or remove tokens from your Safe will
+            show up here.
+          </p>
+        </CategoryTitle>
+      ) : (
+        <QueueContainer>
+          <QueHeader>
+            <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
+              {paymentRequest ? (
+                <div>
+                  <Image src={reject} alt="" />
+                  <p>{t("paymentRequest.ViewRejection")}</p>
+                </div>
+              ) : (
+                <div>
+                  <Image src={back} alt="" />
+                  <p>{t("paymentRequest.Back")}</p>
+                </div>
+              )}
+            </ViewReject>
+          </QueHeader>
+          {/*  */}
+          {paymentRequest ? (
+            <QueueNotice>
+              <h1>{t("queue.NextUp")}</h1>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  sx={{ backgroundColor: "var(--hover-bg)" }}
+                >
+                  <Header>
+                    <HeaderTitle>
+                      <h6>{t("queue.Nonce")}: 1</h6>
+                      <p>On 24 Oct 2023 at 12:05</p>
+                    </HeaderTitle>
+                    <h5>1 {t("queue.Action")}</h5>
+                  </Header>
+                </AccordionSummary>
+                <AccordionDetails sx={{ p: 0 }}>
+                  {/* category property */}
+                  <Action>
+                    <Approvals>
+                      <h4>Approvals: 2/2</h4>
+                      <p>0x4d4b...2915</p>
+                      <p>0x4d4b...2915</p>
+                      <button disabled>{t("queue.Approve")}</button>
+                      <button disabled={false}>{t("queue.Execute")}</button>
+                    </Approvals>
+                    <Approvals>
+                      <h4>Rejections: 1/2</h4>
+                      <p>0x4d4b...2915</p>
+                      <p>0x4d4b...2915</p>
+                      <button disabled={false}>Reject</button>
+                      <button disabled={true}>Execute</button>
+                    </Approvals>
+                    {/* <Rejections></Rejections> */}
+                  </Action>
+                  <TableContainer
+                    component={Paper}
+                    sx={{ maxHeight: 200, minWidth: 800 }}
                   >
-                    <Header>
-                      <HeaderTitle>
-                        <h6>{t("queue.Nonce")}: 1</h6>
-                        <p>On 24 Oct 2023 at 12:05</p>
-                      </HeaderTitle>
-                      <h5>1 {t("queue.Action")}</h5>
-                    </Header>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ p: 0 }}>
-                    {/* category property */}
-                    <Action>
-                      <Approvals>
-                        <h4>Approvals: 2/2</h4>
-                        <p>0x4d4b...2915</p>
-                        <p>0x4d4b...2915</p>
-                        <button disabled>{t("queue.Approve")}</button>
-                        <button disabled={false}>{t("queue.Execute")}</button>
-                      </Approvals>
-                      <Approvals>
-                        <h4>Rejections: 1/2</h4>
-                        <p>0x4d4b...2915</p>
-                        <p>0x4d4b...2915</p>
-                        <button disabled={false}>Reject</button>
-                        <button disabled={true}>Execute</button>
-                      </Approvals>
-                      {/* <Rejections></Rejections> */}
-                    </Action>
-                    <TableContainer
-                      component={Paper}
-                      sx={{ maxHeight: 200, minWidth: 800 }}
-                    >
-                      <Table stickyHeader>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Safe</TableCell>
-                            <TableCell>Counterparty</TableCell>
-                            <TableCell>Amount</TableCell>
-                            <TableCell>Category</TableCell>
-                            <TableCell>Date</TableCell>
-                            <TableCell></TableCell>
+                    <Table stickyHeader>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Safe</TableCell>
+                          <TableCell>Counterparty</TableCell>
+                          <TableCell>Amount</TableCell>
+                          <TableCell>Category</TableCell>
+                          <TableCell>Date</TableCell>
+                          <TableCell></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {data.slice(0, 1).map((row) => (
+                          <TableRow key={row.id}>
+                            <TableCell>{recipientFormate(row.safe)}</TableCell>
+                            <TableCell>
+                              {recipientFormate(row.recipient)}
+                            </TableCell>
+                            <TableCell>{row.amount} USDT</TableCell>
+                            <TableCell>
+                              <CategoryCell>{row.category}</CategoryCell>
+                            </TableCell>
+                            <TableCell>{row.date}</TableCell>
+                            <TableCell>
+                              <Button
+                                variant="outlined"
+                                sx={{
+                                  borderColor: "black",
+                                  color: "black",
+                                  textTransform: "lowercase",
+                                }}
+                                onClick={handleOpenModal}
+                              >
+                                view more
+                              </Button>
+                              <CustomModal
+                                open={openModal}
+                                setOpen={setOpenModal}
+                                component={PaymentRequestDetails}
+                              />
+                            </TableCell>
                           </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {data.slice(0, 1).map((row) => (
-                            <TableRow key={row.id}>
-                              <TableCell>
-                                {recipientFormate(row.safe)}
-                              </TableCell>
-                              <TableCell>
-                                {recipientFormate(row.recipient)}
-                              </TableCell>
-                              <TableCell>{row.amount} USDT</TableCell>
-                              <TableCell>
-                                <CategoryCell>{row.category}</CategoryCell>
-                              </TableCell>
-                              <TableCell>{row.date}</TableCell>
-                              <TableCell>
-                                <Button
-                                  variant="outlined"
-                                  sx={{
-                                    borderColor: "black",
-                                    color: "black",
-                                    textTransform: "lowercase",
-                                  }}
-                                  onClick={handleOpenModal}
-                                >
-                                  view more
-                                </Button>
-                                <CustomModal
-                                  open={openModal}
-                                  setOpen={setOpenModal}
-                                  component={PaymentRequestDetails}
-                                />
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                      <TotalValue>Total value: $123.29</TotalValue>
-                    </TableContainer>
-                    {/* category property end */}
-                  </AccordionDetails>
-                </Accordion>
-              </QueueNotice>
-            ) : (
-              <RejectSection>
-                <RejectDataTable />
-              </RejectSection>
-            )}
-          </QueueContainer>
-        )}
-      </QueueSection>
-    </WorkspaceLayout>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    <TotalValue>Total value: $123.29</TotalValue>
+                  </TableContainer>
+                  {/* category property end */}
+                </AccordionDetails>
+              </Accordion>
+            </QueueNotice>
+          ) : (
+            <RejectSection>
+              <RejectDataTable />
+            </RejectSection>
+          )}
+        </QueueContainer>
+      )}
+    </QueueSection>
   );
 };
 
