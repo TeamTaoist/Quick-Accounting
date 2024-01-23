@@ -203,9 +203,10 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
 
   // submit
   const handlePaymentRequestSubmit = () => {
-    createPaymentRequest(Number(id), paymentRequestBody, navigate).then(r => {
+    createPaymentRequest(Number(id), paymentRequestBody, navigate).then((r) => {
       if (r) {
         onClose();
+        navigate("/workspace/8/payment-request");
       }
     });
   };
