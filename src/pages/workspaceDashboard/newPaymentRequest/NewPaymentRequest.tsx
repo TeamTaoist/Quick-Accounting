@@ -210,6 +210,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
       }
     });
   };
+  console.log(paymentRequestBody);
 
   return (
     <FullScreenDialog>
@@ -478,6 +479,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               <ReactSelect
                                 // value={selectedValues}
                                 value={selectSingleValue}
+                                isDisabled={false}
                                 // onChange={handleSelectSingleChange}
                                 onChange={(selectedOption: ReactSelectOption) =>
                                   handleSelectSingleChange(
@@ -487,13 +489,18 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                   )
                                 }
                                 // options={property.values}
-
-                                options={[
-                                  {
-                                    value: property.values,
-                                    label: property.values,
-                                  },
-                                ]}
+                                options={property.values
+                                  .split(";")
+                                  .map((v) => ({
+                                    value: v,
+                                    label: v,
+                                  }))}
+                                // options={[
+                                //   {
+                                //     value: property.values,
+                                //     label: property.values,
+                                //   },
+                                // ]}
                                 isMulti={false}
                                 // defaultValues={[options[1]]}
                               />
