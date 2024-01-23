@@ -3,7 +3,7 @@ import WorkspaceLayout from "../../../components/layout/workspaceLayout/Workspac
 import reject from "../../../assets/workspace/reject.svg";
 import back from "../../../assets/workspace/back.svg";
 import { CategoryTitle } from "../category/category.style";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -20,16 +20,20 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import data from "../../../data/tableData";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import RejectDataTable from "../../../components/workspace/RejectDataTable";
 import { Image, ViewReject } from "../paymentRequest/paymentRequest.style";
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import PaymentRequestDetails from "../paymentRequest/PaymentRequestDetails";
+import { useQueue } from "../../../store/UseQueue";
 
 const Queue = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const { t } = useTranslation();
+
+  const { getQueueList } = useQueue();
   const [hasCategory, setHasCategory] = useState(true);
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -40,6 +44,11 @@ const Queue = () => {
   const handleOpenModal = () => {
     setOpenModal(true);
   };
+  const workspaceId = Number(id);
+
+  useEffect(() => {
+    getQueueList(workspaceId, false);
+  }, [getQueueList, workspaceId]);
   return (
     <QueueSection>
       {!hasCategory ? (

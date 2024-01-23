@@ -314,13 +314,6 @@ const Category = () => {
                             value={categoryName}
                             placeholder="Category Name"
                             onClick={(e) => e.stopPropagation()}
-                            // onChange={(e) =>
-                            //   handleUpdateCategoryName(
-                            //     e,
-                            //     category.workspace_id,
-                            //     category.ID
-                            //   )
-                            // }
                             onChange={(e) => setCategoryName(e.target.value)}
                             onBlur={() =>
                               handleUpdateCategoryName(
