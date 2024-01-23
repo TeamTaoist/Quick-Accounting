@@ -8,7 +8,7 @@ import {
 import arrow from "../../../assets/workspace/arrow.svg";
 import add from "../../../assets/workspace/add.svg";
 import share from "../../../assets/workspace/share.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SidebarLink from "../SidebarLink";
 import assets from "../../../assets/workspace/assets.svg";
 import category from "../../../assets/workspace/category.svg";
@@ -20,18 +20,28 @@ import setting from "../../../assets/workspace/setting.svg";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import NewPaymentRequest from "../../../pages/workspaceDashboard/newPaymentRequest/NewPaymentRequest";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 const WorkspaceSidebar = () => {
   const { t } = useTranslation();
   const { id } = useParams<string>();
   const [newPaymentsVisible, setNewPaymentsVisible] = useState(false);
+  const { getWorkspaceDetails, workspace } = useWorkspace();
+
+  useEffect(() => {
+    getWorkspaceDetails(Number(id));
+  }, [getWorkspaceDetails, id]);
+
+  const recipientFormate = (n: string) => {
+    return `${n.slice(0, 6)}...${n.slice(-4)}`;
+  };
   return (
     <>
       <SidebarContainer>
         <WorkspaceInfo>
           <div>
-            <h5>workspace name</h5>
-            <p>0xB1234···004C</p>
+            <h5>{workspace.name}</h5>
+            <p>{recipientFormate(workspace.creator)}</p>
           </div>
           <img src={arrow} alt="" />
         </WorkspaceInfo>

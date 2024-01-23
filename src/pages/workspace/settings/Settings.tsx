@@ -16,18 +16,16 @@ const Settings = () => {
 
   const { updateWorkspaceName, workspace, getWorkspaceDetails } =
     useWorkspace();
-  const [workspaceName, setWorkspaceName] = useState<string>("");
+  const [workspaceName, setWorkspaceName] = useState<string>(workspace.name);
   // handle workspace name update
   useEffect(() => {
     getWorkspaceDetails(id || "");
   }, [id]);
-  const handleWorkspaceNameUpdate = (
+  const handleUpdateWorkspaceName = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedName = e.target.value;
-    setWorkspaceName(updatedName);
     if (id) {
-      updateWorkspaceName(id, updatedName);
+      updateWorkspaceName(id, workspaceName);
     }
   };
   console.log(workspace);
@@ -49,7 +47,8 @@ const Settings = () => {
             type="text"
             placeholder={t("workspaceForm.WorkspaceName")}
             value={workspaceName}
-            onChange={handleWorkspaceNameUpdate}
+            onChange={(e) => setWorkspaceName(e.target.value)}
+            onBlur={handleUpdateWorkspaceName}
           />
         </InputSection>
       </WorkspaceForm>
