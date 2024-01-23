@@ -1,5 +1,5 @@
-import Header from "../../../components/layout/header/Header";
 import {
+  FullScreenDialog,
   AddPayment,
   Btn,
   CreateRequest,
@@ -66,7 +66,7 @@ interface PropertyValues {
   values?: string;
 }
 
-const NewPaymentRequest = () => {
+const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -203,16 +203,20 @@ const NewPaymentRequest = () => {
 
   // submit
   const handlePaymentRequestSubmit = () => {
-    createPaymentRequest(Number(id), paymentRequestBody, navigate);
+    createPaymentRequest(Number(id), paymentRequestBody, navigate).then(r => {
+      if (r) {
+        onClose();
+      }
+    });
   };
 
   return (
-    <Header>
+    <FullScreenDialog>
       <CreateRequest>
         <Request>
           <RequestHeader>
             <h1>New payment request</h1>
-            <img onClick={() => navigate(-1)} src={cancel} alt="" />
+            <img onClick={onClose} src={cancel} alt="" />
           </RequestHeader>
           <TableSection>
             <TableContainer
@@ -609,7 +613,7 @@ const NewPaymentRequest = () => {
           </TableSection>
         </Request>
       </CreateRequest>
-    </Header>
+    </FullScreenDialog>
   );
 };
 
