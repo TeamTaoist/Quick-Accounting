@@ -15,6 +15,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Typography,
 } from "@mui/material";
 
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
@@ -22,6 +23,7 @@ import multiSelect from "../../../assets/workspace/multi-select.svg";
 import selectIcon from "../../../assets/workspace/select.svg";
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
 import optionsIcon from "../../../assets/workspace/option.svg";
+import statusIcon from "../../../assets/workspace/status.svg";
 import {
   DeleteIcon,
   Image,
@@ -115,6 +117,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       sx={{
                         "& fieldset": { border: "none" },
                       }}
+                      disabled={paymentRequestDetails.status === 1}
                       size="small"
                       value={paymentRequestDetails.recipient}
                       fullWidth
@@ -134,7 +137,21 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       // minHeight: "40px",
                     }}
                   >
-                    {paymentRequestDetails.amount}
+                    <TextField
+                      sx={{
+                        "& fieldset": { border: "none" },
+                      }}
+                      disabled={paymentRequestDetails.status === 1}
+                      size="small"
+                      value={paymentRequestDetails.amount}
+                      fullWidth
+                      // id="fullWidth"
+                      placeholder="Enter wallet address"
+                      InputProps={{
+                        style: { padding: 0 },
+                      }}
+                    />
+                    {/* {paymentRequestDetails.amount} */}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -144,6 +161,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                     }}
                   >
                     <Select
+                      disabled={paymentRequestDetails.status === 1}
                       labelId="demo-select-small-label"
                       id="demo-select-small"
                       value={selectedValue}
@@ -204,7 +222,10 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       </NoteInfo>
                     </TableCell>
                     <TableCell>
-                      <FormControl fullWidth>
+                      <FormControl
+                        fullWidth
+                        disabled={paymentRequestDetails.status === 1}
+                      >
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
@@ -254,6 +275,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           {/* add multi select */}
                           <TableCell>
                             <ReactSelect
+                              isDisabled={paymentRequestDetails.status === 1}
                               value={selectedValues}
                               onChange={handleSelectChange}
                               options={[
@@ -293,6 +315,9 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                               {/* add multi select */}
                               <TableCell>
                                 <ReactSelect
+                                  isDisabled={
+                                    paymentRequestDetails.status === 1
+                                  }
                                   value={selectedValues}
                                   onChange={handleSelectChange}
                                   options={property.values
@@ -331,7 +356,11 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                               </NoteInfo>
                             </TableCell>
                             {/* add multi select */}
-                            <TableCell>{property.values}</TableCell>
+                            <TableCell>
+                              <p style={{ paddingLeft: "10px" }}>
+                                {property.values}
+                              </p>
+                            </TableCell>
                           </TableRow>
                         )}
                       </>
@@ -340,6 +369,13 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                 </TableBody>
               </Table>
             </TableContainer>
+            {/* rejected status */}
+            {paymentRequestDetails.status === 1 && (
+              <PaymentStatus>
+                <img src={statusIcon} alt="" />
+                <p>Status: Rejected</p>
+              </PaymentStatus>
+            )}
           </NoteInformation>
           {/* <ReactSelect /> */}
         </RequestDetails>
@@ -352,4 +388,16 @@ export default PaymentRequestDetails;
 
 const RequestDetails = styled.div`
   padding-bottom: 50px;
+`;
+const PaymentStatus = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 20px;
+  img {
+    width: 20px;
+  }
+  p {
+    font-size: 20px;
+  }
 `;

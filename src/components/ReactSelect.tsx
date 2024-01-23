@@ -9,6 +9,9 @@ export const customStyles: any = {
     ...provided,
     border: "none",
     boxShadow: state.isFocused ? null : null,
+    backgroundColor: state.isDisabled
+      ? "transparent"
+      : provided.backgroundColor,
   }),
   option: (provided: any, state: any) => ({
     ...provided,
@@ -41,6 +44,7 @@ export default function ReactSelect({
   options = [],
   isMulti = true,
   defaultValues = [],
+  isDisabled = false,
 }: any) {
   return (
     <Select
@@ -53,6 +57,7 @@ export default function ReactSelect({
       onChange={onChange}
       menuPortalTarget={document.body}
       // isClearable={false}
+      isDisabled={isDisabled}
     />
   );
 }

@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 import data from "../../data/tableData";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CategoryCell } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import statusIcon from "../../assets/workspace/status-icon.svg";
 import styled from "@emotion/styled";
@@ -22,16 +22,23 @@ const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
 const RejectDataTable = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
 
-  const { paymentRequestList } = usePaymentsStore();
+  const { paymentRequestList, getPaymentRequestDetails } = usePaymentsStore();
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
     setOpenModal(true);
+    getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
   };
   return (
     <div>
+      <CustomModal
+        open={openModal}
+        setOpen={setOpenModal}
+        component={PaymentRequestDetails}
+      />
       <TableContainer component={Paper} sx={{ maxHeight: 600, minWidth: 800 }}>
         <Table stickyHeader>
           <TableHead>
@@ -77,15 +84,12 @@ const RejectDataTable = () => {
                       color: "black",
                       textTransform: "lowercase",
                     }}
-                    onClick={handleOpenModal}
+                    onClick={() =>
+                      handleOpenModal(payment.payment_request_id, payment.ID)
+                    }
                   >
                     view more
                   </Button>
-                  <CustomModal
-                    open={openModal}
-                    setOpen={setOpenModal}
-                    component={PaymentRequestDetails}
-                  />
                 </TableCell>
               </TableRow>
             ))}
