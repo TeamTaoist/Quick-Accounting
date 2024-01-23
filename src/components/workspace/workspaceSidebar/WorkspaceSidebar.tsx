@@ -19,10 +19,12 @@ import reports from "../../../assets/workspace/reports.svg";
 import setting from "../../../assets/workspace/setting.svg";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import NewPaymentRequest from "../../../pages/workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 
 const WorkspaceSidebar = () => {
   const { t } = useTranslation();
   const { id } = useParams<string>();
+  const [newPaymentsVisible, setNewPaymentsVisible] = useState(false);
   return (
     <>
       <SidebarContainer>
@@ -35,12 +37,12 @@ const WorkspaceSidebar = () => {
         </WorkspaceInfo>
         {/* payment request btn and share btn */}
         <PaymentRequest>
-          <Link to={`/workspace/${id}/new-payment-request`}>
-            <RequestBtn>
+          <span>
+            <RequestBtn onClick={() => setNewPaymentsVisible(true)}>
               <img src={add} alt="" />
               <span>{t("workspace.New")}</span>
             </RequestBtn>
-          </Link>
+          </span>
           <Link to={"/new-workspace-payment-request"}>
             <RequestBtn>
               <img src={share} alt="" />
@@ -87,6 +89,9 @@ const WorkspaceSidebar = () => {
           />
         </SidebarLinkList>
       </SidebarContainer>
+      {newPaymentsVisible && (
+        <NewPaymentRequest onClose={() => setNewPaymentsVisible(false)} />
+      )}
       {/* {children} */}
     </>
   );

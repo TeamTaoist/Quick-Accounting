@@ -1,4 +1,17 @@
 import styled from "@emotion/styled";
+import Header from "../../../components/layout/header/Header";
+
+export const FullScreenDialog = styled(Header)`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 99;
+  .container {
+    background-color: #fff;
+  }
+`;
 
 export const CreateRequest = styled.table`
   display: grid;
@@ -27,6 +40,7 @@ export const RequestHeader = styled.div`
   }
   img {
     width: 20px;
+    cursor: pointer;
   }
 `;
 export const TableSection = styled.table`

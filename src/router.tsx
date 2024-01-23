@@ -38,11 +38,7 @@ const RouterLink = () => {
       <Routes>
         {/* TODO convert to the dialog */}
         <Route path="/create-workspace" element={<WorkSpaceForm />} />
-        <Route
-          path="/workspace/:id/new-payment-request"
-          element={<NewPaymentRequest />}
-        ></Route>
-
+      
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPopup />} />
         <Route path="/user" element={<UserDashboard />} />

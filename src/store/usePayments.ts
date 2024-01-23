@@ -17,7 +17,7 @@ interface IPaymentsStore {
     workspaceId: number,
     paymentRequestBody: IPaymentRequestBody,
     navigate: any
-  ) => void;
+  ) => Promise<boolean | undefined>;
   getPaymentRequestDetails: (
     workspaceId: number,
     paymentRequestId: number,
@@ -88,7 +88,7 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
           paymentRequestBody
         );
         if (data.msg === "success" && data.code === 200) {
-          navigate("/workspace/8/payment-request");
+          return true
         }
       } catch (error: any) {
         toast.error(error?.data.msg || error?.status || error);
