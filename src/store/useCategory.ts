@@ -145,7 +145,7 @@ export const useCategory = create<UseCategory>((set) => {
           { name: categoryName }
         );
         if (data.msg === "success" && data.code === 200) {
-          // toast("Category updated");
+          toast("Category name updated");
         }
       } catch (error: any) {
         console.log(error);

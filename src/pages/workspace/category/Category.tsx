@@ -128,12 +128,13 @@ const Category = () => {
     setCategoryNameEditable(true);
   };
   const handleUpdateCategoryName = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    // e: React.ChangeEvent<HTMLInputElement>,
     workspaceId: number,
     categoryId: number
   ) => {
-    setCategoryName(e.target.value);
+    // setCategoryName(e.target.value);
     updateCategoryName(workspaceId, categoryId, categoryName);
+    setCategoryLoading(!categoryLoading);
   };
 
   // update archive workspace category
@@ -313,9 +314,16 @@ const Category = () => {
                             value={categoryName}
                             placeholder="Category Name"
                             onClick={(e) => e.stopPropagation()}
-                            onChange={(e) =>
+                            // onChange={(e) =>
+                            //   handleUpdateCategoryName(
+                            //     e,
+                            //     category.workspace_id,
+                            //     category.ID
+                            //   )
+                            // }
+                            onChange={(e) => setCategoryName(e.target.value)}
+                            onBlur={() =>
                               handleUpdateCategoryName(
-                                e,
                                 category.workspace_id,
                                 category.ID
                               )
