@@ -1,6 +1,12 @@
 import { create } from "zustand";
 import { useLoading } from "./useLoading";
 import axiosClient from "../utils/axios";
+import {
+  getBalances,
+  SafeBalanceResponse,
+  TokenInfo,
+} from "@safe-global/safe-gateway-typescript-sdk";
+import { getShortDisplay } from "../utils/number";
 
 interface FormData {
   chain_id: number;
@@ -41,9 +47,17 @@ interface UseWorkspace {
   getUserWorkspace: () => void;
   getWorkspaceDetails: (workspaceId: number | string, navigate?: any) => void;
   updateWorkspaceName: (workspaceId: string, workspaceName: string) => void;
+  getAssets: () => Promise<void>;
+  totalAssetsValue: string;
+  assetsList: {
+    tokenInfo: TokenInfo;
+    balance: string;
+    fiatBalance: string;
+    fiatConversion: string;
+  }[];
 }
 
-export const useWorkspace = create<UseWorkspace>((set) => {
+export const useWorkspace = create<UseWorkspace>((set, get) => {
   const { setLoading } = useLoading.getState();
   return {
     workspace: {
@@ -160,6 +174,19 @@ export const useWorkspace = create<UseWorkspace>((set) => {
         console.log(error);
       } finally {
         // setLoading(false);
+      }
+    },
+    totalAssetsValue: "0.00",
+    assetsList: [],
+    getAssets: async function () {
+      const { workspace } = get();
+      if (workspace) {
+        const data = await getBalances(
+          String(workspace.chain_id),
+          workspace.vault_wallet
+        );
+        const totalValue = getShortDisplay(data?.fiatTotal || 0) as string;
+        set({ totalAssetsValue: totalValue, assetsList: data.items });
       }
     },
   };

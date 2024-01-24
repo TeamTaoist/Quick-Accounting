@@ -1,5 +1,4 @@
-import { useState } from "react";
-import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
+import { useEffect, useState } from "react";
 import {
   AssetHeader,
   AssetSection,
@@ -21,12 +20,7 @@ import {
   Paper,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import useAsync from "../../../hooks/useAsync";
-import {
-  getBalances,
-  SafeBalanceResponse,
-} from "@safe-global/safe-gateway-typescript-sdk";
-import { formatBalance, getShortDisplay } from "../../../utils/number";
+import { formatBalance } from "../../../utils/number";
 import { useWorkspace } from "../../../store/useWorkspace";
 import CHAINS from "../../../utils/chain";
 
@@ -50,21 +44,16 @@ const Assets = () => {
     setSearchTerm(event.target.value);
   };
   console.log(searchTerm);
-  const { workspace } = useWorkspace();
+  const { workspace, totalAssetsValue, assetsList, getAssets } = useWorkspace();
 
-  const [data, error, loading] = useAsync<SafeBalanceResponse>(
-    () => {
-      return getBalances(String(workspace?.chain_id), workspace?.vault_wallet);
-    },
-    [workspace],
-    false
-  );
-  const totalValue = getShortDisplay(data?.fiatTotal || 0);
-  console.log(data, error, loading);
   const chainData = CHAINS.find((c) => c.chainId === workspace?.chain_id);
 
+  useEffect(() => {
+    getAssets();
+  }, [workspace?.vault_wallet]);
+
   const filterList: AssetType[] =
-    data?.items
+    assetsList
       ?.map((item) => ({
         name: item.tokenInfo.name,
         symbol: item.tokenInfo.symbol,
@@ -103,7 +92,7 @@ const Assets = () => {
           }}
         />
       </AssetHeader>
-      <AssetValue>Value: ${totalValue}</AssetValue>
+      <AssetValue>Value: ${totalAssetsValue}</AssetValue>
       <AssetTable>
         <TableContainer
           component={Paper}
