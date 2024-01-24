@@ -256,6 +256,20 @@ const Category = () => {
       setPropertyValues([]);
     }
   };
+  const handlePropertyCancelBtn = (
+    categoryId: number,
+    propertyIndex: number
+  ) => {
+    const properties = categoryProperties[categoryId] || [];
+    const updatedProperties = properties.filter(
+      (_, index) => index !== propertyIndex
+    );
+
+    setCategoryProperties({
+      ...categoryProperties,
+      [categoryId]: updatedProperties,
+    });
+  };
 
   return (
     <CreateCategory>
@@ -639,7 +653,13 @@ const Category = () => {
                           >
                             Create
                           </CreateCategoryBtn>
-                          <CancelBtn>Cancel</CancelBtn>
+                          <CancelBtn
+                            onClick={() =>
+                              handlePropertyCancelBtn(category.ID, index)
+                            }
+                          >
+                            Cancel
+                          </CancelBtn>
                         </PropertyCreateButtons>
                       </PropertyBtns>
                     </CategoryProperties>
