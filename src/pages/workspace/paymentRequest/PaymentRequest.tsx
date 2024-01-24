@@ -54,6 +54,7 @@ import CustomModal from "../../../utils/CustomModal";
 import PaymentRequestDetails from "./PaymentRequestDetails";
 import SignPaymentRequest from "./SignPaymentRequest";
 import usePaymentsStore from "../../../store/usePayments";
+import PaymentRequestGroupDetails from "../../../components/paymentRequest/PaymentRequestGroupDetails";
 
 interface SubPayment {
   id: number;
@@ -139,6 +140,7 @@ const PaymentRequest = () => {
     paymentRequestList,
     getPaymentRequestDetails,
     rejectPaymentRequest,
+    getPaymentRequestGroupDetails,
   } = usePaymentsStore();
   // table logic
   const recipientFormate = (n: string) => {
@@ -186,11 +188,19 @@ const PaymentRequest = () => {
   const [paymentRequest, setPaymentRequest] = useState(true);
   // modal
   const [openModal, setOpenModal] = useState(false);
+  const [openGroupPaymentModal, setOpenGroupPaymentModal] = useState(false);
   const [openSignPaymentModal, setSignPaymentModal] = useState(false);
 
   const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
     setOpenModal(true);
     getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
+  };
+
+  // group payment details
+  const handleGroupPaymentDetails = (paymentRequestId: string) => {
+    setOpenGroupPaymentModal(true);
+    getPaymentRequestGroupDetails(paymentRequestId);
+    console.log(paymentRequestId);
   };
 
   // modal end
@@ -280,11 +290,17 @@ const PaymentRequest = () => {
         </CategoryTitle>
       ) : (
         <>
-          {/* header */}
+          {/* payment request details modal */}
           <CustomModal
             open={openModal}
             setOpen={setOpenModal}
             component={PaymentRequestDetails}
+          />
+          {/* payment request group details modal */}
+          <CustomModal
+            open={openGroupPaymentModal}
+            setOpen={setOpenGroupPaymentModal}
+            component={PaymentRequestGroupDetails}
           />
           {/* payment request modal */}
           <CustomModal
@@ -442,9 +458,9 @@ const PaymentRequest = () => {
                                   color: "black",
                                   textTransform: "lowercase",
                                 }}
-                                // onClick={handleOpenModal}
+                                onClick={() => handleGroupPaymentDetails(id)}
                               >
-                                view more
+                                view moree
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -524,7 +540,7 @@ const PaymentRequest = () => {
                               <Table size="small">
                                 <TableBody>
                                   {items.map((payments) => (
-                                    <TableRow>
+                                    <TableRow key={payments.ID}>
                                       <TableCell
                                         // colSpan={1}
                                         sx={{

@@ -40,14 +40,6 @@ const ShareWorkspacePaymentRequest = () => {
     setAge(event.target.value as string);
   };
 
-  // add new payment request
-  const [rows, setRows] = useState([{ id: 1 }]);
-
-  const handleAddPayment = () => {
-    const newRow = { id: rows.length + 1 };
-    setRows([...rows, newRow]);
-  };
-
   const [selectedValues, setSelectedValues] = useState([]);
 
   const handleSelectChange = (selectedOptions: any) => {
@@ -360,9 +352,10 @@ const SharePaymentContainer = styled.div`
   display: grid;
   justify-content: center;
   align-items: center;
-  height: 85vh;
+  height: 100vh;
 `;
 const SharePaymentForm = styled.div`
+  padding-top: 90px;
   width: 757px;
   outline: 1px solid gray;
 `;
