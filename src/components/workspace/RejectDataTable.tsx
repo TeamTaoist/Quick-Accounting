@@ -8,7 +8,6 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import data from "../../data/tableData";
 import { useNavigate, useParams } from "react-router-dom";
 import { CategoryCell } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import statusIcon from "../../assets/workspace/status-icon.svg";
@@ -18,10 +17,17 @@ import PaymentRequestDetails from "../../pages/workspace/paymentRequest/PaymentR
 import { useState } from "react";
 import usePaymentsStore from "../../store/usePayments";
 
+interface RejectDataTableProps {
+  searchTerm?: string | undefined;
+  selectedValue?: string;
+}
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
-const RejectDataTable = () => {
+const RejectDataTable = ({
+  searchTerm,
+  selectedValue,
+}: RejectDataTableProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
@@ -32,6 +38,15 @@ const RejectDataTable = () => {
     setOpenModal(true);
     getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
   };
+  // filter table data
+  const filterData = paymentRequestList.filter((data) => {
+    const searchItem = data.recipient
+      .toLowerCase()
+      .includes(searchTerm!.toLowerCase());
+    const filterByCategory =
+      selectedValue === "" || data.category_name === selectedValue;
+    return searchItem && filterByCategory;
+  });
   return (
     <div>
       <CustomModal
@@ -62,7 +77,7 @@ const RejectDataTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paymentRequestList?.map((payment) => (
+            {filterData?.map((payment) => (
               <TableRow key={payment.ID}>
                 <TableCell>{recipientFormate(payment.recipient)}</TableCell>
                 <TableCell>{payment.amount} USDT</TableCell>

@@ -56,80 +56,6 @@ import SignPaymentRequest from "./SignPaymentRequest";
 import usePaymentsStore from "../../../store/usePayments";
 import PaymentRequestGroupDetails from "../../../components/paymentRequest/PaymentRequestGroupDetails";
 
-interface SubPayment {
-  id: number;
-  idNumber: string;
-  category: string;
-  amount: number;
-  date: string;
-}
-
-interface Payment {
-  id: number;
-  idNumber: string;
-  category: string;
-  amount: number;
-  date: string;
-  subPayment: SubPayment[];
-}
-
-const payments: Payment[] = [
-  {
-    id: 1,
-    idNumber: "0Xdf344...4324",
-    amount: 100,
-    category: "category 1",
-    date: "2024-01-01",
-    subPayment: [],
-  },
-  {
-    id: 2,
-    idNumber: "0Xdf344...4324",
-    amount: 150,
-    category: "category 2",
-    date: "2024-01-02",
-    subPayment: [],
-  },
-  {
-    id: 3,
-    idNumber: "0Xdf344...4324",
-    amount: 200,
-    category: "category 1",
-    date: "2024-01-03",
-    subPayment: [],
-  },
-  {
-    id: 4,
-    idNumber: "0Xdf344...4324",
-    amount: 120,
-    category: "category 3",
-    date: "2024-01-04",
-    subPayment: [
-      {
-        id: 1,
-        idNumber: "0Xdf344...4324",
-        amount: 120,
-        category: "category name",
-        date: "2024-01-04",
-      },
-      {
-        id: 2,
-        idNumber: "0Xdf344...4324",
-        amount: 120,
-        category: "category name",
-        date: "2024-01-04",
-      },
-      {
-        id: 3,
-        idNumber: "0Xdf344...4324",
-        amount: 120,
-        category: "category name",
-        date: "2024-01-04",
-      },
-    ],
-  },
-];
-
 const PaymentRequest = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -265,7 +191,14 @@ const PaymentRequest = () => {
   const handleRejectedPayments = () => {
     getPaymentRequestList(workspaceId, true);
     setRejectPaymentLoading(rejectPaymentLoading);
+    setSearchTerm("");
+    setSelectedValue("");
     // setPaymentLoading(!paymentLoading);
+  };
+  const handleBackBtn = () => {
+    setPaymentLoading(!paymentLoading);
+    setSearchTerm("");
+    setSelectedValue("");
   };
 
   return (
@@ -358,7 +291,7 @@ const PaymentRequest = () => {
                   <p>{t("paymentRequest.ViewRejection")}</p>
                 </div>
               ) : (
-                <div onClick={() => setPaymentLoading(!paymentLoading)}>
+                <div onClick={handleBackBtn}>
                   <Image src={back} alt="" />
                   <p>{t("paymentRequest.Back")}</p>
                 </div>
@@ -397,9 +330,11 @@ const PaymentRequest = () => {
                         <Checkbox
                           indeterminate={
                             selected.length > 0 &&
-                            selected.length < payments.length
+                            selected.length < paymentRequestList.length
                           }
-                          checked={selected.length === payments.length}
+                          checked={
+                            selected.length === paymentRequestList.length
+                          }
                           onChange={handleSelectAllClick}
                         />
                         Recipient
@@ -588,7 +523,10 @@ const PaymentRequest = () => {
             </PaymentRequestBody>
           ) : (
             <RejectSection>
-              <RejectDataTable />
+              <RejectDataTable
+                searchTerm={searchTerm}
+                selectedValue={selectedValue}
+              />
             </RejectSection>
           )}
         </>
