@@ -33,7 +33,7 @@ const Queue = () => {
   const { id } = useParams();
   const { t } = useTranslation();
 
-  const { getQueueList } = useQueue();
+  const { getQueueList, queueList } = useQueue();
   const [hasCategory, setHasCategory] = useState(true);
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -49,6 +49,17 @@ const Queue = () => {
   useEffect(() => {
     getQueueList(workspaceId, false);
   }, [getQueueList, workspaceId]);
+
+  const queueGroupData = queueList.reduce((acc, item) => {
+    const paymentRequestId = item.payment_request_id;
+    if (!acc[paymentRequestId]) {
+      acc[paymentRequestId] = [];
+    }
+    acc[paymentRequestId].push(item);
+    return acc;
+  }, {} as Record<number, QueueList[]>);
+  console.log(queueGroupData);
+
   return (
     <QueueSection>
       {!hasCategory ? (
@@ -78,97 +89,115 @@ const Queue = () => {
           </QueHeader>
           {/*  */}
           {paymentRequest ? (
-            <QueueNotice>
-              <h1>{t("queue.NextUp")}</h1>
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                  sx={{ backgroundColor: "var(--hover-bg)" }}
-                >
-                  <Header>
-                    <HeaderTitle>
-                      <h6>{t("queue.Nonce")}: 1</h6>
-                      <p>On 24 Oct 2023 at 12:05</p>
-                    </HeaderTitle>
-                    <h5>1 {t("queue.Action")}</h5>
-                  </Header>
-                </AccordionSummary>
-                <AccordionDetails sx={{ p: 0 }}>
-                  {/* category property */}
-                  <Action>
-                    <Approvals>
-                      <h4>Approvals: 2/2</h4>
-                      <p>0x4d4b...2915</p>
-                      <p>0x4d4b...2915</p>
-                      <button disabled>{t("queue.Approve")}</button>
-                      <button disabled={false}>{t("queue.Execute")}</button>
-                    </Approvals>
-                    <Approvals>
-                      <h4>Rejections: 1/2</h4>
-                      <p>0x4d4b...2915</p>
-                      <p>0x4d4b...2915</p>
-                      <button disabled={false}>Reject</button>
-                      <button disabled={true}>Execute</button>
-                    </Approvals>
-                    {/* <Rejections></Rejections> */}
-                  </Action>
-                  <TableContainer
-                    component={Paper}
-                    sx={{ maxHeight: 200, minWidth: 800 }}
-                  >
-                    <Table stickyHeader>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Safe</TableCell>
-                          <TableCell>Counterparty</TableCell>
-                          <TableCell>Amount</TableCell>
-                          <TableCell>Category</TableCell>
-                          <TableCell>Date</TableCell>
-                          <TableCell></TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {data.slice(0, 1).map((row) => (
-                          <TableRow key={row.id}>
-                            <TableCell>{recipientFormate(row.safe)}</TableCell>
-                            <TableCell>
-                              {recipientFormate(row.recipient)}
-                            </TableCell>
-                            <TableCell>{row.amount} USDT</TableCell>
-                            <TableCell>
-                              <CategoryCell>{row.category}</CategoryCell>
-                            </TableCell>
-                            <TableCell>{row.date}</TableCell>
-                            <TableCell>
-                              <Button
-                                variant="outlined"
-                                sx={{
-                                  borderColor: "black",
-                                  color: "black",
-                                  textTransform: "lowercase",
-                                }}
-                                onClick={handleOpenModal}
-                              >
-                                view more
-                              </Button>
-                              <CustomModal
-                                open={openModal}
-                                setOpen={setOpenModal}
-                                component={PaymentRequestDetails}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                    <TotalValue>Total value: $123.29</TotalValue>
-                  </TableContainer>
-                  {/* category property end */}
-                </AccordionDetails>
-              </Accordion>
-            </QueueNotice>
+            <>
+              {Object.entries(queueGroupData).map(([id, queue], index) => (
+                <QueueNotice key={index}>
+                  <h1>{index === 0 ? t("queue.NextUp") : "After that"}</h1>
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                      sx={{ backgroundColor: "var(--hover-bg)" }}
+                    >
+                      <Header>
+                        <HeaderTitle>
+                          <h6>{t("queue.Nonce")}: 1</h6>
+                          <p>On 24 Oct 2023 at 12:05</p>
+                        </HeaderTitle>
+                        <h5>
+                          {queue.length} {t("queue.Action")}
+                        </h5>
+                      </Header>
+                    </AccordionSummary>
+                    {/* {queue.map((queueItem) => ( */}
+                    <AccordionDetails sx={{ p: 0 }}>
+                      {/* category property */}
+                      <Action>
+                        <Approvals>
+                          <h4>Approvals: 2/2</h4>
+                          <p>0x4d4b...2915</p>
+                          <p>0x4d4b...2915</p>
+                          <button disabled>{t("queue.Approve")}</button>
+                          <button disabled={false}>{t("queue.Execute")}</button>
+                        </Approvals>
+                        <Approvals>
+                          <h4>Rejections: 1/2</h4>
+                          <p>0x4d4b...2915</p>
+                          <p>0x4d4b...2915</p>
+                          <button disabled={false}>Reject</button>
+                          <button disabled={true}>Execute</button>
+                        </Approvals>
+                        {/* <Rejections></Rejections> */}
+                      </Action>
+                      <TableContainer
+                        component={Paper}
+                        sx={{
+                          maxHeight: 200,
+                          minWidth: 800,
+                          boxShadow: "none",
+                        }}
+                      >
+                        <Table stickyHeader>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Safe</TableCell>
+                              <TableCell>Counterparty</TableCell>
+                              <TableCell>Amount</TableCell>
+                              <TableCell>Category</TableCell>
+                              <TableCell>Date</TableCell>
+                              <TableCell></TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {queue.map((queueItem) => (
+                              <TableRow key={queueItem.ID}>
+                                <TableCell>
+                                  {recipientFormate(queueItem.recipient)}
+                                </TableCell>
+                                <TableCell>
+                                  {recipientFormate(queueItem.recipient)}
+                                </TableCell>
+                                <TableCell>{queueItem.amount} USDT</TableCell>
+                                <TableCell>
+                                  <CategoryCell>
+                                    {queueItem.category_name}
+                                  </CategoryCell>
+                                </TableCell>
+                                <TableCell>
+                                  {queueItem.CreatedAt.slice(0, 10)}
+                                </TableCell>
+                                <TableCell>
+                                  <Button
+                                    variant="outlined"
+                                    sx={{
+                                      borderColor: "black",
+                                      color: "black",
+                                      textTransform: "lowercase",
+                                    }}
+                                    onClick={handleOpenModal}
+                                  >
+                                    view more
+                                  </Button>
+                                  <CustomModal
+                                    open={openModal}
+                                    setOpen={setOpenModal}
+                                    component={PaymentRequestDetails}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <TotalValue>Total value: $123.29</TotalValue>
+                      {/* category property end */}
+                    </AccordionDetails>
+                    {/* ))} */}
+                  </Accordion>
+                </QueueNotice>
+              ))}
+            </>
           ) : (
             <RejectSection>
               <RejectDataTable />
@@ -272,6 +301,7 @@ const TotalValue = styled.div`
   padding: 10px 0;
   text-align: center;
   background: var(--bg-primary);
+  overflow: hidden;
   /* margin-top: 20px; */
 `;
 const CategoryCell = styled.div`
