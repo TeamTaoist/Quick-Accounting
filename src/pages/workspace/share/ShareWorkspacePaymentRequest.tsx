@@ -27,6 +27,8 @@ import ReactSelect from "../../../components/ReactSelect";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { useLoading } from "../../../store/useLoading";
 import Loading from "../../../utils/Loading";
+import { useWorkspace } from "../../../store/useWorkspace";
+import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
 
 const ShareWorkspacePaymentRequest = () => {
   const { id } = useParams();
@@ -35,6 +37,8 @@ const ShareWorkspacePaymentRequest = () => {
   const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
     useCategoryProperty();
   const { isLoading } = useLoading();
+  const { workspace, assetsList, getAssets } = useWorkspace();
+  const { createSharePaymentRequest } = useSharePaymentRequest();
 
   const [selectedValue, setSelectedValue] = useState("Option1");
 
@@ -59,10 +63,12 @@ const ShareWorkspacePaymentRequest = () => {
   const [sharePaymentRequestForm, setSharePaymentRequestForm] = useState<any>([
     {
       amount: "",
-      currency: "",
+      currency_name: "",
       recipient: "",
-      category_id: "",
-      categoryProperty: [],
+      category_id: null,
+      category_name: "",
+      currency_contract_address: "",
+      category_properties: [],
     },
   ]);
   const handleAddRequest = () => {
@@ -70,49 +76,15 @@ const ShareWorkspacePaymentRequest = () => {
       ...sharePaymentRequestForm,
       {
         amount: "",
-        currency: "",
+        currency_name: "",
         recipient: "",
-        categoryProperty: [
-          {
-            name: "",
-            type: "",
-            values: "",
-          },
-        ],
+        category_id: null,
+        category_name: "",
+        category_properties: [],
       },
     ]);
   };
   console.log(sharePaymentRequestForm);
-
-  // const handleFormChange = (index: any, field: any, value: any) => {
-  //   const updatedRequests = [...sharePaymentRequestForm];
-  //   if (field === "categoryProperties") {
-  //     updatedRequests[index].categoryProperty[index].values = value
-  //       .map((option: any) => option.value)
-  //       .join(";");
-  //   } else {
-  //     // Handle other fields as usual
-  //     updatedRequests[index][field] = value;
-  //   }
-  //   setSharePaymentRequestForm(updatedRequests);
-  // };
-  // const handleFormChange = (
-  //   index: any,
-  //   field: any,
-  //   value: any,
-  //   subfield?: any
-  // ) => {
-  //   const updatedRequests = [...sharePaymentRequestForm];
-  //   if (field === "categoryProperties" && subfield !== undefined) {
-  //     updatedRequests[index].categoryProperty[index][subfield] = value;
-  //   } else if (field === "categoryProperties") {
-  //     updatedRequests[index].categoryProperty = value;
-  //   } else {
-  //     // Handle other fields as usual
-  //     updatedRequests[index][field] = value;
-  //   }
-  //   setSharePaymentRequestForm(updatedRequests);
-  // };
 
   const handleFormChange = (
     index: any,
@@ -123,36 +95,42 @@ const ShareWorkspacePaymentRequest = () => {
     categoryId?: any
   ) => {
     const updatedRequests = [...sharePaymentRequestForm];
+    if (field === "currency_name") {
+      updatedRequests[index].currency_name = value;
+      updatedRequests[index].currency_contract_address = value;
+    }
 
     if (field === "categoryProperties") {
-      // Check if the categoryProperty already exists with the given name
       const existingCategoryPropertyIndex = updatedRequests[
         index
-      ].categoryProperty.findIndex(
+      ].category_properties.findIndex(
         (property: any) => property.name === propertyName
       );
-
       if (existingCategoryPropertyIndex !== -1) {
-        // Update the existing categoryProperty with the new values
-        updatedRequests[index].categoryProperty[
+        // check single select or multi-select
+        const values =
+          propertyType === "single-select"
+            ? value.value
+            : value.map((v: any) => v.value).join(";");
+
+        updatedRequests[index].category_properties[
           existingCategoryPropertyIndex
-        ].values = value.map((v: any) => v.value).join(";");
+        ].values = values;
       } else {
-        // If not exists, create a new categoryProperty
         const newCategoryProperty = {
           name: propertyName,
           type: propertyType,
-          values: value.map((v: any) => v.value).join(";"),
+          values:
+            propertyType === "single-select"
+              ? value.value
+              : value.map((v: any) => v.value).join(";"),
         };
 
-        // Update the categoryProperty array at the specified index
-        updatedRequests[index].categoryProperty.push(newCategoryProperty);
+        updatedRequests[index].category_properties.push(newCategoryProperty);
       }
     } else {
-      // Handle other fields as usual
       updatedRequests[index][field] = value;
     }
-
     setSharePaymentRequestForm(updatedRequests);
   };
 
@@ -162,12 +140,35 @@ const ShareWorkspacePaymentRequest = () => {
   }, [getWorkspaceCategoryProperties, id]);
 
   const [selectedCategoryID, setSelectedCategoryID] = useState<number>();
-  const handleCategoryDropdown = (categoryId: number) => {
+  const handleCategoryDropdown = (
+    categoryId: number,
+    categoryName: string,
+    index: any
+  ) => {
     setSelectedCategoryID(categoryId);
+    console.log(categoryId, categoryName, index);
+
+    const updatedRequests = [...sharePaymentRequestForm];
+    updatedRequests[index] = {
+      ...updatedRequests[index],
+      category_id: categoryId,
+      category_name: categoryName,
+      category_properties: [],
+    };
+    setSharePaymentRequestForm(updatedRequests);
   };
   const selectedCategory = workspaceCategoryProperties?.find(
     (f) => f.ID === selectedCategoryID
   );
+  // get asset list
+  useEffect(() => {
+    getAssets();
+  }, [workspace?.vault_wallet, getAssets]);
+
+  // create payment request
+  const handleSubmitPaymentRequest = () => {
+    createSharePaymentRequest({ rows: sharePaymentRequestForm });
+  };
 
   return (
     <Header>
@@ -289,11 +290,15 @@ const ShareWorkspacePaymentRequest = () => {
                         <Select
                           labelId="demo-select-small-label"
                           id="demo-select-small"
-                          value={selectedValue}
+                          value={sharePaymentRequestForm[index].currency_name}
                           // onChange={handleChange}
                           size="small"
                           onChange={(e) =>
-                            handleFormChange(index, "currency", e.target.value)
+                            handleFormChange(
+                              index,
+                              "currency_name",
+                              e.target.value
+                            )
                           }
                           IconComponent={() => (
                             <InputAdornment position="start">
@@ -309,18 +314,21 @@ const ShareWorkspacePaymentRequest = () => {
                             "& fieldset": { border: "none" },
                           }}
                         >
-                          <MenuItem
-                            value="Option1"
-                            sx={{
-                              "&:hover": { backgroundColor: "var(--hover-bg)" },
-                              "&.Mui-selected": {
-                                backgroundColor: "var(--hover-bg)",
-                              },
-                            }}
-                          >
-                            Ten
-                          </MenuItem>
-                          <MenuItem value="Option2">Twenty</MenuItem>
+                          {assetsList.map((asset) => (
+                            <MenuItem
+                              value={asset.tokenInfo.symbol}
+                              sx={{
+                                "&:hover": {
+                                  backgroundColor: "var(--hover-bg)",
+                                },
+                                "&.Mui-selected": {
+                                  backgroundColor: "var(--hover-bg)",
+                                },
+                              }}
+                            >
+                              {asset.tokenInfo.symbol}
+                            </MenuItem>
+                          ))}
                         </Select>
                       </TableCell>
                     </TableRow>
@@ -379,11 +387,10 @@ const ShareWorkspacePaymentRequest = () => {
                                 <MenuItem
                                   value={category.name}
                                   onClick={() => {
-                                    handleCategoryDropdown(category.ID);
-                                    handleFormChange(
-                                      index,
-                                      "category_id",
-                                      category.ID
+                                    handleCategoryDropdown(
+                                      category.ID,
+                                      category.name,
+                                      index
                                     );
                                   }}
                                   sx={{
@@ -425,6 +432,7 @@ const ShareWorkspacePaymentRequest = () => {
                               <TableCell>
                                 <ReactSelect
                                   value={selectedValues}
+                                  isMulti={false}
                                   onChange={(selectedOption: any) =>
                                     handleFormChange(
                                       index,
@@ -530,9 +538,7 @@ const ShareWorkspacePaymentRequest = () => {
               <Save onClick={() => navigate("/payment-request-preview")}>
                 Save
               </Save>
-              <Submit onClick={() => navigate("/payment-request-preview")}>
-                Submit
-              </Submit>
+              <Submit onClick={handleSubmitPaymentRequest}>Submit</Submit>
             </SubmitBtns>
           </Btns>
         </SharePaymentForm>
@@ -553,7 +559,9 @@ const SharePaymentContainer = styled.div`
 `;
 const SharePaymentForm = styled.div`
   width: 757px;
-  outline: 1px solid gray;
+  outline: 1px solid var(--border-table);
+  border-radius: 10px;
+  overflow: hidden;
   margin: 40px 0;
   /* padding: 40px 0; */
 `;
