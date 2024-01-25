@@ -39,11 +39,8 @@ const ShareWorkspacePaymentRequest = () => {
   const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
     useCategoryProperty();
   const { isLoading } = useLoading();
-  const { workspace, assetsList, getAssets, getWorkspaceDetails } =
-    useWorkspace();
+  const { workspace, assetsList, getAssets } = useWorkspace();
   const { createSharePaymentRequest } = useSharePaymentRequest();
-
-  const [selectedValue, setSelectedValue] = useState("Option1");
 
   const [age, setAge] = useState("Category");
 
@@ -52,12 +49,6 @@ const ShareWorkspacePaymentRequest = () => {
   };
 
   const [selectedValues, setSelectedValues] = useState([]);
-
-  // console.log(selectedValues);
-
-  // const handleSelectChange = (selectedOptions: any) => {
-  //   setSelectedValues(selectedOptions);
-  // };
 
   // dynamic payment request form
   const [sharePaymentRequestForm, setSharePaymentRequestForm] = useState<any>([
@@ -107,24 +98,32 @@ const ShareWorkspacePaymentRequest = () => {
         (property: any) => property.name === propertyName
       );
       if (existingCategoryPropertyIndex !== -1) {
-        // check single select or multi-select
         const values =
           propertyType === "single-select"
             ? value.value
+            : propertyType === "Text"
+            ? value
             : value.map((v: any) => v.value).join(";");
 
         updatedRequests[index].category_properties[
           existingCategoryPropertyIndex
         ].values = values;
       } else {
-        const newCategoryProperty = {
-          name: propertyName,
-          type: propertyType,
-          values:
-            propertyType === "single-select"
-              ? value.value
-              : value.map((v: any) => v.value).join(";"),
-        };
+        const newCategoryProperty =
+          propertyType === "Text"
+            ? {
+                name: propertyName,
+                type: propertyType,
+                values: value,
+              }
+            : {
+                name: propertyName,
+                type: propertyType,
+                values:
+                  propertyType === "single-select"
+                    ? value.value
+                    : value.map((v: any) => v.value).join(";"),
+              };
 
         updatedRequests[index].category_properties.push(newCategoryProperty);
       }
@@ -132,6 +131,14 @@ const ShareWorkspacePaymentRequest = () => {
       updatedRequests[index][field] = value;
     }
     setSharePaymentRequestForm(updatedRequests);
+  };
+
+  // handle delete request form
+  const handleDeleteRequestForm = (index: number) => {
+    const updatedRequest = sharePaymentRequestForm.filter(
+      (_: any, i: number) => i !== index
+    );
+    setSharePaymentRequestForm(updatedRequest);
   };
 
   // get category details
@@ -529,9 +536,35 @@ const ShareWorkspacePaymentRequest = () => {
                               </TableCell>
                               {/* add multi select */}
                               <TableCell>
-                                Here is some description of the payment request,
-                                No more than 50 words. Here is some description
-                                of the payment request.
+                                <TextField
+                                  sx={{
+                                    "& fieldset": { border: "none" },
+                                  }}
+                                  size="small"
+                                  fullWidth
+                                  // value="test"
+                                  // id="fullWidth"
+                                  placeholder="Enter content"
+                                  // onChange={(e) =>
+                                  //   handlePropertyText(
+                                  //     e,
+                                  //     property.name,
+                                  //     property.type
+                                  //   )
+                                  // }
+                                  onChange={(e) =>
+                                    handleFormChange(
+                                      index,
+                                      "categoryProperties",
+                                      e.target.value,
+                                      property.name,
+                                      property.type
+                                    )
+                                  }
+                                  InputProps={{
+                                    style: { padding: 0 },
+                                  }}
+                                />
                               </TableCell>
                             </TableRow>
                           )}
@@ -541,7 +574,9 @@ const ShareWorkspacePaymentRequest = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                <DeleteBtn>Delete</DeleteBtn>
+                <DeleteBtn onClick={() => handleDeleteRequestForm(index)}>
+                  Delete
+                </DeleteBtn>
               </NoteInformation>
               {/* <ReactSelect /> */}
             </RequestDetails>
