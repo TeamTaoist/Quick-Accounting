@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import SafeApiKit from "@safe-global/api-kit";
 import { useLoading } from "./useLoading";
-import { createTokenTransferParams } from "../utils/safeTx";
+import { createTokenTransferParams01 } from "../utils/safeTx";
 
 interface ISafeStore {
   safe?: Safe;
@@ -13,7 +13,8 @@ interface ISafeStore {
   initSafeSDK: (chainId: number, signer: any, safeAddress: string) => void;
   signAndCreateTx: (
     address: string,
-    safeAddress: string
+    safeAddress: string,
+    requests: IPaymentRequest[]
   ) => Promise<string | undefined>;
   getSafeInfo: (safeAddress: string) => void;
 }
@@ -55,7 +56,11 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
         set({ owners: res.owners, threshold: res.threshold });
       });
     },
-    signAndCreateTx: async (senderAddress: string, safeAddress: string) => {
+    signAndCreateTx: async (
+      senderAddress: string,
+      safeAddress: string,
+      requests: IPaymentRequest[]
+    ) => {
       const { safe, safeApiService } = get();
       if (!safe || !safeApiService) {
         return;
@@ -65,17 +70,18 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
       const nextNonce = await safeApiService.getNextNonce(safeAddress);
       console.log("nextNonce", nextNonce);
 
-      const txParams = createTokenTransferParams(
-        "0x183F09C3cE99C02118c570e03808476b22d63191",
-        "0.1",
-        6,
-        "0xfd12ba6e8591Beb75C9b021c20BF0a01d6790317"
+      const txParams = requests.map((item) =>
+        createTokenTransferParams01(
+          senderAddress,
+          item.amount,
+          item.currency_contract_address
+        )
       );
 
-      console.log("===safeTransactionData===", txParams);
+      console.log("===txParams===", txParams);
 
       const safeTransaction = await safe.createTransaction({
-        transactions: [{ ...txParams }],
+        transactions: [...txParams],
         options: { nonce: nextNonce },
       });
 

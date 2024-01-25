@@ -7,6 +7,25 @@ const encodeERC20TransferData = (to: string, value: string): string => {
   return contractInterface.encodeFunctionData("transfer", [to, value]);
 };
 
+export const createTokenTransferParams01 = (
+  recipient: string,
+  amount: string,
+  tokenAddress: string
+): MetaTransactionData => {
+  const isNativeToken = parseInt(tokenAddress, 16) === 0;
+  return isNativeToken
+    ? {
+        to: recipient,
+        value: amount,
+        data: "0x",
+      }
+    : {
+        to: tokenAddress,
+        value: "0",
+        data: encodeERC20TransferData(recipient, amount),
+      };
+};
+
 export const createTokenTransferParams = (
   recipient: string,
   amount: string,

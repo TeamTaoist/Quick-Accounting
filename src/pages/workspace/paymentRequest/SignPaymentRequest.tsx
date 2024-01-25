@@ -48,7 +48,11 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
   // approve payment request
   const handleApproveRequest = async () => {
     if (address) {
-      const safeTxHash = await signAndCreateTx(address, workspace.vault_wallet);
+      const safeTxHash = await signAndCreateTx(
+        address,
+        workspace.vault_wallet,
+        signItems
+      );
       safeTxHash &&
         approvePaymentRequest(id, paymentRequestIds, navigate, safeTxHash);
     }
