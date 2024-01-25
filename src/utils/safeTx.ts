@@ -1,4 +1,7 @@
-import type { MetaTransactionData } from "@safe-global/safe-core-sdk-types";
+import type {
+  MetaTransactionData,
+  SafeMultisigTransactionResponse,
+} from "@safe-global/safe-core-sdk-types";
 import { Interface, formatUnits, parseUnits } from "ethers";
 
 const encodeERC20TransferData = (to: string, value: string): string => {
@@ -46,4 +49,23 @@ export const createTokenTransferParams = (
         value: "0",
         data: encodeERC20TransferData(recipient, value),
       };
+};
+
+// Check if a Safe transaction is already signed by an owner:
+export const isTransactionSignedByAddress = (
+  signerAddress: string,
+  transaction: SafeMultisigTransactionResponse
+) => {
+  const confirmation = transaction.confirmations?.find(
+    (confirmation) => confirmation.owner === signerAddress
+  );
+  return !!confirmation;
+};
+
+// Check if a Safe transaction is ready to be executed:
+export const isTransactionExecutable = (
+  safeThreshold: number,
+  transaction: SafeMultisigTransactionResponse
+) => {
+  return transaction.confirmations?.length || 0 >= safeThreshold;
 };

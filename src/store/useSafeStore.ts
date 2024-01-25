@@ -4,6 +4,10 @@ import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import SafeApiKit from "@safe-global/api-kit";
 import { useLoading } from "./useLoading";
 import { createTokenTransferParams01 } from "../utils/safeTx";
+import {
+  SafeTransaction,
+  SafeMultisigTransactionResponse,
+} from "@safe-global/safe-core-sdk-types";
 
 interface ISafeStore {
   safe?: Safe;
@@ -107,6 +111,49 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
         senderSignature: signature.data,
       });
       return safeTxHash;
+    },
+    confirmTx: async (safeTxHash: string) => {
+      const { safe, safeApiService } = get();
+      if (!safe || !safeApiService) {
+        return;
+      }
+      const signature = await safe.signTransactionHash(safeTxHash);
+
+      // Confirm the Safe transaction
+      const signatureResponse = await safeApiService.confirmTransaction(
+        safeTxHash,
+        signature.data
+      );
+
+      console.log("Added a new signature to transaction with safeTxGas");
+      console.log("- Signer signature:", signatureResponse.signature);
+    },
+    rejectTx: async (nonce: number) => {
+      const { safe, safeApiService } = get();
+      if (!safe || !safeApiService) {
+        return;
+      }
+      await safe.createRejectionTransaction(nonce);
+    },
+    executeTx: async (
+      safeTransaction: SafeTransaction | SafeMultisigTransactionResponse
+    ) => {
+      const { safe, safeApiService } = get();
+      if (!safe || !safeApiService) {
+        return;
+      }
+      const isTxExecutable = await safe.isValidTransaction(safeTransaction);
+
+      if (isTxExecutable) {
+        // Execute the transaction
+        const txResponse = await safe.executeTransaction(safeTransaction);
+        const contractReceipt = await txResponse.transactionResponse?.wait();
+
+        console.log("Transaction executed.");
+        console.log("- Transaction hash:", contractReceipt?.blockHash);
+      } else {
+        console.log("Transaction invalid. Transaction was not executed.");
+      }
     },
   };
 });
