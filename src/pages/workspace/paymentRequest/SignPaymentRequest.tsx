@@ -35,9 +35,10 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
   const { workspace } = useWorkspace();
   const { paymentRequestList, approvePaymentRequest } = usePaymentsStore();
   const paymentRequestIds = selectedItem.join(",");
+ 
   // get selected payments for sign to chain
   const signItems = paymentRequestList.filter((payment) =>
-    paymentRequestIds.includes(payment.payment_request_id)
+    selectedItem.includes(payment.payment_request_id)
   );
 
   const totalTransactionValue = signItems.reduce(
