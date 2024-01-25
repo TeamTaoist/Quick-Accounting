@@ -27,12 +27,14 @@ import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import PaymentRequestDetails from "../paymentRequest/PaymentRequestDetails";
 import { useQueue } from "../../../store/UseQueue";
+import { useSafeStore } from "../../../store/useSafeStore";
 
 const Queue = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { t } = useTranslation();
 
+  const { threshold, owners } = useSafeStore();
   const { getQueueList, queueList } = useQueue();
   const [hasCategory, setHasCategory] = useState(true);
   const recipientFormate = (n: string) => {
@@ -115,14 +117,14 @@ const Queue = () => {
                       {/* category property */}
                       <Action>
                         <Approvals>
-                          <h4>Approvals: 2/2</h4>
+                          <h4>Approvals: 2/{threshold}</h4>
                           <p>0x4d4b...2915</p>
                           <p>0x4d4b...2915</p>
                           <button disabled>{t("queue.Approve")}</button>
                           <button disabled={false}>{t("queue.Execute")}</button>
                         </Approvals>
                         <Approvals>
-                          <h4>Rejections: 1/2</h4>
+                          <h4>Rejections: 1/{owners.length - threshold + 1}</h4>
                           <p>0x4d4b...2915</p>
                           <p>0x4d4b...2915</p>
                           <button disabled={false}>Reject</button>
