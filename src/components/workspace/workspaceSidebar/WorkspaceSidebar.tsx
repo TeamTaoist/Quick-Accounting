@@ -21,16 +21,33 @@ import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import NewPaymentRequest from "../../../pages/workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { useSafeStore } from "../../../store/useSafeStore";
+import { useEthersSigner } from "../../../utils/ethProvider";
 
 const WorkspaceSidebar = () => {
   const { t } = useTranslation();
   const { id } = useParams<string>();
   const [newPaymentsVisible, setNewPaymentsVisible] = useState(false);
   const { getWorkspaceDetails, workspace } = useWorkspace();
+  const { initSafeSDK } = useSafeStore();
+  const signerPromise = useEthersSigner();
 
   useEffect(() => {
     getWorkspaceDetails(Number(id));
   }, [getWorkspaceDetails, id]);
+
+  useEffect(() => {
+    if (workspace.ID) {
+      const init = async () => {
+        initSafeSDK(
+          workspace.chain_id,
+          await signerPromise,
+          workspace.vault_wallet
+        );
+      };
+      init();
+    }
+  }, [workspace?.chain_id, workspace?.vault_wallet]);
 
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
