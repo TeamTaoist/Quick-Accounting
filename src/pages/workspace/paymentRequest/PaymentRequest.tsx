@@ -399,7 +399,7 @@ const PaymentRequest = () => {
                                 }}
                                 onClick={() => handleGroupPaymentDetails(id)}
                               >
-                                view moree
+                                view more
                               </Button>
                             </TableCell>
                           </TableRow>
