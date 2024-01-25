@@ -244,7 +244,7 @@ const PaymentRequestGroupDetails = ({
                           }}
                         >
                           <MenuItem disabled value="Category">
-                            {paymentRequestGroupDetails[0].category_name}
+                            {paymentRequestGroupDetails[0]?.category_name}
                           </MenuItem>
                         </Select>
                       </FormControl>
