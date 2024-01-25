@@ -24,10 +24,13 @@ import categoryIcon from "../../../assets/workspace/category-icon.svg";
 import optionsIcon from "../../../assets/workspace/option.svg";
 import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
+import { useWorkspace } from "../../../store/useWorkspace";
 
-const PaymentRequestPreview = () => {
+const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { workspace } = useWorkspace();
+
   const [selectedValue, setSelectedValue] = useState("Option1");
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -39,35 +42,15 @@ const PaymentRequestPreview = () => {
   const handleCategoryChange = (event: SelectChangeEvent) => {
     setAge(event.target.value as string);
   };
-
-  // add new payment request
-  const [rows, setRows] = useState([{ id: 1 }]);
-
-  const handleAddPayment = () => {
-    const newRow = { id: rows.length + 1 };
-    setRows([...rows, newRow]);
-  };
-
-  const [selectedValues, setSelectedValues] = useState([]);
-
-  const handleSelectChange = (selectedOptions: any) => {
-    setSelectedValues(selectedOptions);
-  };
-  const options = [
-    { value: "option 1", label: "Options 1" },
-    { value: "option 2", label: "Options 2" },
-    { value: "option 3", label: "Options 3" },
-    { value: "option 4", label: "Options 4" },
-    { value: "option 5", label: "Options 5" },
-  ];
+  console.log(sharePaymentRequestForm);
 
   return (
-    <Header>
-      <SharePaymentContainer>
-        <SharePaymentForm>
-          <ShareHeader>
-            <h3>New payment request from workspace name</h3>
-          </ShareHeader>
+    <SharePaymentContainer>
+      <SharePaymentForm>
+        <ShareHeader>
+          <h3>New payment request from {workspace.name}</h3>
+        </ShareHeader>
+        {sharePaymentRequestForm.map((request: any) => (
           <RequestDetails>
             <TableContainer
               sx={{
@@ -332,29 +315,34 @@ const PaymentRequestPreview = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <AddBtn onClick={() => navigate("/user")}>
-                View the progress of your payment request
-              </AddBtn>
             </NoteInformation>
             {/* <ReactSelect /> */}
           </RequestDetails>
-        </SharePaymentForm>
-      </SharePaymentContainer>
-    </Header>
+        ))}
+        <AddBtn onClick={() => navigate("/user")}>
+          View the progress of your payment request
+        </AddBtn>
+      </SharePaymentForm>
+    </SharePaymentContainer>
   );
 };
 
 export default PaymentRequestPreview;
 
 const SharePaymentContainer = styled.div`
-  display: grid;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
-  height: 85vh;
+  align-items: center; */
+  padding-top: 100px;
+  min-height: 90vh;
 `;
 const SharePaymentForm = styled.div`
   width: 757px;
-  outline: 1px solid gray;
+  outline: 1px solid var(--border-table);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 40px 0;
+  background: #fff;
 `;
 const RequestDetails = styled.div`
   padding-bottom: 50px;
@@ -362,6 +350,7 @@ const RequestDetails = styled.div`
 `;
 const ShareHeader = styled.div`
   height: 98px;
+  width: 100%;
   background: var(--bg-secondary);
   padding: 22px 26px;
   h3 {

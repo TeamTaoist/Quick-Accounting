@@ -20,14 +20,23 @@ const CustomModal = ({
         onClose={() => setOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        disableScrollLock={false}
       >
         <Box
           sx={{
             position: "absolute",
-            top: "40%",
+            top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 450,
+            display: "block",
+            overflowY: "scroll",
+            height: "100%",
+            minWidth: 450,
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            "-ms-overflow-style": "none",
+            scrollbarWidth: "none",
           }}
         >
           <Component setOpen={setOpen} {...additionalProps} />

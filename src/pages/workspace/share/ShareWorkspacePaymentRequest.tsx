@@ -29,6 +29,8 @@ import { useLoading } from "../../../store/useLoading";
 import Loading from "../../../utils/Loading";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
+import CustomModal from "../../../utils/CustomModal";
+import PaymentRequestPreview from "./PaymentRequestPreview";
 
 const ShareWorkspacePaymentRequest = () => {
   const { id } = useParams();
@@ -37,7 +39,8 @@ const ShareWorkspacePaymentRequest = () => {
   const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
     useCategoryProperty();
   const { isLoading } = useLoading();
-  const { workspace, assetsList, getAssets } = useWorkspace();
+  const { workspace, assetsList, getAssets, getWorkspaceDetails } =
+    useWorkspace();
   const { createSharePaymentRequest } = useSharePaymentRequest();
 
   const [selectedValue, setSelectedValue] = useState("Option1");
@@ -50,9 +53,6 @@ const ShareWorkspacePaymentRequest = () => {
 
   const [selectedValues, setSelectedValues] = useState([]);
 
-  const handleChange = (selectedOption: any) => {
-    setSelectedValues(selectedOption);
-  };
   // console.log(selectedValues);
 
   // const handleSelectChange = (selectedOptions: any) => {
@@ -87,12 +87,12 @@ const ShareWorkspacePaymentRequest = () => {
   console.log(sharePaymentRequestForm);
 
   const handleFormChange = (
-    index: any,
-    field: any,
+    index: number,
+    field: string,
     value: any,
-    propertyName?: any,
-    propertyType?: any,
-    categoryId?: any
+    propertyName?: string,
+    propertyType?: string,
+    categoryId?: number
   ) => {
     const updatedRequests = [...sharePaymentRequestForm];
     if (field === "currency_name") {
@@ -143,7 +143,7 @@ const ShareWorkspacePaymentRequest = () => {
   const handleCategoryDropdown = (
     categoryId: number,
     categoryName: string,
-    index: any
+    index: number
   ) => {
     setSelectedCategoryID(categoryId);
     console.log(categoryId, categoryName, index);
@@ -165,20 +165,32 @@ const ShareWorkspacePaymentRequest = () => {
     getAssets();
   }, [workspace?.vault_wallet, getAssets]);
 
+  // modal
+  const [openModal, setOpenModal] = useState(false);
+
   // create payment request
   const handleSubmitPaymentRequest = () => {
     createSharePaymentRequest({ rows: sharePaymentRequestForm });
+  };
+  const handleSavePaymentRequest = () => {
+    setOpenModal(true);
   };
 
   return (
     <Header>
       {isLoading && <Loading />}
+      <CustomModal
+        open={openModal}
+        setOpen={setOpenModal}
+        component={PaymentRequestPreview}
+        additionalProps={{ sharePaymentRequestForm }}
+      />
       <SharePaymentContainer>
         <SharePaymentForm>
           <ShareHeader>
-            <h3>New payment request from workspace name</h3>
+            <h3>New payment request from {workspace.name}</h3>
           </ShareHeader>
-          {sharePaymentRequestForm.map((form: any, index: any) => (
+          {sharePaymentRequestForm.map((form: any, index: number) => (
             <RequestDetails>
               <TableContainer
                 sx={{
@@ -535,9 +547,7 @@ const ShareWorkspacePaymentRequest = () => {
           <Btns>
             <AddBtn onClick={handleAddRequest}>+ Add</AddBtn>
             <SubmitBtns>
-              <Save onClick={() => navigate("/payment-request-preview")}>
-                Save
-              </Save>
+              <Save onClick={handleSavePaymentRequest}>Save</Save>
               <Submit onClick={handleSubmitPaymentRequest}>Submit</Submit>
             </SubmitBtns>
           </Btns>
