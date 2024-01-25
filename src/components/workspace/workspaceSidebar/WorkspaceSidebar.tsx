@@ -29,7 +29,7 @@ const WorkspaceSidebar = () => {
   const { id } = useParams<string>();
   const [newPaymentsVisible, setNewPaymentsVisible] = useState(false);
   const { getWorkspaceDetails, workspace } = useWorkspace();
-  const { initSafeSDK } = useSafeStore();
+  const { initSafeSDK, safeApiService, getSafeInfo } = useSafeStore();
   const signerPromise = useEthersSigner();
 
   useEffect(() => {
@@ -48,6 +48,12 @@ const WorkspaceSidebar = () => {
       init();
     }
   }, [workspace?.chain_id, workspace?.vault_wallet]);
+
+  useEffect(() => {
+    workspace?.vault_wallet &&
+      safeApiService &&
+      getSafeInfo(workspace?.vault_wallet);
+  }, [workspace?.vault_wallet, safeApiService]);
 
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;

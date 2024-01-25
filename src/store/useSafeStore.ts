@@ -8,11 +8,14 @@ import { createTokenTransferParams } from "../utils/safeTx";
 interface ISafeStore {
   safe?: Safe;
   safeApiService?: SafeApiKit;
+  owners: string[];
+  threshold: number;
   initSafeSDK: (chainId: number, signer: any, safeAddress: string) => void;
   signAndCreateTx: (
     address: string,
     safeAddress: string
   ) => Promise<string | undefined>;
+  getSafeInfo: (safeAddress: string) => void;
 }
 
 export const createEthersAdapter = (signer: any) => {
@@ -28,6 +31,8 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
   return {
     safe: undefined,
     safeApiService: undefined,
+    owners: [],
+    threshold: 0,
     initSafeSDK: async (chainId: number, signer: any, safeAddress: string) => {
       console.log("signer: ", signer, chainId);
       const safe = await Safe.create({
@@ -40,6 +45,15 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
       });
       console.log("safeApiService", safeApiService);
       set({ safe, safeApiService });
+    },
+    getSafeInfo: (safeAddress: string) => {
+      const { safeApiService } = get();
+      if (!safeApiService) {
+        return;
+      }
+      safeApiService.getSafeInfo(safeAddress).then((res) => {
+        set({ owners: res.owners, threshold: res.threshold });
+      });
     },
     signAndCreateTx: async (senderAddress: string, safeAddress: string) => {
       const { safe, safeApiService } = get();
