@@ -38,17 +38,14 @@ const RouterLink = () => {
       <Routes>
         {/* TODO convert to the dialog */}
         <Route path="/create-workspace" element={<WorkSpaceForm />} />
-      
+
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPopup />} />
         <Route path="/user" element={<UserDashboard />} />
         <Route path="/workspace/:id" element={<WorkspaceIndex />}>
           <Route path="assets" element={<Assets />} />
           <Route path="category" element={<Category />} />
-          <Route
-            path="payment-request"
-            element={<PaymentRequest />}
-          />
+          <Route path="payment-request" element={<PaymentRequest />} />
           <Route path="settings" element={<Settings />} />
           <Route path="queue" element={<Queue />} />
           <Route path="bookkeeping" element={<Bookkeeping />} />
@@ -56,7 +53,7 @@ const RouterLink = () => {
         </Route>
 
         <Route
-          path="/new-workspace-payment-request"
+          path="/workspace/:id/new-workspace-payment-request"
           element={<ShareWorkspacePaymentRequest />}
         />
         <Route

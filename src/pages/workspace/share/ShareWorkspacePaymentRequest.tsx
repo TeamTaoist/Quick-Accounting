@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../../components/layout/header/Header";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FormControl,
   InputAdornment,
@@ -24,15 +24,19 @@ import categoryIcon from "../../../assets/workspace/category-icon.svg";
 import optionsIcon from "../../../assets/workspace/option.svg";
 import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import { useLoading } from "../../../store/useLoading";
+import Loading from "../../../utils/Loading";
 
 const ShareWorkspacePaymentRequest = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [selectedValue, setSelectedValue] = useState("Option1");
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedValue(event.target.value);
-  };
+  const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
+    useCategoryProperty();
+  const { isLoading } = useLoading();
+
+  const [selectedValue, setSelectedValue] = useState("Option1");
 
   const [age, setAge] = useState("Category");
 
@@ -42,304 +46,495 @@ const ShareWorkspacePaymentRequest = () => {
 
   const [selectedValues, setSelectedValues] = useState([]);
 
-  const handleSelectChange = (selectedOptions: any) => {
-    setSelectedValues(selectedOptions);
+  const handleChange = (selectedOption: any) => {
+    setSelectedValues(selectedOption);
   };
-  const options = [
-    { value: "option 1", label: "Options 1" },
-    { value: "option 2", label: "Options 2" },
-    { value: "option 3", label: "Options 3" },
-    { value: "option 4", label: "Options 4" },
-    { value: "option 5", label: "Options 5" },
-  ];
+  // console.log(selectedValues);
+
+  // const handleSelectChange = (selectedOptions: any) => {
+  //   setSelectedValues(selectedOptions);
+  // };
+
+  // dynamic payment request form
+  const [sharePaymentRequestForm, setSharePaymentRequestForm] = useState<any>([
+    {
+      amount: "",
+      currency: "",
+      recipient: "",
+      category_id: "",
+      categoryProperty: [],
+    },
+  ]);
+  const handleAddRequest = () => {
+    setSharePaymentRequestForm([
+      ...sharePaymentRequestForm,
+      {
+        amount: "",
+        currency: "",
+        recipient: "",
+        categoryProperty: [
+          {
+            name: "",
+            type: "",
+            values: "",
+          },
+        ],
+      },
+    ]);
+  };
+  console.log(sharePaymentRequestForm);
+
+  // const handleFormChange = (index: any, field: any, value: any) => {
+  //   const updatedRequests = [...sharePaymentRequestForm];
+  //   if (field === "categoryProperties") {
+  //     updatedRequests[index].categoryProperty[index].values = value
+  //       .map((option: any) => option.value)
+  //       .join(";");
+  //   } else {
+  //     // Handle other fields as usual
+  //     updatedRequests[index][field] = value;
+  //   }
+  //   setSharePaymentRequestForm(updatedRequests);
+  // };
+  // const handleFormChange = (
+  //   index: any,
+  //   field: any,
+  //   value: any,
+  //   subfield?: any
+  // ) => {
+  //   const updatedRequests = [...sharePaymentRequestForm];
+  //   if (field === "categoryProperties" && subfield !== undefined) {
+  //     updatedRequests[index].categoryProperty[index][subfield] = value;
+  //   } else if (field === "categoryProperties") {
+  //     updatedRequests[index].categoryProperty = value;
+  //   } else {
+  //     // Handle other fields as usual
+  //     updatedRequests[index][field] = value;
+  //   }
+  //   setSharePaymentRequestForm(updatedRequests);
+  // };
+
+  const handleFormChange = (
+    index: any,
+    field: any,
+    value: any,
+    propertyName?: any,
+    propertyType?: any,
+    categoryId?: any
+  ) => {
+    const updatedRequests = [...sharePaymentRequestForm];
+
+    if (field === "categoryProperties") {
+      // Check if the categoryProperty already exists with the given name
+      const existingCategoryPropertyIndex = updatedRequests[
+        index
+      ].categoryProperty.findIndex(
+        (property: any) => property.name === propertyName
+      );
+
+      if (existingCategoryPropertyIndex !== -1) {
+        // Update the existing categoryProperty with the new values
+        updatedRequests[index].categoryProperty[
+          existingCategoryPropertyIndex
+        ].values = value.map((v: any) => v.value).join(";");
+      } else {
+        // If not exists, create a new categoryProperty
+        const newCategoryProperty = {
+          name: propertyName,
+          type: propertyType,
+          values: value.map((v: any) => v.value).join(";"),
+        };
+
+        // Update the categoryProperty array at the specified index
+        updatedRequests[index].categoryProperty.push(newCategoryProperty);
+      }
+    } else {
+      // Handle other fields as usual
+      updatedRequests[index][field] = value;
+    }
+
+    setSharePaymentRequestForm(updatedRequests);
+  };
+
+  // get category details
+  useEffect(() => {
+    getWorkspaceCategoryProperties(Number(id));
+  }, [getWorkspaceCategoryProperties, id]);
+
+  const [selectedCategoryID, setSelectedCategoryID] = useState<number>();
+  const handleCategoryDropdown = (categoryId: number) => {
+    setSelectedCategoryID(categoryId);
+  };
+  const selectedCategory = workspaceCategoryProperties?.find(
+    (f) => f.ID === selectedCategoryID
+  );
 
   return (
     <Header>
+      {isLoading && <Loading />}
       <SharePaymentContainer>
         <SharePaymentForm>
           <ShareHeader>
             <h3>New payment request from workspace name</h3>
           </ShareHeader>
-          <RequestDetails>
-            <TableContainer
-              sx={{
-                // paddingInline: "46px",
-                // paddingTop: "30px",
-                boxShadow: "none",
-                border: "1px solid var(--border-table)",
-                borderTopRightRadius: "6px",
-                borderTopLeftRadius: "6px",
-              }}
-            >
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead sx={{ background: "var(--bg-secondary)" }}>
-                  <TableRow>
-                    <TableCell
-                      sx={{
-                        width: 200,
-                        borderRight: "1px solid var(--border-table)",
-                        // paddingInline: 0,
-                        fontSize: "18px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Recipient
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: 150,
-                        borderRight: "1px solid var(--border-table)",
-                        fontSize: "18px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Amount
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: 200,
-                        fontSize: "18px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Currency
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {/* <TableRow sx={{ td: { border: 1, padding: 0 } }}> */}
-                  {/* {rows.map((row) => ( */}
-                  <TableRow
-                    sx={{
-                      height: "30px",
-                    }}
-                  >
-                    <TableCell
-                      // size="small"
-                      sx={{
-                        borderRight: "1px solid var(--border-table)",
-                        padding: 0,
-                      }}
-                    >
-                      <TextField
+          {sharePaymentRequestForm.map((form: any, index: any) => (
+            <RequestDetails>
+              <TableContainer
+                sx={{
+                  // paddingInline: "46px",
+                  // paddingTop: "30px",
+                  boxShadow: "none",
+                  border: "1px solid var(--border-table)",
+                  borderTopRightRadius: "6px",
+                  borderTopLeftRadius: "6px",
+                }}
+              >
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead sx={{ background: "var(--bg-secondary)" }}>
+                    <TableRow>
+                      <TableCell
                         sx={{
-                          "& fieldset": { border: "none" },
-                        }}
-                        size="small"
-                        fullWidth
-                        // id="fullWidth"
-                        placeholder="Enter wallet address"
-                        InputProps={{
-                          style: { padding: 0 },
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderRight: "1px solid var(--border-table)",
-                        borderRadius: "5px",
-                        padding: 0,
-                        paddingLeft: "10px",
-                        // minHeight: "40px",
-                      }}
-                    >
-                      0.00
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        padding: 0,
-                        // minHeight: "40px",
-                      }}
-                    >
-                      <Select
-                        labelId="demo-select-small-label"
-                        id="demo-select-small"
-                        value={selectedValue}
-                        onChange={handleChange}
-                        size="small"
-                        IconComponent={() => (
-                          <InputAdornment position="start">
-                            <img
-                              src={arrowBottom}
-                              alt="Custom Arrow Icon"
-                              style={{ marginRight: "50px" }}
-                            />
-                          </InputAdornment>
-                        )}
-                        sx={{
-                          minWidth: "100%",
-                          "& fieldset": { border: "none" },
+                          width: 200,
+                          borderRight: "1px solid var(--border-table)",
+                          // paddingInline: 0,
+                          fontSize: "18px",
+                          fontWeight: "500",
                         }}
                       >
-                        <MenuItem
-                          value="Option1"
+                        Recipient
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          width: 150,
+                          borderRight: "1px solid var(--border-table)",
+                          fontSize: "18px",
+                          fontWeight: "500",
+                        }}
+                      >
+                        Amount
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          width: 200,
+                          fontSize: "18px",
+                          fontWeight: "500",
+                        }}
+                      >
+                        Currency
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {/* <TableRow sx={{ td: { border: 1, padding: 0 } }}> */}
+                    {/* {rows.map((row) => ( */}
+                    <TableRow
+                      sx={{
+                        height: "30px",
+                      }}
+                    >
+                      <TableCell
+                        // size="small"
+                        sx={{
+                          borderRight: "1px solid var(--border-table)",
+                          padding: 0,
+                        }}
+                      >
+                        <TextField
                           sx={{
-                            "&:hover": { backgroundColor: "var(--hover-bg)" },
-                            "&.Mui-selected": {
-                              backgroundColor: "var(--hover-bg)",
-                            },
+                            "& fieldset": { border: "none" },
+                          }}
+                          size="small"
+                          fullWidth
+                          // id="fullWidth"
+                          placeholder="Enter wallet address"
+                          onChange={(e) =>
+                            handleFormChange(index, "recipient", e.target.value)
+                          }
+                          InputProps={{
+                            style: { padding: 0 },
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          borderRight: "1px solid var(--border-table)",
+                          borderRadius: "5px",
+                          padding: 0,
+                          paddingLeft: "10px",
+                          // minHeight: "40px",
+                        }}
+                      >
+                        <TextField
+                          sx={{
+                            "& fieldset": { border: "none" },
+                          }}
+                          size="small"
+                          fullWidth
+                          // id="fullWidth"
+                          placeholder="amount"
+                          onChange={(e) =>
+                            handleFormChange(index, "amount", e.target.value)
+                          }
+                          InputProps={{
+                            style: { padding: 0 },
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          padding: 0,
+                          // minHeight: "40px",
+                        }}
+                      >
+                        <Select
+                          labelId="demo-select-small-label"
+                          id="demo-select-small"
+                          value={selectedValue}
+                          // onChange={handleChange}
+                          size="small"
+                          onChange={(e) =>
+                            handleFormChange(index, "currency", e.target.value)
+                          }
+                          IconComponent={() => (
+                            <InputAdornment position="start">
+                              <img
+                                src={arrowBottom}
+                                alt="Custom Arrow Icon"
+                                style={{ marginRight: "50px" }}
+                              />
+                            </InputAdornment>
+                          )}
+                          sx={{
+                            minWidth: "100%",
+                            "& fieldset": { border: "none" },
                           }}
                         >
-                          Ten
-                        </MenuItem>
-                        <MenuItem value="Option2">Twenty</MenuItem>
-                      </Select>
-                    </TableCell>
-                  </TableRow>
-                  {/* ))} */}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            {/* note info */}
-            <NoteInformation>
-              <h3>Note Information</h3>
-
-              <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableBody>
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
-                        <NoteInfo>
-                          <Image src={categoryIcon} alt="" /> Category
-                        </NoteInfo>
-                      </TableCell>
-                      <TableCell>
-                        <FormControl fullWidth>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={age}
-                            label="Age"
-                            size="small"
-                            onChange={handleCategoryChange}
-                            IconComponent={() => (
-                              <InputAdornment position="start">
-                                <img
-                                  src={arrowBottom}
-                                  alt="Custom Arrow Icon"
-                                  style={{ marginRight: "20px" }}
-                                />
-                              </InputAdornment>
-                            )}
+                          <MenuItem
+                            value="Option1"
                             sx={{
-                              minWidth: "100%",
-                              "& fieldset": { border: "none" },
+                              "&:hover": { backgroundColor: "var(--hover-bg)" },
+                              "&.Mui-selected": {
+                                backgroundColor: "var(--hover-bg)",
+                              },
                             }}
                           >
-                            <MenuItem disabled value="Category">
-                              Category name
-                            </MenuItem>
-                            <MenuItem
-                              value={10}
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                                "&.Mui-selected": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                              }}
-                            >
-                              Ten
-                            </MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                          </Select>
-                        </FormControl>
+                            Ten
+                          </MenuItem>
+                          <MenuItem value="Option2">Twenty</MenuItem>
+                        </Select>
                       </TableCell>
                     </TableRow>
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
-                        <NoteInfo>
-                          <Image src={selectIcon} alt="" /> Property name
-                        </NoteInfo>
-                      </TableCell>
-                      {/* add multi select */}
-                      <TableCell>
-                        <ReactSelect
-                          value={selectedValues}
-                          onChange={handleSelectChange}
-                          options={options}
-                          defaultValues={[options[1]]}
-                        />
-                      </TableCell>
-                    </TableRow>
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
-                        <NoteInfo>
-                          <Image src={multiSelect} alt="" /> Property name
-                        </NoteInfo>
-                      </TableCell>
-                      {/* add multi select */}
-                      <TableCell>
-                        <ReactSelect
-                          value={selectedValues}
-                          onChange={handleSelectChange}
-                          options={options}
-                          defaultValues={[options[1], options[2]]}
-                        />
-                      </TableCell>
-                    </TableRow>
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
-                        <NoteInfo>
-                          <Image src={optionsIcon} alt="" /> Property name
-                        </NoteInfo>
-                      </TableCell>
-                      {/* add multi select */}
-                      <TableCell>
-                        Here is some description of the payment request, No more
-                        than 50 words. Here is some description of the payment
-                        request.
-                      </TableCell>
-                    </TableRow>
+                    {/* ))} */}
                   </TableBody>
                 </Table>
               </TableContainer>
-              <DeleteBtn>Delete</DeleteBtn>
-              <AddBtn>+ Add</AddBtn>
-              <SubmitBtns>
-                <Save onClick={() => navigate("/payment-request-preview")}>
-                  Save
-                </Save>
-                <Submit onClick={() => navigate("/payment-request-preview")}>
-                  Submit
-                </Submit>
-              </SubmitBtns>
-            </NoteInformation>
-            {/* <ReactSelect /> */}
-          </RequestDetails>
+              {/* note info */}
+              <NoteInformation>
+                <h3>Note Information</h3>
+
+                <TableContainer>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableBody>
+                      <TableRow
+                        sx={{
+                          td: {
+                            border: "1px solid var(--border-table)",
+                            padding: 0,
+                            paddingInline: "16px",
+                          },
+                        }}
+                      >
+                        <TableCell sx={{ height: 1, width: 200 }}>
+                          <NoteInfo>
+                            <Image src={categoryIcon} alt="" /> Category
+                          </NoteInfo>
+                        </TableCell>
+                        <TableCell>
+                          <FormControl fullWidth>
+                            <Select
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              value={age}
+                              label="Age"
+                              size="small"
+                              onChange={handleCategoryChange}
+                              IconComponent={() => (
+                                <InputAdornment position="start">
+                                  <img
+                                    src={arrowBottom}
+                                    alt="Custom Arrow Icon"
+                                    style={{ marginRight: "20px" }}
+                                  />
+                                </InputAdornment>
+                              )}
+                              sx={{
+                                minWidth: "100%",
+                                "& fieldset": { border: "none" },
+                              }}
+                            >
+                              <MenuItem disabled value="Category">
+                                Select category
+                              </MenuItem>
+                              {workspaceCategoryProperties.map((category) => (
+                                <MenuItem
+                                  value={category.name}
+                                  onClick={() => {
+                                    handleCategoryDropdown(category.ID);
+                                    handleFormChange(
+                                      index,
+                                      "category_id",
+                                      category.ID
+                                    );
+                                  }}
+                                  sx={{
+                                    "&:hover": {
+                                      backgroundColor: "var(--hover-bg)",
+                                    },
+                                    "&.Mui-selected": {
+                                      backgroundColor: "var(--hover-bg)",
+                                    },
+                                  }}
+                                >
+                                  {category.name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </TableCell>
+                      </TableRow>
+                      {/* category property */}
+                      {selectedCategory?.properties?.map((property, i) => (
+                        <>
+                          {property.type === "single-select" && (
+                            <TableRow
+                              sx={{
+                                td: {
+                                  border: "1px solid var(--border-table)",
+                                  padding: 0,
+                                  paddingInline: "16px",
+                                },
+                              }}
+                            >
+                              <TableCell sx={{ height: 1, width: 200 }}>
+                                <NoteInfo>
+                                  <Image src={selectIcon} alt="" />{" "}
+                                  {property.name}
+                                </NoteInfo>
+                              </TableCell>
+                              {/* add multi select first */}
+                              <TableCell>
+                                <ReactSelect
+                                  value={selectedValues}
+                                  onChange={(selectedOption: any) =>
+                                    handleFormChange(
+                                      index,
+                                      "categoryProperties",
+                                      selectedOption,
+                                      property.name,
+                                      property.type
+                                    )
+                                  }
+                                  // onChange={(selectedOption: any) =>
+                                  //   handleChange(selectedOption)
+                                  // }
+                                  options={property.values
+                                    .split(";")
+                                    .map((v) => ({
+                                      value: v,
+                                      label: v,
+                                    }))}
+                                  // defaultValues={[options[1]]}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          )}
+                          {property.type === "multi-select" && (
+                            <TableRow
+                              sx={{
+                                td: {
+                                  border: "1px solid var(--border-table)",
+                                  padding: 0,
+                                  paddingInline: "16px",
+                                },
+                              }}
+                            >
+                              <TableCell sx={{ height: 1, width: 200 }}>
+                                <NoteInfo>
+                                  <Image src={multiSelect} alt="" />{" "}
+                                  {property.name}
+                                </NoteInfo>
+                              </TableCell>
+                              {/* add multi select */}
+                              <TableCell>
+                                <ReactSelect
+                                  value={selectedValues}
+                                  // onChange={handleSelectChange}
+                                  onChange={(selectedOption: any) =>
+                                    handleFormChange(
+                                      index,
+                                      "categoryProperties",
+                                      selectedOption,
+                                      property.name,
+                                      property.type
+                                    )
+                                  }
+                                  options={property.values
+                                    .split(";")
+                                    .map((v) => ({
+                                      value: v,
+                                      label: v,
+                                    }))}
+                                  // defaultValues={[options[1], options[2]]}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          )}
+                          {property.type === "Text" && (
+                            <TableRow
+                              sx={{
+                                td: {
+                                  border: "1px solid var(--border-table)",
+                                  padding: 0,
+                                  paddingInline: "16px",
+                                },
+                              }}
+                            >
+                              <TableCell sx={{ height: 1, width: 200 }}>
+                                <NoteInfo>
+                                  <Image src={optionsIcon} alt="" />{" "}
+                                  {property.name}
+                                </NoteInfo>
+                              </TableCell>
+                              {/* add multi select */}
+                              <TableCell>
+                                Here is some description of the payment request,
+                                No more than 50 words. Here is some description
+                                of the payment request.
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </>
+                      ))}
+                      {/*  */}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <DeleteBtn>Delete</DeleteBtn>
+              </NoteInformation>
+              {/* <ReactSelect /> */}
+            </RequestDetails>
+          ))}
+          <Btns>
+            <AddBtn onClick={handleAddRequest}>+ Add</AddBtn>
+            <SubmitBtns>
+              <Save onClick={() => navigate("/payment-request-preview")}>
+                Save
+              </Save>
+              <Submit onClick={() => navigate("/payment-request-preview")}>
+                Submit
+              </Submit>
+            </SubmitBtns>
+          </Btns>
         </SharePaymentForm>
       </SharePaymentContainer>
     </Header>
@@ -349,19 +544,21 @@ const ShareWorkspacePaymentRequest = () => {
 export default ShareWorkspacePaymentRequest;
 
 const SharePaymentContainer = styled.div`
-  display: grid;
+  /* display: grid; */
+  display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding-top: 100px;
 `;
 const SharePaymentForm = styled.div`
-  padding-top: 90px;
   width: 757px;
   outline: 1px solid gray;
+  margin: 40px 0;
+  /* padding: 40px 0; */
 `;
 const RequestDetails = styled.div`
-  padding-bottom: 50px;
-  padding: 10px 30px;
+  padding: 40px 30px;
 `;
 const ShareHeader = styled.div`
   height: 98px;
@@ -420,6 +617,10 @@ const DeleteBtn = styled.button`
   border-radius: 0 0 7px 7px;
   cursor: pointer;
 `;
+const Btns = styled.div`
+  padding-inline: 30px;
+  padding-bottom: 40px;
+`;
 const AddBtn = styled.button`
   background: transparent;
   font-size: 16px;
@@ -430,7 +631,7 @@ const AddBtn = styled.button`
   border-style: dotted;
   border-radius: 7px;
   cursor: pointer;
-  margin: 20px 0;
+  margin-bottom: 30px;
 `;
 const SubmitBtns = styled.div`
   width: 100%;
