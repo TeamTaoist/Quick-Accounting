@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../../components/layout/header/Header";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   FormControl,
   InputAdornment,
@@ -25,6 +25,7 @@ import optionsIcon from "../../../assets/workspace/option.svg";
 import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { Diversity1 } from "@mui/icons-material";
 
 const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
   const { id } = useParams();
@@ -50,8 +51,8 @@ const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
         <ShareHeader>
           <h3>New payment request from {workspace.name}</h3>
         </ShareHeader>
-        {sharePaymentRequestForm.map((request: any) => (
-          <RequestDetails>
+        {sharePaymentRequestForm.map((request: any, i: number) => (
+          <RequestDetails key={i}>
             <TableContainer
               sx={{
                 // paddingInline: "46px",
@@ -117,6 +118,7 @@ const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
                           "& fieldset": { border: "none" },
                         }}
                         size="small"
+                        value={request.amount}
                         fullWidth
                         // id="fullWidth"
                         placeholder="Enter wallet address"
@@ -134,47 +136,18 @@ const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
                         // minHeight: "40px",
                       }}
                     >
-                      0.00
+                      {request.amount}
                     </TableCell>
                     <TableCell
                       sx={{
+                        borderRight: "1px solid var(--border-table)",
+                        borderRadius: "5px",
                         padding: 0,
+                        paddingLeft: "10px",
                         // minHeight: "40px",
                       }}
                     >
-                      <Select
-                        labelId="demo-select-small-label"
-                        id="demo-select-small"
-                        value={selectedValue}
-                        onChange={handleChange}
-                        size="small"
-                        IconComponent={() => (
-                          <InputAdornment position="start">
-                            <img
-                              src={arrowBottom}
-                              alt="Custom Arrow Icon"
-                              style={{ marginRight: "50px" }}
-                            />
-                          </InputAdornment>
-                        )}
-                        sx={{
-                          minWidth: "100%",
-                          "& fieldset": { border: "none" },
-                        }}
-                      >
-                        <MenuItem
-                          value="Option1"
-                          sx={{
-                            "&:hover": { backgroundColor: "var(--hover-bg)" },
-                            "&.Mui-selected": {
-                              backgroundColor: "var(--hover-bg)",
-                            },
-                          }}
-                        >
-                          Ten
-                        </MenuItem>
-                        <MenuItem value="Option2">Twenty</MenuItem>
-                      </Select>
+                      {request.currency_name}
                     </TableCell>
                   </TableRow>
                   {/* ))} */}
@@ -226,92 +199,95 @@ const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
                             }}
                           >
                             <MenuItem disabled value="Category">
-                              Category name
+                              {request.category_name}
                             </MenuItem>
-                            <MenuItem
-                              value={10}
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                                "&.Mui-selected": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                              }}
-                            >
-                              Ten
-                            </MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
                           </Select>
                         </FormControl>
                       </TableCell>
                     </TableRow>
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
-                        <NoteInfo>
-                          <Image src={selectIcon} alt="" /> Property name
-                        </NoteInfo>
-                      </TableCell>
-                      {/* add multi select */}
-                      <TableCell>
-                        <PropertyOption>
-                          <p>Option 1</p>
-                          <p>Option 1</p>
-                        </PropertyOption>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
-                        <NoteInfo>
-                          <Image src={multiSelect} alt="" /> Property name
-                        </NoteInfo>
-                      </TableCell>
-                      {/* add multi select */}
-                      <TableCell>
-                        <PropertyOption>
-                          <p>Option 1</p>
-                          <p>Option 1</p>
-                          <p>Option 1</p>
-                        </PropertyOption>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
-                        <NoteInfo>
-                          <Image src={optionsIcon} alt="" /> Property name
-                        </NoteInfo>
-                      </TableCell>
-                      {/* add multi select */}
-                      <TableCell>
-                        Here is some description of the payment request, No more
-                        than 50 words. Here is some description of the payment
-                        request.
-                      </TableCell>
-                    </TableRow>
+                    {/* property options */}
+                    {request.category_properties.map(
+                      (property: any, i: number) => (
+                        <React.Fragment key={i}>
+                          {property.type === "single-select" && (
+                            <TableRow
+                              sx={{
+                                td: {
+                                  border: "1px solid var(--border-table)",
+                                  padding: 0,
+                                  paddingInline: "16px",
+                                },
+                              }}
+                            >
+                              <TableCell sx={{ height: 1, width: 200 }}>
+                                <NoteInfo>
+                                  <Image src={selectIcon} alt="" />{" "}
+                                  {property.name}
+                                </NoteInfo>
+                              </TableCell>
+                              {/* add multi select */}
+                              <TableCell>
+                                <PropertyOption>
+                                  <p>{property.values}</p>
+                                </PropertyOption>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                          {property.type === "multi-select" && (
+                            <TableRow
+                              sx={{
+                                td: {
+                                  border: "1px solid var(--border-table)",
+                                  padding: 0,
+                                  paddingInline: "16px",
+                                },
+                              }}
+                            >
+                              <TableCell sx={{ height: 1, width: 200 }}>
+                                <NoteInfo>
+                                  <Image src={multiSelect} alt="" />{" "}
+                                  {property.name}
+                                </NoteInfo>
+                              </TableCell>
+                              {/* add multi select */}
+                              <TableCell>
+                                <PropertyOption>
+                                  {property.values
+                                    .split(";")
+                                    .map((option: string, i: number) => (
+                                      <p key={i}>{option}</p>
+                                    ))}
+                                </PropertyOption>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                          {property.type === "Text" && (
+                            <TableRow
+                              sx={{
+                                td: {
+                                  border: "1px solid var(--border-table)",
+                                  padding: 0,
+                                  paddingInline: "16px",
+                                },
+                              }}
+                            >
+                              <TableCell sx={{ height: 1, width: 200 }}>
+                                <NoteInfo>
+                                  <Image src={optionsIcon} alt="" />{" "}
+                                  {property.name}
+                                </NoteInfo>
+                              </TableCell>
+                              {/* add multi select */}
+                              <TableCell>
+                                Here is some description of the payment request,
+                                No more than 50 words. Here is some description
+                                of the payment request.
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </React.Fragment>
+                      )
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -319,9 +295,11 @@ const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
             {/* <ReactSelect /> */}
           </RequestDetails>
         ))}
-        <AddBtn onClick={() => navigate("/user")}>
-          View the progress of your payment request
-        </AddBtn>
+        <Btn>
+          <AddBtn onClick={() => navigate("/user")}>
+            View the progress of your payment request
+          </AddBtn>
+        </Btn>
       </SharePaymentForm>
     </SharePaymentContainer>
   );
@@ -378,6 +356,10 @@ export const NoteInfo = styled.div`
   display: flex;
   gap: 6px;
 `;
+const Btn = styled.div`
+  padding-bottom: 50px;
+  padding: 10px 30px;
+`;
 const AddBtn = styled.button`
   background: var(--bg-primary);
   font-size: 16px;
@@ -387,6 +369,7 @@ const AddBtn = styled.button`
   border-radius: 7px;
   cursor: pointer;
   margin: 20px 0;
+  padding-inline: 30px;
 `;
 const PropertyOption = styled.div`
   display: flex;

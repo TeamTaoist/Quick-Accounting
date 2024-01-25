@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../../components/layout/header/Header";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   InputAdornment,
@@ -190,8 +190,8 @@ const ShareWorkspacePaymentRequest = () => {
           <ShareHeader>
             <h3>New payment request from {workspace.name}</h3>
           </ShareHeader>
-          {sharePaymentRequestForm.map((form: any, index: number) => (
-            <RequestDetails>
+          {sharePaymentRequestForm.map((_: any, index: number) => (
+            <RequestDetails key={index}>
               <TableContainer
                 sx={{
                   // paddingInline: "46px",
@@ -326,8 +326,9 @@ const ShareWorkspacePaymentRequest = () => {
                             "& fieldset": { border: "none" },
                           }}
                         >
-                          {assetsList.map((asset) => (
+                          {assetsList.map((asset, i: number) => (
                             <MenuItem
+                              key={i}
                               value={asset.tokenInfo.symbol}
                               sx={{
                                 "&:hover": {
@@ -397,6 +398,7 @@ const ShareWorkspacePaymentRequest = () => {
                               </MenuItem>
                               {workspaceCategoryProperties.map((category) => (
                                 <MenuItem
+                                  key={category.ID}
                                   value={category.name}
                                   onClick={() => {
                                     handleCategoryDropdown(
@@ -423,7 +425,7 @@ const ShareWorkspacePaymentRequest = () => {
                       </TableRow>
                       {/* category property */}
                       {selectedCategory?.properties?.map((property, i) => (
-                        <>
+                        <React.Fragment key={i}>
                           {property.type === "single-select" && (
                             <TableRow
                               sx={{
@@ -533,7 +535,7 @@ const ShareWorkspacePaymentRequest = () => {
                               </TableCell>
                             </TableRow>
                           )}
-                        </>
+                        </React.Fragment>
                       ))}
                       {/*  */}
                     </TableBody>
