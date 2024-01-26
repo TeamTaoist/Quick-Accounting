@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   CategoryTitle,
   CreateBtn,
@@ -57,45 +57,8 @@ import BookkeepingRejectTable from "../../../components/workspace/BookkeepingRej
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import BookkeepingTransferDetails from "./BookkeepingTransferDetails";
+import { useBookkeeping } from "../../../store/useBookkeeping";
 
-// const payments: Payment[] = [
-//   {
-//     id: 1,
-//     idNumber: "0Xdf344...4324",
-//     amount: 100,
-//     category: "John Doe",
-//     date: "2022-01-01",
-//     subPayment: [],
-//   },
-//   {
-//     id: 2,
-//     idNumber: "0Xdf344...4324",
-//     amount: 150,
-//     category: "Jane Doe",
-//     date: "2022-01-02",
-//     subPayment: [],
-//   },
-//   {
-//     id: 3,
-//     idNumber: "0Xdf344...4324",
-//     amount: 200,
-//     category: "Bob Smith",
-//     date: "2022-01-03",
-//     subPayment: [],
-//   },
-//   {
-//     id: 4,
-//     idNumber: "0Xdf344...4324",
-//     amount: 120,
-//     category: "Alice Johnson",
-//     date: "2022-01-04",
-//     subPayment: [
-//       { id: 31, idNumber: "Subcategory 3-1" },
-//       { id: 32, idNumber: "Subcategory 3-2" },
-//       { id: 33, idNumber: "Subcategory 3-3" },
-//     ],
-//   },
-// ];
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
@@ -103,6 +66,17 @@ const recipientFormate = (n: string) => {
 const Bookkeeping = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const { getBookkeepingList } = useBookkeeping();
+
+  // visibility
+  const [visible, setVisible] = useState<boolean>(false);
+
+  // fetch bookkeeping data
+  useEffect(() => {
+    getBookkeepingList(visible);
+  }, [getBookkeepingList, visible]);
+
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
 

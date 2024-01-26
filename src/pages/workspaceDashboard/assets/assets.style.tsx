@@ -27,7 +27,7 @@ export const AssetTable = styled.div`
 
 export const RowCell = styled.div`
   justify-content: center;
-  display: grid;
+  /* display: grid; */
   h6 {
     font-size: 20px;
     font-weight: 400;

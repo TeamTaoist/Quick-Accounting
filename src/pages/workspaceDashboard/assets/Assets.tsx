@@ -103,7 +103,7 @@ const Assets = () => {
               <TableRow>
                 <TableCell
                   sx={{
-                    textAlign: "center",
+                    // textAlign: "center",
                     background: "var(--bg-primary)",
                   }}
                 >
@@ -111,7 +111,7 @@ const Assets = () => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    textAlign: "center",
+                    // textAlign: "center",
                     background: "var(--bg-primary)",
                   }}
                 >
@@ -119,7 +119,7 @@ const Assets = () => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    textAlign: "center",
+                    // textAlign: "center",
                     background: "var(--bg-primary)",
                   }}
                 >
@@ -127,7 +127,7 @@ const Assets = () => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    textAlign: "center",
+                    // textAlign: "center",
                     background: "var(--bg-primary)",
                   }}
                 ></TableCell>
@@ -136,7 +136,11 @@ const Assets = () => {
             <TableBody>
               {filterList.map((data, i) => (
                 <TableRow key={i}>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "left",
+                    }}
+                  >
                     {/* {recipientFormate(row.assetsName)} */}
                     <RowCell>
                       <h6>{data.symbol}</h6>
