@@ -15,6 +15,7 @@ interface UseBookkeeping {
     workspaceId: number,
     bookkeepingFile: any
   ) => Promise<void>;
+  hideBookkeepingList: (workspaceId: number, paymentRequestIds: string) => void;
 }
 
 export const useBookkeeping = create<UseBookkeeping>((set) => {
@@ -28,7 +29,7 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
         const { data } = await axiosClient.get(
           `/bookkeeping/${workspaceId}?hided=${visibility}`
         );
-        set({ bookkeepingList: data.data.data });
+        set({ bookkeepingList: data.data.rows });
       } catch (error: any) {
         console.log(error);
       } finally {
@@ -78,6 +79,23 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
       } catch (error: any) {
         console.log(error);
         toast.error("Failed to import bookkeeping list.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    //export bookkeeping
+    hideBookkeepingList: async (workspaceId, paymentRequestIds) => {
+      try {
+        setLoading(true);
+        const response = await axiosClient.post(
+          `/bookkeeping/${workspaceId}/hide?ids=${paymentRequestIds}`
+        );
+        console.log(response);
+        if (response.data.code === 200) {
+          toast.success("Selected items hidden successfully");
+        }
+      } catch (error: any) {
+        console.log(error);
       } finally {
         setLoading(false);
       }

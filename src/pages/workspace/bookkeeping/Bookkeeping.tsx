@@ -59,33 +59,39 @@ import CustomModal from "../../../utils/CustomModal";
 import BookkeepingTransferDetails from "./BookkeepingTransferDetails";
 import { useBookkeeping } from "../../../store/useBookkeeping";
 
-const recipientFormate = (n: string) => {
-  return `${n.slice(0, 6)}...${n.slice(-4)}`;
-};
-
 const Bookkeeping = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const { getBookkeepingList, exportBookkeepingList, importBookkeepingList } =
-    useBookkeeping();
+  const {
+    getBookkeepingList,
+    exportBookkeepingList,
+    importBookkeepingList,
+    bookkeepingList,
+    hideBookkeepingList,
+  } = useBookkeeping();
+  const recipientFormate = (n: string) => {
+    return `${n.slice(0, 6)}...${n.slice(-4)}`;
+  };
 
   // visibility
   const [visible, setVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // fetch bookkeeping data
   const workspaceId = Number(id);
   useEffect(() => {
     getBookkeepingList(workspaceId, visible);
-  }, [getBookkeepingList, visible, workspaceId]);
+  }, [getBookkeepingList, visible, workspaceId, loading]);
 
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
+  console.log(selected);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelected(data.map((c) => c.id));
+      setSelected(bookkeepingList.map((c) => c.ID));
     } else {
       setSelected([]);
     }
@@ -133,28 +139,29 @@ const Bookkeeping = () => {
   };
   // hide the selected table row
   const [hiddenRows, setHiddenRows] = useState<number[]>([]);
-  const handleHideClick = () => {
-    const updatedHiddenRows = [...hiddenRows, ...selected];
-    setHiddenRows(updatedHiddenRows);
+  // const handleHideClick = () => {
+  //   const updatedHiddenRows = [...hiddenRows, ...selected];
+  //   setHiddenRows(updatedHiddenRows);
 
-    setSelected([]);
-    // console.log("hidden");
-  };
+  //   setSelected([]);
+  //   // console.log("hidden");
+  // };
   // filter table data
-  const filterData = data.filter((f) => {
-    const searchItem = f.safe.toLowerCase().includes(searchTerm.toLowerCase());
+  const filterData = bookkeepingList.filter((bookkeeping) => {
+    const searchItem = bookkeeping.recipient
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
     const filterByCategory =
-      selectedValue === "" || f.category === selectedValue;
+      selectedValue === "" || bookkeeping.category_name === selectedValue;
     return searchItem && filterByCategory;
   });
 
   // export
+  const paymentRequestIds = selected.join(",");
   const handleExportBookkeepingList = () => {
-    // TODO: payment list separate by ,
-    exportBookkeepingList(workspaceId, "1");
+    exportBookkeepingList(workspaceId, paymentRequestIds);
   };
   // importBookkeepingList
-  console.log(hiddenRows);
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
@@ -166,18 +173,24 @@ const Bookkeeping = () => {
       const formData = new FormData();
       formData.append("file", file);
       importBookkeepingList(workspaceId, formData);
-      handleExportBookkeepingList();
+      // handleExportBookkeepingList();
     }
+  };
+  // hide item
+  const handleHideBookkeepingList = () => {
+    hideBookkeepingList(workspaceId, paymentRequestIds);
+    setVisible(false);
+    setLoading(!loading);
   };
 
   return (
     <PaymentRequestContainer>
-      {!hasCategory && (
+      {bookkeepingList.length === 0 && (
         <CategoryTitle>
-          <h3>No payment request yet.</h3>
+          <h3>You don't have any transactions.</h3>
           <p style={{ width: "509px", textAlign: "center" }}>
-            Payments requests are requested by share link or drafted directly by
-            multi-signer will show up here.
+            Transactions that add tokens to or remove tokens from your Safe will
+            show up here.
           </p>
           <CreateOptionButton>
             <CreateBtn>
@@ -217,15 +230,17 @@ const Bookkeeping = () => {
             inputProps={{ "aria-label": "Select a value" }}
             size="small"
           >
-            <MenuItem value="" disabled>
+            <MenuItem disabled>
               <Option>
                 <Image src={filterIcon} alt="" />
                 {t("paymentRequest.Filter")}
               </Option>
             </MenuItem>
-            <MenuItem value="category 1">Category 1</MenuItem>
-            <MenuItem value="category 2">Category 2</MenuItem>
-            <MenuItem value="category 3">Category 3</MenuItem>
+            {bookkeepingList.map((bookkeeping) => (
+              <MenuItem key={bookkeeping.ID} value={bookkeeping.category_name}>
+                {bookkeeping.category_name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
@@ -261,7 +276,7 @@ const Bookkeeping = () => {
               <img src={download} alt="" />
               <p>{t("paymentRequest.Download")}</p>
             </Btn>
-            <Btn onClick={handleHideClick}>
+            <Btn onClick={handleHideBookkeepingList}>
               <img src={hide} alt="" />
               <p>{t("paymentRequest.Hide")}</p>
             </Btn>
@@ -280,9 +295,10 @@ const Bookkeeping = () => {
                   <TableCell sx={{ background: "var(--bg-primary)" }}>
                     <Checkbox
                       indeterminate={
-                        selected.length > 0 && selected.length < data.length
+                        selected.length > 0 &&
+                        selected.length < bookkeepingList.length
                       }
-                      checked={selected.length === data.length}
+                      checked={selected.length === bookkeepingList.length}
                       onChange={handleSelectAllClick}
                     />
                     Safe
@@ -305,10 +321,10 @@ const Bookkeeping = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filterData.map((book) => (
-                  <>
-                    {!hiddenRows.includes(book.id) && (
-                      <TableRow key={book.id}>
+                {filterData.map((bookkeeping) => (
+                  <React.Fragment key={bookkeeping.ID}>
+                    {!hiddenRows.includes(bookkeeping.ID) && (
+                      <TableRow>
                         <TableCell
                           style={{
                             padding: 0,
@@ -320,30 +336,30 @@ const Bookkeeping = () => {
                           <SafeSection>
                             <div>
                               <Checkbox
-                                checked={isSelected(book.id)}
+                                checked={isSelected(bookkeeping.ID)}
                                 onChange={(event) =>
-                                  handleCheckboxClick(event, book.id)
+                                  handleCheckboxClick(event, bookkeeping.ID)
                                 }
                               />
-                              {`${book.recipient.slice(
-                                0,
-                                6
-                              )}...${book.recipient.slice(-4)}`}
+                              {recipientFormate(bookkeeping.recipient)}
                             </div>
                             <Logo>
                               <img src={rightArrow} alt="" />
                             </Logo>
                           </SafeSection>
                         </TableCell>
-                        <TableCell>{`${book.recipient.slice(
-                          0,
-                          6
-                        )}...${book.recipient.slice(-4)}`}</TableCell>
-                        <TableCell>{book.amount} USDT</TableCell>
                         <TableCell>
-                          <CategoryCell>{book.category}</CategoryCell>
+                          {recipientFormate(bookkeeping.recipient)}
                         </TableCell>
-                        <TableCell>{book.date}</TableCell>
+                        <TableCell>{bookkeeping.amount} USDT</TableCell>
+                        <TableCell>
+                          <CategoryCell>
+                            {bookkeeping.category_name}
+                          </CategoryCell>
+                        </TableCell>
+                        <TableCell>
+                          {bookkeeping.CreatedAt.slice(0, 10)}
+                        </TableCell>
                         <TableCell>
                           <Button
                             variant="outlined"
@@ -361,11 +377,12 @@ const Bookkeeping = () => {
                             open={openModal}
                             setOpen={setOpenModal}
                             component={BookkeepingTransferDetails}
+                            // additionalProps={{}}
                           />
                         </TableCell>
                       </TableRow>
                     )}
-                  </>
+                  </React.Fragment>
                 ))}
               </TableBody>
             </Table>
