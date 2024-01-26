@@ -16,6 +16,10 @@ interface UseBookkeeping {
     bookkeepingFile: any
   ) => Promise<void>;
   hideBookkeepingList: (workspaceId: number, paymentRequestIds: string) => void;
+  unHideBookkeepingList: (
+    workspaceId: number,
+    paymentRequestIds: string
+  ) => void;
 }
 
 export const useBookkeeping = create<UseBookkeeping>((set) => {
@@ -64,7 +68,7 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
         setLoading(false);
       }
     },
-    //export bookkeeping
+    //import bookkeeping
     importBookkeepingList: async (workspaceId, bookkeepingFile) => {
       try {
         setLoading(true);
@@ -83,7 +87,7 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
         setLoading(false);
       }
     },
-    //export bookkeeping
+    //hide bookkeeping
     hideBookkeepingList: async (workspaceId, paymentRequestIds) => {
       try {
         setLoading(true);
@@ -93,6 +97,23 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
         console.log(response);
         if (response.data.code === 200) {
           toast.success("Selected items hidden successfully");
+        }
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    //un-hide bookkeeping
+    unHideBookkeepingList: async (workspaceId, paymentRequestIds) => {
+      try {
+        setLoading(true);
+        const response = await axiosClient.post(
+          `/bookkeeping/${workspaceId}/unhide?ids=${paymentRequestIds}`
+        );
+        console.log(response);
+        if (response.data.code === 200) {
+          toast.success("Selected items unhide successfully");
         }
       } catch (error: any) {
         console.log(error);

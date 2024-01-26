@@ -70,7 +70,9 @@ const Bookkeeping = () => {
     importBookkeepingList,
     bookkeepingList,
     hideBookkeepingList,
+    unHideBookkeepingList,
   } = useBookkeeping();
+
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
   };
@@ -139,13 +141,7 @@ const Bookkeeping = () => {
   };
   // hide the selected table row
   const [hiddenRows, setHiddenRows] = useState<number[]>([]);
-  // const handleHideClick = () => {
-  //   const updatedHiddenRows = [...hiddenRows, ...selected];
-  //   setHiddenRows(updatedHiddenRows);
 
-  //   setSelected([]);
-  //   // console.log("hidden");
-  // };
   // filter table data
   const filterData = bookkeepingList.filter((bookkeeping) => {
     const searchItem = bookkeeping.recipient
@@ -183,25 +179,20 @@ const Bookkeeping = () => {
     setLoading(!loading);
   };
 
+  const handleViewHiddenList = () => {
+    setPaymentRequest(!paymentRequest);
+    setVisible(!visible);
+  };
+
   return (
     <PaymentRequestContainer>
-      {bookkeepingList.length === 0 && (
+      {bookkeepingList.length === 0 && paymentRequest && (
         <CategoryTitle>
           <h3>You don't have any transactions.</h3>
           <p style={{ width: "509px", textAlign: "center" }}>
             Transactions that add tokens to or remove tokens from your Safe will
             show up here.
           </p>
-          <CreateOptionButton>
-            <CreateBtn>
-              <img src={add} alt="" />
-              <span>Create category</span>
-            </CreateBtn>
-            <CreateBtn>
-              <img src={archive} alt="" />
-              <span>View archive</span>
-            </CreateBtn>
-          </CreateOptionButton>
         </CategoryTitle>
       )}
       {/* header */}
@@ -243,7 +234,7 @@ const Bookkeeping = () => {
             ))}
           </Select>
         </FormControl>
-        <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
+        <ViewReject onClick={handleViewHiddenList}>
           {paymentRequest ? (
             <div>
               <Image src={view} alt="" />
@@ -390,7 +381,7 @@ const Bookkeeping = () => {
         </PaymentRequestBody>
       ) : (
         <RejectSection>
-          <BookkeepingRejectTable hiddenRows={hiddenRows} />
+          <BookkeepingRejectTable workspaceId={workspaceId} />
         </RejectSection>
       )}
     </PaymentRequestContainer>

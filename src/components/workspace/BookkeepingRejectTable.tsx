@@ -19,21 +19,25 @@ import { useState } from "react";
 import rightArrow from "../../assets/workspace/right-arrow.svg";
 import hide from "../../assets/workspace/hide.svg";
 import styled from "@emotion/styled";
+import { useBookkeeping } from "../../store/useBookkeeping";
 
 interface RejectTableProps {
-  hiddenRows: number[];
+  workspaceId: number;
 }
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
-const BookkeepingRejectTable = ({ hiddenRows }: RejectTableProps) => {
+const BookkeepingRejectTable = ({ workspaceId }: RejectTableProps) => {
   const navigate = useNavigate();
+
+  const { bookkeepingList, unHideBookkeepingList } = useBookkeeping();
+
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelected(data.map((c) => c.id));
+      setSelected(bookkeepingList.map((c) => c.ID));
     } else {
       setSelected([]);
     }
@@ -55,10 +59,18 @@ const BookkeepingRejectTable = ({ hiddenRows }: RejectTableProps) => {
   const isSelected = (categoryId: number) => {
     return selected.indexOf(categoryId) !== -1;
   };
+
+  // un-hide item
+  const paymentRequestIds = selected.join(",");
+  const handleUnHideBookkeepingList = () => {
+    unHideBookkeepingList(workspaceId, paymentRequestIds);
+  };
+  console.log(selected);
+
   return (
     <div>
       <UnhideBtn>
-        <Btn>
+        <Btn onClick={handleUnHideBookkeepingList}>
           <img src={hide} alt="" />
           <p>Unhide</p>
         </Btn>
@@ -72,9 +84,10 @@ const BookkeepingRejectTable = ({ hiddenRows }: RejectTableProps) => {
               <TableCell>
                 <Checkbox
                   indeterminate={
-                    selected.length > 0 && selected.length < data.length
+                    selected.length > 0 &&
+                    selected.length < bookkeepingList.length
                   }
-                  checked={selected.length === data.length}
+                  checked={selected.length === bookkeepingList.length}
                   onChange={handleSelectAllClick}
                 />
                 Safe
@@ -87,60 +100,60 @@ const BookkeepingRejectTable = ({ hiddenRows }: RejectTableProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((book) => (
+            {bookkeepingList.map((bookkeeping) => (
               <>
-                {hiddenRows.includes(book.id) ? (
-                  <TableRow key={book.id}>
-                    <TableCell
-                      style={{
-                        padding: 0,
-                        paddingLeft: "16px",
-                        borderBottom: "1px solid #ddd",
-                        borderTop: "none",
+                {/* {hiddenRows.includes(book.id) ? ( */}
+                <TableRow>
+                  <TableCell
+                    style={{
+                      padding: 0,
+                      paddingLeft: "16px",
+                      borderBottom: "1px solid #ddd",
+                      borderTop: "none",
+                    }}
+                  >
+                    <SafeSection>
+                      <div>
+                        <Checkbox
+                          checked={isSelected(bookkeeping.ID)}
+                          onChange={(event) =>
+                            handleCheckboxClick(event, bookkeeping.ID)
+                          }
+                        />
+                        {recipientFormate(
+                          bookkeeping.currency_contract_address
+                        )}
+                      </div>
+                      <Logo>
+                        <img src={rightArrow} alt="" />
+                      </Logo>
+                    </SafeSection>
+                  </TableCell>
+                  <TableCell>
+                    {recipientFormate(bookkeeping.recipient)}
+                  </TableCell>
+                  <TableCell>{bookkeeping.amount}</TableCell>
+                  <TableCell>
+                    <CategoryCell>{bookkeeping.category_name}</CategoryCell>
+                  </TableCell>
+                  <TableCell>{bookkeeping.CreatedAt.slice(0, 10)}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        borderColor: "black",
+                        color: "black",
+                        textTransform: "lowercase",
                       }}
+                      onClick={() =>
+                        navigate(`/payment-request/${bookkeeping.ID}`)
+                      }
                     >
-                      <SafeSection>
-                        <div>
-                          <Checkbox
-                            checked={isSelected(book.id)}
-                            onChange={(event) =>
-                              handleCheckboxClick(event, book.id)
-                            }
-                          />
-                          {`${book.recipient.slice(
-                            0,
-                            6
-                          )}...${book.recipient.slice(-4)}`}
-                        </div>
-                        <Logo>
-                          <img src={rightArrow} alt="" />
-                        </Logo>
-                      </SafeSection>
-                    </TableCell>
-                    <TableCell>{`${book.recipient.slice(
-                      0,
-                      6
-                    )}...${book.recipient.slice(-4)}`}</TableCell>
-                    <TableCell>{book.amount}</TableCell>
-                    <TableCell>
-                      <CategoryCell>{book.category}</CategoryCell>
-                    </TableCell>
-                    <TableCell>{book.date}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          borderColor: "black",
-                          color: "black",
-                          textTransform: "lowercase",
-                        }}
-                        onClick={() => navigate(`/payment-request/${book.id}`)}
-                      >
-                        view more
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ) : null}
+                      view more
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                {/* ) : null} */}
               </>
             ))}
           </TableBody>
