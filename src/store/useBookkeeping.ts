@@ -11,6 +11,10 @@ interface UseBookkeeping {
     workspaceId: number,
     paymentRequestIds: string
   ) => Promise<void>;
+  importBookkeepingList: (
+    workspaceId: number,
+    bookkeepingFile: any
+  ) => Promise<void>;
 }
 
 export const useBookkeeping = create<UseBookkeeping>((set) => {
@@ -55,6 +59,25 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
         document.body.removeChild(link);
       } catch (error: any) {
         console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    //export bookkeeping
+    importBookkeepingList: async (workspaceId, bookkeepingFile) => {
+      try {
+        setLoading(true);
+        const response = await axiosClient.post(
+          `/bookkeeping/${workspaceId}/import`,
+          bookkeepingFile
+        );
+        console.log(response);
+        if (response.data.code === 200) {
+          toast.success("Success! Data imported.");
+        }
+      } catch (error: any) {
+        console.log(error);
+        toast.error("Failed to import bookkeeping list.");
       } finally {
         setLoading(false);
       }

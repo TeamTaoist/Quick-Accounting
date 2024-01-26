@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import {
   CategoryTitle,
   CreateBtn,
@@ -68,7 +68,8 @@ const Bookkeeping = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const { getBookkeepingList, exportBookkeepingList } = useBookkeeping();
+  const { getBookkeepingList, exportBookkeepingList, importBookkeepingList } =
+    useBookkeeping();
 
   // visibility
   const [visible, setVisible] = useState<boolean>(false);
@@ -149,9 +150,25 @@ const Bookkeeping = () => {
 
   // export
   const handleExportBookkeepingList = () => {
+    // TODO: payment list separate by ,
     exportBookkeepingList(workspaceId, "1");
   };
+  // importBookkeepingList
   console.log(hiddenRows);
+
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
+
+  const handleImportBookkeepingList = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      importBookkeepingList(workspaceId, formData);
+      handleExportBookkeepingList();
+    }
+  };
 
   return (
     <PaymentRequestContainer>
@@ -228,9 +245,17 @@ const Bookkeeping = () => {
       {paymentRequest ? (
         <PaymentRequestBody>
           <ActionBtn>
-            <Btn>
+            <Btn onClick={() => inputFileRef.current!.click()}>
               <img src={importIcon} alt="" />
               <p>{t("bookkeeping.Import")}</p>
+              <input
+                type="file"
+                name=""
+                id=""
+                hidden
+                ref={inputFileRef}
+                onChange={handleImportBookkeepingList}
+              />
             </Btn>
             <Btn onClick={handleExportBookkeepingList}>
               <img src={download} alt="" />
