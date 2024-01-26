@@ -55,6 +55,7 @@ import PaymentRequestDetails from "./PaymentRequestDetails";
 import SignPaymentRequest from "./SignPaymentRequest";
 import usePaymentsStore from "../../../store/usePayments";
 import PaymentRequestGroupDetails from "../../../components/paymentRequest/PaymentRequestGroupDetails";
+import NewPaymentRequest from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -72,6 +73,7 @@ const PaymentRequest = () => {
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
   };
+  const [newPaymentsVisible, setNewPaymentsVisible] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
   const [openRows, setOpenRows] = useState<number[]>([]);
 
@@ -211,7 +213,7 @@ const PaymentRequest = () => {
             multi-signer will show up here.
           </p>
           <CreateOptionButton>
-            <CreateBtn>
+            <CreateBtn onClick={() => setNewPaymentsVisible(true)}>
               <img src={add} alt="" />
               <span>Create category</span>
             </CreateBtn>
@@ -530,6 +532,9 @@ const PaymentRequest = () => {
             </RejectSection>
           )}
         </>
+      )}
+      {newPaymentsVisible && (
+        <NewPaymentRequest onClose={() => setNewPaymentsVisible(false)} />
       )}
     </PaymentRequestContainer>
   );

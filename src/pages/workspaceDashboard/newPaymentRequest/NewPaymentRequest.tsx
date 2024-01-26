@@ -56,7 +56,7 @@ interface SubmitRowData {
   amount: string;
   currency: string;
 }
-interface ReactSelectOption {
+export interface ReactSelectOption {
   value: string;
   label: string;
 }

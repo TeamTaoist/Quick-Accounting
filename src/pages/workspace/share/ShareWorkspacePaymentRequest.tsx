@@ -31,6 +31,7 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
 import CustomModal from "../../../utils/CustomModal";
 import PaymentRequestPreview from "./PaymentRequestPreview";
+import { ReactSelectOption } from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 
 const ShareWorkspacePaymentRequest = () => {
   const { id } = useParams();
@@ -51,7 +52,9 @@ const ShareWorkspacePaymentRequest = () => {
   const [selectedValues, setSelectedValues] = useState([]);
 
   // dynamic payment request form
-  const [sharePaymentRequestForm, setSharePaymentRequestForm] = useState<any>([
+  const [sharePaymentRequestForm, setSharePaymentRequestForm] = useState<
+    SharePaymentRequestBody[]
+  >([
     {
       amount: "",
       currency_name: "",
@@ -103,7 +106,7 @@ const ShareWorkspacePaymentRequest = () => {
             ? value.value
             : propertyType === "Text"
             ? value
-            : value.map((v: any) => v.value).join(";");
+            : value.map((v: ReactSelectOption) => v.value).join(";");
 
         updatedRequests[index].category_properties[
           existingCategoryPropertyIndex
@@ -122,13 +125,13 @@ const ShareWorkspacePaymentRequest = () => {
                 values:
                   propertyType === "single-select"
                     ? value.value
-                    : value.map((v: any) => v.value).join(";"),
+                    : value.map((v: ReactSelectOption) => v.value).join(";"),
               };
 
         updatedRequests[index].category_properties.push(newCategoryProperty);
       }
     } else {
-      updatedRequests[index][field] = value;
+      (updatedRequests[index] as any)[field] = value;
     }
     setSharePaymentRequestForm(updatedRequests);
   };
@@ -136,7 +139,7 @@ const ShareWorkspacePaymentRequest = () => {
   // handle delete request form
   const handleDeleteRequestForm = (index: number) => {
     const updatedRequest = sharePaymentRequestForm.filter(
-      (_: any, i: number) => i !== index
+      (_, i) => i !== index
     );
     setSharePaymentRequestForm(updatedRequest);
   };
@@ -197,7 +200,7 @@ const ShareWorkspacePaymentRequest = () => {
           <ShareHeader>
             <h3>New payment request from {workspace.name}</h3>
           </ShareHeader>
-          {sharePaymentRequestForm.map((_: any, index: number) => (
+          {sharePaymentRequestForm.map((_, index) => (
             <RequestDetails key={index}>
               <TableContainer
                 sx={{
@@ -454,7 +457,9 @@ const ShareWorkspacePaymentRequest = () => {
                                 <ReactSelect
                                   value={selectedValues}
                                   isMulti={false}
-                                  onChange={(selectedOption: any) =>
+                                  onChange={(
+                                    selectedOption: ReactSelectOption
+                                  ) =>
                                     handleFormChange(
                                       index,
                                       "categoryProperties",
@@ -498,7 +503,9 @@ const ShareWorkspacePaymentRequest = () => {
                                 <ReactSelect
                                   value={selectedValues}
                                   // onChange={handleSelectChange}
-                                  onChange={(selectedOption: any) =>
+                                  onChange={(
+                                    selectedOption: ReactSelectOption
+                                  ) =>
                                     handleFormChange(
                                       index,
                                       "categoryProperties",
