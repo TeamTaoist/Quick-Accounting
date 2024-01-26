@@ -38,7 +38,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import RejectDataTable from "../../../components/workspace/RejectDataTable";
 import {
   ActionBtn,
@@ -64,18 +64,20 @@ const recipientFormate = (n: string) => {
 };
 
 const Bookkeeping = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const { getBookkeepingList } = useBookkeeping();
+  const { getBookkeepingList, exportBookkeepingList } = useBookkeeping();
 
   // visibility
   const [visible, setVisible] = useState<boolean>(false);
 
   // fetch bookkeeping data
+  const workspaceId = Number(id);
   useEffect(() => {
-    getBookkeepingList(visible);
-  }, [getBookkeepingList, visible]);
+    getBookkeepingList(workspaceId, visible);
+  }, [getBookkeepingList, visible, workspaceId]);
 
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
@@ -144,6 +146,11 @@ const Bookkeeping = () => {
       selectedValue === "" || f.category === selectedValue;
     return searchItem && filterByCategory;
   });
+
+  // export
+  const handleExportBookkeepingList = () => {
+    exportBookkeepingList(workspaceId, "1");
+  };
   console.log(hiddenRows);
 
   return (
@@ -225,7 +232,7 @@ const Bookkeeping = () => {
               <img src={importIcon} alt="" />
               <p>{t("bookkeeping.Import")}</p>
             </Btn>
-            <Btn>
+            <Btn onClick={handleExportBookkeepingList}>
               <img src={download} alt="" />
               <p>{t("paymentRequest.Download")}</p>
             </Btn>

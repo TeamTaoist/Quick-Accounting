@@ -3,6 +3,7 @@ declare interface IPaymentRequest {
   CreatedAt: string;
   UpdatedAt: string;
   DeletedAt: null | string;
+  workspace_id: number;
   payment_request_id: number;
   recipient: string;
   amount: string;

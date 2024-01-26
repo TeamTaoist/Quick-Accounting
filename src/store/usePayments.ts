@@ -48,6 +48,7 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
       CreatedAt: "",
       UpdatedAt: "",
       DeletedAt: "",
+      workspace_id: 0,
       payment_request_id: 0,
       recipient: "",
       amount: "",

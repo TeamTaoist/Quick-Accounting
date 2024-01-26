@@ -20,7 +20,7 @@ const UserDashboard = () => {
       <Sidebar>
         <UserDashboardSection>
           <UserSidebar>
-            {userPayment.total === 0 ? (
+            {userPayment.length === 0 ? (
               <Details>
                 <h2>
                   You don't have any payment <br /> request

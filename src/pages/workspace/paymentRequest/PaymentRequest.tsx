@@ -215,11 +215,11 @@ const PaymentRequest = () => {
           <CreateOptionButton>
             <CreateBtn onClick={() => setNewPaymentsVisible(true)}>
               <img src={add} alt="" />
-              <span>Create category</span>
+              <span>Create request</span>
             </CreateBtn>
             <CreateBtn>
               <img src={archive} alt="" />
-              <span>View archive</span>
+              <span>View rejection</span>
             </CreateBtn>
           </CreateOptionButton>
         </CategoryTitle>
