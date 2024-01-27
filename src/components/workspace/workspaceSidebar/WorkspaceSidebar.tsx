@@ -22,7 +22,8 @@ import { useTranslation } from "react-i18next";
 import NewPaymentRequest from "../../../pages/workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useSafeStore } from "../../../store/useSafeStore";
-import { useEthersSigner } from "../../../utils/ethProvider";
+import { clientToSigner } from "../../../utils/ethProvider";
+import { type Config, useConnectorClient } from "wagmi";
 
 const WorkspaceSidebar = () => {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ const WorkspaceSidebar = () => {
   const [newPaymentsVisible, setNewPaymentsVisible] = useState(false);
   const { getWorkspaceDetails, workspace } = useWorkspace();
   const { initSafeSDK, safeApiService, getSafeInfo } = useSafeStore();
-  const signerPromise = useEthersSigner();
+  const { data: client } = useConnectorClient();
 
   useEffect(() => {
     getWorkspaceDetails(Number(id));
@@ -39,15 +40,17 @@ const WorkspaceSidebar = () => {
   useEffect(() => {
     if (workspace.ID) {
       const init = async () => {
-        initSafeSDK(
-          workspace.chain_id,
-          await signerPromise,
-          workspace.vault_wallet
-        );
+        if (!client) {
+          return;
+        }
+        const signer = await clientToSigner(client);
+
+        signer &&
+          initSafeSDK(workspace.chain_id, signer, workspace.vault_wallet);
       };
       init();
     }
-  }, [workspace?.chain_id, workspace?.vault_wallet]);
+  }, [workspace?.chain_id, workspace?.vault_wallet, client]);
 
   useEffect(() => {
     workspace?.vault_wallet &&

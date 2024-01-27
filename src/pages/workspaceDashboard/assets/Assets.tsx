@@ -49,7 +49,7 @@ const Assets = () => {
   const chainData = CHAINS.find((c) => c.chainId === workspace?.chain_id);
 
   useEffect(() => {
-    getAssets();
+    workspace?.vault_wallet && getAssets();
   }, [workspace?.vault_wallet]);
 
   const filterList: AssetType[] =
