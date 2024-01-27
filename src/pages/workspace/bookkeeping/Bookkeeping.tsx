@@ -70,13 +70,12 @@ const Bookkeeping = () => {
     importBookkeepingList,
     bookkeepingList,
     hideBookkeepingList,
-    unHideBookkeepingList,
   } = useBookkeeping();
 
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
   };
-
+  const [paymentRequest, setPaymentRequest] = useState(true);
   // visibility
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -85,7 +84,7 @@ const Bookkeeping = () => {
   const workspaceId = Number(id);
   useEffect(() => {
     getBookkeepingList(workspaceId, visible);
-  }, [getBookkeepingList, visible, workspaceId, loading]);
+  }, [getBookkeepingList, visible, workspaceId, loading, paymentRequest]);
 
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
@@ -118,7 +117,6 @@ const Bookkeeping = () => {
 
   // end
   const [hasCategory, setHasCategory] = useState(true);
-  const [paymentRequest, setPaymentRequest] = useState(true);
 
   // modal
   const [openModal, setOpenModal] = useState(false);
@@ -173,16 +171,23 @@ const Bookkeeping = () => {
     }
   };
   // hide item
-  const handleHideBookkeepingList = () => {
-    hideBookkeepingList(workspaceId, paymentRequestIds);
+  const handleHideBookkeepingList = async () => {
+    await hideBookkeepingList(workspaceId, paymentRequestIds);
     setVisible(false);
     setLoading(!loading);
+    setSelected([]);
   };
 
   const handleViewHiddenList = () => {
     setPaymentRequest(!paymentRequest);
-    setVisible(!visible);
+    setVisible(true);
   };
+  const handleBackBtn = () => {
+    setPaymentRequest(!paymentRequest);
+    setVisible(false);
+  };
+  console.log("loading", loading);
+  console.log("visible", visible);
 
   return (
     <PaymentRequestContainer>
@@ -234,14 +239,14 @@ const Bookkeeping = () => {
             ))}
           </Select>
         </FormControl>
-        <ViewReject onClick={handleViewHiddenList}>
+        <ViewReject>
           {paymentRequest ? (
-            <div>
+            <div onClick={handleViewHiddenList}>
               <Image src={view} alt="" />
               <p>{t("bookkeeping.ViewHidden")}</p>
             </div>
           ) : (
-            <div>
+            <div onClick={handleBackBtn}>
               <Image src={back} alt="" />
               <p>{t("paymentRequest.Back")}</p>
             </div>
@@ -314,65 +319,63 @@ const Bookkeeping = () => {
               <TableBody>
                 {filterData.map((bookkeeping) => (
                   <React.Fragment key={bookkeeping.ID}>
-                    {!hiddenRows.includes(bookkeeping.ID) && (
-                      <TableRow>
-                        <TableCell
-                          style={{
-                            padding: 0,
-                            paddingLeft: "16px",
-                            borderBottom: "1px solid #ddd",
-                            borderTop: "none",
+                    <TableRow>
+                      <TableCell
+                        style={{
+                          padding: 0,
+                          paddingLeft: "16px",
+                          borderBottom: "1px solid #ddd",
+                          borderTop: "none",
+                        }}
+                      >
+                        <SafeSection>
+                          <div>
+                            <Checkbox
+                              checked={isSelected(bookkeeping.ID)}
+                              onChange={(event) =>
+                                handleCheckboxClick(event, bookkeeping.ID)
+                              }
+                            />
+                            {recipientFormate(
+                              bookkeeping.currency_contract_address
+                            )}
+                          </div>
+                          <Logo>
+                            <img src={rightArrow} alt="" />
+                          </Logo>
+                        </SafeSection>
+                      </TableCell>
+                      <TableCell>
+                        {recipientFormate(bookkeeping.recipient)}
+                      </TableCell>
+                      <TableCell>{bookkeeping.amount} USDT</TableCell>
+                      <TableCell>
+                        <CategoryCell>{bookkeeping.category_name}</CategoryCell>
+                      </TableCell>
+                      <TableCell>
+                        {bookkeeping.CreatedAt.slice(0, 10)}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          sx={{
+                            borderColor: "black",
+                            color: "black",
+                            textTransform: "lowercase",
                           }}
+                          onClick={handleOpenModal}
                         >
-                          <SafeSection>
-                            <div>
-                              <Checkbox
-                                checked={isSelected(bookkeeping.ID)}
-                                onChange={(event) =>
-                                  handleCheckboxClick(event, bookkeeping.ID)
-                                }
-                              />
-                              {recipientFormate(bookkeeping.recipient)}
-                            </div>
-                            <Logo>
-                              <img src={rightArrow} alt="" />
-                            </Logo>
-                          </SafeSection>
-                        </TableCell>
-                        <TableCell>
-                          {recipientFormate(bookkeeping.recipient)}
-                        </TableCell>
-                        <TableCell>{bookkeeping.amount} USDT</TableCell>
-                        <TableCell>
-                          <CategoryCell>
-                            {bookkeeping.category_name}
-                          </CategoryCell>
-                        </TableCell>
-                        <TableCell>
-                          {bookkeeping.CreatedAt.slice(0, 10)}
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              borderColor: "black",
-                              color: "black",
-                              textTransform: "lowercase",
-                            }}
-                            onClick={handleOpenModal}
-                          >
-                            view more
-                          </Button>
-                          {/* modal */}
-                          <CustomModal
-                            open={openModal}
-                            setOpen={setOpenModal}
-                            component={BookkeepingTransferDetails}
-                            // additionalProps={{}}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    )}
+                          view more
+                        </Button>
+                        {/* modal */}
+                        <CustomModal
+                          open={openModal}
+                          setOpen={setOpenModal}
+                          component={BookkeepingTransferDetails}
+                          // additionalProps={{}}
+                        />
+                      </TableCell>
+                    </TableRow>
                   </React.Fragment>
                 ))}
               </TableBody>
@@ -381,7 +384,11 @@ const Bookkeeping = () => {
         </PaymentRequestBody>
       ) : (
         <RejectSection>
-          <BookkeepingRejectTable workspaceId={workspaceId} />
+          <BookkeepingRejectTable
+            workspaceId={workspaceId}
+            paymentRequest={paymentRequest}
+            filterData={filterData}
+          />
         </RejectSection>
       )}
     </PaymentRequestContainer>
