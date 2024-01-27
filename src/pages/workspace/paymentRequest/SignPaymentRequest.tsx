@@ -35,7 +35,7 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
   const { workspace } = useWorkspace();
   const { paymentRequestList, approvePaymentRequest } = usePaymentsStore();
   const paymentRequestIds = selectedItem.join(",");
- 
+
   // get selected payments for sign to chain
   const signItems = paymentRequestList.filter((payment) =>
     selectedItem.includes(payment.payment_request_id)
@@ -66,7 +66,7 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
       setOpen={setOpen}
     >
       <PaymentRequestChain>
-        <p>Transaction value: ${totalTransactionValue}</p>
+        <p>Transaction value: $0</p>
         {/* table */}
         <TableContainer
           component={Paper}
@@ -86,9 +86,11 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
               {signItems.map((payment) => (
                 <TableRow key={payment.ID}>
                   <TableCell>{recipientFormate(payment.recipient)}</TableCell>
-                  <TableCell>{payment.amount}</TableCell>
                   <TableCell>
-                    <CategoryCell>{payment.currency_name}</CategoryCell>
+                    {payment.amount} {payment.currency_name}
+                  </TableCell>
+                  <TableCell>
+                    <CategoryCell>{payment.category_name}</CategoryCell>
                   </TableCell>
                   <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
                 </TableRow>
