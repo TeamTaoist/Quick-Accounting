@@ -19,7 +19,7 @@ interface UseBookkeeping {
   unHideBookkeepingList: (
     workspaceId: number,
     paymentRequestIds: string
-  ) => void;
+  ) => Promise<void>;
 }
 
 export const useBookkeeping = create<UseBookkeeping>((set) => {

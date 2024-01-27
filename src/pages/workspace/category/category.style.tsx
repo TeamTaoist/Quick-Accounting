@@ -6,7 +6,7 @@ export const CreateCategory = styled.div`
   min-width: 600px;
 `;
 export const CategoryTitle = styled.div`
-  height: 100vh;
+  height: 90vh;
   /* border: 1px solid var(--border); */
   display: flex;
   flex-direction: column;

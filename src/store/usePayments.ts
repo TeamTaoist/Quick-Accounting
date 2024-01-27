@@ -26,6 +26,7 @@ interface IPaymentsStore {
     paymentId: number
   ) => void;
   getPaymentRequestGroupDetails: (
+    workspaceId: number,
     paymentRequestId: string
   ) => Promise<boolean | undefined>;
   approvePaymentRequest: (
@@ -131,11 +132,11 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       }
     },
     // get payment request details
-    getPaymentRequestGroupDetails: async (paymentRequestId) => {
+    getPaymentRequestGroupDetails: async (workspaceId, paymentRequestId) => {
       setLoading(true);
       try {
         const { data } = await axiosClient.get(
-          `/payment_request/${workspace.ID}/${paymentRequestId}`
+          `/payment_request/${workspaceId}/${paymentRequestId}`
         );
         set({ paymentRequestGroupDetails: data.data });
         return true;

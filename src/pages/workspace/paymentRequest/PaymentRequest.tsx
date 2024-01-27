@@ -126,7 +126,7 @@ const PaymentRequest = () => {
 
   // group payment details
   const handleGroupPaymentDetails = (paymentRequestId: string) => {
-    getPaymentRequestGroupDetails(paymentRequestId).then((r) => {
+    getPaymentRequestGroupDetails(Number(id), paymentRequestId).then((r) => {
       if (r) {
         setOpenGroupPaymentModal(true);
       }

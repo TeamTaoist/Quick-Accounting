@@ -85,7 +85,7 @@ const BookkeepingRejectTable = ({
     <div>
       {bookkeepingList.length === 0 && !paymentRequest ? (
         <Message>
-          <h3>You don't have any transactions.</h3>
+          <h3>You don't have any hidden transactions.</h3>
           <p style={{ width: "509px", textAlign: "center" }}>
             Transactions that add tokens to or remove tokens from your Safe will
             show up here.
