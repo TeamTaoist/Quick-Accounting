@@ -8,6 +8,7 @@ import {
   SafeTransaction,
   SafeMultisigTransactionResponse,
 } from "@safe-global/safe-core-sdk-types";
+import { toast } from "react-toastify";
 
 interface ISafeStore {
   safe?: Safe;
@@ -83,49 +84,56 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
       if (!safe || !safeApiService) {
         return;
       }
-      console.log("===senderAddress===", senderAddress);
-      // Create transaction
-      const nextNonce = await safeApiService.getNextNonce(safeAddress);
-      console.log("nextNonce", nextNonce);
+      try {
+        setLoading(true);
+        console.log("===senderAddress===", senderAddress);
+        // Create transaction
+        const nextNonce = await safeApiService.getNextNonce(safeAddress);
+        console.log("nextNonce", nextNonce);
 
-      const txParams = requests.map((item) =>
-        createTokenTransferParams(
+        const txParams = requests.map((item) =>
+          createTokenTransferParams(
+            senderAddress,
+            item.amount,
+            item.decimals,
+            item.currency_contract_address
+          )
+        );
+
+        console.log("===txParams===", txParams);
+
+        const safeTransaction = await safe.createTransaction({
+          transactions: [...txParams],
+          options: { nonce: nextNonce },
+        });
+
+        console.log("===safeTransaction===", safeTransaction);
+
+        const safeTxHash = await safe.getTransactionHash(safeTransaction);
+
+        console.log("===safeTxHash===", safeTxHash);
+
+        const signature = await safe.signTransactionHash(safeTxHash);
+
+        console.log("Proposed a transaction with Safe:", safeAddress);
+        console.log("- safeTxHash:", safeTxHash);
+        console.log("- Sender:", senderAddress);
+        console.log("- Sender signature:", signature);
+
+        // Propose transaction to the service
+        await safeApiService.proposeTransaction({
+          safeAddress,
+          safeTransactionData: safeTransaction.data,
+          safeTxHash,
           senderAddress,
-          item.amount,
-          item.decimals,
-          item.currency_contract_address
-        )
-      );
-
-      console.log("===txParams===", txParams);
-
-      const safeTransaction = await safe.createTransaction({
-        transactions: [...txParams],
-        options: { nonce: nextNonce },
-      });
-
-      console.log("===safeTransaction===", safeTransaction);
-
-      const safeTxHash = await safe.getTransactionHash(safeTransaction);
-
-      console.log("===safeTxHash===", safeTxHash);
-
-      const signature = await safe.signTransactionHash(safeTxHash);
-
-      console.log("Proposed a transaction with Safe:", safeAddress);
-      console.log("- safeTxHash:", safeTxHash);
-      console.log("- Sender:", senderAddress);
-      console.log("- Sender signature:", signature);
-
-      // Propose transaction to the service
-      await safeApiService.proposeTransaction({
-        safeAddress,
-        safeTransactionData: safeTransaction.data,
-        safeTxHash,
-        senderAddress,
-        senderSignature: signature.data,
-      });
-      return safeTxHash;
+          senderSignature: signature.data,
+        });
+        return safeTxHash;
+      } catch (error: any) {
+        toast.error(error?.data?.msg || error?.status || error);
+      } finally {
+        setLoading(false);
+      }
     },
     confirmTx: async (safeTxHash: string) => {
       const { safe, safeApiService } = get();
