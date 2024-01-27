@@ -126,8 +126,12 @@ const PaymentRequest = () => {
 
   // group payment details
   const handleGroupPaymentDetails = (paymentRequestId: string) => {
-    setOpenGroupPaymentModal(true);
-    getPaymentRequestGroupDetails(paymentRequestId);
+    getPaymentRequestGroupDetails(paymentRequestId).then((r) => {
+      if (r) {
+        setOpenGroupPaymentModal(true);
+      }
+    });
+
     console.log(paymentRequestId);
   };
 
@@ -179,16 +183,19 @@ const PaymentRequest = () => {
 
   // approve modal
   const handlePaymentRequestChaiModal = () => {
-    setSignPaymentModal(true);
     console.log(selected);
+    if (selected.length) {
+      setSignPaymentModal(true);
+    }
   };
 
   // reject payment request
   const paymentRequestIds = selected.join(",");
-  const handleRejectPaymentRequest = async () => {
-    await rejectPaymentRequest(id, paymentRequestIds);
-    setPaymentLoading(!paymentLoading);
-    setSelectedValue("");
+  const handleRejectPaymentRequest = () => {
+    if (selected.length) {
+      rejectPaymentRequest(id, paymentRequestIds);
+      setPaymentLoading(!paymentLoading);
+    }
   };
 
   // get rejected payments
@@ -400,7 +407,7 @@ const PaymentRequest = () => {
                                 }}
                                 onClick={() => handleGroupPaymentDetails(id)}
                               >
-                                view moree
+                                view more
                               </Button>
                             </TableCell>
                           </TableRow>

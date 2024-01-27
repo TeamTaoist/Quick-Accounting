@@ -8,9 +8,7 @@ export const FullScreenDialog = styled(Header)`
   left: 0;
   top: 0;
   z-index: 99;
-  .container {
-    background-color: #fff;
-  }
+  background-color: #fff;
 `;
 
 export const CreateRequest = styled.table`

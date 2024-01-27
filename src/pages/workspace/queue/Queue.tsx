@@ -27,42 +27,52 @@ import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import PaymentRequestDetails from "../paymentRequest/PaymentRequestDetails";
 import { useQueue } from "../../../store/UseQueue";
+import { useSafeStore } from "../../../store/useSafeStore";
+import { useWorkspace } from "../../../store/useWorkspace";
+import { SafeMultisigTransactionResponse } from "@safe-global/safe-core-sdk-types";
+import { getShortAddress } from "../../../utils";
+import usePaymentsStore from "../../../store/usePayments";
 
 const Queue = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { t } = useTranslation();
 
-  const { getQueueList, queueList } = useQueue();
+  const { threshold, owners, getQueueTx, isReady } = useSafeStore();
+  const { workspace } = useWorkspace();
+  const { paymentRquestMap, getPaymentRequestBySafeTxHash } =
+    usePaymentsStore();
   const [hasCategory, setHasCategory] = useState(true);
-  const recipientFormate = (n: string) => {
-    return `${n.slice(0, 6)}...${n.slice(-4)}`;
-  };
+ 
   const [paymentRequest, setPaymentRequest] = useState(true);
   const [openModal, setOpenModal] = useState(false);
+  const [list, setList] = useState<SafeMultisigTransactionResponse[]>([]);
 
   const handleOpenModal = () => {
     setOpenModal(true);
   };
   const workspaceId = Number(id);
 
-  useEffect(() => {
-    getQueueList(workspaceId, false);
-  }, [getQueueList, workspaceId]);
+  const getQueueList = async () => {
+    const data = await getQueueTx(workspace.vault_wallet);
+    data && setList(data);
+  };
 
-  const queueGroupData = queueList.reduce((acc, item) => {
-    const paymentRequestId = item.payment_request_id;
-    if (!acc[paymentRequestId]) {
-      acc[paymentRequestId] = [];
-    }
-    acc[paymentRequestId].push(item);
-    return acc;
-  }, {} as Record<number, QueueList[]>);
-  console.log(queueGroupData);
+  useEffect(() => {
+    isReady && workspace?.vault_wallet && getQueueList();
+  }, [isReady, workspace?.vault_wallet]);
+
+  useEffect(() => {
+    list.length &&
+      getPaymentRequestBySafeTxHash(
+        workspaceId,
+        list.map((item) => item.safeTxHash)
+      );
+  }, [list, workspaceId]);
 
   return (
     <QueueSection>
-      {queueList.length === 0 ? (
+      {list.length === 0 ? (
         <CategoryTitle>
           <h3>You don't have any transactions.</h3>
           <p style={{ width: "450px", textAlign: "center" }}>
@@ -90,7 +100,7 @@ const Queue = () => {
           {/*  */}
           {paymentRequest ? (
             <>
-              {Object.entries(queueGroupData).map(([id, queue], index) => (
+              {list.map((item, index) => (
                 <QueueNotice key={index}>
                   <h1>{index === 0 ? t("queue.NextUp") : "After that"}</h1>
                   <Accordion>
@@ -102,11 +112,13 @@ const Queue = () => {
                     >
                       <Header>
                         <HeaderTitle>
-                          <h6>{t("queue.Nonce")}: 1</h6>
+                          <h6>
+                            {t("queue.Nonce")}: {item.nonce}
+                          </h6>
                           <p>On 24 Oct 2023 at 12:05</p>
                         </HeaderTitle>
                         <h5>
-                          {queue.length} {t("queue.Action")}
+                          {1} {t("queue.Action")}
                         </h5>
                       </Header>
                     </AccordionSummary>
@@ -115,14 +127,21 @@ const Queue = () => {
                       {/* category property */}
                       <Action>
                         <Approvals>
-                          <h4>Approvals: 2/2</h4>
-                          <p>0x4d4b...2915</p>
-                          <p>0x4d4b...2915</p>
+                          <h4>
+                            Approvals: {item.confirmations?.length || 0}/
+                            {threshold}
+                          </h4>
+                          {item.confirmations?.map((owner) => (
+                            <p key={owner.owner}>
+                              {getShortAddress(owner.owner)}
+                            </p>
+                          ))}
+
                           <button disabled>{t("queue.Approve")}</button>
                           <button disabled={false}>{t("queue.Execute")}</button>
                         </Approvals>
                         <Approvals>
-                          <h4>Rejections: 1/2</h4>
+                          <h4>Rejections: 1/{owners.length - threshold + 1}</h4>
                           <p>0x4d4b...2915</p>
                           <p>0x4d4b...2915</p>
                           <button disabled={false}>Reject</button>
@@ -150,47 +169,51 @@ const Queue = () => {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {queue.map((queueItem) => (
-                              <TableRow key={queueItem.ID}>
-                                <TableCell>
-                                  {recipientFormate(queueItem.recipient)}
-                                </TableCell>
-                                <TableCell>
-                                  {recipientFormate(queueItem.recipient)}
-                                </TableCell>
-                                <TableCell>{queueItem.amount} USDT</TableCell>
-                                <TableCell>
-                                  <CategoryCell>
-                                    {queueItem.category_name}
-                                  </CategoryCell>
-                                </TableCell>
-                                <TableCell>
-                                  {queueItem.CreatedAt.slice(0, 10)}
-                                </TableCell>
-                                <TableCell>
-                                  <Button
-                                    variant="outlined"
-                                    sx={{
-                                      borderColor: "black",
-                                      color: "black",
-                                      textTransform: "lowercase",
-                                    }}
-                                    onClick={handleOpenModal}
-                                  >
-                                    view more
-                                  </Button>
-                                  <CustomModal
-                                    open={openModal}
-                                    setOpen={setOpenModal}
-                                    component={PaymentRequestDetails}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            ))}
+                            {(paymentRquestMap.get(item.safeTxHash) || []).map(
+                              (queueItem: any) => (
+                                <TableRow key={queueItem.ID}>
+                                  <TableCell>
+                                    {getShortAddress(queueItem.recipient)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {getShortAddress(queueItem.recipient)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {queueItem.amount} {queueItem.currency_name}
+                                  </TableCell>
+                                  <TableCell>
+                                    <CategoryCell>
+                                      {queueItem.category_name}
+                                    </CategoryCell>
+                                  </TableCell>
+                                  <TableCell>
+                                    {queueItem.CreatedAt.slice(0, 10)}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button
+                                      variant="outlined"
+                                      sx={{
+                                        borderColor: "black",
+                                        color: "black",
+                                        textTransform: "lowercase",
+                                      }}
+                                      onClick={handleOpenModal}
+                                    >
+                                      view more
+                                    </Button>
+                                    <CustomModal
+                                      open={openModal}
+                                      setOpen={setOpenModal}
+                                      component={PaymentRequestDetails}
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              )
+                            )}
                           </TableBody>
                         </Table>
                       </TableContainer>
-                      <TotalValue>Total value: $123.29</TotalValue>
+                      <TotalValue>Total value: $0</TotalValue>
                       {/* category property end */}
                     </AccordionDetails>
                     {/* ))} */}

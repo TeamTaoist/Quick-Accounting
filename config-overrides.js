@@ -1,4 +1,5 @@
 const { override } = require('customize-cra');
+const webpack = require("webpack");
 
 const handleFallback = () => (config) => {
   const fallback = config.resolve.fallback || {};
@@ -13,6 +14,12 @@ const handleFallback = () => (config) => {
     zlib: require.resolve("browserify-zlib"),
   });
   config.resolve.fallback = fallback;
+  config.plugins = (config.plugins || []).concat([
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+      Buffer: ["buffer", "Buffer"],
+    }),
+  ]);
   return config;
 };
 module.exports = override(handleFallback());

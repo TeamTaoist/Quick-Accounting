@@ -14,6 +14,9 @@ import {
 import data from "../../../data/tableData";
 import usePaymentsStore from "../../../store/usePayments";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSafeStore } from "../../../store/useSafeStore";
+import { useAccount } from "wagmi";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 interface SignPaymentRequestProps {
   setOpen: (open: boolean) => void;
@@ -24,14 +27,18 @@ const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
 
-const SignPaymentRequest = ({ setOpen, selectedItem }: any) => {
+const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { address } = useAccount();
+  const { signAndCreateTx } = useSafeStore();
+  const { workspace } = useWorkspace();
   const { paymentRequestList, approvePaymentRequest } = usePaymentsStore();
   const paymentRequestIds = selectedItem.join(",");
+
   // get selected payments for sign to chain
   const signItems = paymentRequestList.filter((payment) =>
-    paymentRequestIds.includes(payment.payment_request_id)
+    selectedItem.includes(payment.payment_request_id)
   );
 
   const totalTransactionValue = signItems.reduce(
@@ -39,8 +46,16 @@ const SignPaymentRequest = ({ setOpen, selectedItem }: any) => {
     0
   );
   // approve payment request
-  const handleApproveRequest = () => {
-    approvePaymentRequest(id, paymentRequestIds, navigate);
+  const handleApproveRequest = async () => {
+    if (address) {
+      const safeTxHash = await signAndCreateTx(
+        address,
+        workspace.vault_wallet,
+        signItems
+      );
+      safeTxHash &&
+        approvePaymentRequest(id, paymentRequestIds, navigate, safeTxHash);
+    }
   };
 
   return (
@@ -51,7 +66,7 @@ const SignPaymentRequest = ({ setOpen, selectedItem }: any) => {
       setOpen={setOpen}
     >
       <PaymentRequestChain>
-        <p>Transaction value: ${totalTransactionValue}</p>
+        <p>Transaction value: $0</p>
         {/* table */}
         <TableContainer
           component={Paper}
@@ -71,9 +86,11 @@ const SignPaymentRequest = ({ setOpen, selectedItem }: any) => {
               {signItems.map((payment) => (
                 <TableRow key={payment.ID}>
                   <TableCell>{recipientFormate(payment.recipient)}</TableCell>
-                  <TableCell>{payment.amount}</TableCell>
                   <TableCell>
-                    <CategoryCell>{payment.currency_name}</CategoryCell>
+                    {payment.amount} {payment.currency_name}
+                  </TableCell>
+                  <TableCell>
+                    <CategoryCell>{payment.category_name}</CategoryCell>
                   </TableCell>
                   <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
                 </TableRow>

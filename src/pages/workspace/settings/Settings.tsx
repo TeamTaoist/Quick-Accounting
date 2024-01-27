@@ -9,10 +9,13 @@ import {
   getSafeInfo,
   SafeInfo,
 } from "@safe-global/safe-gateway-typescript-sdk";
+import { useSafeStore } from "../../../store/useSafeStore";
 
 const Settings = () => {
   const { t } = useTranslation();
   const { id } = useParams<string>();
+
+  const { owners } = useSafeStore();
 
   const { updateWorkspaceName, workspace, getWorkspaceDetails } =
     useWorkspace();
@@ -30,14 +33,6 @@ const Settings = () => {
   };
   console.log(workspace);
 
-  const [data, error, loading] = useAsync<SafeInfo>(
-    () => {
-      return getSafeInfo(String(workspace?.chain_id), workspace?.vault_wallet);
-    },
-    [workspace],
-    false
-  );
-
   return (
     <SettingsContainer>
       <WorkspaceForm>
@@ -54,8 +49,8 @@ const Settings = () => {
       </WorkspaceForm>
       <MultiSigner>
         <h3>{t("settings.MultiSigner")}</h3>
-        {data?.owners?.map((owner) => (
-          <p key={owner.value}>{owner.value}</p>
+        {owners?.map((owner) => (
+          <p key={owner}>{owner}</p>
         ))}
       </MultiSigner>
     </SettingsContainer>

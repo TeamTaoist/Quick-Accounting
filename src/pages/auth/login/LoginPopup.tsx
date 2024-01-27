@@ -21,10 +21,10 @@ import { createSiweMessage } from "../../../utils";
 const LoginPopup = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { connectors, isLoading: connectLoading, connectAsync } = useConnect();
+  const { connectors, connectAsync } = useConnect();
   const { isConnected, address } = useAccount();
   const chainId = useChainId();
-  const { signMessageAsync, isLoading: signLoading } = useSignMessage();
+  const { signMessageAsync } = useSignMessage();
   const [loginVidible, setLoginVisible] = useState(false);
 
   const [clickConnectFlag, setClickConnectFlag] = useState(false);
@@ -33,10 +33,6 @@ const LoginPopup = () => {
   const { loginAsync, refreshNounce } = useAuthStore();
 
   console.log("loading", isLoading);
-
-  useEffect(() => {
-    setLoading(connectLoading || signLoading);
-  }, [connectLoading, signLoading, setLoading]);
 
   useEffect(() => {
     if (isConnected && address && clickConnectFlag) {
@@ -77,10 +73,11 @@ const LoginPopup = () => {
 
   const onClickConnect = async () => {
     const connector = connectors[0];
-    if (!connector.ready) {
-      alert("Please install MetaMask");
-      return;
-    }
+    // TODO check if metamask is installed
+    // if (!connector.setup) {
+    //   alert("Please install MetaMask");
+    //   return;
+    // }
     try {
       // connect
       await connectAsync({ connector });

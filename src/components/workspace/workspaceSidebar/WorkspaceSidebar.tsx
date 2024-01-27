@@ -21,16 +21,42 @@ import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import NewPaymentRequest from "../../../pages/workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { useSafeStore } from "../../../store/useSafeStore";
+import { clientToSigner } from "../../../utils/ethProvider";
+import { type Config, useConnectorClient } from "wagmi";
 
 const WorkspaceSidebar = () => {
   const { t } = useTranslation();
   const { id } = useParams<string>();
   const [newPaymentsVisible, setNewPaymentsVisible] = useState(false);
   const { getWorkspaceDetails, workspace } = useWorkspace();
+  const { initSafeSDK, safeApiService, getSafeInfo } = useSafeStore();
+  const { data: client } = useConnectorClient();
 
   useEffect(() => {
     getWorkspaceDetails(Number(id));
   }, [getWorkspaceDetails, id]);
+
+  useEffect(() => {
+    if (workspace.ID) {
+      const init = async () => {
+        if (!client) {
+          return;
+        }
+        const signer = await clientToSigner(client);
+
+        signer &&
+          initSafeSDK(workspace.chain_id, signer, workspace.vault_wallet);
+      };
+      init();
+    }
+  }, [workspace?.chain_id, workspace?.vault_wallet, client]);
+
+  useEffect(() => {
+    workspace?.vault_wallet &&
+      safeApiService &&
+      getSafeInfo(workspace?.vault_wallet);
+  }, [workspace?.vault_wallet, safeApiService]);
 
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;

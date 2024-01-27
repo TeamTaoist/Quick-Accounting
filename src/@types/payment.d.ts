@@ -9,6 +9,7 @@ declare interface IPaymentRequest {
   amount: string;
   currency_name: string;
   currency_contract_address: string;
+  decimals: number;
   category_id: number;
   category_name: string;
   category_properties: string;
