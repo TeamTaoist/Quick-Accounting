@@ -192,7 +192,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       try {
         const reqs = safeTxHash.map((hash) =>
           axiosClient.get(
-            `/payment_request/${workspaceId}/payment_requests_by_safe_tx_hash?safe_tx_hash=${hash}`
+            `/payment_requests/${workspaceId}/payment_requests_by_safe_tx_hash?safe_tx_hash=${hash}`
           )
         );
         Promise.all(reqs)
