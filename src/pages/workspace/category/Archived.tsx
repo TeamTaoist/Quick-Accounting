@@ -75,50 +75,60 @@ const Archived = ({ setOpen }: any) => {
             <p>Unarchive</p>
           </div>
         </Unarchive>
-        <ArchiveTable>
-          <TableContainer
-            sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
-          >
-            <Table>
-              <TableHead
-                style={{
-                  background: "var(--bg-secondary)",
-                }}
+        {workspaceCategories.data.total === 0 ? (
+          <Archivemsg>Archive list is empty</Archivemsg>
+        ) : (
+          <>
+            <ArchiveTable>
+              <TableContainer
+                sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
               >
-                <TableRow>
-                  <TableCell>
-                    <Checkbox
-                      indeterminate={
-                        selected.length > 0 &&
-                        selected.length < workspaceCategories.data.rows.length
-                      }
-                      checked={
-                        selected.length === workspaceCategories.data.rows.length
-                      }
-                      onChange={handleSelectAllClick}
-                    />
-                    Category
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {workspaceCategories.data.rows.map((category) => (
-                  <TableRow key={category.ID}>
-                    <TableCell sx={{ display: "flex", alignItems: "center" }}>
-                      <Checkbox
-                        checked={isSelected(category.ID)}
-                        onChange={(event) =>
-                          handleCheckboxClick(event, category.ID)
-                        }
-                      />
-                      <CellValue>{category.name}</CellValue>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </ArchiveTable>
+                <Table>
+                  <TableHead
+                    style={{
+                      background: "var(--bg-secondary)",
+                    }}
+                  >
+                    <TableRow>
+                      <TableCell>
+                        <Checkbox
+                          indeterminate={
+                            selected.length > 0 &&
+                            selected.length <
+                              workspaceCategories.data.rows.length
+                          }
+                          checked={
+                            selected.length ===
+                            workspaceCategories.data.rows.length
+                          }
+                          onChange={handleSelectAllClick}
+                        />
+                        Category
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {workspaceCategories.data.rows.map((category) => (
+                      <TableRow key={category.ID}>
+                        <TableCell
+                          sx={{ display: "flex", alignItems: "center" }}
+                        >
+                          <Checkbox
+                            checked={isSelected(category.ID)}
+                            onChange={(event) =>
+                              handleCheckboxClick(event, category.ID)
+                            }
+                          />
+                          <CellValue>{category.name}</CellValue>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </ArchiveTable>
+          </>
+        )}
       </WorkspaceItemDetailsLayout>
     </>
   );
@@ -153,4 +163,9 @@ const CellValue = styled.div`
   background: var(--bg-primary);
   padding: 5px 10px;
   border-radius: 4px;
+`;
+const Archivemsg = styled.div`
+  font-size: 20px;
+  text-align: center;
+  padding: 50px;
 `;

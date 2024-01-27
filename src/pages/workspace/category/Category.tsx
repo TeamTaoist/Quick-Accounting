@@ -96,6 +96,8 @@ const Category = () => {
 
   const handleOpenModal = () => {
     setOpenModal(true);
+    getWorkspaceCategories(workspaceId, true);
+    console.log("click");
   };
 
   // end
@@ -273,6 +275,11 @@ const Category = () => {
 
   return (
     <CreateCategory>
+      <CustomModal
+        open={openModal}
+        setOpen={setOpenModal}
+        component={Archived}
+      />
       {workspaceCategoryProperties === null ? (
         <CategoryTitle>
           <h3>You don't have any categories.</h3>
@@ -282,7 +289,7 @@ const Category = () => {
               <img src={add} alt="" />
               <span>{t("category.CreateCategory")}</span>
             </CreateBtn>
-            <CreateBtn>
+            <CreateBtn onClick={handleOpenModal}>
               <img src={archive} alt="" />
               <span>{t("category.ViewArchives")}</span>
             </CreateBtn>
@@ -302,11 +309,6 @@ const Category = () => {
                 <img src={archive} alt="" />
                 <span>View archive</span>
               </CreateBtn>
-              <CustomModal
-                open={openModal}
-                setOpen={setOpenModal}
-                component={Archived}
-              />
             </CreateOptionButton>
             {/* category option */}
             {workspaceCategoryProperties?.map((category, index) => (

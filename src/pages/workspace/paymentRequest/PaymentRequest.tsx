@@ -164,6 +164,7 @@ const PaymentRequest = () => {
     workspaceId,
     paymentLoading,
     rejectPaymentLoading,
+    newPaymentsVisible,
   ]);
   // payment_request_id
 
@@ -184,9 +185,10 @@ const PaymentRequest = () => {
 
   // reject payment request
   const paymentRequestIds = selected.join(",");
-  const handleRejectPaymentRequest = () => {
-    rejectPaymentRequest(id, paymentRequestIds);
+  const handleRejectPaymentRequest = async () => {
+    await rejectPaymentRequest(id, paymentRequestIds);
     setPaymentLoading(!paymentLoading);
+    setSelectedValue("");
   };
 
   // get rejected payments
@@ -195,6 +197,7 @@ const PaymentRequest = () => {
     setRejectPaymentLoading(rejectPaymentLoading);
     setSearchTerm("");
     setSelectedValue("");
+    setPaymentRequest(false);
     // setPaymentLoading(!paymentLoading);
   };
   const handleBackBtn = () => {
@@ -217,7 +220,7 @@ const PaymentRequest = () => {
               <img src={add} alt="" />
               <span>Create request</span>
             </CreateBtn>
-            <CreateBtn>
+            <CreateBtn onClick={handleRejectedPayments}>
               <img src={archive} alt="" />
               <span>View rejection</span>
             </CreateBtn>
@@ -300,7 +303,7 @@ const PaymentRequest = () => {
               )}
             </ViewReject>
           </Header>
-          {paymentRequest ? (
+          {paymentRequest && (
             <PaymentRequestBody>
               <ActionBtn>
                 <Btn>
@@ -523,7 +526,8 @@ const PaymentRequest = () => {
                 </Table>
               </TableContainer>
             </PaymentRequestBody>
-          ) : (
+          )}
+          {!paymentRequest && (
             <RejectSection>
               <RejectDataTable
                 searchTerm={searchTerm}
