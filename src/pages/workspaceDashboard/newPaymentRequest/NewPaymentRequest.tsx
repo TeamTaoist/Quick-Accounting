@@ -201,10 +201,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
       );
       return token
         ? {
-            amount: parseUnits(
-              row.amount,
-              token!.tokenInfo.decimals
-            ).toString(),
+            amount: row.amount,
             currency_contract_address: row.currency,
             currency_name: token?.tokenInfo.symbol!,
             decimals: token.tokenInfo.decimals,
@@ -226,7 +223,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     createPaymentRequest(Number(id), paymentRequestBody, navigate).then((r) => {
       if (r) {
         onClose();
-        navigate("/workspace/8/payment-request");
+        navigate(`/workspace/${id}/payment-request`);
       }
     });
   };
