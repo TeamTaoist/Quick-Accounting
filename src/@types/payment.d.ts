@@ -13,7 +13,8 @@ declare interface IPaymentRequest {
   category_name: string;
   category_properties: string;
   safe_id: string;
-  tx: string;
+  tx_hash: string;
+  safe_tx_hash: string;
   tx_timestamp: number;
   status: number;
   hide: boolean;

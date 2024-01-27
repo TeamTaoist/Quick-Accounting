@@ -26,6 +26,10 @@ interface RejectTableProps {
   workspaceId: number;
   paymentRequest: boolean;
   filterData: IBookkeeping[];
+  handleBookkeepingDetails: (
+    paymentRequestId: number,
+    paymentId: number
+  ) => void;
 }
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -34,6 +38,7 @@ const BookkeepingRejectTable = ({
   workspaceId,
   paymentRequest,
   filterData,
+  handleBookkeepingDetails,
 }: RejectTableProps) => {
   const navigate = useNavigate();
 
@@ -166,7 +171,10 @@ const BookkeepingRejectTable = ({
                             textTransform: "lowercase",
                           }}
                           onClick={() =>
-                            navigate(`/payment-request/${bookkeeping.ID}`)
+                            handleBookkeepingDetails(
+                              bookkeeping.payment_request_id,
+                              bookkeeping.ID
+                            )
                           }
                         >
                           view more

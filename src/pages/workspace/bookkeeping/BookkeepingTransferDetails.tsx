@@ -35,6 +35,8 @@ import {
 import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
 import data from "../../../data/tableData";
+import usePaymentsStore from "../../../store/usePayments";
+import { useLoading } from "../../../store/useLoading";
 
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -42,6 +44,10 @@ const recipientFormate = (n: string) => {
 
 const BookkeepingTransferDetails = ({ setOpen }: any) => {
   const { id } = useParams();
+
+  const { paymentRequestDetails } = usePaymentsStore();
+  const { isLoading } = useLoading();
+
   const [selectedValue, setSelectedValue] = useState("Option1");
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -66,7 +72,31 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
     { value: "option 4", label: "Options 4" },
     { value: "option 5", label: "Options 5" },
   ];
+  if (isLoading) return <p></p>;
+  let parseCategoryProperties;
+  if (paymentRequestDetails.category_properties !== "") {
+    const categoryProperties = paymentRequestDetails?.category_properties;
+    parseCategoryProperties = JSON.parse(categoryProperties);
+  }
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
 
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+      timeZoneName: "short",
+    };
+
+    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+      date
+    );
+    return formattedDate + " +UTC";
+  };
   return (
     // <Header>
     <WorkspaceItemDetailsLayout title="Transfer Detail" setOpen={setOpen}>
@@ -82,65 +112,69 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                 <TableRow>
                   <TableCell>Safe</TableCell>
                   <TableCell>Counterparty</TableCell>
-                  <TableCell>Counterparty</TableCell>
-                  <TableCell>Counterparty</TableCell>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Currency</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.slice(0, 1).map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell
-                      sx={{
-                        borderRight: "1px solid var(--border-table)",
-                        borderLeft: "1px solid var(--border-table)",
-                        borderBottom: "1px solid var(--border-table)",
-                        // borderRadius: "7px",
-                        padding: 0,
-                        paddingLeft: "12px",
-                      }}
-                    >
-                      <SafeSection>
-                        <div>{recipientFormate(row.recipient)}</div>
-                        <Logo>
-                          <img src={transferArrow} alt="" />
-                        </Logo>
-                      </SafeSection>
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderRight: "1px solid var(--border-table)",
-                        borderBottom: "1px solid var(--border-table)",
-                        // borderRadius: "7px",
-                        padding: 0,
-                        paddingLeft: "12px",
-                      }}
-                    >
-                      {row.amount}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderRight: "1px solid var(--border-table)",
-                        borderBottom: "1px solid var(--border-table)",
-                        // borderRadius: "7px",
-                        padding: 0,
-                        paddingLeft: "12px",
-                      }}
-                    >
-                      {row.category}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderBottom: "1px solid var(--border-table)",
-                        borderRight: "1px solid var(--border-table)",
-                        // borderRadius: "7px",
-                        padding: 0,
-                        paddingLeft: "12px",
-                      }}
-                    >
-                      {row.status}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {/* {data.slice(0, 1).map((row) => ( */}
+                <TableRow>
+                  <TableCell
+                    sx={{
+                      borderRight: "1px solid var(--border-table)",
+                      borderLeft: "1px solid var(--border-table)",
+                      borderBottom: "1px solid var(--border-table)",
+                      // borderRadius: "7px",
+                      padding: 0,
+                      paddingLeft: "12px",
+                    }}
+                  >
+                    <SafeSection>
+                      <div>
+                        {recipientFormate(
+                          paymentRequestDetails.currency_contract_address
+                        )}
+                      </div>
+                      <Logo>
+                        <img src={transferArrow} alt="" />
+                      </Logo>
+                    </SafeSection>
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderRight: "1px solid var(--border-table)",
+                      borderBottom: "1px solid var(--border-table)",
+                      // borderRadius: "7px",
+                      padding: 0,
+                      paddingLeft: "12px",
+                    }}
+                  >
+                    {recipientFormate(paymentRequestDetails.recipient)}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderRight: "1px solid var(--border-table)",
+                      borderBottom: "1px solid var(--border-table)",
+                      // borderRadius: "7px",
+                      padding: 0,
+                      paddingLeft: "12px",
+                    }}
+                  >
+                    {paymentRequestDetails.amount}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "1px solid var(--border-table)",
+                      borderRight: "1px solid var(--border-table)",
+                      // borderRadius: "7px",
+                      padding: 0,
+                      paddingLeft: "12px",
+                    }}
+                  >
+                    {paymentRequestDetails.currency_name}
+                  </TableCell>
+                </TableRow>
+                {/* ))} */}
               </TableBody>
             </Table>
           </TableContainer>
@@ -149,16 +183,15 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
         <TransactionHash>
           <h3>Transaction hash</h3>
           <div>
-            <p>
-              0x2dfeda31e6c3d70e23ea91dbd47435d3898dfb62a1d34945fc8369daa055fcf1
-            </p>
+            <p>{paymentRequestDetails.tx_hash}</p>
             <img src={linkIcon} alt="" />
           </div>
         </TransactionHash>
         <TransactionHash>
           <h3>Transaction date</h3>
           <div>
-            <p>Oct-15-2023 01:04:34 PM +UTC</p>
+            {/* <p>Oct-15-2023 01:04:34 PM +UTC</p> */}
+            <p>{formatTimestamp(paymentRequestDetails.UpdatedAt)}</p>
           </div>
         </TransactionHash>
         {/* note info */}
@@ -183,7 +216,10 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                     </NoteInfo>
                   </TableCell>
                   <TableCell>
-                    <FormControl fullWidth>
+                    <FormControl
+                      fullWidth
+                      disabled={paymentRequestDetails.status === 1}
+                    >
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
@@ -206,25 +242,13 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                         }}
                       >
                         <MenuItem disabled value="Category">
-                          Category name
+                          {paymentRequestDetails.category_name}
                         </MenuItem>
-                        <MenuItem
-                          value={10}
-                          sx={{
-                            "&:hover": { backgroundColor: "var(--hover-bg)" },
-                            "&.Mui-selected": {
-                              backgroundColor: "var(--hover-bg)",
-                            },
-                          }}
-                        >
-                          Ten
-                        </MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
                       </Select>
                     </FormControl>
                   </TableCell>
                 </TableRow>
-                <TableRow
+                {/* <TableRow
                   sx={{
                     td: {
                       border: "1px solid var(--border-table)",
@@ -238,7 +262,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                       <Image src={selectIcon} alt="" /> Property name
                     </NoteInfo>
                   </TableCell>
-                  {/* add multi select */}
                   <TableCell>
                     <ReactSelect
                       value={selectedValues}
@@ -262,7 +285,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                       <Image src={multiSelect} alt="" /> Property name
                     </NoteInfo>
                   </TableCell>
-                  {/* add multi select */}
                   <TableCell>
                     <ReactSelect
                       value={selectedValues}
@@ -286,13 +308,120 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                       <Image src={optionsIcon} alt="" /> Property name
                     </NoteInfo>
                   </TableCell>
-                  {/* add multi select */}
                   <TableCell>
                     Here is some description of the payment request, No more
                     than 50 words. Here is some description of the payment
                     request.
                   </TableCell>
-                </TableRow>
+                </TableRow> */}
+                {parseCategoryProperties?.map((property: any) => (
+                  <>
+                    {property.type === "single-select" && (
+                      <TableRow
+                        sx={{
+                          td: {
+                            border: "1px solid var(--border-table)",
+                            padding: 1,
+                            paddingInline: 1,
+                          },
+                        }}
+                      >
+                        <TableCell sx={{ height: 1, width: 200 }}>
+                          <NoteInfo>
+                            <Image src={selectIcon} alt="" /> {property.name}
+                          </NoteInfo>
+                        </TableCell>
+                        {/* add multi select */}
+                        <TableCell>
+                          <ReactSelect
+                            isDisabled={paymentRequestDetails.status === 1}
+                            value={selectedValues}
+                            onChange={handleSelectChange}
+                            options={[
+                              {
+                                value: property.values,
+                                label: property.values,
+                              },
+                            ]}
+                            defaultValues={[
+                              {
+                                value: property.values,
+                                label: property.values,
+                              },
+                            ]}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )}
+                    {
+                      <>
+                        {property.type === "multi-select" && (
+                          <TableRow
+                            sx={{
+                              td: {
+                                border: "1px solid var(--border-table)",
+                                padding: 1,
+                                paddingInline: 1,
+                              },
+                            }}
+                          >
+                            <TableCell sx={{ height: 1, width: 200 }}>
+                              <NoteInfo>
+                                <Image src={multiSelect} alt="" />{" "}
+                                {property.name}
+                              </NoteInfo>
+                            </TableCell>
+                            {/* add multi select */}
+                            <TableCell>
+                              <ReactSelect
+                                isDisabled={paymentRequestDetails.status === 1}
+                                value={selectedValues}
+                                onChange={handleSelectChange}
+                                options={property.values
+                                  .split(";")
+                                  .map((v: string) => ({
+                                    value: v,
+                                    label: v,
+                                  }))}
+                                defaultValues={property.values
+                                  .split(";")
+                                  .map((v: string) => ({
+                                    value: v,
+                                    label: v,
+                                  }))}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </>
+                    }
+                    <>
+                      {property.type === "Text" && (
+                        <TableRow
+                          sx={{
+                            td: {
+                              border: "1px solid var(--border-table)",
+                              padding: 1,
+                              paddingInline: 1,
+                            },
+                          }}
+                        >
+                          <TableCell sx={{ height: 1, width: 200 }}>
+                            <NoteInfo>
+                              <Image src={optionsIcon} alt="" /> {property.name}
+                            </NoteInfo>
+                          </TableCell>
+                          {/* add multi select */}
+                          <TableCell>
+                            <p style={{ paddingLeft: "10px" }}>
+                              {property.values}
+                            </p>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
+                  </>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>

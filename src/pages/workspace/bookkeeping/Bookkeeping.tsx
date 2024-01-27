@@ -58,6 +58,7 @@ import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import BookkeepingTransferDetails from "./BookkeepingTransferDetails";
 import { useBookkeeping } from "../../../store/useBookkeeping";
+import usePaymentsStore from "../../../store/usePayments";
 
 const Bookkeeping = () => {
   const { id } = useParams();
@@ -71,6 +72,7 @@ const Bookkeeping = () => {
     bookkeepingList,
     hideBookkeepingList,
   } = useBookkeeping();
+  const { getPaymentRequestDetails } = usePaymentsStore();
 
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -121,7 +123,11 @@ const Bookkeeping = () => {
   // modal
   const [openModal, setOpenModal] = useState(false);
 
-  const handleOpenModal = () => {
+  const handleBookkeepingDetails = (
+    paymentRequestId: number,
+    paymentId: number
+  ) => {
+    getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
     setOpenModal(true);
   };
 
@@ -191,6 +197,12 @@ const Bookkeeping = () => {
 
   return (
     <PaymentRequestContainer>
+      <CustomModal
+        open={openModal}
+        setOpen={setOpenModal}
+        component={BookkeepingTransferDetails}
+        // additionalProps={{}}
+      />
       {bookkeepingList.length === 0 && paymentRequest && (
         <CategoryTitle>
           <h3>You don't have any transactions.</h3>
@@ -363,17 +375,22 @@ const Bookkeeping = () => {
                             color: "black",
                             textTransform: "lowercase",
                           }}
-                          onClick={handleOpenModal}
+                          onClick={() =>
+                            handleBookkeepingDetails(
+                              bookkeeping.payment_request_id,
+                              bookkeeping.ID
+                            )
+                          }
                         >
                           view more
                         </Button>
                         {/* modal */}
-                        <CustomModal
+                        {/* <CustomModal
                           open={openModal}
                           setOpen={setOpenModal}
                           component={BookkeepingTransferDetails}
                           // additionalProps={{}}
-                        />
+                        /> */}
                       </TableCell>
                     </TableRow>
                   </React.Fragment>
@@ -388,6 +405,7 @@ const Bookkeeping = () => {
             workspaceId={workspaceId}
             paymentRequest={paymentRequest}
             filterData={filterData}
+            handleBookkeepingDetails={handleBookkeepingDetails}
           />
         </RejectSection>
       )}
