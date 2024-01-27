@@ -36,9 +36,7 @@ interface ISafeStore {
   confirmTx: (safeTxHash: string) => void;
   executeTx: (
     workspace_id: number,
-    senderAddress: string,
     safeTxHash: string,
-    nonce: number,
     requests: IPaymentRequest[],
     isReject?: boolean
   ) => void;
@@ -216,34 +214,18 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
     },
     executeTx: async (
       workspace_id: number,
-      senderAddress: string,
       safeTxHash: string,
-      nonce: number,
       requests: IPaymentRequest[],
-      isReject = true
+      isReject?: boolean
     ) => {
-      const { safe } = get();
-      if (!safe) {
+      const { safeApiService, safe } = get();
+      if (!safeApiService || !safe) {
         return;
       }
 
       try {
         setLoading(true);
-        const txParams = requests.map((item) =>
-          createTokenTransferParams(
-            senderAddress,
-            item.amount,
-            item.decimals,
-            item.currency_contract_address
-          )
-        );
-
-        console.log("===txParams===", txParams);
-
-        const safeTransaction = await safe.createTransaction({
-          transactions: [...txParams],
-          options: { nonce },
-        });
+        const safeTransaction = await safeApiService.getTransaction(safeTxHash)
 
         console.log("===safeTransaction===", safeTransaction);
 

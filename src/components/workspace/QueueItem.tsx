@@ -66,21 +66,16 @@ const QueueTransactionItem = ({
     //   TODO update ui
   };
   const handleExecuteApprove = () => {
-    address &&
-      executeTx(
-        workspace.ID,
-        address,
-        approveTransaction.safeTxHash,
-        approveTransaction.nonce,
-        payments
-      );
+    executeTx(workspace.ID, approveTransaction.safeTxHash, payments);
   };
 
   const handleReject = () => {
     rejectTransaction && confirmTx(rejectTransaction.safeTxHash);
     //   TODO update ui
   };
-  const handleExecuteReject = () => {};
+  const handleExecuteReject = () => {
+    executeTx(workspace.ID, rejectTransaction.safeTxHash, payments, true);
+  };
 
   const onOpenMoreModal = (item: IPaymentRequest) => {
     setCurrentPaymentRequestDetail(item);
