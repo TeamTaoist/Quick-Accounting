@@ -32,6 +32,8 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import { SafeMultisigTransactionResponse } from "@safe-global/safe-core-sdk-types";
 import { getShortAddress } from "../../../utils";
 import usePaymentsStore from "../../../store/usePayments";
+import { TransactionListItem } from "@safe-global/safe-gateway-typescript-sdk";
+import QueueItem from "../../../components/workspace/QueueItem";
 
 const Queue = () => {
   const navigate = useNavigate();
@@ -43,10 +45,10 @@ const Queue = () => {
   const { paymentRquestMap, getPaymentRequestBySafeTxHash } =
     usePaymentsStore();
   const [hasCategory, setHasCategory] = useState(true);
- 
+
   const [paymentRequest, setPaymentRequest] = useState(true);
   const [openModal, setOpenModal] = useState(false);
-  const [list, setList] = useState<SafeMultisigTransactionResponse[]>([]);
+  const [list, setList] = useState<IQueueGroupItemProps[]>([]);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -54,7 +56,7 @@ const Queue = () => {
   const workspaceId = Number(id);
 
   const getQueueList = async () => {
-    const data = await getQueueTx(workspace.vault_wallet);
+    const data = await getQueueTx(workspace.chain_id, workspace.vault_wallet);
     data && setList(data);
   };
 
@@ -62,13 +64,13 @@ const Queue = () => {
     isReady && workspace?.vault_wallet && getQueueList();
   }, [isReady, workspace?.vault_wallet]);
 
-  useEffect(() => {
-    list.length &&
-      getPaymentRequestBySafeTxHash(
-        workspaceId,
-        list.map((item) => item.safeTxHash)
-      );
-  }, [list, workspaceId]);
+  // useEffect(() => {
+  //   list.length &&
+  //     getPaymentRequestBySafeTxHash(
+  //       workspaceId,
+  //       list.map((item) => item.safeTxHash)
+  //     );
+  // }, [list, workspaceId]);
 
   return (
     <QueueSection>
@@ -101,124 +103,7 @@ const Queue = () => {
           {paymentRequest ? (
             <>
               {list.map((item, index) => (
-                <QueueNotice key={index}>
-                  <h1>{index === 0 ? t("queue.NextUp") : "After that"}</h1>
-                  <Accordion>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                      sx={{ backgroundColor: "var(--hover-bg)" }}
-                    >
-                      <Header>
-                        <HeaderTitle>
-                          <h6>
-                            {t("queue.Nonce")}: {item.nonce}
-                          </h6>
-                          <p>On 24 Oct 2023 at 12:05</p>
-                        </HeaderTitle>
-                        <h5>
-                          {1} {t("queue.Action")}
-                        </h5>
-                      </Header>
-                    </AccordionSummary>
-                    {/* {queue.map((queueItem) => ( */}
-                    <AccordionDetails sx={{ p: 0 }}>
-                      {/* category property */}
-                      <Action>
-                        <Approvals>
-                          <h4>
-                            Approvals: {item.confirmations?.length || 0}/
-                            {threshold}
-                          </h4>
-                          {item.confirmations?.map((owner) => (
-                            <p key={owner.owner}>
-                              {getShortAddress(owner.owner)}
-                            </p>
-                          ))}
-
-                          <button disabled>{t("queue.Approve")}</button>
-                          <button disabled={false}>{t("queue.Execute")}</button>
-                        </Approvals>
-                        <Approvals>
-                          <h4>Rejections: 1/{owners.length - threshold + 1}</h4>
-                          <p>0x4d4b...2915</p>
-                          <p>0x4d4b...2915</p>
-                          <button disabled={false}>Reject</button>
-                          <button disabled={true}>Execute</button>
-                        </Approvals>
-                        {/* <Rejections></Rejections> */}
-                      </Action>
-                      <TableContainer
-                        component={Paper}
-                        sx={{
-                          maxHeight: 200,
-                          minWidth: 800,
-                          boxShadow: "none",
-                        }}
-                      >
-                        <Table stickyHeader>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Safe</TableCell>
-                              <TableCell>Counterparty</TableCell>
-                              <TableCell>Amount</TableCell>
-                              <TableCell>Category</TableCell>
-                              <TableCell>Date</TableCell>
-                              <TableCell></TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {(paymentRquestMap.get(item.safeTxHash) || []).map(
-                              (queueItem: any) => (
-                                <TableRow key={queueItem.ID}>
-                                  <TableCell>
-                                    {getShortAddress(queueItem.recipient)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {getShortAddress(queueItem.recipient)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {queueItem.amount} {queueItem.currency_name}
-                                  </TableCell>
-                                  <TableCell>
-                                    <CategoryCell>
-                                      {queueItem.category_name}
-                                    </CategoryCell>
-                                  </TableCell>
-                                  <TableCell>
-                                    {queueItem.CreatedAt.slice(0, 10)}
-                                  </TableCell>
-                                  <TableCell>
-                                    <Button
-                                      variant="outlined"
-                                      sx={{
-                                        borderColor: "black",
-                                        color: "black",
-                                        textTransform: "lowercase",
-                                      }}
-                                      onClick={handleOpenModal}
-                                    >
-                                      view more
-                                    </Button>
-                                    <CustomModal
-                                      open={openModal}
-                                      setOpen={setOpenModal}
-                                      component={PaymentRequestDetails}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-                              )
-                            )}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                      <TotalValue>Total value: $0</TotalValue>
-                      {/* category property end */}
-                    </AccordionDetails>
-                    {/* ))} */}
-                  </Accordion>
-                </QueueNotice>
+                <QueueItem data={item} key={index} />
               ))}
             </>
           ) : (

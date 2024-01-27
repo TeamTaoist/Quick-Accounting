@@ -9,6 +9,11 @@ import {
   SafeMultisigTransactionResponse,
 } from "@safe-global/safe-core-sdk-types";
 import { toast } from "react-toastify";
+import {
+  getTransactionQueue,
+  TransactionListItem,
+  TransactionListItemType,
+} from "@safe-global/safe-gateway-typescript-sdk";
 
 interface ISafeStore {
   safe?: Safe;
@@ -24,8 +29,9 @@ interface ISafeStore {
   ) => Promise<string | undefined>;
   getSafeInfo: (safeAddress: string) => void;
   getQueueTx: (
+    chainId: number,
     safeAddress: string
-  ) => Promise<SafeMultisigTransactionResponse[] | undefined>;
+  ) => Promise<IQueueGroupItemProps[]>;
 }
 
 export const createEthersAdapter = (signer: any) => {
@@ -66,14 +72,46 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
         set({ owners: res.owners, threshold: res.threshold });
       });
     },
-    getQueueTx: async (safeAddress: string) => {
-      const { safeApiService } = get();
-      if (!safeApiService) {
-        return;
-      }
-      const result = await safeApiService.getPendingTransactions(safeAddress);
-      console.log("queueTx", result.results);
-      return result.results;
+    getQueueTx: async (
+      chainId: number,
+      safeAddress: string
+    ): Promise<IQueueGroupItemProps[]> => {
+      const result = await getTransactionQueue(String(chainId), safeAddress);
+      // const result = await safeApiService.getPendingTransactions(safeAddress);
+      // console.log("queueTx", result.results);
+      const array = new Array<IQueueGroupItemProps>();
+      result.results.forEach((item: TransactionListItem) => {
+        if (item.type === TransactionListItemType.LABEL) {
+          array.push(item);
+        } else if (item.type === TransactionListItemType.TRANSACTION) {
+          if (item.transaction.executionInfo?.type === "MULTISIG") {
+            array.push({
+              type: item.type,
+              transactions: [
+                {
+                  nonce: item.transaction.executionInfo?.nonce,
+                  confirmationsRequired:
+                    item.transaction.executionInfo?.confirmationsRequired,
+                  confirmationsSubmitted:
+                    item.transaction.executionInfo?.confirmationsSubmitted,
+                  safeTxHash: item.transaction.id.split("_")[2],
+                  timestamp: item.transaction.timestamp,
+                  // @ts-ignore
+                  actionCount: item.transaction.txInfo.actionCount,
+                  txStatus: item.transaction.txStatus,
+                  missingSigners:
+                    item.transaction.executionInfo?.missingSigners?.map(
+                      (item) => item.value
+                    ) || [],
+                },
+              ],
+            });
+          }
+        } else {
+          return { type: item.type };
+        }
+      });
+      return array;
     },
     signAndCreateTx: async (
       senderAddress: string,

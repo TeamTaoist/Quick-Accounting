@@ -18,3 +18,21 @@ declare interface QueueList {
   status: number;
   hide: boolean;
 }
+
+declare interface IQueueGroupItemProps {
+  label?: string;
+  type: TransactionListItemType;
+  conflictType?: ConflictType;
+  transactions?: IQueueTransaction[];
+}
+
+declare interface IQueueTransaction {
+  nonce: number;
+  confirmationsRequired: number;
+  confirmationsSubmitted: number;
+  safeTxHash: string;
+  timestamp: number;
+  actionCount: number;
+  txStatus: string; // TODO
+  missingSigners: string[];
+}
