@@ -7,7 +7,6 @@ import {
 import LoginPopup from "./pages/auth/login/LoginPopup";
 import UserDashboard from "./pages/userDashboard/UserDashboard";
 import WorkSpaceForm from "./pages/workspace/WorkSpaceForm";
-import NewPaymentRequest from "./pages/workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import Assets from "./pages/workspaceDashboard/assets/Assets";
 import Category from "./pages/workspace/category/Category";
 import PaymentRequest from "./pages/workspace/paymentRequest/PaymentRequest";

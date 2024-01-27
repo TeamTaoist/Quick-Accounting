@@ -11,7 +11,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import data from "../../data/tableData";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import searchIcon from "../../assets/workspace/search-icon.svg";
@@ -20,12 +20,17 @@ import { Status } from "../../components/workspace/RejectDataTable";
 import CustomModal from "../../utils/CustomModal";
 import PaymentRequestDetails from "../workspace/paymentRequest/PaymentRequestDetails";
 import { useUserPayment } from "../../store/useUserPayment";
+import usePaymentsStore from "../../store/usePayments";
 
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
 
 const UserPaymentRequest = () => {
+  const { id } = useParams();
+  const { userPayment } = useUserPayment();
+  const { getPaymentRequestDetails } = usePaymentsStore();
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (event: any) => {
@@ -33,18 +38,39 @@ const UserPaymentRequest = () => {
   };
 
   // filter table data
-  const filterData = data.filter((d) =>
-    d.workspaceName.toLowerCase().includes(searchTerm.toLowerCase())
+  const filterData = userPayment.filter((payment) =>
+    payment.recipient.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // modal
   const [openModal, setOpenModal] = useState(false);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (
+    workspaceId: number,
+    paymentRequestId: number,
+    paymentId: number
+  ) => {
     setOpenModal(true);
+    getPaymentRequestDetails(workspaceId, paymentRequestId, paymentId);
+  };
+  const paymentStatus = (status: number) => {
+    if (status === 0) {
+      return "Pending";
+    }
+    if (status === 1) {
+      return "Rejected";
+    } else {
+      return "Executed";
+    }
   };
   return (
     <UserPaymentContainer>
+      {/* modal */}
+      <CustomModal
+        open={openModal}
+        setOpen={setOpenModal}
+        component={PaymentRequestDetails}
+      />
       <TextField
         id="search"
         type="search"
@@ -76,22 +102,22 @@ const UserPaymentRequest = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filterData.map((row) => (
-                <TableRow key={row.id}>
+              {filterData.map((payment) => (
+                <TableRow key={payment.ID}>
                   <TableCell>
                     <Safe>
-                      <p>{row.workspaceName}</p>
-                      <p>{recipientFormate(row.recipient)}</p>
+                      <p>{payment.category_name}</p>
+                      <p>{recipientFormate(payment.recipient)}</p>
                     </Safe>
                   </TableCell>
-                  <TableCell>{row.amount} USDT</TableCell>
+                  <TableCell>{payment.amount} USDT</TableCell>
                   <TableCell>
                     <Status>
                       <img src={statusIcon} alt="" />
-                      {row.status}
+                      {paymentStatus(payment.status)}
                     </Status>
                   </TableCell>
-                  <TableCell>{row.date}</TableCell>
+                  <TableCell>{payment.CreatedAt}</TableCell>
                   <TableCell>
                     <Button
                       variant="outlined"
@@ -100,16 +126,16 @@ const UserPaymentRequest = () => {
                         color: "black",
                         textTransform: "lowercase",
                       }}
-                      onClick={handleOpenModal}
+                      onClick={() =>
+                        handleOpenModal(
+                          payment.workspace_id,
+                          payment.payment_request_id,
+                          payment.ID
+                        )
+                      }
                     >
                       view more
                     </Button>
-                    {/* modal */}
-                    <CustomModal
-                      open={openModal}
-                      setOpen={setOpenModal}
-                      component={PaymentRequestDetails}
-                    />
                   </TableCell>
                 </TableRow>
               ))}
