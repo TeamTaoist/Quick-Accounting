@@ -12,6 +12,7 @@ import {
 interface ISafeStore {
   safe?: Safe;
   safeApiService?: SafeApiKit;
+  isReady: boolean;
   owners: string[];
   threshold: number;
   initSafeSDK: (chainId: number, signer: any, safeAddress: string) => void;
@@ -21,6 +22,9 @@ interface ISafeStore {
     requests: IPaymentRequest[]
   ) => Promise<string | undefined>;
   getSafeInfo: (safeAddress: string) => void;
+  getQueueTx: (
+    safeAddress: string
+  ) => Promise<SafeMultisigTransactionResponse[] | undefined>;
 }
 
 export const createEthersAdapter = (signer: any) => {
@@ -38,6 +42,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
     safeApiService: undefined,
     owners: [],
     threshold: 0,
+    isReady: false,
     initSafeSDK: async (chainId: number, signer: any, safeAddress: string) => {
       console.log("signer: ", signer, chainId);
       const safe = await Safe.create({
@@ -49,7 +54,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
         chainId: BigInt(chainId),
       });
       console.log("safeApiService", safeApiService);
-      set({ safe, safeApiService });
+      set({ safe, safeApiService, isReady: true });
     },
     getSafeInfo: (safeAddress: string) => {
       const { safeApiService } = get();
@@ -59,6 +64,15 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
       safeApiService.getSafeInfo(safeAddress).then((res) => {
         set({ owners: res.owners, threshold: res.threshold });
       });
+    },
+    getQueueTx: async (safeAddress: string) => {
+      const { safeApiService } = get();
+      if (!safeApiService) {
+        return;
+      }
+      const result = await safeApiService.getPendingTransactions(safeAddress);
+      console.log("queueTx", result.results);
+      return result.results;
     },
     signAndCreateTx: async (
       senderAddress: string,

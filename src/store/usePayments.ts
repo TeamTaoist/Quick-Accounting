@@ -8,6 +8,7 @@ interface IPaymentsStore {
   paymentRequestList: IPaymentRequest[];
   paymentRequestDetails: IPaymentRequest;
   paymentRequestGroupDetails: IPaymentRequest[];
+  paymentRquestMap: Map<string, IPaymentRequest[]>;
   getPaymentRequestList: (
     workspaceId: number,
     isRejected?: boolean,
@@ -37,9 +38,13 @@ interface IPaymentsStore {
     workspaceId: string | undefined,
     paymentRequestIds: string
   ) => void;
+  getPaymentRequestBySafeTxHash: (
+    workspaceId: number,
+    safeTxHash: string[]
+  ) => void;
 }
 
-const usePaymentsStore = create<IPaymentsStore>((set) => {
+const usePaymentsStore = create<IPaymentsStore>((set, get) => {
   const { setLoading } = useLoading.getState();
   const { workspace } = useWorkspace.getState();
 
@@ -65,6 +70,7 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
       hide: false,
     },
     paymentRequestGroupDetails: [],
+    paymentRquestMap: new Map(),
     getPaymentRequestList: async (
       workspaceId,
       isRejected = false,
@@ -175,6 +181,40 @@ const usePaymentsStore = create<IPaymentsStore>((set) => {
         console.error(error);
       } finally {
         setLoading(false);
+      }
+    },
+    // get payment reqeust by safe tx hash
+    getPaymentRequestBySafeTxHash: async (
+      workspaceId: number,
+      safeTxHash: string[]
+    ) => {
+      setLoading(true);
+      try {
+        const reqs = safeTxHash.map((hash) =>
+          axiosClient.get(
+            `/payment_request/${workspaceId}/payment_requests_by_safe_tx_hash?safe_tx_hash=${hash}`
+          )
+        );
+        Promise.all(reqs)
+          .then((respons) => {
+            const { paymentRquestMap } = get();
+            respons.forEach((resp, i) => {
+              console.log(resp.data);
+              if (resp?.data?.msg === "success" && resp?.data?.code === 200) {
+                paymentRquestMap.set(safeTxHash[i], resp.data.data);
+              }
+            });
+            set({ paymentRquestMap: new Map(paymentRquestMap) });
+          })
+          .catch((error) => {
+            toast.error(error?.data?.msg || error?.status || error);
+            console.error(error);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } catch (error: any) {
+      } finally {
       }
     },
   };
