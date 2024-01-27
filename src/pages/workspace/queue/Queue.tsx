@@ -72,7 +72,7 @@ const Queue = () => {
 
   return (
     <QueueSection>
-      {queueList.length === 0 ? (
+      {list.length === 0 ? (
         <CategoryTitle>
           <h3>You don't have any transactions.</h3>
           <p style={{ width: "450px", textAlign: "center" }}>
