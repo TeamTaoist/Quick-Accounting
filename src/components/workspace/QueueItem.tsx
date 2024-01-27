@@ -43,8 +43,14 @@ const QueueTransactionItem = ({
   const approveTransaction = transactions[0]!;
   const rejectTransaction = transactions[1];
   const { workspace } = useWorkspace();
-  const { owners, threshold, confirmTx, executeTx, getConfirmedOwners } =
-    useSafeStore();
+  const {
+    owners,
+    threshold,
+    confirmTx,
+    executeTx,
+    createRejectTx,
+    getConfirmedOwners,
+  } = useSafeStore();
   const { paymentRquestMap, setCurrentPaymentRequestDetail } =
     usePaymentsStore();
   const payments = paymentRquestMap.get(approveTransaction.safeTxHash) || [];
@@ -70,7 +76,16 @@ const QueueTransactionItem = ({
   };
 
   const handleReject = () => {
-    rejectTransaction && confirmTx(rejectTransaction.safeTxHash);
+    if (rejectTransaction) {
+      confirmTx(rejectTransaction.safeTxHash);
+    } else {
+      address &&
+        createRejectTx(
+          workspace.vault_wallet,
+          address,
+          approveTransaction.nonce
+        );
+    }
     //   TODO update ui
   };
   const handleExecuteReject = () => {

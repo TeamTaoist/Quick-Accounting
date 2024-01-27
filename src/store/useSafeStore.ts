@@ -34,6 +34,11 @@ interface ISafeStore {
     safeAddress: string
   ) => Promise<IQueueGroupItemProps[]>;
   confirmTx: (safeTxHash: string) => void;
+  createRejectTx: (
+    safeAddress: string,
+    senderAddress: string,
+    nonce: number
+  ) => Promise<void>;
   executeTx: (
     workspace_id: number,
     safeTxHash: string,
@@ -205,12 +210,46 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
         setLoading(false);
       }
     },
-    rejectTx: async (nonce: number) => {
-      const { safe, safeApiService } = get();
-      if (!safe || !safeApiService) {
+    createRejectTx: async (
+      safeAddress: string,
+      senderAddress: string,
+      nonce: number
+    ) => {
+      const { safeApiService, safe } = get();
+      if (!safeApiService || !safe) {
         return;
       }
-      await safe.createRejectionTransaction(nonce);
+
+      try {
+        setLoading(true);
+        const safeTransaction = await safe.createRejectionTransaction(nonce);
+        console.log("===safeTransaction===", safeTransaction);
+
+        const safeTxHash = await safe.getTransactionHash(safeTransaction);
+
+        console.log("===safeTxHash===", safeTxHash);
+
+        const signature = await safe.signTransactionHash(safeTxHash);
+
+        console.log("Proposed a transaction with Safe:", safeAddress);
+        console.log("- safeTxHash:", safeTxHash);
+        console.log("- Sender:", senderAddress);
+        console.log("- Sender signature:", signature);
+
+        // Propose transaction to the service
+        await safeApiService.proposeTransaction({
+          safeAddress,
+          safeTransactionData: safeTransaction.data,
+          safeTxHash,
+          senderAddress,
+          senderSignature: signature.data,
+        });
+      } catch (error: any) {
+        console.error(error);
+        toast.error(error);
+      } finally {
+        setLoading(false);
+      }
     },
     executeTx: async (
       workspace_id: number,
@@ -225,7 +264,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
 
       try {
         setLoading(true);
-        const safeTransaction = await safeApiService.getTransaction(safeTxHash)
+        const safeTransaction = await safeApiService.getTransaction(safeTxHash);
 
         console.log("===safeTransaction===", safeTransaction);
 
