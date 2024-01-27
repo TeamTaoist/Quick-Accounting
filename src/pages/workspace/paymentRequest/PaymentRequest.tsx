@@ -182,15 +182,19 @@ const PaymentRequest = () => {
 
   // approve modal
   const handlePaymentRequestChaiModal = () => {
-    setSignPaymentModal(true);
     console.log(selected);
+    if (selected.length) {
+      setSignPaymentModal(true);
+    }
   };
 
   // reject payment request
   const paymentRequestIds = selected.join(",");
   const handleRejectPaymentRequest = () => {
-    rejectPaymentRequest(id, paymentRequestIds);
-    setPaymentLoading(!paymentLoading);
+    if (selected.length) {
+      rejectPaymentRequest(id, paymentRequestIds);
+      setPaymentLoading(!paymentLoading);
+    }
   };
 
   // get rejected payments
