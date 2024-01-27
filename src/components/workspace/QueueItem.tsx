@@ -23,6 +23,7 @@ import { formatTime } from "../../utils/time";
 import { useSafeStore } from "../../store/useSafeStore";
 import { getShortAddress } from "../../utils";
 import { useAccount } from "wagmi";
+import usePaymentsStore from "../../store/usePayments";
 
 // label
 const QueueLabelItem = ({ data }: { data: IQueueGroupItemProps }) => {
@@ -31,13 +32,18 @@ const QueueLabelItem = ({ data }: { data: IQueueGroupItemProps }) => {
 
 const QueueTransactionItem = ({
   transactions,
+  handleOpenModal,
 }: {
   transactions: IQueueTransaction[];
+  handleOpenModal: () => void;
 }) => {
   const { t } = useTranslation();
   const approveTransaction = transactions[0]!;
   const rejectTransaction = transactions[1];
   const { owners, threshold, confirmTx } = useSafeStore();
+  const { paymentRquestMap, setCurrentPaymentRequestDetail } =
+    usePaymentsStore();
+  const payments = paymentRquestMap.get(approveTransaction.safeTxHash) || [];
   const { address } = useAccount();
 
   const filterConfirmSigners = owners.filter(
@@ -68,6 +74,11 @@ const QueueTransactionItem = ({
     //   TODO update ui
   };
   const handleExecuteReject = () => {};
+
+  const onOpenMoreModal = (item: IPaymentRequest) => {
+    setCurrentPaymentRequestDetail(item);
+    handleOpenModal();
+  };
 
   return (
     <QueueNotice>
@@ -152,47 +163,36 @@ const QueueTransactionItem = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/* {(paymentRquestMap.get(item.safeTxHash) || []).map(
-                              (queueItem: any) => (
-                                <TableRow key={queueItem.ID}>
-                                  <TableCell>
-                                    {getShortAddress(queueItem.recipient)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {getShortAddress(queueItem.recipient)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {queueItem.amount} {queueItem.currency_name}
-                                  </TableCell>
-                                  <TableCell>
-                                    <CategoryCell>
-                                      {queueItem.category_name}
-                                    </CategoryCell>
-                                  </TableCell>
-                                  <TableCell>
-                                    {queueItem.CreatedAt.slice(0, 10)}
-                                  </TableCell>
-                                  <TableCell>
-                                    <Button
-                                      variant="outlined"
-                                      sx={{
-                                        borderColor: "black",
-                                        color: "black",
-                                        textTransform: "lowercase",
-                                      }}
-                                      onClick={handleOpenModal}
-                                    >
-                                      view more
-                                    </Button>
-                                    <CustomModal
-                                      open={openModal}
-                                      setOpen={setOpenModal}
-                                      component={PaymentRequestDetails}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-                              )
-                            )} */}
+                {(payments || []).map((queueItem: IPaymentRequest) => (
+                  <TableRow key={queueItem.ID}>
+                    <TableCell>
+                      {getShortAddress(queueItem.recipient)}
+                    </TableCell>
+                    <TableCell>
+                      {getShortAddress(queueItem.recipient)}
+                    </TableCell>
+                    <TableCell>
+                      {queueItem.amount} {queueItem.currency_name}
+                    </TableCell>
+                    <TableCell>
+                      <CategoryCell>{queueItem.category_name}</CategoryCell>
+                    </TableCell>
+                    <TableCell>{queueItem.CreatedAt.slice(0, 10)}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          borderColor: "black",
+                          color: "black",
+                          textTransform: "lowercase",
+                        }}
+                        onClick={() => onOpenMoreModal(queueItem)}
+                      >
+                        view more
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -202,11 +202,22 @@ const QueueTransactionItem = ({
   );
 };
 
-export default function QueueItem({ data }: { data: IQueueGroupItemProps }) {
+export default function QueueItem({
+  data,
+  handleOpenModal,
+}: {
+  data: IQueueGroupItemProps;
+  handleOpenModal: () => void;
+}) {
   if (data.type === TransactionListItemType.LABEL) {
     return <QueueLabelItem data={data} />;
   } else if (data.type === TransactionListItemType.TRANSACTION) {
-    return <QueueTransactionItem transactions={data.transactions!} />;
+    return (
+      <QueueTransactionItem
+        transactions={data.transactions!}
+        handleOpenModal={handleOpenModal}
+      />
+    );
   } else {
     return null;
   }

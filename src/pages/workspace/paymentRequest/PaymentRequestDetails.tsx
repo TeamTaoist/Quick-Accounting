@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import Header from "../../../components/layout/header/Header";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   InputAdornment,
@@ -256,7 +256,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                     </TableCell>
                   </TableRow>
                   {parseCategoryProperties?.map((property: any) => (
-                    <>
+                    <React.Fragment key={property.id}>
                       {property.type === "single-select" && (
                         <TableRow
                           sx={{
@@ -364,7 +364,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           </TableRow>
                         )}
                       </>
-                    </>
+                    </React.Fragment>
                   ))}
                 </TableBody>
               </Table>

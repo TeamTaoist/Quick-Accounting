@@ -32,7 +32,7 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import { SafeMultisigTransactionResponse } from "@safe-global/safe-core-sdk-types";
 import { getShortAddress } from "../../../utils";
 import usePaymentsStore from "../../../store/usePayments";
-import { TransactionListItem } from "@safe-global/safe-gateway-typescript-sdk";
+import { TransactionListItemType } from "@safe-global/safe-gateway-typescript-sdk";
 import QueueItem from "../../../components/workspace/QueueItem";
 
 const Queue = () => {
@@ -64,13 +64,19 @@ const Queue = () => {
     isReady && workspace?.vault_wallet && getQueueList();
   }, [isReady, workspace?.vault_wallet]);
 
-  // useEffect(() => {
-  //   list.length &&
-  //     getPaymentRequestBySafeTxHash(
-  //       workspaceId,
-  //       list.map((item) => item.safeTxHash)
-  //     );
-  // }, [list, workspaceId]);
+  useEffect(() => {
+    const ids: string[] = [];
+    list.forEach((item) => {
+      if (item.type === TransactionListItemType.TRANSACTION) {
+        if (item.transactions?.[0]) {
+          ids.push(item.transactions?.[0].safeTxHash);
+        }
+      }
+    });
+    workspaceId &&
+      ids.length &&
+      getPaymentRequestBySafeTxHash(workspaceId, ids);
+  }, [list, workspaceId]);
 
   return (
     <QueueSection>
@@ -103,7 +109,11 @@ const Queue = () => {
           {paymentRequest ? (
             <>
               {list.map((item, index) => (
-                <QueueItem data={item} key={index} />
+                <QueueItem
+                  data={item}
+                  key={index}
+                  handleOpenModal={handleOpenModal}
+                />
               ))}
             </>
           ) : (
@@ -111,6 +121,11 @@ const Queue = () => {
               <RejectDataTable />
             </RejectSection>
           )}
+          <CustomModal
+            open={openModal}
+            setOpen={setOpenModal}
+            component={PaymentRequestDetails}
+          />
         </QueueContainer>
       )}
     </QueueSection>

@@ -43,6 +43,7 @@ interface IPaymentsStore {
     workspaceId: number,
     safeTxHash: string[]
   ) => Promise<void>;
+  setCurrentPaymentRequestDetail: (paymentRequest: IPaymentRequest) => void;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set, get) => {
@@ -220,6 +221,10 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       } catch (error: any) {
       } finally {
       }
+    },
+    // update current Payment Request detail
+    setCurrentPaymentRequestDetail: (paymentRequest: IPaymentRequest) => {
+      set({ paymentRequestDetails: paymentRequest });
     },
   };
 });
