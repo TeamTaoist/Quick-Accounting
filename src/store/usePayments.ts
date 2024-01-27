@@ -160,7 +160,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         );
         if (data.msg === "success" && data.code === 200) {
           toast.success("Payment request on chain successfully");
-          navigate("/workspace/8/queue");
+          navigate(`/workspace/${workspaceId}/queue`);
         }
       } catch (error: any) {
         toast.error(error?.data.msg || error?.status || error);
