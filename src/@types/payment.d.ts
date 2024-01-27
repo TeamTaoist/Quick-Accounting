@@ -38,3 +38,8 @@ declare interface IPaymentRequestBody {
   category_properties?: ICategoryProperties[];
   rows: IRows[];
 }
+
+declare interface IPageResponse<T> {
+  total: number;
+  rows: T[]
+}

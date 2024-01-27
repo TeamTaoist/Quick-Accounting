@@ -14,7 +14,7 @@ import statusIcon from "../../assets/workspace/status-icon.svg";
 import styled from "@emotion/styled";
 import CustomModal from "../../utils/CustomModal";
 import PaymentRequestDetails from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import usePaymentsStore from "../../store/usePayments";
 
 interface RejectDataTableProps {
@@ -31,22 +31,37 @@ const RejectDataTable = ({
   const { id } = useParams();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
+  const [list, setList] = useState<IPaymentRequest[]>([]);
+  const [total, setTotal] = useState(0);
 
-  const { paymentRequestList, getPaymentRequestDetails } = usePaymentsStore();
+  const {
+    paymentRequestList,
+    getPaymentRequestDetails,
+    getFailedPaymentRequestList,
+  } = usePaymentsStore();
 
   const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
     setOpenModal(true);
     getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
   };
   // filter table data
-  const filterData = paymentRequestList.filter((data) => {
-    const searchItem = data.recipient
-      .toLowerCase()
-      .includes(searchTerm!.toLowerCase());
-    const filterByCategory =
-      selectedValue === "" || data.category_name === selectedValue;
-    return searchItem && filterByCategory;
-  });
+  // const filterData = paymentRequestList.filter((data) => {
+  //   const searchItem = data.recipient
+  //     .toLowerCase()
+  //     .includes(searchTerm!.toLowerCase());
+  //   const filterByCategory =
+  //     selectedValue === "" || data.category_name === selectedValue;
+  //   return searchItem && filterByCategory;
+  // });
+
+  useEffect(() => {
+    getFailedPaymentRequestList(Number(id)).then(
+      (res: IPageResponse<IPaymentRequest>) => {
+        setTotal(res?.total || 0);
+        setList(res?.rows || []);
+      }
+    );
+  }, []);
   return (
     <div>
       <CustomModal
@@ -77,7 +92,7 @@ const RejectDataTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {filterData?.map((payment) => (
+            {list?.map((payment) => (
               <TableRow key={payment.ID}>
                 <TableCell>{recipientFormate(payment.recipient)}</TableCell>
                 <TableCell>{payment.amount} USDT</TableCell>

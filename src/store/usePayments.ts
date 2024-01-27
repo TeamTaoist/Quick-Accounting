@@ -44,6 +44,11 @@ interface IPaymentsStore {
     safeTxHash: string[]
   ) => Promise<void>;
   setCurrentPaymentRequestDetail: (paymentRequest: IPaymentRequest) => void;
+  getFailedPaymentRequestList: (
+    workspaceId: number,
+    page?: number,
+    size?: number
+  ) => Promise<IPageResponse<IPaymentRequest>>;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set, get) => {
@@ -225,6 +230,25 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
     // update current Payment Request detail
     setCurrentPaymentRequestDetail: (paymentRequest: IPaymentRequest) => {
       set({ paymentRequestDetails: paymentRequest });
+    },
+    getFailedPaymentRequestList: async (
+      workspaceId: number,
+      page = 0,
+      size = 10
+    ) => {
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.get(`/queue/${workspaceId}`, {
+          params: { page, size, failed: true },
+        });
+        if (data?.msg === "success" && data?.code === 200) {
+          return data;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     },
   };
 });
