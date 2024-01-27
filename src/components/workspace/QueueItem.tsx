@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useEffect, useState } from "react";
 import {
   TransactionListItemType,
   ConflictType,
@@ -24,6 +25,7 @@ import { useSafeStore } from "../../store/useSafeStore";
 import { getShortAddress } from "../../utils";
 import { useAccount } from "wagmi";
 import usePaymentsStore from "../../store/usePayments";
+import { useWorkspace } from "../../store/useWorkspace";
 
 // label
 const QueueLabelItem = ({ data }: { data: IQueueGroupItemProps }) => {
@@ -40,20 +42,16 @@ const QueueTransactionItem = ({
   const { t } = useTranslation();
   const approveTransaction = transactions[0]!;
   const rejectTransaction = transactions[1];
-  const { owners, threshold, confirmTx } = useSafeStore();
+  const { workspace } = useWorkspace();
+  const { owners, threshold, confirmTx, executeTx, getConfirmedOwners } =
+    useSafeStore();
   const { paymentRquestMap, setCurrentPaymentRequestDetail } =
     usePaymentsStore();
   const payments = paymentRquestMap.get(approveTransaction.safeTxHash) || [];
   const { address } = useAccount();
 
-  const filterConfirmSigners = owners.filter(
-    (owner) => !approveTransaction.missingSigners?.includes(owner)
-  );
-  const filterRejectSigners = rejectTransaction
-    ? owners.filter(
-        (owner) => !rejectTransaction.missingSigners?.includes(owner)
-      )
-    : [];
+  const [filterConfirmSigners, setConfirmedList] = useState<string[]>([]);
+  const [filterRejectSigners, setRejectedList] = useState<string[]>([]);
 
   const hasConfirmed = !!filterConfirmSigners.find((s) => s === address);
   const hasRejected = !!filterRejectSigners.find((s) => s === address);
@@ -67,7 +65,16 @@ const QueueTransactionItem = ({
     confirmTx(approveTransaction.safeTxHash);
     //   TODO update ui
   };
-  const handleExecuteApprove = () => {};
+  const handleExecuteApprove = () => {
+    address &&
+      executeTx(
+        workspace.ID,
+        address,
+        approveTransaction.safeTxHash,
+        approveTransaction.nonce,
+        payments
+      );
+  };
 
   const handleReject = () => {
     rejectTransaction && confirmTx(rejectTransaction.safeTxHash);
@@ -79,6 +86,21 @@ const QueueTransactionItem = ({
     setCurrentPaymentRequestDetail(item);
     handleOpenModal();
   };
+
+  useEffect(() => {
+    if (
+      approveTransaction.safeTxHash &&
+      approveTransaction.confirmationsSubmitted
+    ) {
+      getConfirmedOwners(approveTransaction.safeTxHash).then(setConfirmedList);
+    }
+    if (
+      rejectTransaction?.safeTxHash &&
+      rejectTransaction?.confirmationsSubmitted
+    ) {
+      getConfirmedOwners(rejectTransaction.safeTxHash).then(setRejectedList);
+    }
+  }, [approveTransaction, rejectTransaction]);
 
   return (
     <QueueNotice>

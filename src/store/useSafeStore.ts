@@ -14,6 +14,7 @@ import {
   TransactionListItem,
   TransactionListItemType,
 } from "@safe-global/safe-gateway-typescript-sdk";
+import axiosClient from "../utils/axios";
 
 interface ISafeStore {
   safe?: Safe;
@@ -33,6 +34,15 @@ interface ISafeStore {
     safeAddress: string
   ) => Promise<IQueueGroupItemProps[]>;
   confirmTx: (safeTxHash: string) => void;
+  executeTx: (
+    workspace_id: number,
+    senderAddress: string,
+    safeTxHash: string,
+    nonce: number,
+    requests: IPaymentRequest[],
+    isReject?: boolean
+  ) => void;
+  getConfirmedOwners: (safeTxHash: string) => Promise<string[]>;
 }
 
 export const createEthersAdapter = (signer: any) => {
@@ -191,7 +201,6 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
 
         console.log("Added a new signature to transaction with safeTxGas");
         console.log("- Signer signature:", signatureResponse.signature);
-
       } catch (error: any) {
         toast.error(error?.data?.msg || error?.status || error);
       } finally {
@@ -206,24 +215,80 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
       await safe.createRejectionTransaction(nonce);
     },
     executeTx: async (
-      safeTransaction: SafeTransaction | SafeMultisigTransactionResponse
+      workspace_id: number,
+      senderAddress: string,
+      safeTxHash: string,
+      nonce: number,
+      requests: IPaymentRequest[],
+      isReject = true
     ) => {
-      const { safe, safeApiService } = get();
-      if (!safe || !safeApiService) {
+      const { safe } = get();
+      if (!safe) {
         return;
       }
-      const isTxExecutable = await safe.isValidTransaction(safeTransaction);
 
-      if (isTxExecutable) {
-        // Execute the transaction
-        const txResponse = await safe.executeTransaction(safeTransaction);
-        const contractReceipt = await txResponse.transactionResponse?.wait();
+      try {
+        setLoading(true);
+        const txParams = requests.map((item) =>
+          createTokenTransferParams(
+            senderAddress,
+            item.amount,
+            item.decimals,
+            item.currency_contract_address
+          )
+        );
 
-        console.log("Transaction executed.");
-        console.log("- Transaction hash:", contractReceipt?.blockHash);
-      } else {
-        console.log("Transaction invalid. Transaction was not executed.");
+        console.log("===txParams===", txParams);
+
+        const safeTransaction = await safe.createTransaction({
+          transactions: [...txParams],
+          options: { nonce },
+        });
+
+        console.log("===safeTransaction===", safeTransaction);
+
+        const isTxExecutable = await safe.isValidTransaction(safeTransaction);
+
+        console.log("===isTxExecutable===", isTxExecutable);
+
+        if (isTxExecutable) {
+          // Execute the transaction
+          const txResponse = await safe.executeTransaction(safeTransaction);
+          const contractReceipt = await txResponse.transactionResponse?.wait();
+
+          console.log("Transaction executed.");
+          console.log("- Transaction hash:", contractReceipt?.blockHash);
+        } else {
+          console.log("Transaction invalid. Transaction was not executed.");
+        }
+
+        await axiosClient.post(
+          `/payment_requests/${workspace_id}/${
+            isReject ? "mark_failed" : "mark_executed"
+          }?ids=${requests
+            .map((r) => r.ID)
+            .join(",")}&tx=${safeTxHash}&timestamp=${Date.now()}`
+        );
+      } catch (error: any) {
+        toast.error(error?.data?.msg || error?.status || error);
+      } finally {
+        setLoading(false);
       }
+    },
+    getConfirmedOwners: async (safeTxHash: string) => {
+      const { safeApiService, safe } = get();
+      if (!safeApiService || !safe) {
+        return [];
+      }
+      try {
+        const res = await safeApiService.getTransactionConfirmations(
+          safeTxHash
+        );
+        return res.results.map((item) => item.owner);
+      } catch (error) {
+        console.error("getConfirmedOwners failed", error);
+      }
+      return [];
     },
   };
 });
