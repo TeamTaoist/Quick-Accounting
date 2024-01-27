@@ -50,6 +50,8 @@ import {
   getBalances,
 } from "@safe-global/safe-gateway-typescript-sdk";
 import usePaymentsStore from "../../../store/usePayments";
+import { formatBalance } from "../../../utils/number";
+import { parseUnits } from "viem";
 
 interface SubmitRowData {
   recipient: string;
@@ -193,16 +195,34 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
         ? [proPertyTextValue]
         : []),
     ],
-    rows: rows.map((row) => ({
-      amount: row.amount,
-      currency_contract_address: row.currency,
-      currency_name: row.currency,
-      recipient: row.recipient,
-    })),
+    rows: rows.map((row) => {
+      const token = data?.items.find(
+        (item) => item.tokenInfo.address === row.currency
+      );
+      return token
+        ? {
+            amount: parseUnits(
+              row.amount,
+              token!.tokenInfo.decimals
+            ).toString(),
+            currency_contract_address: row.currency,
+            currency_name: token?.tokenInfo.symbol!,
+            decimals: token.tokenInfo.decimals,
+            recipient: row.recipient,
+          }
+        : {
+            amount: row.amount,
+            currency_contract_address: row.currency,
+            currency_name: "",
+            decimals: 18,
+            recipient: row.recipient,
+          };
+    }),
   };
 
   // submit
   const handlePaymentRequestSubmit = () => {
+    // TODO check all of fields
     createPaymentRequest(Number(id), paymentRequestBody, navigate).then((r) => {
       if (r) {
         onClose();
@@ -348,7 +368,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                         >
                           {data?.items.map((item) => (
                             <MenuItem
-                              value={item.tokenInfo.symbol}
+                              value={item.tokenInfo.address}
                               sx={{
                                 "&:hover": {
                                   backgroundColor: "var(--hover-bg)",
@@ -358,7 +378,12 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 },
                               }}
                             >
-                              {item.tokenInfo.symbol}
+                              {item.tokenInfo.symbol}(
+                              {formatBalance(
+                                item.balance,
+                                item.tokenInfo.decimals
+                              )}
+                              )
                             </MenuItem>
                           ))}
 

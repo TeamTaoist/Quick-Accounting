@@ -126,8 +126,12 @@ const PaymentRequest = () => {
 
   // group payment details
   const handleGroupPaymentDetails = (paymentRequestId: string) => {
-    setOpenGroupPaymentModal(true);
-    getPaymentRequestGroupDetails(paymentRequestId);
+    getPaymentRequestGroupDetails(paymentRequestId).then((r) => {
+      if (r) {
+        setOpenGroupPaymentModal(true);
+      }
+    });
+
     console.log(paymentRequestId);
   };
 
@@ -397,7 +401,7 @@ const PaymentRequest = () => {
                                 }}
                                 onClick={() => handleGroupPaymentDetails(id)}
                               >
-                                view moree
+                                view more
                               </Button>
                             </TableCell>
                           </TableRow>

@@ -14,6 +14,9 @@ import {
 import data from "../../../data/tableData";
 import usePaymentsStore from "../../../store/usePayments";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSafeStore } from "../../../store/useSafeStore";
+import { useAccount } from "wagmi";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 interface SignPaymentRequestProps {
   setOpen: (open: boolean) => void;
@@ -24,14 +27,18 @@ const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
 
-const SignPaymentRequest = ({ setOpen, selectedItem }: any) => {
+const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { address } = useAccount();
+  const { signAndCreateTx } = useSafeStore();
+  const { workspace } = useWorkspace();
   const { paymentRequestList, approvePaymentRequest } = usePaymentsStore();
   const paymentRequestIds = selectedItem.join(",");
+ 
   // get selected payments for sign to chain
   const signItems = paymentRequestList.filter((payment) =>
-    paymentRequestIds.includes(payment.payment_request_id)
+    selectedItem.includes(payment.payment_request_id)
   );
 
   const totalTransactionValue = signItems.reduce(
@@ -39,8 +46,16 @@ const SignPaymentRequest = ({ setOpen, selectedItem }: any) => {
     0
   );
   // approve payment request
-  const handleApproveRequest = () => {
-    approvePaymentRequest(id, paymentRequestIds, navigate);
+  const handleApproveRequest = async () => {
+    if (address) {
+      const safeTxHash = await signAndCreateTx(
+        address,
+        workspace.vault_wallet,
+        signItems
+      );
+      safeTxHash &&
+        approvePaymentRequest(id, paymentRequestIds, navigate, safeTxHash);
+    }
   };
 
   return (

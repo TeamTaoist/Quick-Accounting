@@ -1,26 +1,25 @@
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { mainnet, polygon } from "wagmi/chains";
-import { publicProvider } from "wagmi/providers/public";
-import { InjectedConnector } from "wagmi/connectors/injected";
+import { http, createConfig } from "wagmi";
+import { mainnet, sepolia, polygon } from "wagmi/chains";
+import { WagmiProvider } from "wagmi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-export default function WagmiProvider(props: React.PropsWithChildren) {
-  const { chains, publicClient } = configureChains(
-    [mainnet, polygon],
-    [publicProvider()]
+const config = createConfig({
+  chains: [mainnet, sepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+    [polygon.id]: http(),
+  },
+});
+
+const queryClient = new QueryClient();
+
+export default function WagmiConfigProvider(props: React.PropsWithChildren) {
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        {props.children}
+      </QueryClientProvider>
+    </WagmiProvider>
   );
-
-  const config = createConfig({
-    autoConnect: true,
-    connectors: [
-      new InjectedConnector({
-        chains,
-        options: {
-          shimDisconnect: false,
-        },
-      }),
-    ],
-    publicClient,
-  });
-
-  return <WagmiConfig config={config}>{props.children}</WagmiConfig>;
 }

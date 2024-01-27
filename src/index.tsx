@@ -4,6 +4,10 @@ import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./utils/i18n";
+import { Buffer } from "buffer";
+
+Buffer.from("anything", "base64");
+window.Buffer = window.Buffer || require("buffer").Buffer;
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
