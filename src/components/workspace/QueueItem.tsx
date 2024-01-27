@@ -37,7 +37,7 @@ const QueueTransactionItem = ({
   const { t } = useTranslation();
   const approveTransaction = transactions[0]!;
   const rejectTransaction = transactions[1];
-  const { owners, threshold } = useSafeStore();
+  const { owners, threshold, confirmTx } = useSafeStore();
   const { address } = useAccount();
 
   const filterConfirmSigners = owners.filter(
@@ -56,6 +56,19 @@ const QueueTransactionItem = ({
     approveTransaction.confirmationsSubmitted >= threshold;
   const canExecuteReject =
     rejectTransaction?.confirmationsSubmitted >= owners.length - threshold + 1;
+
+  const handleApprove = () => {
+    confirmTx(approveTransaction.safeTxHash);
+    //   TODO update ui
+  };
+  const handleExecuteApprove = () => {};
+
+  const handleReject = () => {
+    rejectTransaction && confirmTx(rejectTransaction.safeTxHash);
+    //   TODO update ui
+  };
+  const handleExecuteReject = () => {};
+
   return (
     <QueueNotice>
       <Accordion>
@@ -76,57 +89,70 @@ const QueueTransactionItem = ({
               {approveTransaction.actionCount || 1} {t("queue.Action")}
             </h5>
           </Header>
-          <AccordionDetails sx={{ p: 0 }}>
-            {/* category property */}
-            <Action>
-              <Approvals>
-                <h4>
-                  Approvals: {approveTransaction.confirmationsSubmitted || 0}/
-                  {approveTransaction.confirmationsRequired || threshold}
-                </h4>
-                {filterConfirmSigners?.map((owner) => (
-                  <p key={owner}>{getShortAddress(owner)}</p>
-                ))}
+        </AccordionSummary>
+        <AccordionDetails sx={{ p: 0 }}>
+          {/* category property */}
+          <Action>
+            <Approvals>
+              <h4>
+                Approvals: {approveTransaction.confirmationsSubmitted || 0}/
+                {approveTransaction.confirmationsRequired || threshold}
+              </h4>
+              {filterConfirmSigners?.map((owner) => (
+                <p key={owner}>{getShortAddress(owner)}</p>
+              ))}
 
-                <button disabled={hasConfirmed}>{t("queue.Approve")}</button>
-                <button disabled={!canExecuteConfirm}>
-                  {t("queue.Execute")}
-                </button>
-              </Approvals>
-              <Approvals>
-                <h4>
-                  Rejections: {rejectTransaction?.confirmationsSubmitted || 0}/
-                  {rejectTransaction?.confirmationsRequired ||
-                    owners.length - threshold + 1}
-                </h4>
-                {filterRejectSigners?.map((owner) => (
-                  <p key={owner}>{getShortAddress(owner)}</p>
-                ))}
-                <button disabled={hasRejected}>Reject</button>
-                <button disabled={!canExecuteReject}>Execute</button>
-              </Approvals>
-            </Action>
-            <TableContainer
-              component={Paper}
-              sx={{
-                maxHeight: 200,
-                minWidth: 800,
-                boxShadow: "none",
-              }}
-            >
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Safe</TableCell>
-                    <TableCell>Counterparty</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {/* {(paymentRquestMap.get(item.safeTxHash) || []).map(
+              <button disabled={hasConfirmed} onClick={handleApprove}>
+                {t("queue.Approve")}
+              </button>
+              <button
+                disabled={!canExecuteConfirm}
+                onClick={handleExecuteApprove}
+              >
+                {t("queue.Execute")}
+              </button>
+            </Approvals>
+            <Approvals>
+              <h4>
+                Rejections: {rejectTransaction?.confirmationsSubmitted || 0}/
+                {rejectTransaction?.confirmationsRequired ||
+                  owners.length - threshold + 1}
+              </h4>
+              {filterRejectSigners?.map((owner) => (
+                <p key={owner}>{getShortAddress(owner)}</p>
+              ))}
+              <button disabled={hasRejected} onClick={handleReject}>
+                Reject
+              </button>
+              <button
+                disabled={!canExecuteReject}
+                onClick={handleExecuteReject}
+              >
+                Execute
+              </button>
+            </Approvals>
+          </Action>
+          <TableContainer
+            component={Paper}
+            sx={{
+              maxHeight: 200,
+              minWidth: 800,
+              boxShadow: "none",
+            }}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Safe</TableCell>
+                  <TableCell>Counterparty</TableCell>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Category</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {/* {(paymentRquestMap.get(item.safeTxHash) || []).map(
                               (queueItem: any) => (
                                 <TableRow key={queueItem.ID}>
                                   <TableCell>
@@ -167,11 +193,10 @@ const QueueTransactionItem = ({
                                 </TableRow>
                               )
                             )} */}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </AccordionDetails>
-        </AccordionSummary>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </AccordionDetails>
       </Accordion>
     </QueueNotice>
   );

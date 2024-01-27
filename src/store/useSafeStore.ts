@@ -32,6 +32,7 @@ interface ISafeStore {
     chainId: number,
     safeAddress: string
   ) => Promise<IQueueGroupItemProps[]>;
+  confirmTx: (safeTxHash: string) => void;
 }
 
 export const createEthersAdapter = (signer: any) => {
@@ -178,16 +179,24 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
       if (!safe || !safeApiService) {
         return;
       }
-      const signature = await safe.signTransactionHash(safeTxHash);
+      try {
+        setLoading(true);
+        const signature = await safe.signTransactionHash(safeTxHash);
 
-      // Confirm the Safe transaction
-      const signatureResponse = await safeApiService.confirmTransaction(
-        safeTxHash,
-        signature.data
-      );
+        // Confirm the Safe transaction
+        const signatureResponse = await safeApiService.confirmTransaction(
+          safeTxHash,
+          signature.data
+        );
 
-      console.log("Added a new signature to transaction with safeTxGas");
-      console.log("- Signer signature:", signatureResponse.signature);
+        console.log("Added a new signature to transaction with safeTxGas");
+        console.log("- Signer signature:", signatureResponse.signature);
+
+      } catch (error: any) {
+        toast.error(error?.data?.msg || error?.status || error);
+      } finally {
+        setLoading(false);
+      }
     },
     rejectTx: async (nonce: number) => {
       const { safe, safeApiService } = get();
