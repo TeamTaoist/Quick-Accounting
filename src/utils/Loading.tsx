@@ -26,5 +26,5 @@ const LoadingContainer = styled.div`
   width: 100vw;
   height: 100vh;
   position: fixed;
-  z-index: 999;
+  z-index: 99999;
 `;
