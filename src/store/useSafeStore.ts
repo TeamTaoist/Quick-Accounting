@@ -13,6 +13,8 @@ import {
   getTransactionQueue,
   TransactionListItem,
   TransactionListItemType,
+  TransactionInfoType,
+  ConflictType,
 } from "@safe-global/safe-gateway-typescript-sdk";
 import axiosClient from "../utils/axios";
 
@@ -91,35 +93,69 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
       safeAddress: string
     ): Promise<IQueueGroupItemProps[]> => {
       const result = await getTransactionQueue(String(chainId), safeAddress);
-      // const result = await safeApiService.getPendingTransactions(safeAddress);
-      // console.log("queueTx", result.results);
       const array = new Array<IQueueGroupItemProps>();
+      const currentConflict: {
+        nonce: number;
+        transactions: IQueueTransaction[];
+      } = {
+        nonce: 0,
+        transactions: [],
+      };
       result.results.forEach((item: TransactionListItem) => {
         if (item.type === TransactionListItemType.LABEL) {
           array.push(item);
+        } else if (item.type === TransactionListItemType.CONFLICT_HEADER) {
+          currentConflict.nonce = item.nonce;
         } else if (item.type === TransactionListItemType.TRANSACTION) {
-          if (item.transaction.executionInfo?.type === "MULTISIG") {
+          if (
+            item.transaction.executionInfo?.type === "MULTISIG" &&
+            [TransactionInfoType.CUSTOM, TransactionInfoType.TRANSFER].includes(
+              item.transaction.txInfo.type
+            )
+          ) {
+            const tx = {
+              nonce: item.transaction.executionInfo?.nonce,
+              confirmationsRequired:
+                item.transaction.executionInfo?.confirmationsRequired,
+              confirmationsSubmitted:
+                item.transaction.executionInfo?.confirmationsSubmitted,
+              safeTxHash: item.transaction.id.split("_")[2],
+              timestamp: item.transaction.timestamp,
+              // @ts-ignore
+              actionCount: item.transaction.txInfo.actionCount,
+              txStatus: item.transaction.txStatus,
+              missingSigners:
+                item.transaction.executionInfo?.missingSigners?.map(
+                  (item) => item.value
+                ) || [],
+            };
+            if (
+              item.transaction.executionInfo.nonce === currentConflict.nonce
+            ) {
+              if (
+                item.transaction.txInfo.type === TransactionInfoType.CUSTOM &&
+                item.transaction.txInfo.isCancellation
+              ) {
+                currentConflict.transactions[1] = tx;
+              } else if (
+                item.transaction.txInfo.type === TransactionInfoType.TRANSFER
+              ) {
+                currentConflict.transactions[0] = tx;
+              }
+            } else {
+              array.push({
+                type: item.type,
+                transactions: [tx],
+              });
+            }
+          }
+          if (item.conflictType === ConflictType.END && currentConflict.nonce) {
             array.push({
               type: item.type,
-              transactions: [
-                {
-                  nonce: item.transaction.executionInfo?.nonce,
-                  confirmationsRequired:
-                    item.transaction.executionInfo?.confirmationsRequired,
-                  confirmationsSubmitted:
-                    item.transaction.executionInfo?.confirmationsSubmitted,
-                  safeTxHash: item.transaction.id.split("_")[2],
-                  timestamp: item.transaction.timestamp,
-                  // @ts-ignore
-                  actionCount: item.transaction.txInfo.actionCount,
-                  txStatus: item.transaction.txStatus,
-                  missingSigners:
-                    item.transaction.executionInfo?.missingSigners?.map(
-                      (item) => item.value
-                    ) || [],
-                },
-              ],
+              transactions: [...currentConflict.transactions],
             });
+            currentConflict.nonce = 0;
+            currentConflict.transactions = [];
           }
         } else {
           return { type: item.type };
