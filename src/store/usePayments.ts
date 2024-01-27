@@ -41,7 +41,7 @@ interface IPaymentsStore {
   getPaymentRequestBySafeTxHash: (
     workspaceId: number,
     safeTxHash: string[]
-  ) => void;
+  ) => Promise<void>;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set, get) => {
@@ -60,6 +60,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       amount: "",
       currency_name: "",
       currency_contract_address: "",
+      decimals: 18,
       category_id: 0,
       category_name: "",
       category_properties: "",

@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import SafeApiKit from "@safe-global/api-kit";
 import { useLoading } from "./useLoading";
-import { createTokenTransferParams01 } from "../utils/safeTx";
+import { createTokenTransferParams } from "../utils/safeTx";
 import {
   SafeTransaction,
   SafeMultisigTransactionResponse,
@@ -89,9 +89,10 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
       console.log("nextNonce", nextNonce);
 
       const txParams = requests.map((item) =>
-        createTokenTransferParams01(
+        createTokenTransferParams(
           senderAddress,
           item.amount,
+          item.decimals,
           item.currency_contract_address
         )
       );

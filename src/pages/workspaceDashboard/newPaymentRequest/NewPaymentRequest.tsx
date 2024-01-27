@@ -207,12 +207,14 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
             ).toString(),
             currency_contract_address: row.currency,
             currency_name: token?.tokenInfo.symbol!,
+            decimals: token.tokenInfo.decimals,
             recipient: row.recipient,
           }
         : {
             amount: row.amount,
             currency_contract_address: row.currency,
             currency_name: "",
+            decimals: 18,
             recipient: row.recipient,
           };
     }),
