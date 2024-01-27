@@ -244,8 +244,8 @@ const Category = () => {
     const propertyFormValues = categoryProperties[categoryId][showProperty!];
     const propertyValue = {
       category_id: categoryId,
-      name: propertyFormValues.name,
-      type: propertyFormValues.type,
+      name: propertyFormValues?.name,
+      type: propertyFormValues?.type,
       values: propertyValues.join(";"),
       workspace_id: Number(id),
     };
