@@ -108,8 +108,8 @@ const Category = () => {
     name: "Category name",
     workspace_id: Number(id),
   };
-  const handleCreateCategory = () => {
-    createWorkspaceCategory(createCategoryFormData);
+  const handleCreateCategory = async () => {
+    await createWorkspaceCategory(createCategoryFormData);
     setCategoryLoading(!categoryLoading);
   };
 
@@ -140,15 +140,14 @@ const Category = () => {
   };
 
   // update archive workspace category
-  const handelArchiveCategory = (
+  const handelArchiveCategory = async (
     e: any,
     workspaceId: number,
     categoryId: number
   ) => {
     e.stopPropagation();
-    updateCategoryArchive(workspaceId, categoryId);
+    await updateCategoryArchive(workspaceId, categoryId);
     setCategoryLoading(!categoryLoading);
-    console.log("update archive");
   };
 
   // get all categories
@@ -372,7 +371,10 @@ const Category = () => {
                         <PropertyOptions>
                           <h4>ADD PROPERTIES</h4>
                           {category.properties?.map((property, index) => (
-                            <div onClick={() => setShowProperty(property.ID)}>
+                            <div
+                              key={index}
+                              onClick={() => setShowProperty(property.ID)}
+                            >
                               <Option>
                                 <PropertyTitle>
                                   <img src={property1} alt="" />

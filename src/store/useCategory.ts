@@ -47,15 +47,23 @@ interface UseCategory {
   workspaceCategories: WorkspaceCategories;
   workspaceCategory: WorkspaceCategory;
   getWorkspaceCategories: (workspaceId: number, archiveQuery?: boolean) => void;
-  createWorkspaceCategory: (createCategoryFormData: CreateCategoryForm) => void;
+  createWorkspaceCategory: (
+    createCategoryFormData: CreateCategoryForm
+  ) => Promise<void>;
   getWorkspaceCategoryDetails: (workspaceCategoryId: number) => void;
   updateCategoryName: (
     workspaceId: number,
     categoryId: number,
     categoryName: string
   ) => void;
-  updateCategoryArchive: (workspaceId: number, categoryIds: number) => void;
-  unArchiveCategory: (workspaceId: number, categoryIds: number[]) => void;
+  updateCategoryArchive: (
+    workspaceId: number,
+    categoryIds: number
+  ) => Promise<void>;
+  unArchiveCategory: (
+    workspaceId: number,
+    categoryIds: number[]
+  ) => Promise<void>;
 }
 
 export const useCategory = create<UseCategory>((set) => {

@@ -50,9 +50,10 @@ const Archived = ({ setOpen }: any) => {
   // un archive category
   const workspaceId = Number(id);
   const categoryIds = selected;
-  const handleUnArchive = () => {
-    unArchiveCategory(workspaceId, categoryIds);
+  const handleUnArchive = async () => {
+    await unArchiveCategory(workspaceId, categoryIds);
     setCategoryLoading(!categoryLoading);
+    setSelected([]);
   };
 
   // get workspace un-archive category

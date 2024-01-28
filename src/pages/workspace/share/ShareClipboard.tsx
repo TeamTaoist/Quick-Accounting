@@ -18,7 +18,6 @@ const ShareClipboard = () => {
     const shareLink = `${baseUrl}/workspace/${workspaceId}/new-workspace-payment-request`;
     setLink(shareLink);
   }, []);
-  console.log(link);
 
   return (
     <ShareContainer>
