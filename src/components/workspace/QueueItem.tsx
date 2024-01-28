@@ -84,6 +84,7 @@ const QueueTransactionItem = ({
       payments
     );
     if (r) {
+      afterExecute();
     }
   };
 
@@ -94,17 +95,23 @@ const QueueTransactionItem = ({
         getConfirmedOwners(rejectTransaction.safeTxHash).then(setRejectedList);
       }
     } else {
-      address &&
-        createRejectTx(
+      if (address) {
+        const r = await createRejectTx(
           workspace.vault_wallet,
           address,
           approveTransaction.nonce
         );
+        if (r) {
+          afterExecute();
+        }
+      }
     }
-    //   TODO update ui
   };
-  const handleExecuteReject = () => {
-    executeTx(workspace.ID, rejectTransaction.safeTxHash, payments, true);
+  const handleExecuteReject = async () => {
+    const r = await executeTx(workspace.ID, rejectTransaction.safeTxHash, payments, true);
+    if (r) {
+      afterExecute();
+    }
   };
 
   const onOpenMoreModal = (item: IPaymentRequest) => {

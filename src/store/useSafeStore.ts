@@ -40,7 +40,7 @@ interface ISafeStore {
     safeAddress: string,
     senderAddress: string,
     nonce: number
-  ) => Promise<void>;
+  ) => Promise<boolean | void>;
   executeTx: (
     workspace_id: number,
     safeTxHash: string,
@@ -281,6 +281,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
           senderAddress,
           senderSignature: signature.data,
         });
+        return true;
       } catch (error: any) {
         console.error(error);
         toast.error(error);
