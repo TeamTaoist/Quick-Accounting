@@ -98,7 +98,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
         nonce: number;
         transactions: IQueueTransaction[];
       } = {
-        nonce: 0,
+        nonce: -1,
         transactions: [],
       };
       result.results.forEach((item: TransactionListItem) => {
@@ -149,12 +149,15 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
               });
             }
           }
-          if (item.conflictType === ConflictType.END && currentConflict.nonce) {
+          if (
+            item.conflictType === ConflictType.END &&
+            currentConflict.nonce > -1
+          ) {
             array.push({
               type: item.type,
               transactions: [...currentConflict.transactions],
             });
-            currentConflict.nonce = 0;
+            currentConflict.nonce = -1;
             currentConflict.transactions = [];
           }
         } else {
