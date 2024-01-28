@@ -35,7 +35,7 @@ interface ISafeStore {
     chainId: number,
     safeAddress: string
   ) => Promise<IQueueGroupItemProps[]>;
-  confirmTx: (safeTxHash: string) => void;
+  confirmTx: (safeTxHash: string) => Promise<boolean | undefined>;
   createRejectTx: (
     safeAddress: string,
     senderAddress: string,
@@ -46,7 +46,7 @@ interface ISafeStore {
     safeTxHash: string,
     requests: IPaymentRequest[],
     isReject?: boolean
-  ) => void;
+  ) => Promise<boolean | undefined>;
   getConfirmedOwners: (safeTxHash: string) => Promise<string[]>;
 }
 
@@ -240,6 +240,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
 
         console.log("Added a new signature to transaction with safeTxGas");
         console.log("- Signer signature:", signatureResponse.signature);
+        return true;
       } catch (error: any) {
         toast.error(error?.data?.msg || error?.status || error);
       } finally {
@@ -315,17 +316,18 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
 
           console.log("Transaction executed.");
           console.log("- Transaction hash:", contractReceipt?.blockHash);
+
+          await axiosClient.post(
+            `/payment_requests/${workspace_id}/${
+              isReject ? "mark_failed" : "mark_executed"
+            }?ids=${requests
+              .map((r) => r.ID)
+              .join(",")}&tx=${safeTxHash}&timestamp=${Date.now()}`
+          );
+          return true;
         } else {
           console.log("Transaction invalid. Transaction was not executed.");
         }
-
-        await axiosClient.post(
-          `/payment_requests/${workspace_id}/${
-            isReject ? "mark_failed" : "mark_executed"
-          }?ids=${requests
-            .map((r) => r.ID)
-            .join(",")}&tx=${safeTxHash}&timestamp=${Date.now()}`
-        );
       } catch (error: any) {
         toast.error(error?.data?.msg || error?.status || error);
       } finally {

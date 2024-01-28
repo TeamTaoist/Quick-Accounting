@@ -55,6 +55,10 @@ const Queue = () => {
       getPaymentRequestBySafeTxHash(workspaceId, ids);
   }, [list, workspaceId]);
 
+  const afterExecute = () => {
+    getQueueList();
+  }
+
   return (
     <QueueSection>
       {list.length === 0 ? (
@@ -90,6 +94,7 @@ const Queue = () => {
                   data={item}
                   key={index}
                   handleOpenModal={handleOpenModal}
+                  afterExecute={afterExecute}
                 />
               ))}
             </>

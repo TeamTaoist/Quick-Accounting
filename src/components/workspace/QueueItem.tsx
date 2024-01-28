@@ -35,9 +35,11 @@ const QueueLabelItem = ({ data }: { data: IQueueGroupItemProps }) => {
 const QueueTransactionItem = ({
   transactions,
   handleOpenModal,
+  afterExecute,
 }: {
   transactions: IQueueTransaction[];
   handleOpenModal: () => void;
+  afterExecute: () => void;
 }) => {
   const { t } = useTranslation();
   const approveTransaction = transactions[0]!;
@@ -63,21 +65,34 @@ const QueueTransactionItem = ({
   const hasRejected = !!filterRejectSigners.find((s) => s === address);
 
   const canExecuteConfirm =
-    approveTransaction.confirmationsSubmitted >= threshold;
+    (filterConfirmSigners.length ||
+      approveTransaction.confirmationsSubmitted) >= threshold;
   const canExecuteReject =
-    rejectTransaction?.confirmationsSubmitted >= owners.length - threshold + 1;
+    (filterRejectSigners.length || rejectTransaction?.confirmationsSubmitted) >=
+    owners.length - threshold + 1;
 
-  const handleApprove = () => {
-    confirmTx(approveTransaction.safeTxHash);
-    //   TODO update ui
+  const handleApprove = async () => {
+    const r = await confirmTx(approveTransaction.safeTxHash);
+    if (r) {
+      getConfirmedOwners(approveTransaction.safeTxHash).then(setConfirmedList);
+    }
   };
-  const handleExecuteApprove = () => {
-    executeTx(workspace.ID, approveTransaction.safeTxHash, payments);
+  const handleExecuteApprove = async () => {
+    const r = await executeTx(
+      workspace.ID,
+      approveTransaction.safeTxHash,
+      payments
+    );
+    if (r) {
+    }
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     if (rejectTransaction) {
-      confirmTx(rejectTransaction.safeTxHash);
+      const r = await confirmTx(rejectTransaction.safeTxHash);
+      if (r) {
+        getConfirmedOwners(rejectTransaction.safeTxHash).then(setRejectedList);
+      }
     } else {
       address &&
         createRejectTx(
@@ -138,8 +153,11 @@ const QueueTransactionItem = ({
           <Action>
             <Approvals>
               <h4>
-                Approvals: {approveTransaction.confirmationsSubmitted || 0}/
-                {approveTransaction.confirmationsRequired || threshold}
+                Approvals:{" "}
+                {filterConfirmSigners.length ||
+                  approveTransaction.confirmationsSubmitted ||
+                  0}
+                /{approveTransaction.confirmationsRequired || threshold}
               </h4>
               {filterConfirmSigners?.map((owner) => (
                 <p key={owner}>{getShortAddress(owner)}</p>
@@ -157,7 +175,11 @@ const QueueTransactionItem = ({
             </Approvals>
             <Approvals>
               <h4>
-                Rejections: {rejectTransaction?.confirmationsSubmitted || 0}/
+                Rejections:{" "}
+                {filterRejectSigners.length ||
+                  rejectTransaction?.confirmationsSubmitted ||
+                  0}
+                /
                 {rejectTransaction?.confirmationsRequired ||
                   owners.length - threshold + 1}
               </h4>
@@ -237,9 +259,11 @@ const QueueTransactionItem = ({
 export default function QueueItem({
   data,
   handleOpenModal,
+  afterExecute,
 }: {
   data: IQueueGroupItemProps;
   handleOpenModal: () => void;
+  afterExecute: () => void;
 }) {
   if (data.type === TransactionListItemType.LABEL) {
     return <QueueLabelItem data={data} />;
@@ -248,6 +272,7 @@ export default function QueueItem({
       <QueueTransactionItem
         transactions={data.transactions!}
         handleOpenModal={handleOpenModal}
+        afterExecute={afterExecute}
       />
     );
   } else {
