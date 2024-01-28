@@ -79,7 +79,8 @@ const WorkspaceSidebar = () => {
               <span>{t("workspace.New")}</span>
             </RequestBtn>
           </span>
-          <Link to={`/workspace/${id}/new-workspace-payment-request`}>
+          {/* <Link to={`/workspace/${id}/new-workspace-payment-request`}> */}
+          <Link to={`/workspace/${id}/share`}>
             <RequestBtn>
               <img src={share} alt="" />
               <span>{t("workspace.Share")}</span>
