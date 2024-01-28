@@ -46,6 +46,7 @@ interface IPaymentsStore {
   setCurrentPaymentRequestDetail: (paymentRequest: IPaymentRequest) => void;
   getFailedPaymentRequestList: (
     workspaceId: number,
+    isInqueue?: boolean,
     page?: number,
     size?: number
   ) => Promise<IPageResponse<IPaymentRequest>>;
@@ -233,16 +234,22 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
     },
     getFailedPaymentRequestList: async (
       workspaceId: number,
+      isInqueue = false,
       page = 0,
       size = 10
     ) => {
       try {
         setLoading(true);
-        const { data } = await axiosClient.get(`/queue/${workspaceId}`, {
-          params: { page, size, failed: true },
-        });
+        const { data } = await axiosClient.get(
+          isInqueue
+            ? `/queue/${workspaceId}?failed=true`
+            : `/payment_request/${workspaceId}?rejected=true`,
+          {
+            params: { page, size },
+          }
+        );
         if (data?.msg === "success" && data?.code === 200) {
-          return data;
+          return data.data;
         }
       } catch (error) {
         console.error(error);

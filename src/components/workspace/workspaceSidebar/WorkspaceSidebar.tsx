@@ -23,7 +23,9 @@ import NewPaymentRequest from "../../../pages/workspaceDashboard/newPaymentReque
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useSafeStore } from "../../../store/useSafeStore";
 import { clientToSigner } from "../../../utils/ethProvider";
-import { type Config, useConnectorClient } from "wagmi";
+import { type Config, useConnectorClient, useSwitchChain } from "wagmi";
+import { useLoading } from "../../../store/useLoading";
+import { toast } from "react-toastify";
 
 const WorkspaceSidebar = () => {
   const { t } = useTranslation();
@@ -32,6 +34,8 @@ const WorkspaceSidebar = () => {
   const { getWorkspaceDetails, workspace } = useWorkspace();
   const { initSafeSDK, safeApiService, getSafeInfo } = useSafeStore();
   const { data: client } = useConnectorClient();
+  const { switchChainAsync } = useSwitchChain();
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     getWorkspaceDetails(Number(id));
@@ -44,7 +48,22 @@ const WorkspaceSidebar = () => {
           return;
         }
         const signer = await clientToSigner(client);
-
+        const netowrk = await signer?.provider?.getNetwork();
+        if (netowrk?.chainId !== BigInt(workspace.chain_id)) {
+          setLoading(true);
+          try {
+            await switchChainAsync({ chainId: workspace.chain_id });
+          } catch (error) {
+            console.error(error);
+            toast.error(
+              `Please switch to the chain ${workspace.chain_id} and use the workspace`,
+              { autoClose: false }
+            );
+          } finally {
+            setLoading(false);
+          }
+          return;
+        }
         signer &&
           initSafeSDK(workspace.chain_id, signer, workspace.vault_wallet);
       };

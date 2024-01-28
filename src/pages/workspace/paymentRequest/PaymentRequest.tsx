@@ -211,8 +211,8 @@ const PaymentRequest = () => {
 
   // get rejected payments
   const handleRejectedPayments = () => {
-    getPaymentRequestList(workspaceId, true);
-    setRejectPaymentLoading(rejectPaymentLoading);
+    // getPaymentRequestList(workspaceId, true);
+    // setRejectPaymentLoading(rejectPaymentLoading);
     setSearchTerm("");
     setSelectedValue("");
     setPaymentRequest(false);
@@ -455,9 +455,11 @@ const PaymentRequest = () => {
                                   {payment.amount} {payment.currency_name}
                                 </TableCell>
                                 <TableCell>
-                                  <CategoryCell>
-                                    {payment.category_name}
-                                  </CategoryCell>
+                                  {payment.category_name && (
+                                    <CategoryCell>
+                                      {payment.category_name}
+                                    </CategoryCell>
+                                  )}
                                 </TableCell>
                                 <TableCell>
                                   {payment.CreatedAt.slice(0, 10)}

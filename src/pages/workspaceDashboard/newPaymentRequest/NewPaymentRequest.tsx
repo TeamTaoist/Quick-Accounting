@@ -40,7 +40,7 @@ import {
 } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactSelect from "../../../components/ReactSelect";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { useWorkspace } from "../../../store/useWorkspace";
@@ -51,7 +51,9 @@ import {
 } from "@safe-global/safe-gateway-typescript-sdk";
 import usePaymentsStore from "../../../store/usePayments";
 import { formatBalance } from "../../../utils/number";
-import { parseUnits } from "viem";
+import { toast } from "react-toastify";
+import { isAddress } from "viem";
+import { parseUnits } from "ethers";
 
 interface SubmitRowData {
   recipient: string;
@@ -71,8 +73,9 @@ interface PropertyValues {
 const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { pathname } = useLocation();
 
-  const { createPaymentRequest } = usePaymentsStore();
+  const { createPaymentRequest, getPaymentRequestList } = usePaymentsStore();
 
   const [category, setCategory] = useState("");
 
@@ -217,13 +220,55 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     }),
   };
 
+  const checkAllFields = () => {
+    if (!paymentRequestBody.rows.length) {
+      return;
+    }
+    for (const item of paymentRequestBody.rows) {
+      if (!item.recipient || !item.amount || !item.currency_contract_address) {
+        toast.error("Please fill all fields");
+        return;
+      }
+      if (!isAddress(item.recipient)) {
+        toast.error(`Invalid address: ${item.recipient}`);
+        return;
+      }
+      if (Number(item.amount) < 0) {
+        toast.error(`Invalid amount: ${item.amount}`);
+        return;
+      }
+      try {
+        const amountBigInt = parseUnits(item.amount, item.decimals);
+        const selectToken = data?.items.find(
+          (s) => s.tokenInfo.address === item.currency_contract_address
+        );
+        if (BigInt(selectToken?.balance || 0) < amountBigInt) {
+          toast.error(`Insufficient balance: ${item.amount} ${item.currency_name}`);
+          return;
+        }
+      } catch (error) {
+        toast.error(`Invalid decimal amount: ${item.amount}`);
+        return;
+      }
+    }
+    return true;
+  };
+
   // submit
   const handlePaymentRequestSubmit = () => {
-    // TODO check all of fields
+    // check all of fields
+    if (!checkAllFields()) {
+      return;
+    }
     createPaymentRequest(Number(id), paymentRequestBody, navigate).then((r) => {
       if (r) {
         onClose();
-        navigate(`/workspace/${id}/payment-request`);
+        const target_path = `/workspace/${id}/payment-request`;
+        if (pathname === target_path) {
+          getPaymentRequestList(Number(id), false);
+        } else {
+          navigate(target_path);
+        }
       }
     });
   };

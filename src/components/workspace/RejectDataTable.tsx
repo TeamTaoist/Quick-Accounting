@@ -20,6 +20,7 @@ import usePaymentsStore from "../../store/usePayments";
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
   selectedValue?: string;
+  isInQueue?: boolean;
 }
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -27,6 +28,7 @@ const recipientFormate = (n: string) => {
 const RejectDataTable = ({
   searchTerm,
   selectedValue,
+  isInQueue,
 }: RejectDataTableProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -35,7 +37,6 @@ const RejectDataTable = ({
   const [total, setTotal] = useState(0);
 
   const {
-    paymentRequestList,
     getPaymentRequestDetails,
     getFailedPaymentRequestList,
   } = usePaymentsStore();
@@ -45,23 +46,24 @@ const RejectDataTable = ({
     getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
   };
   // filter table data
-  // const filterData = paymentRequestList.filter((data) => {
-  //   const searchItem = data.recipient
-  //     .toLowerCase()
-  //     .includes(searchTerm!.toLowerCase());
-  //   const filterByCategory =
-  //     selectedValue === "" || data.category_name === selectedValue;
-  //   return searchItem && filterByCategory;
-  // });
+  const filterData = list.filter((data) => {
+    const searchItem = data.recipient
+      .toLowerCase()
+      .includes(searchTerm!.toLowerCase());
+    const filterByCategory =
+      selectedValue === "" || data.category_name === selectedValue;
+    return searchItem && filterByCategory;
+  });
 
   useEffect(() => {
-    getFailedPaymentRequestList(Number(id)).then(
+    getFailedPaymentRequestList(Number(id), isInQueue).then(
       (res: IPageResponse<IPaymentRequest>) => {
         setTotal(res?.total || 0);
         setList(res?.rows || []);
       }
     );
-  }, []);
+  }, [isInQueue]);
+
   return (
     <div>
       <CustomModal
@@ -92,7 +94,7 @@ const RejectDataTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {list?.map((payment) => (
+            {filterData?.map((payment) => (
               <TableRow key={payment.ID}>
                 <TableCell>{recipientFormate(payment.recipient)}</TableCell>
                 <TableCell>{payment.amount} USDT</TableCell>
