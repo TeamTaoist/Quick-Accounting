@@ -119,7 +119,10 @@ const WorkSpaceForm = () => {
                 ))}
               </Select>
             </SelectBox>
-            <Button onClick={handleCreateWorkspace}>
+            <Button
+              onClick={handleCreateWorkspace}
+              disabled={!workspaceName || !safe || !workspaceName.trim()}
+            >
               {t("workspaceForm.FormSubmitBtn")}
             </Button>
           </Safe>
