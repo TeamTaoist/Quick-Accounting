@@ -40,7 +40,7 @@ import {
 } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactSelect from "../../../components/ReactSelect";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { useWorkspace } from "../../../store/useWorkspace";
@@ -51,7 +51,6 @@ import {
 } from "@safe-global/safe-gateway-typescript-sdk";
 import usePaymentsStore from "../../../store/usePayments";
 import { formatBalance } from "../../../utils/number";
-import { parseUnits } from "viem";
 
 interface SubmitRowData {
   recipient: string;
@@ -71,8 +70,9 @@ interface PropertyValues {
 const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { pathname } = useLocation();
 
-  const { createPaymentRequest } = usePaymentsStore();
+  const { createPaymentRequest, getPaymentRequestList } = usePaymentsStore();
 
   const [category, setCategory] = useState("");
 
@@ -223,7 +223,12 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     createPaymentRequest(Number(id), paymentRequestBody, navigate).then((r) => {
       if (r) {
         onClose();
-        navigate(`/workspace/${id}/payment-request`);
+        const target_path = `/workspace/${id}/payment-request`;
+        if (pathname === target_path) {
+          getPaymentRequestList(Number(id), false);
+        } else {
+          navigate(target_path);
+        }
       }
     });
   };
