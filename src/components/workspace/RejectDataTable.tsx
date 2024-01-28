@@ -62,7 +62,8 @@ const RejectDataTable = ({
         setList(res?.rows || []);
       }
     );
-  }, []);
+  }, [isInQueue]);
+
   return (
     <div>
       <CustomModal

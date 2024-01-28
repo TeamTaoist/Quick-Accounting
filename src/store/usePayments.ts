@@ -242,14 +242,14 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         setLoading(true);
         const { data } = await axiosClient.get(
           isInqueue
-            ? `/queue/${workspaceId}`
-            : `/payment_request/${workspaceId}`,
+            ? `/queue/${workspaceId}?failed=true`
+            : `/payment_request/${workspaceId}?rejected=true`,
           {
-            params: { page, size, failed: true },
+            params: { page, size },
           }
         );
         if (data?.msg === "success" && data?.code === 200) {
-          return data;
+          return data.data;
         }
       } catch (error) {
         console.error(error);
