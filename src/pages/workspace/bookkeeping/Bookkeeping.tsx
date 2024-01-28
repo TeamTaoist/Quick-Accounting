@@ -159,43 +159,46 @@ const Bookkeeping = () => {
   // export
   const paymentRequestIds = selected.join(",");
   const handleExportBookkeepingList = () => {
-    exportBookkeepingList(workspaceId, paymentRequestIds);
+    if (selected.length) {
+      exportBookkeepingList(workspaceId, paymentRequestIds);
+      setSelected([]);
+    }
   };
   // importBookkeepingList
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
-  const handleImportBookkeepingList = (
+  const handleImportBookkeepingList = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = e.target.files?.[0];
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
-      importBookkeepingList(workspaceId, formData).then(() => {
-        setLoading(false);
-      });
+      await importBookkeepingList(workspaceId, formData);
+      setLoading(false);
       // handleExportBookkeepingList();
     }
   };
   // hide item
   const handleHideBookkeepingList = async () => {
-    await hideBookkeepingList(workspaceId, paymentRequestIds);
-    setVisible(false);
-    setLoading(!loading);
-    setSelected([]);
+    if (selected.length) {
+      await hideBookkeepingList(workspaceId, paymentRequestIds);
+      setVisible(false);
+      setLoading(!loading);
+      setSelected([]);
+    }
   };
 
   const handleViewHiddenList = () => {
     setPaymentRequest(!paymentRequest);
     setVisible(true);
+    setSelected([]);
   };
   const handleBackBtn = () => {
     setPaymentRequest(!paymentRequest);
     setVisible(false);
   };
-  console.log("loading", loading);
-  console.log("visible", visible);
 
   return (
     <PaymentRequestContainer>

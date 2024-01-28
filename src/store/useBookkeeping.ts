@@ -6,7 +6,10 @@ import { useWorkspace } from "./useWorkspace";
 
 interface UseBookkeeping {
   bookkeepingList: IBookkeeping[];
-  getBookkeepingList: (workspaceId: number, visibility: boolean) => void;
+  getBookkeepingList: (
+    workspaceId: number,
+    visibility: boolean
+  ) => Promise<void>;
   exportBookkeepingList: (
     workspaceId: number,
     paymentRequestIds: string
@@ -15,7 +18,10 @@ interface UseBookkeeping {
     workspaceId: number,
     bookkeepingFile: any
   ) => Promise<void>;
-  hideBookkeepingList: (workspaceId: number, paymentRequestIds: string) => void;
+  hideBookkeepingList: (
+    workspaceId: number,
+    paymentRequestIds: string
+  ) => Promise<void>;
   unHideBookkeepingList: (
     workspaceId: number,
     paymentRequestIds: string
