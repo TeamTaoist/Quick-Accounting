@@ -7,6 +7,7 @@ import {
   TokenInfo,
 } from "@safe-global/safe-gateway-typescript-sdk";
 import { getShortDisplay } from "../utils/number";
+import { toast } from "react-toastify";
 
 interface FormData {
   chain_id: number;
@@ -158,6 +159,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         }
       } catch (error: any) {
         console.log(error);
+        toast.error(error?.data?.msg || error?.status || error)
       } finally {
         setLoading(false);
       }
