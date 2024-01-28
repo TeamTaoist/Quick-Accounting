@@ -441,9 +441,11 @@ const PaymentRequest = () => {
                                   {payment.amount} {payment.currency_name}
                                 </TableCell>
                                 <TableCell>
-                                  <CategoryCell>
-                                    {payment.category_name}
-                                  </CategoryCell>
+                                  {payment.category_name && (
+                                    <CategoryCell>
+                                      {payment.category_name}
+                                    </CategoryCell>
+                                  )}
                                 </TableCell>
                                 <TableCell>
                                   {payment.CreatedAt.slice(0, 10)}
