@@ -51,6 +51,9 @@ import {
 } from "@safe-global/safe-gateway-typescript-sdk";
 import usePaymentsStore from "../../../store/usePayments";
 import { formatBalance } from "../../../utils/number";
+import { toast } from "react-toastify";
+import { isAddress } from "viem";
+import { parseUnits } from "ethers";
 
 interface SubmitRowData {
   recipient: string;
@@ -217,9 +220,46 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     }),
   };
 
+  const checkAllFields = () => {
+    if (!paymentRequestBody.rows.length) {
+      return;
+    }
+    for (const item of paymentRequestBody.rows) {
+      if (!item.recipient || !item.amount || !item.currency_contract_address) {
+        toast.error("Please fill all fields");
+        return;
+      }
+      if (!isAddress(item.recipient)) {
+        toast.error(`Invalid address: ${item.recipient}`);
+        return;
+      }
+      if (Number(item.amount) < 0) {
+        toast.error(`Invalid amount: ${item.amount}`);
+        return;
+      }
+      try {
+        const amountBigInt = parseUnits(item.amount, item.decimals);
+        const selectToken = data?.items.find(
+          (s) => s.tokenInfo.address === item.currency_contract_address
+        );
+        if (BigInt(selectToken?.balance || 0) < amountBigInt) {
+          toast.error(`Insufficient balance: ${item.amount} ${item.currency_name}`);
+          return;
+        }
+      } catch (error) {
+        toast.error(`Invalid decimal amount: ${item.amount}`);
+        return;
+      }
+    }
+    return true;
+  };
+
   // submit
   const handlePaymentRequestSubmit = () => {
-    // TODO check all of fields
+    // check all of fields
+    if (!checkAllFields()) {
+      return;
+    }
     createPaymentRequest(Number(id), paymentRequestBody, navigate).then((r) => {
       if (r) {
         onClose();
