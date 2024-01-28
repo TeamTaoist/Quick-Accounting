@@ -200,8 +200,8 @@ const PaymentRequest = () => {
 
   // get rejected payments
   const handleRejectedPayments = () => {
-    getPaymentRequestList(workspaceId, true);
-    setRejectPaymentLoading(rejectPaymentLoading);
+    // getPaymentRequestList(workspaceId, true);
+    // setRejectPaymentLoading(rejectPaymentLoading);
     setSearchTerm("");
     setSelectedValue("");
     setPaymentRequest(false);

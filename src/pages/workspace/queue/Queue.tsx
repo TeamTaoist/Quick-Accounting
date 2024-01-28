@@ -95,7 +95,7 @@ const Queue = () => {
             </>
           ) : (
             <RejectSection>
-              <RejectDataTable />
+              <RejectDataTable isInQueue />
             </RejectSection>
           )}
           <CustomModal
