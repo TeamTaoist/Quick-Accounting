@@ -180,7 +180,18 @@ const PaymentRequest = () => {
     acc[paymentRequestId].push(item);
     return acc;
   }, {} as Record<number, IPaymentRequest[]>);
+  console.log(groupedData);
+  console.log(Object.entries(groupedData));
 
+  const sortedPayment = Object.entries(groupedData).sort(
+    ([idA, itemsA], [idB, itemsB]) => {
+      const lengthComparison = itemsA.length - itemsB.length;
+
+      return lengthComparison !== 0
+        ? lengthComparison
+        : Number(idA) - Number(idB);
+    }
+  );
   // approve modal
   const handlePaymentRequestChaiModal = () => {
     console.log(selected);
@@ -212,7 +223,10 @@ const PaymentRequest = () => {
     setSearchTerm("");
     setSelectedValue("");
   };
-
+  // unique category name
+  const uniqueCategoryNames = Array.from(
+    new Set(paymentRequestList.map((payment) => payment.category_name))
+  );
   return (
     <PaymentRequestContainer>
       {paymentRequestList.length === 0 ? (
@@ -288,9 +302,9 @@ const PaymentRequest = () => {
                       {t("paymentRequest.Filter")}
                     </Option>
                   </MenuItem>
-                  {paymentRequestList.map((payment) => (
-                    <MenuItem value={payment.category_name} key={payment.ID}>
-                      {payment.category_name}
+                  {uniqueCategoryNames.map((categoryName) => (
+                    <MenuItem value={categoryName} key={categoryName}>
+                      {categoryName}
                     </MenuItem>
                   ))}
                 </Select>
@@ -358,7 +372,7 @@ const PaymentRequest = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {Object.entries(groupedData).map(([id, items], index) => (
+                    {sortedPayment.map(([id, items], index) => (
                       <React.Fragment key={index}>
                         {items.length > 1 ? (
                           <TableRow
