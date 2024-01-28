@@ -40,7 +40,7 @@ const ShareWorkspacePaymentRequest = () => {
   const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
     useCategoryProperty();
   const { isLoading } = useLoading();
-  const { workspace, assetsList, getAssets } = useWorkspace();
+  const { workspace, assetsList, getAssets, getWorkspaceDetails } = useWorkspace();
   const { createSharePaymentRequest } = useSharePaymentRequest();
 
   const [age, setAge] = useState("Category");
@@ -172,7 +172,7 @@ const ShareWorkspacePaymentRequest = () => {
   );
   // get asset list
   useEffect(() => {
-    getAssets();
+    workspace?.vault_wallet && getAssets();
   }, [workspace?.vault_wallet, getAssets]);
 
   // modal
@@ -185,6 +185,10 @@ const ShareWorkspacePaymentRequest = () => {
   const handleSavePaymentRequest = () => {
     setOpenModal(true);
   };
+
+  useEffect(() => {
+    getWorkspaceDetails(Number(id));
+  }, [])
 
   return (
     <Header>
