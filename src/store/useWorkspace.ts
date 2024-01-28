@@ -44,7 +44,7 @@ interface UseWorkspace {
   workspace: Workspace;
   userWorkspaces: UserWorkspaces;
   createWorkspace: (formData: FormData, navigate: any) => void;
-  getUserWorkspace: () => void;
+  getUserWorkspace: () => Promise<UserWorkspaces | undefined>;
   getWorkspaceDetails: (workspaceId: number | string, navigate?: any) => void;
   updateWorkspaceName: (workspaceId: string, workspaceName: string) => void;
   getAssets: () => Promise<void>;
@@ -136,9 +136,9 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         setLoading(true);
         const { data } = await axiosClient.get("/workspaces/my_workspaces");
         set({ userWorkspaces: data });
-        // if (data.msg === "success" && data.code === 200) {
-        //   navigate("/assets");
-        // }
+        if (data.msg === "success" && data.code === 200) {
+          return data;
+        }
       } catch (error: any) {
         console.log(error);
       } finally {

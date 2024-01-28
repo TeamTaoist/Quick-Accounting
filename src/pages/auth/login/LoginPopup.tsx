@@ -17,6 +17,7 @@ import { useLoading } from "../../../store/useLoading";
 import { useAuthStore } from "../../../store/useAuthStore";
 import Loading from "../../../utils/Loading";
 import { createSiweMessage } from "../../../utils";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 const LoginPopup = () => {
   const { t } = useTranslation();
@@ -90,6 +91,31 @@ const LoginPopup = () => {
       }
     }
   };
+  const { getUserWorkspace, userWorkspaces, getWorkspaceDetails } =
+    useWorkspace();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const handleVerify = async () => {
+      try {
+        const data = await getUserWorkspace();
+        if (data?.code === 200) {
+          const firstWorkspaceId = data.data.rows[0].ID;
+          if (token && firstWorkspaceId) {
+            navigate(`/workspace/${firstWorkspaceId}/assets`);
+          } else if (token) {
+            navigate("/user");
+          } else {
+            navigate("/login");
+          }
+        }
+      } catch (error) {}
+    };
+
+    handleVerify();
+  }, []);
+
   return (
     <Header>
       {isLoading && <Loading />}
