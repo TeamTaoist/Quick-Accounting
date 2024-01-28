@@ -257,12 +257,12 @@ export default function QueueItem({
 
 const QueueLabelItemStyle = styled.h1`
   font-size: 20px;
-  margin-bottom: 10px;
+  margin-block: 10px;
   font-weight: 400;
 `;
 
 const QueueNotice = styled.div`
-  margin-top: 30px;
+  margin-block: 10px;
 `;
 
 const Header = styled.div`
