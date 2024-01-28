@@ -328,6 +328,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
           return true;
         } else {
           console.log("Transaction invalid. Transaction was not executed.");
+          toast.error("Transaction invalid. Transaction was not executed.");
         }
       } catch (error: any) {
         toast.error(error?.data?.msg || error?.status || error);
