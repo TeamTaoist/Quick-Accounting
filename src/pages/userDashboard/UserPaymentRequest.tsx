@@ -29,7 +29,7 @@ const recipientFormate = (n: string) => {
 
 const UserPaymentRequest = () => {
   const { id } = useParams();
-  const { userPayment } = useUserPayment();
+  const { userPayment, getUserPayment } = useUserPayment();
   const { getPaymentRequestDetails } = usePaymentsStore();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,7 +39,7 @@ const UserPaymentRequest = () => {
   };
 
   // filter table data
-  const filterData = userPayment.filter((payment) =>
+  const filterData = userPayment.rows.filter((payment) =>
     payment.recipient.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -158,7 +158,7 @@ const UserPaymentContainer = styled.div`
   flex: 1;
 `;
 const PaymentLIst = styled.div`
-  margin-top: 140px;
+  margin-top: 60px;
 `;
 const Safe = styled.div`
   /* display: flex; */

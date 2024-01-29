@@ -16,3 +16,11 @@ export const Details = styled.div`
     text-align: center;
   }
 `;
+export const PaymentTable = styled.div`
+  height: 90vh;
+  overflow-y: scroll;
+`;
+export const Pagination = styled.div`
+  /* display: flex; */
+  padding: 20px 30px;
+`;

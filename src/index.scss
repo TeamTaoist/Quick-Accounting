@@ -28,6 +28,7 @@ body {
 ul,
 li {
   text-decoration: none;
+  list-style: none;
 }
 
 a {
@@ -37,4 +38,36 @@ a {
 .container {
   max-width: 1512px;
   margin-inline: auto;
+}
+
+/* pagination */
+.pagination {
+  display: flex;
+  justify-content: start;
+  gap: 8px;
+}
+
+.page-num {
+  padding: 3px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 400;
+}
+
+.page-num:hover {
+  background-color: #adadad;
+  color: #fff;
+}
+
+.pagination .active {
+  background-color: var(--text-secondary);
+  color: #fff;
+}
+
+.page-arrow {
+  padding: 3px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: var(--text-secondary);
+  color: #fff;
 }
