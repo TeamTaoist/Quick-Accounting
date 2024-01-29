@@ -36,24 +36,24 @@ const RejectDataTable = ({
   const [list, setList] = useState<IPaymentRequest[]>([]);
   const [total, setTotal] = useState(0);
 
-  const {
-    getPaymentRequestDetails,
-    getFailedPaymentRequestList,
-  } = usePaymentsStore();
+  const { getPaymentRequestDetails, getFailedPaymentRequestList } =
+    usePaymentsStore();
 
   const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
     setOpenModal(true);
     getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
   };
   // filter table data
-  const filterData = list.filter((data) => {
-    const searchItem = data.recipient
-      .toLowerCase()
-      .includes(searchTerm!.toLowerCase());
-    const filterByCategory =
-      selectedValue === "" || data.category_name === selectedValue;
-    return searchItem && filterByCategory;
-  });
+  const filterData = searchTerm
+    ? list.filter((data) => {
+        const searchItem = data.recipient
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const filterByCategory =
+          selectedValue === "" || data.category_name === selectedValue;
+        return searchItem && filterByCategory;
+      })
+    : list;
 
   useEffect(() => {
     getFailedPaymentRequestList(Number(id), isInQueue).then(
@@ -104,7 +104,7 @@ const RejectDataTable = ({
                 <TableCell>
                   <Status>
                     <img src={statusIcon} alt="" />
-                    {payment.status === 1 && "Rejected"}
+                    {"Rejected"}
                   </Status>
                 </TableCell>
                 <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
