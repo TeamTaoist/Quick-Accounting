@@ -116,7 +116,7 @@ const Category = () => {
   const [editableCategoryId, setEditableCategoryId] = useState<number>();
   const [categoryNameEditable, setCategoryNameEditable] =
     useState<boolean>(false);
-  const [categoryName, setCategoryName] = useState<string>("");
+  const [categoryName, setCategoryName] = useState<string | undefined>();
 
   //get workspace category details
   const handleCategory = (workspaceCategoryId: number) => {
@@ -134,9 +134,10 @@ const Category = () => {
     workspaceId: number,
     categoryId: number
   ) => {
-    // setCategoryName(e.target.value);
     updateCategoryName(workspaceId, categoryId, categoryName);
     setCategoryLoading(!categoryLoading);
+    setCategoryNameEditable(false);
+    console.log("update");
   };
 
   // update archive workspace category
@@ -326,7 +327,8 @@ const Category = () => {
                         categoryNameEditable ? (
                           <input
                             type="text"
-                            value={categoryName}
+                            // value={categoryName}
+                            value={categoryName ?? category.name}
                             placeholder="Category Name"
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => setCategoryName(e.target.value)}

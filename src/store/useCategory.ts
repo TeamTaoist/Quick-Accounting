@@ -54,7 +54,7 @@ interface UseCategory {
   updateCategoryName: (
     workspaceId: number,
     categoryId: number,
-    categoryName: string
+    categoryName: string | undefined
   ) => void;
   updateCategoryArchive: (
     workspaceId: number,

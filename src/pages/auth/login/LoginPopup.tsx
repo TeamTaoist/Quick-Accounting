@@ -96,7 +96,6 @@ const LoginPopup = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     const handleVerify = async () => {
       try {
         const data = await getUserWorkspace();
@@ -112,8 +111,9 @@ const LoginPopup = () => {
         }
       } catch (error) {}
     };
-
-    handleVerify();
+    if (address && isConnected) {
+      handleVerify();
+    }
   }, []);
 
   return (

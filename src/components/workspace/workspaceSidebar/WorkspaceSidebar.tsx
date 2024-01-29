@@ -23,7 +23,12 @@ import NewPaymentRequest from "../../../pages/workspaceDashboard/newPaymentReque
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useSafeStore } from "../../../store/useSafeStore";
 import { clientToSigner } from "../../../utils/ethProvider";
-import { type Config, useConnectorClient, useSwitchChain } from "wagmi";
+import {
+  type Config,
+  useConnectorClient,
+  useSwitchChain,
+  useAccount,
+} from "wagmi";
 import { useLoading } from "../../../store/useLoading";
 import { toast } from "react-toastify";
 
@@ -40,11 +45,15 @@ const WorkspaceSidebar = () => {
   useEffect(() => {
     getWorkspaceDetails(Number(id));
   }, [getWorkspaceDetails, id]);
+  const { isConnected, address } = useAccount();
+  console.log(isConnected, address);
 
   useEffect(() => {
     if (workspace.ID) {
       const init = async () => {
         if (!client) {
+          console.log(client);
+
           return;
         }
         const signer = await clientToSigner(client);
