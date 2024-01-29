@@ -17,18 +17,25 @@ const Settings = () => {
 
   const { owners } = useSafeStore();
 
-  const { updateWorkspaceName, workspace, getWorkspaceDetails } =
-    useWorkspace();
+  const {
+    updateWorkspaceName,
+    workspace,
+    getWorkspaceDetails,
+    getUserWorkspace,
+  } = useWorkspace();
   const [workspaceName, setWorkspaceName] = useState<string>(workspace.name);
+  const [settingLoading, isSettingLoading] = useState<boolean>(false);
   // handle workspace name update
   useEffect(() => {
     getWorkspaceDetails(id || "");
-  }, [id]);
-  const handleUpdateWorkspaceName = (
+    getUserWorkspace();
+  }, [id, settingLoading]);
+  const handleUpdateWorkspaceName = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (id) {
-      updateWorkspaceName(id, workspaceName);
+      await updateWorkspaceName(id, workspaceName);
+      isSettingLoading(!settingLoading);
     }
   };
   console.log(workspace);

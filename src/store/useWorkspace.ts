@@ -47,7 +47,10 @@ interface UseWorkspace {
   createWorkspace: (formData: FormData, navigate: any) => void;
   getUserWorkspace: () => Promise<UserWorkspaces | undefined>;
   getWorkspaceDetails: (workspaceId: number | string, navigate?: any) => void;
-  updateWorkspaceName: (workspaceId: string, workspaceName: string) => void;
+  updateWorkspaceName: (
+    workspaceId: string,
+    workspaceName: string
+  ) => Promise<void>;
   getAssets: () => Promise<void>;
   totalAssetsValue: string;
   assetsList: {
@@ -159,7 +162,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         }
       } catch (error: any) {
         console.log(error);
-        toast.error(error?.data?.msg || error?.status || error)
+        toast.error(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
       }
@@ -172,8 +175,11 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           name: workspaceName,
         });
         console.log(data.msg);
+        if (data.msg === "success" && data.code === 200) {
+          toast.success("Workspace name updated");
+        }
       } catch (error: any) {
-        console.log(error);
+        toast.error(error?.data?.msg || error?.status || error);
       } finally {
         // setLoading(false);
       }
