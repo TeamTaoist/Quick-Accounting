@@ -31,6 +31,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
   FormControl,
   InputAdornment,
+  InputLabel,
   MenuItem,
   Select,
   TextField,
@@ -290,7 +291,7 @@ const PaymentRequest = () => {
                   ),
                 }}
               />
-              <FormControl sx={{ marginLeft: "25px" }}>
+              <FormControl sx={{ marginLeft: "25px", minWidth: 100 }}>
                 <Select
                   value={selectedValue}
                   onChange={handleDropdownChange}
@@ -304,11 +305,14 @@ const PaymentRequest = () => {
                       {t("paymentRequest.Filter")}
                     </Option>
                   </MenuItem>
-                  {uniqueCategoryNames.map((categoryName) => (
-                    <MenuItem value={categoryName} key={categoryName}>
-                      {categoryName}
-                    </MenuItem>
-                  ))}
+                  {uniqueCategoryNames.map(
+                    (categoryName) =>
+                      categoryName.trim() !== "" && (
+                        <MenuItem value={categoryName} key={categoryName}>
+                          {categoryName}
+                        </MenuItem>
+                      )
+                  )}
                 </Select>
               </FormControl>
             </div>

@@ -199,6 +199,10 @@ const Bookkeeping = () => {
     setPaymentRequest(!paymentRequest);
     setVisible(false);
   };
+  // unique category name
+  const uniqueCategoryNames = Array.from(
+    new Set(bookkeepingList.map((payment) => payment.category_name))
+  );
 
   return (
     <PaymentRequestContainer>
@@ -248,14 +252,14 @@ const Bookkeeping = () => {
                   {t("paymentRequest.Filter")}
                 </Option>
               </MenuItem>
-              {bookkeepingList.map((bookkeeping) => (
-                <MenuItem
-                  key={bookkeeping.ID}
-                  value={bookkeeping.category_name}
-                >
-                  {bookkeeping.category_name}
-                </MenuItem>
-              ))}
+              {uniqueCategoryNames.map(
+                (categoryName) =>
+                  categoryName.trim() !== "" && (
+                    <MenuItem value={categoryName} key={categoryName}>
+                      {categoryName}
+                    </MenuItem>
+                  )
+              )}
             </Select>
           </FormControl>
           <ViewReject>
