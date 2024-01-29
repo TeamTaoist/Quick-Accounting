@@ -151,7 +151,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
       }
     },
     // get single workspace details
-    getWorkspaceDetails: async (workspaceId, navigate) => {
+    getWorkspaceDetails: async (workspaceId, navigate = undefined) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(`/workspace/${workspaceId}`);
