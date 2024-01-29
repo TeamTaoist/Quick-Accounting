@@ -66,7 +66,7 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
       setOpen={setOpen}
     >
       <PaymentRequestChain>
-        <p>Transaction value: $0</p>
+        <p>Transaction value: $ {totalTransactionValue}</p>
         {/* table */}
         <TableContainer
           component={Paper}
