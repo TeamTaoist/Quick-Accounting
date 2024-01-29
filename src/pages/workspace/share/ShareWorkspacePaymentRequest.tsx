@@ -32,6 +32,10 @@ import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
 import CustomModal from "../../../utils/CustomModal";
 import PaymentRequestPreview from "./PaymentRequestPreview";
 import { ReactSelectOption } from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
+import { formatBalance } from "../../../utils/number";
+import { toast } from "react-toastify";
+import { isAddress } from "viem";
+import { parseUnits } from "ethers";
 
 const ShareWorkspacePaymentRequest = () => {
   const { id } = useParams();
@@ -60,6 +64,7 @@ const ShareWorkspacePaymentRequest = () => {
       amount: "",
       currency_name: "",
       recipient: "",
+      decimals: 18,
       category_id: null,
       category_name: "",
       currency_contract_address: "",
@@ -73,6 +78,7 @@ const ShareWorkspacePaymentRequest = () => {
         amount: "",
         currency_name: "",
         recipient: "",
+        decimals: 18,
         category_id: null,
         category_name: "",
         category_properties: [],
@@ -90,8 +96,12 @@ const ShareWorkspacePaymentRequest = () => {
     categoryId?: number
   ) => {
     const updatedRequests = [...sharePaymentRequestForm];
-    if (field === "currency_name") {
-      updatedRequests[index].currency_name = value;
+    if (field === "currency_address") {
+      const token = assetsList.find((item) => item.tokenInfo.address === value);
+      if (token) {
+        updatedRequests[index].currency_name = token.tokenInfo.symbol;
+        updatedRequests[index].decimals = token.tokenInfo.decimals;
+      }
       updatedRequests[index].currency_contract_address = value;
     }
 
@@ -179,8 +189,47 @@ const ShareWorkspacePaymentRequest = () => {
   // modal
   const [openModal, setOpenModal] = useState(false);
 
+  const checkAllFields = () => {
+    if (!sharePaymentRequestForm.length) {
+      return;
+    }
+    for (const item of sharePaymentRequestForm) {
+      if (!item.recipient || !item.amount || !item.currency_contract_address) {
+        toast.error("Please fill all fields");
+        return;
+      }
+      if (!isAddress(item.recipient)) {
+        toast.error(`Invalid address: ${item.recipient}`);
+        return;
+      }
+      if (Number(item.amount) < 0) {
+        toast.error(`Invalid amount: ${item.amount}`);
+        return;
+      }
+      try {
+        const amountBigInt = parseUnits(item.amount, item.decimals);
+        const selectToken = assetsList.find(
+          (s) => s.tokenInfo.address === item.currency_contract_address
+        );
+        if (BigInt(selectToken?.balance || 0) < amountBigInt) {
+          toast.error(
+            `Insufficient balance: ${item.amount} ${item.currency_name}`
+          );
+          return;
+        }
+      } catch (error) {
+        toast.error(`Invalid decimal amount: ${item.amount}`);
+        return;
+      }
+    }
+    return true;
+  };
+
   // create payment request
   const handleSubmitPaymentRequest = () => {
+    if (!checkAllFields()) {
+      return;
+    }
     createSharePaymentRequest({ rows: sharePaymentRequestForm });
   };
   const handleSavePaymentRequest = () => {
@@ -322,13 +371,16 @@ const ShareWorkspacePaymentRequest = () => {
                           <Select
                             labelId="demo-select-small-label"
                             id="demo-select-small"
-                            value={sharePaymentRequestForm[index].currency_name}
+                            value={
+                              sharePaymentRequestForm[index]
+                                .currency_contract_address
+                            }
                             // onChange={handleChange}
                             size="small"
                             onChange={(e) =>
                               handleFormChange(
                                 index,
-                                "currency_name",
+                                "currency_address",
                                 e.target.value
                               )
                             }
@@ -349,7 +401,7 @@ const ShareWorkspacePaymentRequest = () => {
                             {assetsList.map((asset, i: number) => (
                               <MenuItem
                                 key={i}
-                                value={asset.tokenInfo.symbol}
+                                value={asset.tokenInfo.address}
                                 sx={{
                                   "&:hover": {
                                     backgroundColor: "var(--hover-bg)",
@@ -359,7 +411,12 @@ const ShareWorkspacePaymentRequest = () => {
                                   },
                                 }}
                               >
-                                {asset.tokenInfo.symbol}
+                                {asset.tokenInfo.symbol}(
+                                {formatBalance(
+                                  asset.balance,
+                                  asset.tokenInfo.decimals
+                                )}
+                                )
                               </MenuItem>
                             ))}
                           </Select>

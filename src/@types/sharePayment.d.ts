@@ -8,6 +8,7 @@ declare interface SharePaymentRequestBody {
   amount: string;
   currency_name: string;
   recipient: string;
+  decimals: number;
   category_id: null | number;
   category_name: string;
   currency_contract_address?: string;
