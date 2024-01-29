@@ -218,19 +218,6 @@ const Category = () => {
     updatedValues[index] = newValue;
     setPropertyValues(updatedValues);
   };
-  console.log("category properties", categoryProperties);
-  // const handlePropertyValueChange = (
-  //   categoryId: number,
-  //   index: number,
-  //   newName: string
-  // ) => {
-  //   const updatedProperties = [...categoryProperties[categoryId]];
-  //   updatedProperties[index].value = newName;
-  //   setCategoryProperties({
-  //     ...categoryProperties,
-  //     [categoryId]: updatedProperties,
-  //   });
-  // };
 
   const handlePropertyTypeChange = (
     categoryId: number,

@@ -38,7 +38,7 @@ interface IPaymentsStore {
   rejectPaymentRequest: (
     workspaceId: string | undefined,
     paymentRequestIds: string
-  ) => void;
+  ) => Promise<void>;
   getPaymentRequestBySafeTxHash: (
     workspaceId: number,
     safeTxHash: string[]

@@ -202,10 +202,11 @@ const PaymentRequest = () => {
 
   // reject payment request
   const paymentRequestIds = selected.join(",");
-  const handleRejectPaymentRequest = () => {
+  const handleRejectPaymentRequest = async () => {
     if (selected.length) {
-      rejectPaymentRequest(id, paymentRequestIds);
+      await rejectPaymentRequest(id, paymentRequestIds);
       setPaymentLoading(!paymentLoading);
+      setSelected([]);
     }
   };
 
@@ -237,6 +238,7 @@ const PaymentRequest = () => {
             multi-signer will show up here.
           </p>
           <CreateOptionButton>
+            j
             <CreateBtn onClick={() => setNewPaymentsVisible(true)}>
               <img src={add} alt="" />
               <span>Create request</span>
