@@ -21,6 +21,7 @@ import CustomModal from "../../utils/CustomModal";
 import PaymentRequestDetails from "../workspace/paymentRequest/PaymentRequestDetails";
 import { useUserPayment } from "../../store/useUserPayment";
 import usePaymentsStore from "../../store/usePayments";
+import { formatNumber } from "../../utils/number";
 
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -110,7 +111,9 @@ const UserPaymentRequest = () => {
                       <p>{recipientFormate(payment.recipient)}</p>
                     </Safe>
                   </TableCell>
-                  <TableCell>{payment.amount} USDT</TableCell>
+                  <TableCell>
+                    {formatNumber(Number(payment.amount))} USDT
+                  </TableCell>
                   <TableCell>
                     <Status>
                       <img src={statusIcon} alt="" />

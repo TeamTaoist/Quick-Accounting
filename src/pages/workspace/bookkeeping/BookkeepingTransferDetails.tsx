@@ -39,6 +39,7 @@ import usePaymentsStore from "../../../store/usePayments";
 import { useLoading } from "../../../store/useLoading";
 import CHAINS from "../../../utils/chain";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { formatNumber } from "../../../utils/number";
 
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -167,7 +168,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                       paddingLeft: "12px",
                     }}
                   >
-                    {paymentRequestDetails.amount}
+                    {formatNumber(Number(paymentRequestDetails.amount))}
                   </TableCell>
                   <TableCell
                     sx={{
