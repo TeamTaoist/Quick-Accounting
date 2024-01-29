@@ -320,14 +320,14 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
           const contractReceipt = await txResponse.transactionResponse?.wait();
 
           console.log("Transaction executed.");
-          console.log("- Transaction hash:", contractReceipt?.blockHash);
+          console.log("- Transaction hash:", contractReceipt?.hash);
 
           await axiosClient.post(
             `/payment_requests/${workspace_id}/${
               isReject ? "mark_failed" : "mark_executed"
-            }?ids=${requests
-              .map((r) => r.ID)
-              .join(",")}&tx=${safeTxHash}&timestamp=${Date.now()}`
+            }?ids=${requests.map((r) => r.ID).join(",")}&tx=${
+              contractReceipt?.hash
+            }&timestamp=${Date.now()}`
           );
           return true;
         } else {
