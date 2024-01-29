@@ -37,6 +37,8 @@ import ReactSelect from "../../../components/ReactSelect";
 import data from "../../../data/tableData";
 import usePaymentsStore from "../../../store/usePayments";
 import { useLoading } from "../../../store/useLoading";
+import CHAINS from "../../../utils/chain";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -44,6 +46,11 @@ const recipientFormate = (n: string) => {
 
 const BookkeepingTransferDetails = ({ setOpen }: any) => {
   const { id } = useParams();
+
+  const { workspace } = useWorkspace();
+  const chainData = CHAINS.find(
+    (chain) => chain.chainId === workspace?.chain_id
+  );
 
   const { paymentRequestDetails } = usePaymentsStore();
   const { isLoading } = useLoading();
@@ -184,7 +191,13 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
           <h3>Transaction hash</h3>
           <div>
             <p>{paymentRequestDetails.tx_hash}</p>
-            <img src={linkIcon} alt="" />
+            <a
+              href={`${chainData?.explore}/tx/${paymentRequestDetails.tx_hash}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img src={linkIcon} alt="" />
+            </a>
           </div>
         </TransactionHash>
         <TransactionHash>
@@ -446,6 +459,9 @@ const TransferTable = styled.div`
 const TransactionHash = styled.div`
   margin-inline: 46px;
   margin-top: 30px;
+  img {
+    cursor: pointer;
+  }
   h3 {
     font-size: 18px;
     padding-bottom: 8px;
