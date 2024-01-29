@@ -48,29 +48,42 @@ const WorkspaceSidebar = () => {
   const { isConnected, address } = useAccount();
   console.log(isConnected, address);
 
+  const handleSwitchChain = async () => {
+    setLoading(true);
+    try {
+      await switchChainAsync({ chainId: workspace.chain_id });
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        `Please switch to the chain ${workspace.chain_id} and use the workspace`,
+        { autoClose: false }
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (workspace.ID) {
       const init = async () => {
+
         if (!client) {
           console.log(client);
 
           return;
         }
+
         const signer = await clientToSigner(client);
-        const netowrk = await signer?.provider?.getNetwork();
-        if (netowrk?.chainId !== BigInt(workspace.chain_id)) {
-          setLoading(true);
-          try {
-            await switchChainAsync({ chainId: workspace.chain_id });
-          } catch (error) {
-            console.error(error);
-            toast.error(
-              `Please switch to the chain ${workspace.chain_id} and use the workspace`,
-              { autoClose: false }
-            );
-          } finally {
-            setLoading(false);
-          }
+
+        let network: any = null;
+        try {
+          network = await signer?.provider?.getNetwork();
+        } catch (error) {
+          await handleSwitchChain();
+          return;
+        }
+        if (network?.chainId !== BigInt(workspace.chain_id)) {
+          await handleSwitchChain();
           return;
         }
         signer &&

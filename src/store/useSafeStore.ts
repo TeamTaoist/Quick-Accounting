@@ -138,7 +138,8 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
               ) {
                 currentConflict.transactions[1] = tx;
               } else if (
-                item.transaction.txInfo.type === TransactionInfoType.TRANSFER
+                item.transaction.txInfo.type === TransactionInfoType.TRANSFER ||
+                item.transaction.txInfo.type === TransactionInfoType.CUSTOM
               ) {
                 currentConflict.transactions[0] = tx;
               }
