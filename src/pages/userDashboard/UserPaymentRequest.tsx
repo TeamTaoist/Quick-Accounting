@@ -90,7 +90,15 @@ const UserPaymentRequest = () => {
       <PaymentLIst>
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 600, minWidth: 800 }}
+          sx={{
+            maxHeight: 600,
+            minWidth: 800,
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            "-ms-overflow-style": "none",
+            scrollbarWidth: "none",
+          }}
         >
           <Table stickyHeader>
             <TableHead>
