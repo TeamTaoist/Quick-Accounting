@@ -124,10 +124,15 @@ const Category = () => {
     setCategoryNameEditable(false);
   };
   // update category name
-  const handleCategoryName = (e: any, categoryId: number) => {
+  const handleCategoryName = (
+    e: any,
+    categoryId: number,
+    categoryName: string
+  ) => {
     e.stopPropagation();
     setEditableCategoryId(categoryId);
     setCategoryNameEditable(true);
+    setCategoryName(categoryName);
   };
   const handleUpdateCategoryName = (
     // e: React.ChangeEvent<HTMLInputElement>,
@@ -137,8 +142,8 @@ const Category = () => {
     updateCategoryName(workspaceId, categoryId, categoryName);
     setCategoryLoading(!categoryLoading);
     setCategoryNameEditable(false);
-    console.log("update");
   };
+  console.log("update", categoryName);
 
   // update archive workspace category
   const handelArchiveCategory = async (
@@ -322,13 +327,17 @@ const Category = () => {
                     sx={{ backgroundColor: "var(--hover-bg)" }}
                   >
                     <Header>
-                      <div onClick={(e) => handleCategoryName(e, category.ID)}>
+                      <div
+                        onClick={(e) =>
+                          handleCategoryName(e, category.ID, category.name)
+                        }
+                      >
                         {editableCategoryId === category.ID &&
                         categoryNameEditable ? (
                           <input
                             type="text"
-                            // value={categoryName}
-                            value={categoryName ?? category.name}
+                            value={categoryName}
+                            // value={categoryName ?? category.name}
                             placeholder="Category Name"
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => setCategoryName(e.target.value)}
