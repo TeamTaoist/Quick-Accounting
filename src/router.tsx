@@ -19,7 +19,6 @@ import Reports from "./pages/workspace/reports/Reports";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WorkspaceIndex from "./pages/workspace";
-import ShareClipboard from "./pages/workspace/share/ShareClipboard";
 
 const RouterLink = () => {
   return (
@@ -60,7 +59,6 @@ const RouterLink = () => {
           path="/payment-request-preview"
           element={<PaymentRequestPreview />}
         />
-        <Route path="/workspace/:id/share" element={<ShareClipboard />} />
       </Routes>
     </Router>
   );
