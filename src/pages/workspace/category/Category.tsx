@@ -218,7 +218,7 @@ const Category = () => {
     updatedValues[index] = newValue;
     setPropertyValues(updatedValues);
   };
-  console.log(propertyValues);
+  console.log("category properties", categoryProperties);
   // const handlePropertyValueChange = (
   //   categoryId: number,
   //   index: number,
@@ -247,7 +247,10 @@ const Category = () => {
 
   const [showProperty, setShowProperty] = useState<number | null>();
 
-  const handleCreateProperty = (categoryId: number, propertyIndex: number) => {
+  const handleCreateProperty = async (
+    categoryId: number,
+    propertyIndex: number
+  ) => {
     const propertyFormValues = categoryProperties[categoryId][showProperty!];
     const propertyValue = {
       category_id: categoryId,
@@ -256,11 +259,13 @@ const Category = () => {
       values: propertyValues.join(";"),
       workspace_id: Number(id),
     };
-    createWorkspaceCategoryProperties(propertyValue);
+    await createWorkspaceCategoryProperties(propertyValue);
     if (categoryProperty.code === 200 && categoryProperty.msg === "success") {
       setShowProperty(null);
       // setCategoryProperties({});
       setPropertyValues([]);
+      setCategoryProperties({});
+      setCategoryLoading(!categoryLoading);
     }
   };
   const handlePropertyCancelBtn = (

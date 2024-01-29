@@ -43,7 +43,7 @@ interface UseCategoryProperty {
   workspaceCategoryProperties: CategoryProperties[];
   categoryProperty: CategoryProperty;
   getWorkspaceCategoryProperties: (workspaceId: number) => void;
-  createWorkspaceCategoryProperties: (propertyValues: any) => void;
+  createWorkspaceCategoryProperties: (propertyValues: any) => Promise<void>;
 }
 
 export const useCategoryProperty = create<UseCategoryProperty>((set) => {
