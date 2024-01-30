@@ -234,6 +234,7 @@ const PaymentRequest = () => {
     setSelectedValue("");
     setPaymentRequest(false);
     // setPaymentLoading(!paymentLoading);
+    console.log("click");
   };
   const handleBackBtn = () => {
     setPaymentLoading(!paymentLoading);
@@ -244,10 +245,9 @@ const PaymentRequest = () => {
   const uniqueCategoryNames = Array.from(
     new Set(paymentRequestList.map((payment) => payment.category_name))
   );
-
   return (
     <PaymentRequestContainer>
-      {paymentRequestList.length === 0 ? (
+      {paymentRequestList.length === 0 && paymentRequest ? (
         <CategoryTitle>
           <h3>No payment request yet.</h3>
           <p style={{ width: "509px", textAlign: "center" }}>
@@ -255,7 +255,6 @@ const PaymentRequest = () => {
             multi-signer will show up here.
           </p>
           <CreateOptionButton>
-            j
             <CreateBtn onClick={() => setNewPaymentsVisible(true)}>
               <img src={add} alt="" />
               <span>Create request</span>
@@ -593,15 +592,23 @@ const PaymentRequest = () => {
               )}
             </PaymentRequestBody>
           )}
-          {!paymentRequest && (
+          {/* {!paymentRequest && (
             <RejectSection>
               <RejectDataTable
                 searchTerm={searchTerm}
                 selectedValue={selectedValue}
               />
             </RejectSection>
-          )}
+          )} */}
         </>
+      )}
+      {!paymentRequest && (
+        <RejectSection>
+          <RejectDataTable
+            searchTerm={searchTerm}
+            selectedValue={selectedValue}
+          />
+        </RejectSection>
       )}
       {newPaymentsVisible && (
         <NewPaymentRequest onClose={() => setNewPaymentsVisible(false)} />
