@@ -9,13 +9,17 @@ import {
   Button,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { CategoryCell } from "../../pages/workspace/paymentRequest/paymentRequest.style";
+import {
+  CategoryCell,
+  PaymentPagination,
+} from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import statusIcon from "../../assets/workspace/status-icon.svg";
 import styled from "@emotion/styled";
 import CustomModal from "../../utils/CustomModal";
 import PaymentRequestDetails from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
 import { useEffect, useState } from "react";
 import usePaymentsStore from "../../store/usePayments";
+import ReactPaginate from "react-paginate";
 
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
@@ -35,6 +39,7 @@ const RejectDataTable = ({
   const [openModal, setOpenModal] = useState(false);
   const [list, setList] = useState<IPaymentRequest[]>([]);
   const [total, setTotal] = useState(0);
+  const [pageNumbers, setPageNumbers] = useState(0);
 
   const { getPaymentRequestDetails, getFailedPaymentRequestList } =
     usePaymentsStore();
@@ -56,13 +61,23 @@ const RejectDataTable = ({
     : list;
 
   useEffect(() => {
-    getFailedPaymentRequestList(Number(id), isInQueue).then(
+    getFailedPaymentRequestList(Number(id), isInQueue, pageNumbers).then(
       (res: IPageResponse<IPaymentRequest>) => {
         setTotal(res?.total || 0);
         setList(res?.rows || []);
       }
     );
-  }, [isInQueue]);
+  }, [isInQueue, pageNumbers]);
+
+  // pagination
+  // const pageSize = 10;
+  // const totalItem = paymentPagination.total;
+
+  const pageCount = Math.ceil(total / 10);
+
+  const handlePageClick = (event: any) => {
+    setPageNumbers(event.selected);
+  };
 
   return (
     <div>
@@ -128,6 +143,26 @@ const RejectDataTable = ({
           </TableBody>
         </Table>
       </TableContainer>
+      {total > 10 && (
+        <PaymentPagination>
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            pageCount={pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+            containerClassName="pagination"
+            pageLinkClassName="page-num"
+            previousLinkClassName="page-arrow"
+            nextLinkClassName="page-arrow"
+            activeLinkClassName="active"
+            // initialPage={2}
+            forcePage={0}
+          />
+        </PaymentPagination>
+      )}
     </div>
   );
 };

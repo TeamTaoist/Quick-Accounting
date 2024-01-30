@@ -6,11 +6,6 @@ import { toast } from "react-toastify";
 
 interface IPaymentsStore {
   paymentRequestList: IPaymentRequest[];
-  paymentPagination: {
-    page: number;
-    size: number;
-    total: number;
-  };
   paymentRequestDetails: IPaymentRequest;
   paymentRequestGroupDetails: IPaymentRequest[];
   paymentRquestMap: Map<string, IPaymentRequest[]>;
@@ -19,7 +14,7 @@ interface IPaymentsStore {
     isRejected?: boolean,
     page?: number,
     size?: number
-  ) => void;
+  ) => Promise<number>;
   createPaymentRequest: (
     workspaceId: number,
     paymentRequestBody: IPaymentRequestBody,
@@ -63,11 +58,6 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
 
   return {
     paymentRequestList: [],
-    paymentPagination: {
-      page: 0,
-      size: 0,
-      total: 0,
-    },
     paymentRequestDetails: {
       ID: 0,
       CreatedAt: "",
@@ -104,7 +94,9 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           `/payment_request/${workspaceId}?rejected=${isRejected}&page=${page}&size=${size}`
         );
         set({ paymentRequestList: data.data.rows });
-        set({ paymentPagination: data.data });
+        if (data.msg === "success" && data.code === 200) {
+          return data.data.total;
+        }
       } catch (error: any) {
         toast.error(error?.data.msg || error?.status || error);
         console.error(error);

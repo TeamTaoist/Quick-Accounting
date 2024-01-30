@@ -71,7 +71,6 @@ const PaymentRequest = () => {
     getPaymentRequestDetails,
     rejectPaymentRequest,
     getPaymentRequestGroupDetails,
-    paymentPagination,
   } = usePaymentsStore();
   // table logic
   const recipientFormate = (n: string) => {
@@ -164,12 +163,21 @@ const PaymentRequest = () => {
   const [rejectPaymentLoading, setRejectPaymentLoading] =
     useState<boolean>(false);
 
-  // pagination page count
+  // pagination
   const [pageNumbers, setPageNumbers] = useState(0);
+  const [totalItem, setTotalItem] = useState(0);
+
+  const pageCount = Math.ceil(totalItem / 10);
+
+  const handlePageClick = (event: any) => {
+    setPageNumbers(event.selected);
+  };
 
   const workspaceId = Number(id);
   useEffect(() => {
-    getPaymentRequestList(workspaceId, false, pageNumbers);
+    getPaymentRequestList(workspaceId, false, pageNumbers).then((res) => {
+      setTotalItem(res);
+    });
   }, [
     getPaymentRequestList,
     workspaceId,
@@ -236,17 +244,6 @@ const PaymentRequest = () => {
   const uniqueCategoryNames = Array.from(
     new Set(paymentRequestList.map((payment) => payment.category_name))
   );
-  console.log(paymentPagination);
-  console.log("total", paymentPagination.total);
-  // pagination
-  const pageSize = paymentPagination.size;
-  const totalItem = paymentPagination.total;
-
-  const pageCount = Math.ceil(totalItem / pageSize);
-
-  const handlePageClick = (event: any) => {
-    setPageNumbers(event.selected);
-  };
 
   return (
     <PaymentRequestContainer>
@@ -574,7 +571,7 @@ const PaymentRequest = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {paymentPagination.total >= 10 && (
+              {totalItem > 10 && (
                 <PaymentPagination>
                   <ReactPaginate
                     breakLabel="..."
