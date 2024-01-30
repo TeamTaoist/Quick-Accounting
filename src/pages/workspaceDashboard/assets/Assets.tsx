@@ -79,6 +79,7 @@ const Assets = () => {
         <TextField
           id="search"
           type="search"
+          autoComplete="off"
           placeholder={t("assets.SearchPlaceholder")}
           value={searchTerm}
           onChange={handleChange}

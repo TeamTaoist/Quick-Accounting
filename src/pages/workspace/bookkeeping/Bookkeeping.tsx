@@ -225,6 +225,7 @@ const Bookkeeping = () => {
           <TextField
             id="search"
             type="search"
+            autoComplete="off"
             placeholder={t("paymentRequest.SearchToken")}
             value={searchTerm}
             onChange={handleChange}

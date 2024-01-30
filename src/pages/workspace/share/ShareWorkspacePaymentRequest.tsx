@@ -352,6 +352,7 @@ const ShareWorkspacePaymentRequest = () => {
                             }}
                             size="small"
                             fullWidth
+                            autoComplete="off"
                             // id="fullWidth"
                             placeholder="amount"
                             onChange={(e) =>

@@ -243,7 +243,9 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
           (s) => s.tokenInfo.address === item.currency_contract_address
         );
         if (BigInt(selectToken?.balance || 0) < amountBigInt) {
-          toast.error(`Insufficient balance: ${item.amount} ${item.currency_name}`);
+          toast.error(
+            `Insufficient balance: ${item.amount} ${item.currency_name}`
+          );
           return;
         }
       } catch (error) {
@@ -363,6 +365,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           }}
                           size="small"
                           fullWidth
+                          autoComplete="off"
                           // id="fullWidth"
                           placeholder="0.00"
                           InputProps={{

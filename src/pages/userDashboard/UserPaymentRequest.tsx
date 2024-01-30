@@ -75,6 +75,7 @@ const UserPaymentRequest = () => {
       <TextField
         id="search"
         type="search"
+        autoComplete="off"
         placeholder="Search Token"
         value={searchTerm}
         onChange={handleChange}
