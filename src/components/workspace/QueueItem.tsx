@@ -227,7 +227,7 @@ const QueueTransactionItem = ({
                 {(payments || []).map((queueItem: IPaymentRequest) => (
                   <TableRow key={queueItem.ID}>
                     <TableCell>
-                      {getShortAddress(queueItem.recipient)}
+                      {getShortAddress(workspace?.vault_wallet)}
                     </TableCell>
                     <TableCell>
                       {getShortAddress(queueItem.recipient)}
