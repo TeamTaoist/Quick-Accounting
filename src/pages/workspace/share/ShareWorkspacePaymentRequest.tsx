@@ -230,7 +230,7 @@ const ShareWorkspacePaymentRequest = () => {
     if (!checkAllFields()) {
       return;
     }
-    createSharePaymentRequest({ rows: sharePaymentRequestForm }).then((res) => {
+    createSharePaymentRequest(id!, { rows: sharePaymentRequestForm }).then((res) => {
       if (res) {
         setSharePaymentRequestForm([]);
         setOpenModal(true);
