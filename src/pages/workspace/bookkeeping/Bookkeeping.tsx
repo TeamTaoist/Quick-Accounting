@@ -47,6 +47,7 @@ import {
   Header,
   Image,
   Option,
+  PaymentPagination,
   PaymentRequestBody,
   PaymentRequestContainer,
   RejectSection,
@@ -59,6 +60,7 @@ import CustomModal from "../../../utils/CustomModal";
 import BookkeepingTransferDetails from "./BookkeepingTransferDetails";
 import { useBookkeeping } from "../../../store/useBookkeeping";
 import usePaymentsStore from "../../../store/usePayments";
+import ReactPaginate from "react-paginate";
 
 const Bookkeeping = () => {
   const { id } = useParams();
@@ -78,6 +80,16 @@ const Bookkeeping = () => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
   };
   const [paymentRequest, setPaymentRequest] = useState(true);
+
+  // pagination
+  const [pageNumbers, setPageNumbers] = useState(0);
+  const [totalItem, setTotalItem] = useState(0);
+
+  const pageCount = Math.ceil(totalItem / 10);
+
+  const handlePageClick = (event: any) => {
+    setPageNumbers(event.selected);
+  };
   // visibility
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -85,8 +97,19 @@ const Bookkeeping = () => {
   // fetch bookkeeping data
   const workspaceId = Number(id);
   useEffect(() => {
-    getBookkeepingList(workspaceId, visible);
-  }, [getBookkeepingList, visible, workspaceId, loading, paymentRequest]);
+    getBookkeepingList(workspaceId, visible).then((res) => {
+      if (res) {
+        setTotalItem(res);
+      }
+    });
+  }, [
+    getBookkeepingList,
+    visible,
+    workspaceId,
+    loading,
+    paymentRequest,
+    pageNumbers,
+  ]);
 
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
@@ -436,6 +459,27 @@ const Bookkeeping = () => {
         </RejectSection>
       )}
       {/*  */}
+      {/* pagination */}
+      {totalItem > 10 && (
+        <PaymentPagination>
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            pageCount={pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+            containerClassName="pagination"
+            pageLinkClassName="page-num"
+            previousLinkClassName="page-arrow"
+            nextLinkClassName="page-arrow"
+            activeLinkClassName="active"
+            // initialPage={2}
+            forcePage={0}
+          />
+        </PaymentPagination>
+      )}
 
       {/* header */}
     </PaymentRequestContainer>

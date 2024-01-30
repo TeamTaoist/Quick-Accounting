@@ -9,7 +9,7 @@ interface UseBookkeeping {
   getBookkeepingList: (
     workspaceId: number,
     visibility: boolean
-  ) => Promise<void>;
+  ) => Promise<number>;
   exportBookkeepingList: (
     workspaceId: number,
     paymentRequestIds: string
@@ -40,6 +40,9 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
           `/bookkeeping/${workspaceId}?hided=${visibility}`
         );
         set({ bookkeepingList: data.data.rows });
+        if (data?.msg === "success" && data?.code === 200) {
+          return data.data.total;
+        }
       } catch (error: any) {
         console.log(error);
       } finally {
