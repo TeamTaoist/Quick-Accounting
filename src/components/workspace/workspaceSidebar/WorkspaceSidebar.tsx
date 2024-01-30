@@ -102,18 +102,11 @@ const WorkspaceSidebar = () => {
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
   };
-  // share payment clipboard
-  const [link, setLink] = useState("");
 
   const handleCopy = () => {
     toast.success("The share link has been copied to your clipboard!");
   };
-  useEffect(() => {
-    const baseUrl = window.location.origin;
-    const workspaceId = workspace.ID;
-    const shareLink = `${baseUrl}/workspace/${workspaceId}/new-workspace-payment-request`;
-    setLink(shareLink);
-  }, []);
+ 
   return (
     <>
       <SidebarContainer>
@@ -133,7 +126,10 @@ const WorkspaceSidebar = () => {
             </RequestBtn>
           </span>
           {/* <Link to={`/workspace/${id}/new-workspace-payment-request`}> */}
-          <CopyToClipboard text={link} onCopy={handleCopy}>
+          <CopyToClipboard
+            text={`${window.location.origin}/workspace/${workspace.ID}/new-workspace-payment-request`}
+            onCopy={handleCopy}
+          >
             {/* <Link to={`/workspace/${id}/share`}> */}
             <RequestBtn>
               <img src={share} alt="" />
