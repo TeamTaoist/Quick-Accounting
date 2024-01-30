@@ -243,7 +243,7 @@ const Bookkeeping = () => {
               ),
             }}
           />
-          <FormControl>
+          <FormControl sx={{ minWidth: 100 }}>
             <Select
               value={selectedValue}
               onChange={handleDropdownChange}
@@ -251,7 +251,7 @@ const Bookkeeping = () => {
               inputProps={{ "aria-label": "Select a value" }}
               size="small"
             >
-              <MenuItem disabled>
+              <MenuItem value="" disabled>
                 <Option>
                   <Image src={filterIcon} alt="" />
                   {t("paymentRequest.Filter")}
