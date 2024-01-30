@@ -84,6 +84,7 @@
     "typescript": "^5.0.4"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/react-copy-to-clipboard": "^5.0.7"
   }
 }

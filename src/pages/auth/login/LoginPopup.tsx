@@ -117,34 +117,39 @@ const LoginPopup = () => {
   }, []);
 
   return (
-    <Header>
+    <>
       {isLoading && <Loading />}
-      {loginVidible ? (
-        <div className="login">
-          <div className="popup">
-            <span onClick={() => setLoginVisible(false)}>
-              <img className="close-btn" src={cancelIcon} alt="" />
-            </span>
-            <h3>{t("login.LoginTitle")}</h3>
-            <button className="btn" onClick={onClickConnect}>
-              <img src={metamask} alt="" />
-              <span>{t("login.MetaMask")}</span>
-            </button>
+      <Header>
+        {loginVidible ? (
+          <div className="login">
+            <div className="popup">
+              <span onClick={() => setLoginVisible(false)}>
+                <img className="close-btn" src={cancelIcon} alt="" />
+              </span>
+              <h3>{t("login.LoginTitle")}</h3>
+              <button className="btn" onClick={onClickConnect}>
+                <img src={metamask} alt="" />
+                <span>{t("login.MetaMask")}</span>
+              </button>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="home-container">
-          <div className="home">
-            <img src={logo} alt="" />
-            <h3 className="home-title">{t("home.HomeTitle")}</h3>
-            <p className="home-description">{t("home.HomeDescription")}</p>
-            <span className="connect-btn" onClick={() => setLoginVisible(true)}>
-              {t("home.ConnectBtn")}
-            </span>
+        ) : (
+          <div className="home-container">
+            <div className="home">
+              <img src={logo} alt="" />
+              <h3 className="home-title">{t("home.HomeTitle")}</h3>
+              <p className="home-description">{t("home.HomeDescription")}</p>
+              <span
+                className="connect-btn"
+                onClick={() => setLoginVisible(true)}
+              >
+                {t("home.ConnectBtn")}
+              </span>
+            </div>
           </div>
-        </div>
-      )}
-    </Header>
+        )}
+      </Header>
+    </>
   );
 };
 
