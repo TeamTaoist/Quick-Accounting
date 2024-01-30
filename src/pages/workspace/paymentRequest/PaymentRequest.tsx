@@ -59,6 +59,7 @@ import usePaymentsStore from "../../../store/usePayments";
 import PaymentRequestGroupDetails from "../../../components/paymentRequest/PaymentRequestGroupDetails";
 import NewPaymentRequest from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import ReactPaginate from "react-paginate";
+import { formatNumber } from "../../../utils/number";
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -474,7 +475,8 @@ const PaymentRequest = () => {
                                   {recipientFormate(payment.recipient)}
                                 </TableCell>
                                 <TableCell>
-                                  {payment.amount} {payment.currency_name}
+                                  {formatNumber(Number(payment.amount))}{" "}
+                                  {payment.currency_name}
                                 </TableCell>
                                 <TableCell>
                                   {payment.category_name && (

@@ -20,6 +20,7 @@ import PaymentRequestDetails from "../../pages/workspace/paymentRequest/PaymentR
 import { useEffect, useState } from "react";
 import usePaymentsStore from "../../store/usePayments";
 import ReactPaginate from "react-paginate";
+import { formatNumber } from "../../utils/number";
 
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
@@ -112,7 +113,9 @@ const RejectDataTable = ({
             {filterData?.map((payment) => (
               <TableRow key={payment.ID}>
                 <TableCell>{recipientFormate(payment.recipient)}</TableCell>
-                <TableCell>{payment.amount} USDT</TableCell>
+                <TableCell>
+                  {formatNumber(Number(payment.amount))} {payment.currency_name}
+                </TableCell>
                 <TableCell>
                   <CategoryCell>{payment.category_name}</CategoryCell>
                 </TableCell>
