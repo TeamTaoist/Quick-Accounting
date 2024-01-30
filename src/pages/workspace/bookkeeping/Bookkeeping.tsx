@@ -219,6 +219,10 @@ const Bookkeeping = () => {
             Transactions that add tokens to or remove tokens from your Safe will
             show up here.
           </p>
+          <CreateBtn onClick={handleViewHiddenList}>
+            <img src={view} alt="" style={{ width: "20px" }} />
+            <span>View hidden</span>
+          </CreateBtn>
         </CategoryTitle>
       ) : (
         <Header>
