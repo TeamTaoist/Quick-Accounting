@@ -5,7 +5,9 @@ import { toast } from "react-toastify";
 import { useWorkspace } from "./useWorkspace";
 
 interface UseSharePaymentRequest {
-  createSharePaymentRequest: (createSharePaymentRequest: any) => void;
+  createSharePaymentRequest: (
+    createSharePaymentRequest: any
+  ) => Promise<boolean | undefined>;
 }
 
 export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
@@ -21,6 +23,7 @@ export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
         );
         if (data.msg === "success" && data.code === 200) {
           toast.success("Payment request submitted");
+          return true;
         }
       } catch (error: any) {
         console.log(error);
