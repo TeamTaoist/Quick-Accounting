@@ -48,24 +48,26 @@ const UserDashboard = () => {
               <PaymentTable>
                 <UserPaymentRequest />
                 {/* pagination */}
-                <Pagination>
-                  <ReactPaginate
-                    breakLabel="..."
-                    nextLabel=">"
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={3}
-                    pageCount={pageCount}
-                    previousLabel="<"
-                    renderOnZeroPageCount={null}
-                    containerClassName="pagination"
-                    pageLinkClassName="page-num"
-                    previousLinkClassName="page-arrow"
-                    nextLinkClassName="page-arrow"
-                    activeLinkClassName="active"
-                    // initialPage={2}
-                    forcePage={0}
-                  />
-                </Pagination>
+                {totalItem >= 10 && (
+                  <Pagination>
+                    <ReactPaginate
+                      breakLabel="..."
+                      nextLabel=">"
+                      onPageChange={handlePageClick}
+                      pageRangeDisplayed={3}
+                      pageCount={pageCount}
+                      previousLabel="<"
+                      renderOnZeroPageCount={null}
+                      containerClassName="pagination"
+                      pageLinkClassName="page-num"
+                      previousLinkClassName="page-arrow"
+                      nextLinkClassName="page-arrow"
+                      activeLinkClassName="active"
+                      // initialPage={2}
+                      forcePage={0}
+                    />
+                  </Pagination>
+                )}
               </PaymentTable>
             )}
           </UserSidebar>

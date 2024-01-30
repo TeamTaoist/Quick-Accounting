@@ -56,6 +56,9 @@ export const ViewReject = styled.div`
 export const RejectSection = styled.div`
   margin-top: 120px;
 `;
+export const PaymentPagination = styled.div`
+  padding: 20px 0;
+`;
 export const CategoryCell = styled.div`
   background: var(--bg-primary);
   padding: 4px;

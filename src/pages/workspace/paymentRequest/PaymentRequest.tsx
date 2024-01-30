@@ -45,6 +45,7 @@ import {
   Header,
   Image,
   Option,
+  PaymentPagination,
   PaymentRequestBody,
   PaymentRequestContainer,
   RejectSection,
@@ -57,6 +58,7 @@ import SignPaymentRequest from "./SignPaymentRequest";
 import usePaymentsStore from "../../../store/usePayments";
 import PaymentRequestGroupDetails from "../../../components/paymentRequest/PaymentRequestGroupDetails";
 import NewPaymentRequest from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
+import ReactPaginate from "react-paginate";
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -69,6 +71,7 @@ const PaymentRequest = () => {
     getPaymentRequestDetails,
     rejectPaymentRequest,
     getPaymentRequestGroupDetails,
+    paymentPagination,
   } = usePaymentsStore();
   // table logic
   const recipientFormate = (n: string) => {
@@ -161,15 +164,19 @@ const PaymentRequest = () => {
   const [rejectPaymentLoading, setRejectPaymentLoading] =
     useState<boolean>(false);
 
+  // pagination page count
+  const [pageNumbers, setPageNumbers] = useState(0);
+
   const workspaceId = Number(id);
   useEffect(() => {
-    getPaymentRequestList(workspaceId, false);
+    getPaymentRequestList(workspaceId, false, pageNumbers);
   }, [
     getPaymentRequestList,
     workspaceId,
     paymentLoading,
     rejectPaymentLoading,
     newPaymentsVisible,
+    pageNumbers,
   ]);
   // payment_request_id
 
@@ -229,6 +236,18 @@ const PaymentRequest = () => {
   const uniqueCategoryNames = Array.from(
     new Set(paymentRequestList.map((payment) => payment.category_name))
   );
+  console.log(paymentPagination);
+  console.log("total", paymentPagination.total);
+  // pagination
+  const pageSize = paymentPagination.size;
+  const totalItem = paymentPagination.total;
+
+  const pageCount = Math.ceil(totalItem / pageSize);
+
+  const handlePageClick = (event: any) => {
+    setPageNumbers(event.selected);
+  };
+
   return (
     <PaymentRequestContainer>
       {paymentRequestList.length === 0 ? (
@@ -555,6 +574,26 @@ const PaymentRequest = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
+              {paymentPagination.total >= 10 && (
+                <PaymentPagination>
+                  <ReactPaginate
+                    breakLabel="..."
+                    nextLabel=">"
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={3}
+                    pageCount={pageCount}
+                    previousLabel="<"
+                    renderOnZeroPageCount={null}
+                    containerClassName="pagination"
+                    pageLinkClassName="page-num"
+                    previousLinkClassName="page-arrow"
+                    nextLinkClassName="page-arrow"
+                    activeLinkClassName="active"
+                    // initialPage={2}
+                    forcePage={0}
+                  />
+                </PaymentPagination>
+              )}
             </PaymentRequestBody>
           )}
           {!paymentRequest && (
