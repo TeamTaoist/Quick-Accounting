@@ -1,7 +1,11 @@
 import { formatUnits } from "viem";
 
 export const formatNumber = (num: number) => {
-  return (num >= 0 ? "" : "-") + Math.abs(num).toLocaleString("en-US");
+  if (num >= 0) {
+    return num < 1 ? num : num.toLocaleString("en-US");
+  } else {
+    return "-" + Math.abs(num).toLocaleString("en-US");
+  }
 };
 
 export const getShortDisplay = (v: any, num = 2) => {
