@@ -61,6 +61,9 @@ import BookkeepingTransferDetails from "./BookkeepingTransferDetails";
 import { useBookkeeping } from "../../../store/useBookkeeping";
 import usePaymentsStore from "../../../store/usePayments";
 import ReactPaginate from "react-paginate";
+import { getShortAddress } from "../../../utils";
+import { useWorkspace } from "../../../store/useWorkspace";
+import { formatNumber } from "../../../utils/number";
 
 const Bookkeeping = () => {
   const { id } = useParams();
@@ -75,10 +78,8 @@ const Bookkeeping = () => {
     hideBookkeepingList,
   } = useBookkeeping();
   const { getPaymentRequestDetails } = usePaymentsStore();
+  const { workspace } = useWorkspace();
 
-  const recipientFormate = (n: string) => {
-    return `${n.slice(0, 6)}...${n.slice(-4)}`;
-  };
   const [paymentRequest, setPaymentRequest] = useState(true);
 
   // pagination
@@ -391,9 +392,7 @@ const Bookkeeping = () => {
                                     handleCheckboxClick(event, bookkeeping.ID)
                                   }
                                 />
-                                {recipientFormate(
-                                  bookkeeping.currency_contract_address
-                                )}
+                                {getShortAddress(workspace?.vault_wallet)}
                               </div>
                               <Logo>
                                 <img src={rightArrow} alt="" />
@@ -401,9 +400,12 @@ const Bookkeeping = () => {
                             </SafeSection>
                           </TableCell>
                           <TableCell>
-                            {recipientFormate(bookkeeping.recipient)}
+                            {getShortAddress(bookkeeping.recipient)}
                           </TableCell>
-                          <TableCell>{bookkeeping.amount} USDT</TableCell>
+                          <TableCell>
+                            {formatNumber(Number(bookkeeping.amount))}{" "}
+                            {bookkeeping.currency_name}
+                          </TableCell>
                           <TableCell>
                             <CategoryCell>
                               {bookkeeping.category_name}

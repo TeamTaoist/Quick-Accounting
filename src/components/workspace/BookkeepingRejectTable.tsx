@@ -21,6 +21,9 @@ import hide from "../../assets/workspace/hide.svg";
 import styled from "@emotion/styled";
 import { useBookkeeping } from "../../store/useBookkeeping";
 import { CategoryTitle } from "../../pages/workspace/category/category.style";
+import { getShortAddress } from "../../utils";
+import { useWorkspace } from "../../store/useWorkspace";
+import { formatNumber } from "../../utils/number";
 
 interface RejectTableProps {
   workspaceId: number;
@@ -31,9 +34,6 @@ interface RejectTableProps {
     paymentId: number
   ) => void;
 }
-const recipientFormate = (n: string) => {
-  return `${n.slice(0, 6)}...${n.slice(-4)}`;
-};
 const BookkeepingRejectTable = ({
   workspaceId,
   paymentRequest,
@@ -44,6 +44,7 @@ const BookkeepingRejectTable = ({
 
   const { bookkeepingList, unHideBookkeepingList, getBookkeepingList } =
     useBookkeeping();
+  const { workspace } = useWorkspace();
 
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
@@ -143,9 +144,7 @@ const BookkeepingRejectTable = ({
                                 handleCheckboxClick(event, bookkeeping.ID)
                               }
                             />
-                            {recipientFormate(
-                              bookkeeping.currency_contract_address
-                            )}
+                            {getShortAddress(workspace.vault_wallet)}
                           </div>
                           <Logo>
                             <img src={rightArrow} alt="" />
@@ -153,9 +152,12 @@ const BookkeepingRejectTable = ({
                         </SafeSection>
                       </TableCell>
                       <TableCell>
-                        {recipientFormate(bookkeeping.recipient)}
+                        {getShortAddress(bookkeeping.recipient)}
                       </TableCell>
-                      <TableCell>{bookkeeping.amount}</TableCell>
+                      <TableCell>
+                        {formatNumber(Number(bookkeeping.amount))}{" "}
+                        {bookkeeping.currency_name}
+                      </TableCell>
                       <TableCell>
                         <CategoryCell>{bookkeeping.category_name}</CategoryCell>
                       </TableCell>
