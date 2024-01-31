@@ -60,6 +60,7 @@ import PaymentRequestGroupDetails from "../../../components/paymentRequest/Payme
 import NewPaymentRequest from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import ReactPaginate from "react-paginate";
 import { formatNumber } from "../../../utils/number";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -73,6 +74,7 @@ const PaymentRequest = () => {
     rejectPaymentRequest,
     getPaymentRequestGroupDetails,
   } = usePaymentsStore();
+  const { getWorkspaceCategoryProperties } = useCategoryProperty();
   // table logic
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
@@ -122,10 +124,16 @@ const PaymentRequest = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openGroupPaymentModal, setOpenGroupPaymentModal] = useState(false);
   const [openSignPaymentModal, setSignPaymentModal] = useState(false);
+  const [test, setTest] = useState(false);
 
   const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
-    setOpenModal(true);
-    getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
+    getPaymentRequestDetails(Number(id), paymentRequestId, paymentId).then(
+      (res) => {
+        if (res) {
+          setOpenModal(true);
+        }
+      }
+    );
   };
 
   // group payment details
@@ -135,8 +143,6 @@ const PaymentRequest = () => {
         setOpenGroupPaymentModal(true);
       }
     });
-
-    console.log(paymentRequestId);
   };
 
   // modal end
@@ -179,6 +185,7 @@ const PaymentRequest = () => {
     getPaymentRequestList(workspaceId, false, pageNumbers).then((res) => {
       setTotalItem(res);
     });
+    getWorkspaceCategoryProperties(Number(id));
   }, [
     getPaymentRequestList,
     workspaceId,

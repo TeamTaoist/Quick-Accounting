@@ -24,7 +24,7 @@ interface IPaymentsStore {
     workspaceId: number,
     paymentRequestId: number,
     paymentId: number
-  ) => void;
+  ) => Promise<boolean | undefined>;
   getPaymentRequestGroupDetails: (
     workspaceId: number,
     paymentRequestId: string
@@ -134,6 +134,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           `/payment_request/${workspaceId}/${paymentRequestId}/item/${paymentId}`
         );
         set({ paymentRequestDetails: data.data });
+        return true;
       } catch (error: any) {
         toast.error(error?.data.msg || error?.status || error);
         console.error(error);
