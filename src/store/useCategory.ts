@@ -55,7 +55,7 @@ interface UseCategory {
     workspaceId: number,
     categoryId: number,
     categoryName: string | undefined
-  ) => void;
+  ) => Promise<void>;
   updateCategoryArchive: (
     workspaceId: number,
     categoryIds: number
@@ -157,6 +157,7 @@ export const useCategory = create<UseCategory>((set) => {
         }
       } catch (error: any) {
         console.log(error);
+        toast.error(error?.data.msg || error?.status || error);
       } finally {
       }
     },

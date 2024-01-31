@@ -134,12 +134,12 @@ const Category = () => {
     setCategoryNameEditable(true);
     setCategoryName(categoryName);
   };
-  const handleUpdateCategoryName = (
+  const handleUpdateCategoryName = async (
     // e: React.ChangeEvent<HTMLInputElement>,
     workspaceId: number,
     categoryId: number
   ) => {
-    updateCategoryName(workspaceId, categoryId, categoryName);
+    await updateCategoryName(workspaceId, categoryId, categoryName);
     setCategoryLoading(!categoryLoading);
     setCategoryNameEditable(false);
   };
