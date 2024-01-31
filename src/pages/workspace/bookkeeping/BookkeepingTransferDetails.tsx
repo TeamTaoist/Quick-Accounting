@@ -40,10 +40,7 @@ import { useLoading } from "../../../store/useLoading";
 import CHAINS from "../../../utils/chain";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
-
-const recipientFormate = (n: string) => {
-  return `${n.slice(0, 6)}...${n.slice(-4)}`;
-};
+import { getShortAddress } from "../../../utils";
 
 const BookkeepingTransferDetails = ({ setOpen }: any) => {
   const { id } = useParams();
@@ -138,11 +135,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                     }}
                   >
                     <SafeSection>
-                      <div>
-                        {recipientFormate(
-                          paymentRequestDetails.currency_contract_address
-                        )}
-                      </div>
+                      <div>{getShortAddress(workspace.vault_wallet)}</div>
                       <Logo>
                         <img src={transferArrow} alt="" />
                       </Logo>
@@ -157,7 +150,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                       paddingLeft: "12px",
                     }}
                   >
-                    {recipientFormate(paymentRequestDetails.recipient)}
+                    {getShortAddress(paymentRequestDetails.recipient)}
                   </TableCell>
                   <TableCell
                     sx={{
