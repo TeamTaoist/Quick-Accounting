@@ -106,14 +106,14 @@ const WorkspaceSidebar = () => {
   const handleCopy = () => {
     toast.success("The share link has been copied to your clipboard!");
   };
- 
+
   return (
     <>
       <SidebarContainer>
         <WorkspaceInfo>
           <div>
             <h5>{workspace.name}</h5>
-            <p>{recipientFormate(workspace.creator)}</p>
+            <p>{recipientFormate(workspace.vault_wallet)}</p>
           </div>
           <img src={arrow} alt="" />
         </WorkspaceInfo>
