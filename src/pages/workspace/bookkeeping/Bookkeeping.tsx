@@ -236,17 +236,17 @@ const Bookkeeping = () => {
         // additionalProps={{}}
       />
       {bookkeepingList.length === 0 && paymentRequest ? (
-        <CategoryTitle>
+        <BookkeepingTitle>
           <h3>You don't have any transactions.</h3>
           <p style={{ width: "509px", textAlign: "center" }}>
             Transactions that add tokens to or remove tokens from your Safe will
             show up here.
           </p>
-          <CreateBtn onClick={handleViewHiddenList}>
+          <HideBtn onClick={handleViewHiddenList}>
             <img src={view} alt="" style={{ width: "20px" }} />
             <span>View hidden</span>
-          </CreateBtn>
-        </CategoryTitle>
+          </HideBtn>
+        </BookkeepingTitle>
       ) : (
         <Header>
           <TextField
@@ -497,5 +497,44 @@ export const Logo = styled.div`
   flex: 0 0 30%;
   img {
     width: 20px;
+  }
+`;
+const BookkeepingTitle = styled.div`
+  height: 90vh;
+  /* border: 1px solid var(--border); */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  h3 {
+    font-size: 30px;
+    font-weight: 500;
+  }
+  p {
+    font-size: 18px;
+    padding: 30px 0;
+  }
+`;
+const HideBtn = styled.button`
+  position: absolute;
+  top: 0;
+  right: 5%;
+  top: 20px;
+  background: var(--bg-primary);
+  outline: none;
+  border: none;
+  font-size: 20px;
+  font-weight: 400;
+  padding: 10px 30px;
+  border-radius: 4px;
+  margin-top: 21px;
+  cursor: pointer;
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  img {
+    width: 14px;
   }
 `;
