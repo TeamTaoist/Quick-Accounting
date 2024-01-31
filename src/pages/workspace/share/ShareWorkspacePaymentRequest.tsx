@@ -479,7 +479,7 @@ const ShareWorkspacePaymentRequest = () => {
                                 <MenuItem disabled value="Category">
                                   Select category
                                 </MenuItem>
-                                {workspaceCategoryProperties.map((category) => (
+                                {workspaceCategoryProperties?.map((category) => (
                                   <MenuItem
                                     key={category.ID}
                                     value={category.name}
