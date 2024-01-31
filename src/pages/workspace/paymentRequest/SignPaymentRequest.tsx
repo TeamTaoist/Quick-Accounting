@@ -42,10 +42,10 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
   );
 
   useEffect(() => {
-    if (!assetsList.length) {
+    if (!assetsList.length && !!workspace.chain_id) {
       getAssets();
-    } 
-  }, [assetsList])
+    }
+  }, [assetsList, workspace.chain_id]);
 
   useEffect(() => {
     if (signItems.length && assetsList.length) {
