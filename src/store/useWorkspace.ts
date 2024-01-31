@@ -130,6 +130,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         }
       } catch (error: any) {
         console.log(error);
+        toast.error(error?.response?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
         // navigate("/assets");

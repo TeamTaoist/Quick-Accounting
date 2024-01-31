@@ -59,6 +59,7 @@ const WorkSpaceForm = () => {
   };
   const handleCreateWorkspace = () => {
     createWorkspace(formData, navigate);
+    console.log("Clicked");
   };
 
   const onSelectChain = (e: any) => {

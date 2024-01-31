@@ -48,6 +48,9 @@ export const Button = styled.button`
   margin-top: 50px;
   cursor: pointer;
   color: var(--text-primary);
+  &[disabled]:hover {
+    cursor: not-allowed;
+  }
 `;
 
 export const ChainMenuItem = styled.div`
@@ -62,4 +65,4 @@ export const ChainMenuItem = styled.div`
 export const SelectBox = styled.div`
   display: flex;
   gap: 12px;
-`
+`;
