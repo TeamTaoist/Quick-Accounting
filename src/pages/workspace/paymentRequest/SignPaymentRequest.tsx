@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../../components/layout/header/Header";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
 import styled from "@emotion/styled";
@@ -17,34 +17,52 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSafeStore } from "../../../store/useSafeStore";
 import { useAccount } from "wagmi";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { formatNumber, getShortDisplay } from "../../../utils/number";
+import { getShortAddress } from "../../../utils";
+import BigNumber from "bignumber.js";
 
 interface SignPaymentRequestProps {
   setOpen: (open: boolean) => void;
   selectedItem: [];
 }
 
-const recipientFormate = (n: string) => {
-  return `${n.slice(0, 6)}...${n.slice(-4)}`;
-};
-
 const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { address } = useAccount();
   const { signAndCreateTx } = useSafeStore();
-  const { workspace } = useWorkspace();
+  const { workspace, assetsList, getAssets } = useWorkspace();
   const { paymentRequestList, approvePaymentRequest } = usePaymentsStore();
   const paymentRequestIds = selectedItem.join(",");
+  const [totalValue, setTotalValue] = useState("0.00");
 
   // get selected payments for sign to chain
   const signItems = paymentRequestList.filter((payment) =>
     selectedItem.includes(payment.payment_request_id)
   );
 
-  const totalTransactionValue = signItems.reduce(
-    (acc, value) => acc + parseFloat(value.amount),
-    0
-  );
+  useEffect(() => {
+    if (!assetsList.length) {
+      getAssets();
+    } 
+  }, [assetsList])
+
+  useEffect(() => {
+    if (signItems.length && assetsList.length) {
+      let _value = BigNumber(0);
+      signItems.forEach(item => {
+        const token = assetsList.find(a => a.tokenInfo.address === item.currency_contract_address);
+        if (token) {
+          _value = _value.plus(
+            BigNumber(token.fiatConversion).multipliedBy(BigNumber(item.amount))
+          );
+          console.log()
+        }
+      });
+      setTotalValue(getShortDisplay(_value.toString(), 4));
+    }
+  }, [assetsList, signItems]);
+
   // approve payment request
   const handleApproveRequest = async () => {
     if (address) {
@@ -66,7 +84,7 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
       setOpen={setOpen}
     >
       <PaymentRequestChain>
-        <p>Transaction value: $ {totalTransactionValue}</p>
+        <p>Transaction value: $ {totalValue}</p>
         {/* table */}
         <TableContainer
           component={Paper}
@@ -85,9 +103,10 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
             <TableBody>
               {signItems.map((payment) => (
                 <TableRow key={payment.ID}>
-                  <TableCell>{recipientFormate(payment.recipient)}</TableCell>
+                  <TableCell>{getShortAddress(payment.recipient)}</TableCell>
                   <TableCell>
-                    {payment.amount} {payment.currency_name}
+                    {formatNumber(Number(payment.amount))}{" "}
+                    {payment.currency_name}
                   </TableCell>
                   <TableCell>
                     <CategoryCell>{payment.category_name}</CategoryCell>
