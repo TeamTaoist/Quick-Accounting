@@ -20,7 +20,7 @@ const Queue = () => {
   const { t } = useTranslation();
 
   const { getQueueTx, isReady } = useSafeStore();
-  const { workspace } = useWorkspace();
+  const { workspace, assetsList, getAssets } = useWorkspace();
   const { getPaymentRequestBySafeTxHash } = usePaymentsStore();
 
   const [paymentRequest, setPaymentRequest] = useState(true);
@@ -40,6 +40,12 @@ const Queue = () => {
   useEffect(() => {
     isReady && workspace?.vault_wallet && getQueueList();
   }, [isReady, workspace?.vault_wallet]);
+
+  useEffect(() => {
+    if (!assetsList.length) {
+      getAssets();
+    }
+  }, [assetsList]);
 
   useEffect(() => {
     const ids: string[] = [];

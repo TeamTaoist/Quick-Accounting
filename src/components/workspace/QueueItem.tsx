@@ -26,6 +26,8 @@ import { getShortAddress } from "../../utils";
 import { useAccount } from "wagmi";
 import usePaymentsStore from "../../store/usePayments";
 import { useWorkspace } from "../../store/useWorkspace";
+import BigNumber from "bignumber.js";
+import { getShortDisplay } from "../../utils/number";
 
 // label
 const QueueLabelItem = ({ data }: { data: IQueueGroupItemProps }) => {
@@ -44,7 +46,7 @@ const QueueTransactionItem = ({
   const { t } = useTranslation();
   const approveTransaction = transactions[0]!;
   const rejectTransaction = transactions[1];
-  const { workspace } = useWorkspace();
+  const { workspace, assetsList } = useWorkspace();
   const {
     owners,
     threshold,
@@ -60,6 +62,7 @@ const QueueTransactionItem = ({
 
   const [filterConfirmSigners, setConfirmedList] = useState<string[]>([]);
   const [filterRejectSigners, setRejectedList] = useState<string[]>([]);
+  const [totalValue, setTotalValue] = useState("0.00");
 
   const hasConfirmed = !!filterConfirmSigners.find((s) => s === address);
   const hasRejected = !!filterRejectSigners.find((s) => s === address);
@@ -133,6 +136,23 @@ const QueueTransactionItem = ({
       getConfirmedOwners(rejectTransaction.safeTxHash).then(setRejectedList);
     }
   }, [approveTransaction, rejectTransaction]);
+
+  useEffect(() => {
+    if (payments.length && assetsList.length) {
+      let _value = BigNumber(0);
+      payments.forEach((item) => {
+        const token = assetsList.find(
+          (a) => a.tokenInfo.address === item.currency_contract_address
+        );
+        if (token) {
+          _value = _value.plus(
+            BigNumber(token.fiatConversion).multipliedBy(BigNumber(item.amount))
+          );
+        }
+      });
+      setTotalValue(getShortDisplay(_value.toString(), 4));
+    }
+  }, [assetsList, payments]);
 
   return (
     <QueueNotice>
@@ -258,6 +278,7 @@ const QueueTransactionItem = ({
             </Table>
           </TableContainer>
         </AccordionDetails>
+        <TotalValue>Total value: ${totalValue}</TotalValue>
       </Accordion>
     </QueueNotice>
   );

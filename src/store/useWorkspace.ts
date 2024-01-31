@@ -189,7 +189,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
     assetsList: [],
     getAssets: async function () {
       const { workspace } = get();
-      if (workspace) {
+      if (workspace.chain_id) {
         const data = await getBalances(
           String(workspace.chain_id),
           workspace.vault_wallet

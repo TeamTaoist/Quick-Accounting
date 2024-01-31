@@ -56,7 +56,6 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
           _value = _value.plus(
             BigNumber(token.fiatConversion).multipliedBy(BigNumber(item.amount))
           );
-          console.log()
         }
       });
       setTotalValue(getShortDisplay(_value.toString(), 4));
