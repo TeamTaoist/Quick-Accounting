@@ -125,7 +125,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
   const handleCategoryChange = (event: SelectChangeEvent) => {
     setAge(event.target.value as string);
-    // handleUpdateCategory();
   };
   // get the selected category list
   const [categoryProperties, setCategoryProperties] = useState<any>([]);
@@ -138,7 +137,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
     setSelectedCategoryID(paymentRequestDetails.category_id);
   }, [setOpen]);
   useEffect(() => {
-    // setSelectedCategoryID(paymentRequestDetails.category_id);
     const selectedCategory = workspaceCategoryProperties?.find(
       (f) => f?.ID === selectedCategoryID
     );
@@ -150,13 +148,12 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
   console.log("selected category ", selectedCategory);
   // handle category
-  const handleCategory = (categoryId: number) => {
+  const handleCategory = async (categoryId: number) => {
     setSelectedCategoryID(categoryId);
     setPropertyValues({});
     setPropertyMultiValues({});
     setPropertyTextValue({});
     setPropertyContent("");
-    // handleUpdateCategory();
   };
   // form data
   const updatedPaymentBody = {
@@ -172,15 +169,12 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
         : []),
     ],
   };
-  console.log("body", updatedPaymentBody);
-  console.log(propertyValues, propertyMultiValues, proPertyTextValue);
 
   let parseCategoryProperties: any;
   if (paymentRequestDetails) {
     const categoryProperties = paymentRequestDetails?.category_properties;
     parseCategoryProperties = JSON.parse(categoryProperties);
   }
-  console.log(parseCategoryProperties);
 
   useEffect(() => {
     const initialSelectSingleValue = parseCategoryProperties
@@ -216,9 +210,8 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
     setPropertyContent(initialText[0]);
   }, []);
-  console.log("ii", propertyContent);
+
   const handleUpdateCategory = async () => {
-    console.log("update");
     await updatePaymentRequestCategory(
       id,
       paymentRequestDetails.payment_request_id.toString(),
@@ -387,6 +380,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           label="Age"
                           size="small"
                           onChange={handleCategoryChange}
+                          onBlur={handleUpdateCategory}
                           IconComponent={() => (
                             <InputAdornment position="start">
                               <img
@@ -409,6 +403,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                             <MenuItem
                               key={category.ID}
                               value={category.name}
+                              // onBlur={handleUpdateCategory}
                               onClick={() => handleCategory(category.ID)}
                             >
                               {category.name}

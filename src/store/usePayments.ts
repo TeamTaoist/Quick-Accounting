@@ -279,7 +279,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           updatedPaymentBody
         );
         if (data.msg === "success" && data.code === 200) {
-          // return true;
+          toast.success("Updated successfully");
         }
       } catch (error: any) {
         toast.error(error?.data.msg || error?.status || error);
