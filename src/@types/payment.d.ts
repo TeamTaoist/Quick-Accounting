@@ -19,6 +19,8 @@ declare interface IPaymentRequest {
   tx_timestamp: number;
   status: number;
   hide: boolean;
+  workspace_name: string;
+  vault_wallet: string;
 }
 
 declare interface ICategoryProperties {
@@ -41,5 +43,5 @@ declare interface IPaymentRequestBody {
 
 declare interface IPageResponse<T> {
   total: number;
-  rows: T[]
+  rows: T[];
 }

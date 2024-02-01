@@ -84,6 +84,8 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       tx_timestamp: 0,
       status: 0,
       hide: false,
+      workspace_name: "",
+      vault_wallet: "",
     },
     paymentRequestGroupDetails: [],
     paymentRquestMap: new Map(),

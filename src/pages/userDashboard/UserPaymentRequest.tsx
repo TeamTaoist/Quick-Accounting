@@ -39,8 +39,10 @@ const UserPaymentRequest = () => {
   };
 
   // filter table data
-  const filterData = userPayment.rows.filter((payment) =>
-    payment.recipient.toLowerCase().includes(searchTerm.toLowerCase())
+  const filterData = userPayment.rows.filter(
+    (payment) =>
+      payment.workspace_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      payment.vault_wallet.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // modal
@@ -56,11 +58,16 @@ const UserPaymentRequest = () => {
   };
   const paymentStatus = (status: number) => {
     if (status === 0) {
-      return "Pending";
-    }
-    if (status === 1) {
+      return "Draft";
+    } else if (status === 1) {
+      return "Submitted";
+    } else if (status === 2) {
       return "Rejected";
-    } else {
+    } else if (status === 3) {
+      return "Pending";
+    } else if (status === 4) {
+      return "Failed";
+    } else if (status === 5) {
       return "Executed";
     }
   };
@@ -116,8 +123,8 @@ const UserPaymentRequest = () => {
                 <TableRow key={payment.ID}>
                   <TableCell>
                     <Safe>
-                      <p>{payment.category_name}</p>
-                      <p>{recipientFormate(payment.recipient)}</p>
+                      <p>{payment.workspace_name}</p>
+                      <p>{recipientFormate(payment.vault_wallet)}</p>
                     </Safe>
                   </TableCell>
                   <TableCell>
@@ -129,7 +136,7 @@ const UserPaymentRequest = () => {
                       {paymentStatus(payment.status)}
                     </Status>
                   </TableCell>
-                  <TableCell>{payment.CreatedAt}</TableCell>
+                  <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
                   <TableCell>
                     <Button
                       variant="outlined"
