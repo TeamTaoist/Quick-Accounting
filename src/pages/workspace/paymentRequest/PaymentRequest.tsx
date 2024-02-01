@@ -73,6 +73,7 @@ const PaymentRequest = () => {
     getPaymentRequestDetails,
     rejectPaymentRequest,
     getPaymentRequestGroupDetails,
+    exportPaymentList,
   } = usePaymentsStore();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
   // table logic
@@ -254,6 +255,14 @@ const PaymentRequest = () => {
   const uniqueCategoryNames = Array.from(
     new Set(paymentRequestList.map((payment) => payment.category_name))
   );
+  // export
+
+  const handleExportPaymentRequestList = () => {
+    if (selected.length) {
+      exportPaymentList(id, paymentRequestIds);
+      setSelected([]);
+    }
+  };
   return (
     <PaymentRequestContainer>
       {paymentRequestList.length === 0 && paymentRequest ? (
@@ -358,7 +367,7 @@ const PaymentRequest = () => {
           {paymentRequest && (
             <PaymentRequestBody>
               <ActionBtn>
-                <Btn>
+                <Btn onClick={handleExportPaymentRequestList}>
                   <img src={download} alt="" />
                   <p>{t("paymentRequest.Download")}</p>
                 </Btn>

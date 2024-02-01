@@ -55,6 +55,10 @@ interface IPaymentsStore {
     paymentRequestId: string,
     updatedPaymentBody: any
   ) => Promise<void>;
+  exportPaymentList: (
+    workspaceId: string | undefined,
+    paymentRequestIds: string
+  ) => Promise<void>;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set, get) => {
@@ -288,6 +292,32 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         console.error(error);
       } finally {
         // setLoading(false);
+      }
+    },
+    // export payment request list
+    exportPaymentList: async (workspaceId, paymentRequestIds) => {
+      try {
+        setLoading(true);
+        const response = await axiosClient.get(
+          `/payment_requests/${workspaceId}/export?ids=${paymentRequestIds}`,
+          {
+            responseType: "arraybuffer",
+          }
+        );
+        const blob = new Blob([response.data], {
+          type: response.headers["Content_Types"],
+        });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "payment-request.xlsx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
     },
   };
