@@ -53,8 +53,13 @@ const UserPaymentRequest = () => {
     paymentRequestId: number,
     paymentId: number
   ) => {
-    setOpenModal(true);
-    getPaymentRequestDetails(workspaceId, paymentRequestId, paymentId);
+    getPaymentRequestDetails(workspaceId, paymentRequestId, paymentId).then(
+      (res) => {
+        if (res) {
+          setOpenModal(true);
+        }
+      }
+    );
   };
   const paymentStatus = (status: number) => {
     if (status === 0) {

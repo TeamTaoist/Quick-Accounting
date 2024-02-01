@@ -173,7 +173,9 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   let parseCategoryProperties: any;
   if (paymentRequestDetails) {
     const categoryProperties = paymentRequestDetails?.category_properties;
-    parseCategoryProperties = JSON.parse(categoryProperties);
+    if (categoryProperties) {
+      parseCategoryProperties = JSON.parse(categoryProperties);
+    }
   }
 
   useEffect(() => {
@@ -218,6 +220,8 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
       updatedPaymentBody
     );
   };
+  if (isLoading) return <p></p>;
+
   return (
     <>
       <WorkspaceItemDetailsLayout
@@ -545,6 +549,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
                             <TableCell onBlur={handleUpdateCategory}>
                               <TextField
+                                disabled={paymentRequestDetails.status === 2}
                                 sx={{
                                   "& fieldset": { border: "none" },
                                 }}
