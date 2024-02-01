@@ -55,7 +55,8 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
   const [selectedValue, setSelectedValue] = useState("Option1");
 
-  const { paymentRequestDetails } = usePaymentsStore();
+  const { paymentRequestDetails, updatePaymentRequestCategory } =
+    usePaymentsStore();
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
 
@@ -124,6 +125,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
   const handleCategoryChange = (event: SelectChangeEvent) => {
     setAge(event.target.value as string);
+    // handleUpdateCategory();
   };
   // get the selected category list
   const [categoryProperties, setCategoryProperties] = useState<any>([]);
@@ -152,6 +154,9 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
     setSelectedCategoryID(categoryId);
     setPropertyValues({});
     setPropertyMultiValues({});
+    setPropertyTextValue({});
+    setPropertyContent("");
+    // handleUpdateCategory();
   };
   // form data
   const updatedPaymentBody = {
@@ -168,24 +173,8 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
     ],
   };
   console.log("body", updatedPaymentBody);
+  console.log(propertyValues, propertyMultiValues, proPertyTextValue);
 
-  // end
-  // if (isLoading) return <p></p>;
-
-  // let parseCategoryProperties: any;
-  // if (paymentRequestDetails) {
-  //   const categoryProperties = paymentRequestDetails?.category_properties;
-  //   parseCategoryProperties = JSON.parse(categoryProperties);
-  // }
-  // console.log(parseCategoryProperties);
-
-  // let parseCategoryProperties;
-  // if (paymentRequestDetails) {
-  //   const categoryProperties = selectedCategory?.properties;
-  //   parseCategoryProperties = JSON.parse(categoryProperties);
-  // }
-  // default value
-  // useEffect to set initial values
   let parseCategoryProperties: any;
   if (paymentRequestDetails) {
     const categoryProperties = paymentRequestDetails?.category_properties;
@@ -197,8 +186,9 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
     const initialSelectSingleValue = parseCategoryProperties
       .filter((p: any) => p.type === "single-select")
       .map((p: any) => ({
-        value: p.values,
-        label: p.values,
+        name: p.name,
+        type: p.type,
+        values: p.values,
       }));
 
     const initialSelectedValues = parseCategoryProperties
@@ -208,13 +198,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
         type: p.type,
         values: p.values,
       }));
-    // .map((p: any) =>
-    //   p.values.split(";").map((v: string) => ({
-    //     value: v,
-    //     label: v,
-    //   }))
-    // )
-    // .flat();
 
     const initialPropertyTextValue = parseCategoryProperties
       .filter((p: any) => p.type === "Text")
@@ -223,16 +206,25 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
         type: p.type,
         values: p.values,
       }));
+    const initialText = parseCategoryProperties
+      .filter((p: any) => p.type === "Text")
+      .map((p: any) => p.values);
 
-    // Set the initial values in the state
-    // setSelectSingleValue(initialSelectSingleValue);
-    // setSelectedValues(initialSelectedValues);
-    // setPropertyTextValue(initialPropertyTextValue);
+    setPropertyTextValue(initialPropertyTextValue[0] || {});
+    setPropertyMultiValues(initialSelectedValues[0] || {});
+    setPropertyValues(initialSelectSingleValue[0] || {});
 
-    console.log(initialSelectedValues);
-    setPropertyMultiValues(initialSelectedValues);
-    // setPropertyValues({ name: name, type: type, values: selectedOption.value });
+    setPropertyContent(initialText[0]);
   }, []);
+  console.log("ii", propertyContent);
+  const handleUpdateCategory = async () => {
+    console.log("update");
+    await updatePaymentRequestCategory(
+      id,
+      paymentRequestDetails.payment_request_id.toString(),
+      updatedPaymentBody
+    );
+  };
   return (
     <>
       <WorkspaceItemDetailsLayout
@@ -415,6 +407,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           </MenuItem>
                           {workspaceCategoryProperties.map((category) => (
                             <MenuItem
+                              key={category.ID}
                               value={category.name}
                               onClick={() => handleCategory(category.ID)}
                             >
@@ -443,7 +436,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                               single select
                             </NoteInfo>
                           </TableCell>
-                          <TableCell>
+                          <TableCell onBlur={handleUpdateCategory}>
                             <ReactSelect
                               isMulti={false}
                               isDisabled={paymentRequestDetails.status === 2}
@@ -493,7 +486,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                                 </NoteInfo>
                               </TableCell>
 
-                              <TableCell>
+                              <TableCell onBlur={handleUpdateCategory}>
                                 <ReactSelect
                                   isDisabled={
                                     paymentRequestDetails.status === 2
@@ -555,7 +548,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                               </NoteInfo>
                             </TableCell>
 
-                            <TableCell>
+                            <TableCell onBlur={handleUpdateCategory}>
                               <TextField
                                 sx={{
                                   "& fieldset": { border: "none" },

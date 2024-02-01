@@ -50,6 +50,11 @@ interface IPaymentsStore {
     page?: number,
     size?: number
   ) => Promise<IPageResponse<IPaymentRequest>>;
+  updatePaymentRequestCategory: (
+    workspaceId: string | undefined,
+    paymentRequestId: string,
+    updatedPaymentBody: any
+  ) => Promise<void>;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set, get) => {
@@ -256,6 +261,28 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           return data.data;
         }
       } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    // update payment request category & property
+    updatePaymentRequestCategory: async (
+      workspaceId,
+      paymentRequestId,
+      updatedPaymentBody
+    ) => {
+      setLoading(true);
+      try {
+        const { data } = await axiosClient.put(
+          `/payment_request/${workspaceId}/${paymentRequestId}`,
+          updatedPaymentBody
+        );
+        if (data.msg === "success" && data.code === 200) {
+          // return true;
+        }
+      } catch (error: any) {
+        toast.error(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);

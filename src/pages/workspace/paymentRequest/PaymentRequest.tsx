@@ -124,7 +124,7 @@ const PaymentRequest = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openGroupPaymentModal, setOpenGroupPaymentModal] = useState(false);
   const [openSignPaymentModal, setSignPaymentModal] = useState(false);
-  const [test, setTest] = useState(false);
+  console.log("modal", openModal);
 
   const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
     getPaymentRequestDetails(Number(id), paymentRequestId, paymentId).then(
@@ -193,6 +193,7 @@ const PaymentRequest = () => {
     rejectPaymentLoading,
     newPaymentsVisible,
     pageNumbers,
+    openModal,
   ]);
   // payment_request_id
 
