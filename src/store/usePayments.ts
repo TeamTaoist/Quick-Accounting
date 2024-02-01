@@ -274,7 +274,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       paymentRequestId,
       updatedPaymentBody
     ) => {
-      setLoading(true);
+      // setLoading(true);
       try {
         const { data } = await axiosClient.put(
           `/payment_request/${workspaceId}/${paymentRequestId}`,
@@ -287,7 +287,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         toast.error(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     },
   };

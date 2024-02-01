@@ -15,7 +15,8 @@ export const customStyles: any = {
   }),
   option: (provided: any, state: any) => ({
     ...provided,
-    backgroundColor: state.isFocused ? "#d3d3d3" : null,
+    backgroundColor: state.isFocused && "#d3d3d3",
+    color: "#222121",
   }),
   multiValue: (provided: any) => ({
     ...provided,

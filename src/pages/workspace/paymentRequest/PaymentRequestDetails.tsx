@@ -431,8 +431,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                         >
                           <TableCell sx={{ height: 1, width: 200 }}>
                             <NoteInfo>
-                              <Image src={selectIcon} alt="" /> {property.name}{" "}
-                              single select
+                              <Image src={selectIcon} alt="" /> {property.name}
                             </NoteInfo>
                           </TableCell>
                           <TableCell onBlur={handleUpdateCategory}>
@@ -481,7 +480,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                               <TableCell sx={{ height: 1, width: 200 }}>
                                 <NoteInfo>
                                   <Image src={multiSelect} alt="" />{" "}
-                                  {property.name} test
+                                  {property.name}
                                 </NoteInfo>
                               </TableCell>
 
