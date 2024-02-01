@@ -230,12 +230,14 @@ const ShareWorkspacePaymentRequest = () => {
     if (!checkAllFields()) {
       return;
     }
-    createSharePaymentRequest(id!, { rows: sharePaymentRequestForm }).then((res) => {
-      if (res) {
-        setSharePaymentRequestForm([]);
-        setOpenModal(true);
+    createSharePaymentRequest(id!, { rows: sharePaymentRequestForm }).then(
+      (res) => {
+        if (res) {
+          setSharePaymentRequestForm([]);
+          setOpenModal(true);
+        }
       }
-    });
+    );
   };
   const handleSavePaymentRequest = () => {
     setOpenModal(true);
@@ -458,8 +460,12 @@ const ShareWorkspacePaymentRequest = () => {
                               <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={age}
-                                label="Age"
+                                value={
+                                  sharePaymentRequestForm[index].category_name
+                                }
+                                label={
+                                  sharePaymentRequestForm[index].category_name
+                                }
                                 size="small"
                                 onChange={handleCategoryChange}
                                 IconComponent={() => (
@@ -479,29 +485,31 @@ const ShareWorkspacePaymentRequest = () => {
                                 <MenuItem disabled value="Category">
                                   Select category
                                 </MenuItem>
-                                {workspaceCategoryProperties?.map((category) => (
-                                  <MenuItem
-                                    key={category.ID}
-                                    value={category.name}
-                                    onClick={() => {
-                                      handleCategoryDropdown(
-                                        category.ID,
-                                        category.name,
-                                        index
-                                      );
-                                    }}
-                                    sx={{
-                                      "&:hover": {
-                                        backgroundColor: "var(--hover-bg)",
-                                      },
-                                      "&.Mui-selected": {
-                                        backgroundColor: "var(--hover-bg)",
-                                      },
-                                    }}
-                                  >
-                                    {category.name}
-                                  </MenuItem>
-                                ))}
+                                {workspaceCategoryProperties?.map(
+                                  (category) => (
+                                    <MenuItem
+                                      key={category.ID}
+                                      value={category.name}
+                                      onClick={() => {
+                                        handleCategoryDropdown(
+                                          category.ID,
+                                          category.name,
+                                          index
+                                        );
+                                      }}
+                                      sx={{
+                                        "&:hover": {
+                                          backgroundColor: "var(--hover-bg)",
+                                        },
+                                        "&.Mui-selected": {
+                                          backgroundColor: "var(--hover-bg)",
+                                        },
+                                      }}
+                                    >
+                                      {category.name}
+                                    </MenuItem>
+                                  )
+                                )}
                               </Select>
                             </FormControl>
                           </TableCell>
