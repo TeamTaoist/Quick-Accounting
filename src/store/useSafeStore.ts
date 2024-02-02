@@ -92,80 +92,91 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
       chainId: number,
       safeAddress: string
     ): Promise<IQueueGroupItemProps[]> => {
-      const result = await getTransactionQueue(String(chainId), safeAddress);
-      const array = new Array<IQueueGroupItemProps>();
-      const currentConflict: {
-        nonce: number;
-        transactions: IQueueTransaction[];
-      } = {
-        nonce: -1,
-        transactions: [],
-      };
-      result.results.forEach((item: TransactionListItem) => {
-        if (item.type === TransactionListItemType.LABEL) {
-          array.push(item);
-        } else if (item.type === TransactionListItemType.CONFLICT_HEADER) {
-          currentConflict.nonce = item.nonce;
-        } else if (item.type === TransactionListItemType.TRANSACTION) {
-          if (
-            item.transaction.executionInfo?.type === "MULTISIG" &&
-            [TransactionInfoType.CUSTOM, TransactionInfoType.TRANSFER].includes(
-              item.transaction.txInfo.type
-            )
-          ) {
-            const tx = {
-              nonce: item.transaction.executionInfo?.nonce,
-              confirmationsRequired:
-                item.transaction.executionInfo?.confirmationsRequired,
-              confirmationsSubmitted:
-                item.transaction.executionInfo?.confirmationsSubmitted,
-              safeTxHash: item.transaction.id.split("_")[2],
-              timestamp: item.transaction.timestamp,
-              // @ts-ignore
-              actionCount: item.transaction.txInfo.actionCount,
-              txStatus: item.transaction.txStatus,
-              missingSigners:
-                item.transaction.executionInfo?.missingSigners?.map(
-                  (item) => item.value
-                ) || [],
-            };
+      setLoading(true);
+      try {
+        const result = await getTransactionQueue(String(chainId), safeAddress);
+        const array = new Array<IQueueGroupItemProps>();
+        const currentConflict: {
+          nonce: number;
+          transactions: IQueueTransaction[];
+        } = {
+          nonce: -1,
+          transactions: [],
+        };
+        result.results.forEach((item: TransactionListItem) => {
+          if (item.type === TransactionListItemType.LABEL) {
+            array.push(item);
+          } else if (item.type === TransactionListItemType.CONFLICT_HEADER) {
+            currentConflict.nonce = item.nonce;
+          } else if (item.type === TransactionListItemType.TRANSACTION) {
             if (
-              item.transaction.executionInfo.nonce === currentConflict.nonce
+              item.transaction.executionInfo?.type === "MULTISIG" &&
+              [
+                TransactionInfoType.CUSTOM,
+                TransactionInfoType.TRANSFER,
+              ].includes(item.transaction.txInfo.type)
             ) {
+              const tx = {
+                nonce: item.transaction.executionInfo?.nonce,
+                confirmationsRequired:
+                  item.transaction.executionInfo?.confirmationsRequired,
+                confirmationsSubmitted:
+                  item.transaction.executionInfo?.confirmationsSubmitted,
+                safeTxHash: item.transaction.id.split("_")[2],
+                timestamp: item.transaction.timestamp,
+                // @ts-ignore
+                actionCount: item.transaction.txInfo.actionCount,
+                txStatus: item.transaction.txStatus,
+                missingSigners:
+                  item.transaction.executionInfo?.missingSigners?.map(
+                    (item) => item.value
+                  ) || [],
+              };
               if (
-                item.transaction.txInfo.type === TransactionInfoType.CUSTOM &&
-                item.transaction.txInfo.isCancellation
+                item.transaction.executionInfo.nonce === currentConflict.nonce
               ) {
-                currentConflict.transactions[1] = tx;
-              } else if (
-                item.transaction.txInfo.type === TransactionInfoType.TRANSFER ||
-                item.transaction.txInfo.type === TransactionInfoType.CUSTOM
-              ) {
-                currentConflict.transactions[0] = tx;
+                if (
+                  item.transaction.txInfo.type === TransactionInfoType.CUSTOM &&
+                  item.transaction.txInfo.isCancellation
+                ) {
+                  currentConflict.transactions[1] = tx;
+                } else if (
+                  item.transaction.txInfo.type ===
+                    TransactionInfoType.TRANSFER ||
+                  item.transaction.txInfo.type === TransactionInfoType.CUSTOM
+                ) {
+                  currentConflict.transactions[0] = tx;
+                }
+              } else {
+                array.push({
+                  type: item.type,
+                  transactions: [tx],
+                });
               }
-            } else {
+            }
+            if (
+              item.conflictType === ConflictType.END &&
+              currentConflict.nonce > -1
+            ) {
               array.push({
                 type: item.type,
-                transactions: [tx],
+                transactions: [...currentConflict.transactions],
               });
+              currentConflict.nonce = -1;
+              currentConflict.transactions = [];
             }
+          } else {
+            return { type: item.type };
           }
-          if (
-            item.conflictType === ConflictType.END &&
-            currentConflict.nonce > -1
-          ) {
-            array.push({
-              type: item.type,
-              transactions: [...currentConflict.transactions],
-            });
-            currentConflict.nonce = -1;
-            currentConflict.transactions = [];
-          }
-        } else {
-          return { type: item.type };
-        }
-      });
-      return array;
+        });
+        return array;
+      } catch (error:any) {
+        console.error(error);
+        toast.error(error);
+      } finally {
+        setLoading(false);
+      }
+      return [];
     },
     signAndCreateTx: async (
       senderAddress: string,
