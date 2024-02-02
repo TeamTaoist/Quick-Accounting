@@ -216,7 +216,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
 
         console.log("===safeTxHash===", safeTxHash);
 
-        const signature = await safe.signTransactionHash(safeTxHash);
+        const signature = await safe.signTypedData(safeTransaction);
 
         console.log("Proposed a transaction with Safe:", safeAddress);
         console.log("- safeTxHash:", safeTxHash);
