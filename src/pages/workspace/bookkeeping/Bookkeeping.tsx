@@ -111,7 +111,7 @@ const Bookkeeping = () => {
     visible,
     workspaceId,
     loading,
-    paymentRequest,
+    // paymentRequest,
     pageNumbers,
     openModal,
   ]);
@@ -207,7 +207,6 @@ const Bookkeeping = () => {
       formData.append("file", file);
       await importBookkeepingList(workspaceId, formData);
       setLoading(false);
-      // handleExportBookkeepingList();
     }
   };
   // hide item
@@ -221,13 +220,22 @@ const Bookkeeping = () => {
   };
 
   const handleViewHiddenList = () => {
-    setPaymentRequest(!paymentRequest);
-    setVisible(true);
-    setSelected([]);
+    getBookkeepingList(workspaceId, true).then((res) => {
+      if (res) {
+        setTotalItem(res);
+        setPaymentRequest(!paymentRequest);
+        setSelected([]);
+      }
+    });
   };
   const handleBackBtn = () => {
-    setPaymentRequest(!paymentRequest);
-    setVisible(false);
+    getBookkeepingList(workspaceId, false).then((res) => {
+      if (res) {
+        setTotalItem(res);
+        setPaymentRequest(!paymentRequest);
+        setSelected([]);
+      }
+    });
   };
   // unique category name
   const uniqueCategoryNames = Array.from(
