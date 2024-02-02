@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import Header from "../../../components/layout/header/Header";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FormControl,
   InputAdornment,
@@ -41,6 +41,19 @@ import CHAINS from "../../../utils/chain";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
 import { getShortAddress } from "../../../utils";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
+interface PaymentRequestDetailsProps {
+  setOpen: (open: boolean) => void;
+}
+export interface ReactSelectOption {
+  value: string;
+  label: string;
+}
+interface PropertyValues {
+  name?: string;
+  type?: string;
+  values?: string;
+}
 
 const BookkeepingTransferDetails = ({ setOpen }: any) => {
   const { id } = useParams();
@@ -50,7 +63,9 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
     (chain) => chain.chainId === workspace?.chain_id
   );
 
-  const { paymentRequestDetails } = usePaymentsStore();
+  const { paymentRequestDetails, updatePaymentRequestCategory } =
+    usePaymentsStore();
+  const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
 
   const [selectedValue, setSelectedValue] = useState("Option1");
@@ -59,30 +74,164 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
     setSelectedValue(event.target.value);
   };
 
+  // handle react select
+  const [selectedValues, setSelectedValues] = useState<ReactSelectOption[]>([]);
+  const [selectSingleValue, setSelectSingleValue] =
+    useState<ReactSelectOption>();
+  const [propertyValues, setPropertyValues] = useState<PropertyValues>({});
+  const [propertyMultiValues, setPropertyMultiValues] =
+    useState<PropertyValues>({});
+
+  const handleSelectSingleChange = (
+    selectedOption: ReactSelectOption,
+    name: string,
+    type: string
+  ) => {
+    setSelectSingleValue(selectedOption);
+    setPropertyValues({ name: name, type: type, values: selectedOption.value });
+    if (selectedOption.value === "") {
+      setPropertyMultiValues({});
+    }
+  };
+
+  // handle multi select
+  const handleSelectChange = (
+    selectedOptions: ReactSelectOption[],
+    name: string,
+    type: string
+  ) => {
+    setSelectedValues(selectedOptions);
+    console.log(selectedOptions, name, type);
+    const v = selectedOptions?.map((p) => p.value);
+    setPropertyMultiValues({
+      name: name,
+      type: type,
+      values: v.join(";"),
+    });
+    if (v.length === 0) {
+      setPropertyMultiValues({});
+    }
+  };
+
+  // property value input
+  const [propertyContent, setPropertyContent] = useState<string>("");
+  const [proPertyTextValue, setPropertyTextValue] = useState<any>({});
+  const handlePropertyText = (e: any, name: string, type: string) => {
+    setPropertyContent(e.target.value);
+    setPropertyTextValue({
+      name: name,
+      type: type,
+      values: e.target.value,
+    });
+    if (e.target.value === "") {
+      setPropertyTextValue({});
+    }
+  };
+
   const [age, setAge] = useState("Category");
 
   const handleCategoryChange = (event: SelectChangeEvent) => {
     setAge(event.target.value as string);
   };
 
-  const [selectedValues, setSelectedValues] = useState([]);
+  // const handleSelectChange = (selectedOptions: any) => {
+  //   setSelectedValues(selectedOptions);
+  // };
 
-  const handleSelectChange = (selectedOptions: any) => {
-    setSelectedValues(selectedOptions);
+  // get the selected category list
+  const [categoryProperties, setCategoryProperties] = useState<any>([]);
+
+  const [selectedCategoryID, setSelectedCategoryID] = useState<number>(
+    paymentRequestDetails?.category_id
+  );
+  const [selectedCategory, setSelectedCategory] = useState<any>({});
+  useEffect(() => {
+    setSelectedCategoryID(paymentRequestDetails.category_id);
+  }, [setOpen]);
+  useEffect(() => {
+    const selectedCategory = workspaceCategoryProperties?.find(
+      (f) => f?.ID === selectedCategoryID
+    );
+    setSelectedCategory(selectedCategory);
+    if (selectedCategory) {
+      setCategoryProperties(selectedCategory?.properties);
+    }
+  }, [selectedCategoryID, workspaceCategoryProperties]);
+
+  console.log("selected category ", selectedCategory);
+  const handleCategory = async (categoryId: number) => {
+    setSelectedCategoryID(categoryId);
+    setPropertyValues({});
+    setPropertyMultiValues({});
+    setPropertyTextValue({});
+    setPropertyContent("");
   };
-  const options = [
-    { value: "option 1", label: "Options 1" },
-    { value: "option 2", label: "Options 2" },
-    { value: "option 3", label: "Options 3" },
-    { value: "option 4", label: "Options 4" },
-    { value: "option 5", label: "Options 5" },
-  ];
-  if (isLoading) return <p></p>;
-  let parseCategoryProperties;
+  // form data
+  const updatedPaymentBody = {
+    category_id: selectedCategory?.ID,
+    category_name: selectedCategory?.name,
+    category_properties: [
+      ...(Object.keys(propertyValues).length !== 0 ? [propertyValues] : []),
+      ...(Object.keys(propertyMultiValues).length !== 0
+        ? [propertyMultiValues]
+        : []),
+      ...(Object.keys(proPertyTextValue).length !== 0
+        ? [proPertyTextValue]
+        : []),
+    ],
+  };
+  let parseCategoryProperties: any;
+  // if (paymentRequestDetails) {
   if (paymentRequestDetails.category_properties !== "") {
     const categoryProperties = paymentRequestDetails?.category_properties;
-    parseCategoryProperties = JSON.parse(categoryProperties);
+    if (categoryProperties) {
+      parseCategoryProperties = JSON.parse(categoryProperties);
+    }
   }
+  useEffect(() => {
+    const initialSelectSingleValue = parseCategoryProperties
+      .filter((p: any) => p.type === "single-select")
+      .map((p: any) => ({
+        name: p.name,
+        type: p.type,
+        values: p.values,
+      }));
+
+    const initialSelectedValues = parseCategoryProperties
+      .filter((p: any) => p.type === "multi-select")
+      .map((p: any) => ({
+        name: p.name,
+        type: p.type,
+        values: p.values,
+      }));
+
+    const initialPropertyTextValue = parseCategoryProperties
+      .filter((p: any) => p.type === "Text")
+      .map((p: any) => ({
+        name: p.name,
+        type: p.type,
+        values: p.values,
+      }));
+    const initialText = parseCategoryProperties
+      .filter((p: any) => p.type === "Text")
+      .map((p: any) => p.values);
+
+    setPropertyTextValue(initialPropertyTextValue[0] || {});
+    setPropertyMultiValues(initialSelectedValues[0] || {});
+    setPropertyValues(initialSelectSingleValue[0] || {});
+
+    setPropertyContent(initialText[0]);
+  }, []);
+
+  const handleUpdateCategory = async () => {
+    await updatePaymentRequestCategory(
+      id,
+      paymentRequestDetails.payment_request_id.toString(),
+      updatedPaymentBody
+    );
+  };
+  if (isLoading) return <p></p>;
+
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
 
@@ -234,6 +383,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                         label="Age"
                         size="small"
                         onChange={handleCategoryChange}
+                        onBlur={handleUpdateCategory}
                         IconComponent={() => (
                           <InputAdornment position="start">
                             <img
@@ -249,8 +399,19 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                         }}
                       >
                         <MenuItem disabled value="Category">
-                          {paymentRequestDetails.category_name}
+                          {/* {paymentRequestDetails.category_name} */}
+                          {selectedCategory?.name}
                         </MenuItem>
+                        {workspaceCategoryProperties.map((category) => (
+                          <MenuItem
+                            key={category.ID}
+                            value={category.name}
+                            // onBlur={handleUpdateCategory}
+                            onClick={() => handleCategory(category.ID)}
+                          >
+                            {category.name}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </TableCell>
@@ -321,7 +482,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                     request.
                   </TableCell>
                 </TableRow> */}
-                {parseCategoryProperties?.map((property: any) => (
+                {/* {parseCategoryProperties?.map((property: any) => (
                   <>
                     {property.type === "single-select" && (
                       <TableRow
@@ -338,7 +499,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                             <Image src={selectIcon} alt="" /> {property.name}
                           </NoteInfo>
                         </TableCell>
-                        {/* add multi select */}
                         <TableCell>
                           <ReactSelect
                             isDisabled={paymentRequestDetails.status === 1}
@@ -378,7 +538,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                                 {property.name}
                               </NoteInfo>
                             </TableCell>
-                            {/* add multi select */}
                             <TableCell>
                               <ReactSelect
                                 isDisabled={paymentRequestDetails.status === 1}
@@ -418,7 +577,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                               <Image src={optionsIcon} alt="" /> {property.name}
                             </NoteInfo>
                           </TableCell>
-                          {/* add multi select */}
                           <TableCell>
                             <p style={{ paddingLeft: "10px" }}>
                               {property.values}
@@ -427,6 +585,157 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                         </TableRow>
                       )}
                     </>
+                  </>
+                ))} */}
+                {categoryProperties?.map((property: any) => (
+                  <>
+                    {property.type === "single-select" && (
+                      <TableRow
+                        sx={{
+                          td: {
+                            border: "1px solid var(--border-table)",
+                            padding: 1,
+                            paddingInline: 1,
+                          },
+                        }}
+                      >
+                        <TableCell sx={{ height: 1, width: 200 }}>
+                          <NoteInfo>
+                            <Image src={selectIcon} alt="" /> {property.name}
+                          </NoteInfo>
+                        </TableCell>
+                        <TableCell onBlur={handleUpdateCategory}>
+                          <ReactSelect
+                            isMulti={false}
+                            isDisabled={paymentRequestDetails.status === 2}
+                            value={selectSingleValue}
+                            onChange={(selectedOption: ReactSelectOption) =>
+                              handleSelectSingleChange(
+                                selectedOption,
+                                property.name,
+                                property.type
+                              )
+                            }
+                            options={property.values
+                              .split(";")
+                              .map((v: string) => ({
+                                value: v,
+                                label: v,
+                              }))}
+                            defaultValues={parseCategoryProperties
+                              .filter((p: any) => p.type === "single-select")
+                              .map((p: any) =>
+                                p.values.split(";").map((v: string) => ({
+                                  value: v,
+                                  label: v,
+                                }))
+                              )
+                              .flat()}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
+                ))}
+                {categoryProperties?.map((property: any) => (
+                  <>
+                    {property.type === "multi-select" && (
+                      <TableRow
+                        sx={{
+                          td: {
+                            border: "1px solid var(--border-table)",
+                            padding: 1,
+                            paddingInline: 1,
+                          },
+                        }}
+                      >
+                        <TableCell sx={{ height: 1, width: 200 }}>
+                          <NoteInfo>
+                            <Image src={multiSelect} alt="" /> {property.name}
+                          </NoteInfo>
+                        </TableCell>
+
+                        <TableCell onBlur={handleUpdateCategory}>
+                          <ReactSelect
+                            isDisabled={paymentRequestDetails.status === 2}
+                            value={selectedValues}
+                            onChange={(selectedOptions: ReactSelectOption[]) =>
+                              handleSelectChange(
+                                selectedOptions,
+                                property.name,
+                                property.type
+                              )
+                            }
+                            options={property.values
+                              .split(";")
+                              .map((v: string) => ({
+                                value: v,
+                                label: v,
+                              }))}
+                            // defaultValues={property.values
+                            //   .split(";")
+                            //   .map((v: string) => ({
+                            //     value: v,
+                            //     label: v,
+                            //   }))}
+                            defaultValues={parseCategoryProperties
+                              .filter((p: any) => p.type === "multi-select")
+                              .map((p: any) =>
+                                p.values.split(";").map((v: string) => ({
+                                  value: v,
+                                  label: v,
+                                }))
+                              )
+                              .flat()}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
+                ))}
+                {categoryProperties?.map((property: any) => (
+                  <>
+                    {property.type === "Text" && (
+                      <TableRow
+                        sx={{
+                          td: {
+                            border: "1px solid var(--border-table)",
+                            padding: 1,
+                            paddingInline: 1,
+                          },
+                        }}
+                      >
+                        <TableCell sx={{ height: 1, width: 200 }}>
+                          <NoteInfo>
+                            <Image src={optionsIcon} alt="" /> {property.name}
+                          </NoteInfo>
+                        </TableCell>
+
+                        <TableCell onBlur={handleUpdateCategory}>
+                          <TextField
+                            disabled={paymentRequestDetails.status === 2}
+                            sx={{
+                              "& fieldset": { border: "none" },
+                            }}
+                            size="small"
+                            fullWidth
+                            value={propertyContent}
+                            // id="fullWidth"
+                            placeholder="Enter content"
+                            onChange={(e) =>
+                              handlePropertyText(
+                                e,
+                                property.name,
+                                property.type
+                              )
+                            }
+                            InputProps={{
+                              style: { padding: 0 },
+                            }}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </>
                 ))}
               </TableBody>

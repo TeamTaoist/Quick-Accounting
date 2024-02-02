@@ -95,6 +95,9 @@ const Bookkeeping = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // modal
+  const [openModal, setOpenModal] = useState(false);
+
   // fetch bookkeeping data
   const workspaceId = Number(id);
   useEffect(() => {
@@ -110,6 +113,7 @@ const Bookkeeping = () => {
     loading,
     paymentRequest,
     pageNumbers,
+    openModal,
   ]);
 
   // table logic
@@ -144,15 +148,17 @@ const Bookkeeping = () => {
   // end
   const [hasCategory, setHasCategory] = useState(true);
 
-  // modal
-  const [openModal, setOpenModal] = useState(false);
-
   const handleBookkeepingDetails = (
     paymentRequestId: number,
     paymentId: number
   ) => {
-    getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
-    setOpenModal(true);
+    getPaymentRequestDetails(Number(id), paymentRequestId, paymentId).then(
+      (res) => {
+        if (res) {
+          setOpenModal(true);
+        }
+      }
+    );
   };
 
   // modal end
