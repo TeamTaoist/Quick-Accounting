@@ -71,7 +71,7 @@ export const CategoryProperties = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 400px;
+  max-height: 400px;
 `;
 export const Options = styled.div`
   display: flex;
@@ -90,6 +90,15 @@ export const PropertyOptions = styled.div`
   width: 50%;
   height: 326px;
   flex: 1;
+  overflow-y: auto;
+  padding-bottom: 14px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  & {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 `;
 export const Option = styled.div`
   display: flex;

@@ -452,7 +452,7 @@ const Category = () => {
                       />
                     </Header>
                   </AccordionSummary>
-                  <AccordionDetails sx={{ p: 0 }}>
+                  <AccordionDetails sx={{ p: 0, maxHeight: "500px" }}>
                     {/* category property */}
                     <CategoryProperties>
                       <Options>
