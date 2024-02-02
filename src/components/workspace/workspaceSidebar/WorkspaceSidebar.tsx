@@ -32,6 +32,7 @@ import {
 import { useLoading } from "../../../store/useLoading";
 import { toast } from "react-toastify";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
 
 const WorkspaceSidebar = () => {
   const { t } = useTranslation();
@@ -48,6 +49,7 @@ const WorkspaceSidebar = () => {
   }, [getWorkspaceDetails, id]);
   const { isConnected, address } = useAccount();
   console.log(isConnected, address);
+  const { getPaymentRequestShareCode } = useSharePaymentRequest();
 
   const handleSwitchChain = async () => {
     setLoading(true);
@@ -102,10 +104,27 @@ const WorkspaceSidebar = () => {
   const recipientFormate = (n: string) => {
     return `${n.slice(0, 6)}...${n.slice(-4)}`;
   };
+  // share link
+  const [shareLink, setShareLink] = useState<string>("");
 
+  const handleCreateShareLink = () => {
+    // getPaymentRequestShareCode(id).then((res) => {
+    //   if (res) {
+    //     setShareLink(res);
+    //     setCopySuccess(true);
+    //   }
+    // });
+    setShareLink("link");
+  };
   const handleCopy = () => {
     toast.success("The share link has been copied to your clipboard!");
   };
+  // <CopyToClipboard
+  //   text={`${window.location.origin}/share/${shareLink}`}
+  //   onCopy={handleCopy}
+  // >
+  //   <h1>test</h1>
+  // </CopyToClipboard>;
 
   return (
     <>
@@ -125,18 +144,12 @@ const WorkspaceSidebar = () => {
               <span>{t("workspace.New")}</span>
             </RequestBtn>
           </span>
-          {/* <Link to={`/workspace/${id}/new-workspace-payment-request`}> */}
-          <CopyToClipboard
-            text={`${window.location.origin}/workspace/${workspace.ID}/new-workspace-payment-request`}
-            onCopy={handleCopy}
-          >
-            {/* <Link to={`/workspace/${id}/share`}> */}
-            <RequestBtn>
-              <img src={share} alt="" />
-              <span>{t("workspace.Share")}</span>
-            </RequestBtn>
-            {/* </Link> */}
-          </CopyToClipboard>
+
+          <RequestBtn onClick={handleCreateShareLink}>
+            <img src={share} alt="" />
+            <span>{t("workspace.Share")}</span>
+          </RequestBtn>
+          {/* </Link> */}
         </PaymentRequest>
         {/* sidebar list */}
         <SidebarLinkList className="">
