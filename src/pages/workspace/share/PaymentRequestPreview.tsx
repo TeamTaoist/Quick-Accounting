@@ -195,6 +195,7 @@ const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
                             )}
                             sx={{
                               minWidth: "100%",
+                              marginLeft: "-12px",
                               "& fieldset": { border: "none" },
                             }}
                           >
@@ -266,7 +267,7 @@ const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
                               sx={{
                                 td: {
                                   border: "1px solid var(--border-table)",
-                                  padding: 0,
+                                  padding: "5px",
                                   paddingInline: "16px",
                                 },
                               }}
@@ -278,11 +279,7 @@ const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
                                 </NoteInfo>
                               </TableCell>
                               {/* add multi select */}
-                              <TableCell>
-                                Here is some description of the payment request,
-                                No more than 50 words. Here is some description
-                                of the payment request.
-                              </TableCell>
+                              <TableCell>{property.values}</TableCell>
                             </TableRow>
                           )}
                         </React.Fragment>

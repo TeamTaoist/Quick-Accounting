@@ -230,14 +230,14 @@ const ShareWorkspacePaymentRequest = () => {
     if (!checkAllFields()) {
       return;
     }
-    // createSharePaymentRequest(id!, { rows: sharePaymentRequestForm }).then(
-    //   (res) => {
-    //     if (res) {
-    //       setSharePaymentRequestForm([]);
-    //       setOpenModal(true);
-    //     }
-    //   }
-    // );
+    createSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
+      (res) => {
+        if (res) {
+          setSharePaymentRequestForm([]);
+          setOpenModal(true);
+        }
+      }
+    );
   };
   const handleSavePaymentRequest = () => {
     setOpenModal(true);

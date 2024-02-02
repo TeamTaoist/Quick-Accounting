@@ -5,8 +5,8 @@ import { toast } from "react-toastify";
 
 interface UseSharePaymentRequest {
   createSharePaymentRequest: (
-    workspaceId: number | string,
-    createSharePaymentRequest: any
+    shareCode: string | undefined,
+    sharePaymentRequestFormData: any
   ) => Promise<boolean | undefined>;
   getPaymentRequestShareCode: (
     workspaceId: string | undefined
@@ -17,13 +17,13 @@ export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
   const { setLoading } = useLoading.getState();
   return {
     createSharePaymentRequest: async (
-      workspaceId,
+      shareCode,
       sharePaymentRequestFormData
     ) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.post(
-          `/payment_requests/${workspaceId}/create_from_share`,
+          `/payment_request_share/${shareCode}/submit`,
           sharePaymentRequestFormData
         );
         if (data.msg === "success" && data.code === 200) {
@@ -31,7 +31,7 @@ export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
           return true;
         }
       } catch (error: any) {
-        console.log(error);
+        toast.error(error?.response?.data?.msg);
       } finally {
         setLoading(false);
       }
@@ -44,7 +44,6 @@ export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
           `/workspace/${workspaceId}/new_share_code`
         );
         if (data.msg === "success" && data.code === 200) {
-          // toast.success("The share link has been copied to your clipboard!");
           toast.success("The share link has been copied to your clipboard!");
           return data.data.share_code;
         }
