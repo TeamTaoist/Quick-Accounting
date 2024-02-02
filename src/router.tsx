@@ -52,7 +52,7 @@ const RouterLink = () => {
         </Route>
 
         <Route
-          path="/workspace/:id/new-workspace-payment-request"
+          path="/share/:shareId"
           element={<ShareWorkspacePaymentRequest />}
         />
         <Route

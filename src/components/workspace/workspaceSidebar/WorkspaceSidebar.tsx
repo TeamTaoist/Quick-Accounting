@@ -108,24 +108,13 @@ const WorkspaceSidebar = () => {
   const [shareLink, setShareLink] = useState<string>("");
 
   const handleCreateShareLink = () => {
-    // getPaymentRequestShareCode(id).then((res) => {
-    //   if (res) {
-    //     setShareLink(res);
-    //     setCopySuccess(true);
-    //   }
-    // });
-    setShareLink("link");
+    getPaymentRequestShareCode(id).then((res) => {
+      if (res) {
+        setShareLink(res);
+        navigator.clipboard.writeText(`${window.location.origin}/share/${res}`);
+      }
+    });
   };
-  const handleCopy = () => {
-    toast.success("The share link has been copied to your clipboard!");
-  };
-  // <CopyToClipboard
-  //   text={`${window.location.origin}/share/${shareLink}`}
-  //   onCopy={handleCopy}
-  // >
-  //   <h1>test</h1>
-  // </CopyToClipboard>;
-
   return (
     <>
       <SidebarContainer>
@@ -144,11 +133,15 @@ const WorkspaceSidebar = () => {
               <span>{t("workspace.New")}</span>
             </RequestBtn>
           </span>
-
+          {/* <CopyToClipboard
+            text={`${window.location.origin}/share/${shareLink}`}
+            onCopy={handleCopy}
+          > */}
           <RequestBtn onClick={handleCreateShareLink}>
             <img src={share} alt="" />
             <span>{t("workspace.Share")}</span>
           </RequestBtn>
+          {/* </CopyToClipboard> */}
           {/* </Link> */}
         </PaymentRequest>
         {/* sidebar list */}

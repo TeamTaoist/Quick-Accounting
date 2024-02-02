@@ -45,7 +45,7 @@ export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
         );
         if (data.msg === "success" && data.code === 200) {
           // toast.success("The share link has been copied to your clipboard!");
-          toast.success("Create new share link");
+          toast.success("The share link has been copied to your clipboard!");
           return data.data.share_code;
         }
       } catch (error: any) {
