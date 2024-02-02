@@ -17,11 +17,7 @@
       }
     }
     .workspace {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 32px;
+      height: calc(100vh - 260px);
       .user-workspaces {
         .workspace-logo {
           margin-top: 20px;
@@ -41,6 +37,7 @@
       }
 
       .plus-icon {
+        margin-bottom: 32px;
         width: 23px;
         cursor: pointer;
       }
@@ -52,7 +49,6 @@
       justify-content: center;
       align-items: center;
       border-top: 1px solid var(--border);
-      position: absolute;
       bottom: 0;
       img {
         width: 55px;
