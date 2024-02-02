@@ -39,11 +39,22 @@ interface CategoryProperty {
     values: string;
   };
 }
+interface UpdatedPropertyBody {
+  name: string;
+  type: string;
+  values: string;
+}
 interface UseCategoryProperty {
   workspaceCategoryProperties: CategoryProperties[];
   categoryProperty: CategoryProperty;
   getWorkspaceCategoryProperties: (workspaceId: number) => void;
   createWorkspaceCategoryProperties: (propertyValues: any) => Promise<void>;
+  updateWorkspaceCategoryProperties: (
+    workspaceId: number | undefined,
+    workspaceCategoryId: number | undefined,
+    workspaceCategoryPropertyId: number | undefined,
+    updatedPropertyBody: UpdatedPropertyBody
+  ) => Promise<boolean | undefined>;
 }
 
 export const useCategoryProperty = create<UseCategoryProperty>((set) => {
@@ -117,6 +128,27 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
         );
         set({ categoryProperty: data });
         toast.success("Property created successfully");
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    updateWorkspaceCategoryProperties: async (
+      workspaceId,
+      workspaceCategoryId,
+      workspaceCategoryPropertyId,
+      updatedPropertyBody
+    ) => {
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.put(
+          `/workspace_category_property/${workspaceId}/${workspaceCategoryId}/update/${workspaceCategoryPropertyId}`,
+          updatedPropertyBody
+        );
+        set({ categoryProperty: data });
+        toast.success("Property updated successfully");
+        return true;
       } catch (error: any) {
         console.log(error);
       } finally {

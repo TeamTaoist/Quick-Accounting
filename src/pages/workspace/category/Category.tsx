@@ -56,7 +56,7 @@ import { useLoading } from "../../../store/useLoading";
 import Loading from "../../../utils/Loading";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
-interface CategoryProperty {
+export interface CategoryProperty {
   name: string;
   type: string;
   value: "";
@@ -86,6 +86,7 @@ const Category = () => {
     workspaceCategoryProperties,
     createWorkspaceCategoryProperties,
     categoryProperty,
+    updateWorkspaceCategoryProperties,
   } = useCategoryProperty();
 
   const [selectedValue, setSelectedValue] = useState("Text");
@@ -269,6 +270,90 @@ const Category = () => {
       [categoryId]: updatedProperties,
     });
   };
+  // update category properties
+  // property name
+  // const [selectedProperty, setSelectedProperty] =
+  //   useState<ICategoryProperties>();
+  const [propertyName, setPropertyName] = useState<string>("");
+  const [propertyType, setPropertyType] = useState<string>("");
+  const [propertyValue, setPropertyValue] = useState<string[]>([]);
+  // const [updatedValues, setUpdatedValues] = useState<string[]>([]);
+  const handleSelectedProperty = (property: ICategoryProperties) => {
+    setShowProperty(property.ID);
+    // setSelectedProperty(property);
+    setPropertyName(property.name);
+    setPropertyType(property.type);
+    const valuesArray = property.values.split(";");
+    const filteredValuesArray = valuesArray.filter(
+      (value) => value.trim() !== ""
+    );
+    setPropertyValue(filteredValuesArray);
+  };
+
+  // console.log("property values", updatedValues);
+  const handleSetPropertyType = (e: any) => {
+    if (e.target.value === "Text") {
+      setPropertyValue([]);
+    }
+    setPropertyType(e.target.value);
+  };
+  const handlePropertyValue = (index: number, newValue: string) => {
+    const updatedValues = [...propertyValue];
+    updatedValues[index] = newValue;
+    setPropertyValue(updatedValues);
+  };
+  // add value
+  const handleUpdateAddButtonClick = () => {
+    setPropertyValue((prevValues) => [...prevValues, ""]);
+  };
+
+  const updatedPropertyBody = {
+    name: propertyName,
+    type: propertyType,
+    values: propertyValue.join(";"),
+  };
+  console.log(updatedPropertyBody);
+  const handleUpdatedCategoryProperty = (
+    workspaceId: number,
+    categoryId: number,
+    propertyId: number
+  ) => {
+    updateWorkspaceCategoryProperties(
+      workspaceId,
+      categoryId,
+      propertyId,
+      updatedPropertyBody
+    ).then((res) => {
+      if (res) {
+        // setPropertyValue([]);
+        setCategoryLoading(!categoryLoading);
+      }
+    });
+  };
+  const handleUpdateDeleteProperty = async (
+    index: number,
+    workspaceId: number,
+    categoryId: number,
+    propertyID: number
+  ) => {
+    const updatedProperty = propertyValue.filter((_, i) => i !== index);
+    setPropertyValue(updatedProperty);
+    const propertyBody = {
+      name: propertyName,
+      type: propertyType,
+      values: updatedProperty.join(";"),
+    };
+    await updateWorkspaceCategoryProperties(
+      workspaceId,
+      categoryId,
+      propertyID,
+      propertyBody
+    ).then((res) => {
+      if (res) {
+        setCategoryLoading(!categoryLoading);
+      }
+    });
+  };
 
   return (
     <CreateCategory>
@@ -373,10 +458,11 @@ const Category = () => {
                       <Options>
                         <PropertyOptions>
                           <h4>ADD PROPERTIES</h4>
+                          {/* TODO: update */}
                           {category.properties?.map((property, index) => (
                             <div
                               key={index}
-                              onClick={() => setShowProperty(property.ID)}
+                              onClick={() => handleSelectedProperty(property)}
                             >
                               <Option>
                                 <PropertyTitle>
@@ -386,6 +472,11 @@ const Category = () => {
                                 <img src={archive} alt="" />
                               </Option>
                             </div>
+                            // <SingleCategoryProperty
+                            //   property={property}
+                            //   handleSelectedProperty={handleSelectedProperty}
+                            //   propertyName={propertyName}
+                            // />
                           ))}
                           {categoryProperties[category.ID] &&
                             categoryProperties[category.ID].map(
@@ -403,6 +494,7 @@ const Category = () => {
                         {/* property input section */}
                         <Details>
                           <>
+                            {/* TODO: update */}
                             {category.properties?.map((property, index) => (
                               <div>
                                 {showProperty === property.ID && (
@@ -410,12 +502,16 @@ const Category = () => {
                                     <h3>Property name</h3>
                                     <PropertyInput
                                       placeholder="Property name"
-                                      value={property.name}
+                                      // value={property.name}
+                                      value={propertyName}
                                       onChange={(e) =>
-                                        handlePropertyNameChange(
-                                          category.ID,
-                                          index,
-                                          e.target.value
+                                        setPropertyName(e.target.value)
+                                      }
+                                      onBlur={() =>
+                                        handleUpdatedCategoryProperty(
+                                          property.workspace_id,
+                                          property.category_id,
+                                          property.ID
                                         )
                                       }
                                     />
@@ -423,14 +519,23 @@ const Category = () => {
                                     <Select
                                       labelId={`property-type-label-${index}`}
                                       id={`property-type-${index}`}
-                                      value={property.type}
-                                      onChange={(e) =>
-                                        handlePropertyTypeChange(
-                                          category.ID,
-                                          index,
-                                          e.target.value
+                                      // value={property.type}
+                                      value={propertyType}
+                                      onChange={(e) => handleSetPropertyType(e)}
+                                      onBlur={() =>
+                                        handleUpdatedCategoryProperty(
+                                          property.workspace_id,
+                                          property.category_id,
+                                          property.ID
                                         )
                                       }
+                                      // onChange={(e) =>
+                                      //   handlePropertyTypeChange(
+                                      //     category.ID,
+                                      //     index,
+                                      //     e.target.value
+                                      //   )
+                                      // }
                                       size="small"
                                       IconComponent={() => (
                                         <InputAdornment position="start">
@@ -475,6 +580,52 @@ const Category = () => {
                                       </MenuItem>
                                     </Select>
                                     {/* property value */}
+                                    {propertyType !== "Text" && (
+                                      <>
+                                        {propertyValue.map(
+                                          (value, valueIndex) => (
+                                            <PropertyOptionsValue>
+                                              <img src={propertyAdd} alt="" />
+                                              <PropertyInputValue
+                                                key={valueIndex}
+                                                placeholder=""
+                                                value={value}
+                                                onChange={(e) =>
+                                                  handlePropertyValue(
+                                                    valueIndex,
+                                                    e.target.value
+                                                  )
+                                                }
+                                                onBlur={() =>
+                                                  handleUpdatedCategoryProperty(
+                                                    property.workspace_id,
+                                                    property.category_id,
+                                                    property.ID
+                                                  )
+                                                }
+                                              />
+                                              <img
+                                                onClick={() =>
+                                                  handleUpdateDeleteProperty(
+                                                    valueIndex,
+                                                    property.workspace_id,
+                                                    property.category_id,
+                                                    property.ID
+                                                  )
+                                                }
+                                                src={propertyDelete}
+                                                alt=""
+                                              />
+                                            </PropertyOptionsValue>
+                                          )
+                                        )}
+                                        <PropertyOptionsValueBtn
+                                          onClick={handleUpdateAddButtonClick}
+                                        >
+                                          + Add option
+                                        </PropertyOptionsValueBtn>
+                                      </>
+                                    )}
                                     {/* {property.type !== "Text" && (
                                     <>
                                       <PropertyInputValue
@@ -683,3 +834,21 @@ const Category = () => {
 };
 
 export default Category;
+
+// const SingleCategoryProperty = ({
+//   property,
+//   handleSelectedProperty,
+//   propertyName,
+// }: any) => {
+//   return (
+//     <div onClick={() => handleSelectedProperty(property)}>
+//       <Option>
+//         <PropertyTitle>
+//           <img src={property1} alt="" />
+//           <p>{property.name}</p>
+//         </PropertyTitle>
+//         <img src={archive} alt="" />
+//       </Option>
+//     </div>
+//   );
+// };
