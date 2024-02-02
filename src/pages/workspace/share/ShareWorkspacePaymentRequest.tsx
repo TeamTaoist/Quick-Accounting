@@ -38,7 +38,7 @@ import { isAddress } from "viem";
 import { parseUnits } from "ethers";
 
 const ShareWorkspacePaymentRequest = () => {
-  const { id } = useParams();
+  const { workspaceId, shareId } = useParams();
   const navigate = useNavigate();
 
   const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
@@ -157,8 +157,8 @@ const ShareWorkspacePaymentRequest = () => {
 
   // get category details
   useEffect(() => {
-    getWorkspaceCategoryProperties(Number(id));
-  }, [getWorkspaceCategoryProperties, id]);
+    getWorkspaceCategoryProperties(Number(workspaceId));
+  }, [getWorkspaceCategoryProperties, workspaceId]);
 
   const [selectedCategoryID, setSelectedCategoryID] = useState<number>();
   const handleCategoryDropdown = (
@@ -230,21 +230,21 @@ const ShareWorkspacePaymentRequest = () => {
     if (!checkAllFields()) {
       return;
     }
-    createSharePaymentRequest(id!, { rows: sharePaymentRequestForm }).then(
-      (res) => {
-        if (res) {
-          setSharePaymentRequestForm([]);
-          setOpenModal(true);
-        }
-      }
-    );
+    // createSharePaymentRequest(id!, { rows: sharePaymentRequestForm }).then(
+    //   (res) => {
+    //     if (res) {
+    //       setSharePaymentRequestForm([]);
+    //       setOpenModal(true);
+    //     }
+    //   }
+    // );
   };
   const handleSavePaymentRequest = () => {
     setOpenModal(true);
   };
 
   useEffect(() => {
-    getWorkspaceDetails(Number(id));
+    getWorkspaceDetails(Number(workspaceId));
   }, []);
 
   return (
@@ -330,6 +330,7 @@ const ShareWorkspacePaymentRequest = () => {
                             }}
                             size="small"
                             fullWidth
+                            autoComplete="off"
                             // id="fullWidth"
                             placeholder="Enter wallet address"
                             onChange={(e) =>

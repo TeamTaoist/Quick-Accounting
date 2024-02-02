@@ -118,7 +118,7 @@ const PaymentRequestPreview = ({ sharePaymentRequestForm }: any) => {
                           "& fieldset": { border: "none" },
                         }}
                         size="small"
-                        value={request.amount}
+                        value={request.recipient}
                         fullWidth
                         // id="fullWidth"
                         placeholder="Enter wallet address"
@@ -379,7 +379,8 @@ const PropertyOption = styled.div`
   p {
     font-size: 13px;
     background: var(--bg-primary);
-    padding: 4px 8px;
+    padding: 2px 8px;
     border-radius: 4px;
+    padding-inline: 20px;
   }
 `;
