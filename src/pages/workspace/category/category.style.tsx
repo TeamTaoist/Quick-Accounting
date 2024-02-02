@@ -156,10 +156,16 @@ export const PropertyTitle = styled.div`
 `;
 export const Details = styled.div`
   width: 50%;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: space-between; */
-  /* align-items: flex-end; */
+  height: 326px;
+  overflow-y: auto;
+  padding-bottom: 14px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  & {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 `;
 export const DetailsInput = styled.div`
   padding: 10px;
