@@ -208,7 +208,8 @@ const QueueTransactionItem = ({
                   0}
                 /
                 {rejectTransaction?.confirmationsRequired ||
-                  owners.length - threshold + 1}
+                  approveTransaction.confirmationsRequired ||
+                  threshold}
               </h4>
               {filterRejectSigners?.map((owner) => (
                 <p key={owner}>{getShortAddress(owner)}</p>
