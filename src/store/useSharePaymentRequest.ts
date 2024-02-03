@@ -14,6 +14,10 @@ interface UseSharePaymentRequest {
   getPaymentRequestShareCodeData: (
     shareCode: string | undefined
   ) => Promise<ISharePayment[]>;
+  saveSharePaymentRequest: (
+    shareCode: string | undefined,
+    sharePaymentRequestFormData: any
+  ) => Promise<boolean | undefined>;
 }
 
 export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
@@ -68,6 +72,24 @@ export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
         }
       } catch (error: any) {
         console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    // save payment request
+    saveSharePaymentRequest: async (shareCode, sharePaymentRequestFormData) => {
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.post(
+          `/payment_request_share/${shareCode}/save`,
+          sharePaymentRequestFormData
+        );
+        if (data.msg === "success" && data.code === 200) {
+          toast.success("Payment request saved");
+          return true;
+        }
+      } catch (error: any) {
+        toast.error(error?.response?.data?.msg);
       } finally {
         setLoading(false);
       }

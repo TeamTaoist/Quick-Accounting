@@ -46,8 +46,11 @@ const ShareWorkspacePaymentRequest = () => {
   const { isLoading } = useLoading();
   const { workspace, assetsList, getAssets, getWorkspaceDetails } =
     useWorkspace();
-  const { createSharePaymentRequest, getPaymentRequestShareCodeData } =
-    useSharePaymentRequest();
+  const {
+    createSharePaymentRequest,
+    getPaymentRequestShareCodeData,
+    saveSharePaymentRequest,
+  } = useSharePaymentRequest();
 
   // payments details
   const [paymentDetails, setPaymentDetails] = useState<ISharePayment[]>([]);
@@ -255,7 +258,13 @@ const ShareWorkspacePaymentRequest = () => {
     );
   };
   const handleSavePaymentRequest = () => {
-    setOpenModal(true);
+    saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
+      (res) => {
+        if (res) {
+          setOpenModal(true);
+        }
+      }
+    );
   };
 
   useEffect(() => {
@@ -524,8 +533,8 @@ const ShareWorkspacePaymentRequest = () => {
                                   "& fieldset": { border: "none" },
                                 }}
                               >
-                                <MenuItem disabled value="Category">
-                                  Select category
+                                <MenuItem disabled value="">
+                                  {sharePaymentRequestForm[index].category_name}
                                 </MenuItem>
                                 {workspaceCategoryProperties?.map(
                                   (category) => (
