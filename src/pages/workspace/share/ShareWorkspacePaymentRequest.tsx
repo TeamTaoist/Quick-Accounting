@@ -46,13 +46,17 @@ const ShareWorkspacePaymentRequest = () => {
   const { isLoading } = useLoading();
   const { workspace, assetsList, getAssets, getWorkspaceDetails } =
     useWorkspace();
-  const { createSharePaymentRequest } = useSharePaymentRequest();
+  const { createSharePaymentRequest, getPaymentRequestShareCodeData } =
+    useSharePaymentRequest();
 
-  const [age, setAge] = useState("Category");
+  // payments details
+  const [paymentDetails, setPaymentDetails] = useState<ISharePayment[]>([]);
 
-  const handleCategoryChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
-  };
+  // const [age, setAge] = useState("Category");
+
+  // const handleCategoryChange = (event: SelectChangeEvent) => {
+  //   setAge(event.target.value as string);
+  // };
 
   const [selectedValues, setSelectedValues] = useState([]);
 
@@ -160,6 +164,18 @@ const ShareWorkspacePaymentRequest = () => {
     getWorkspaceCategoryProperties(Number(workspaceId));
   }, [getWorkspaceCategoryProperties, workspaceId]);
 
+  // get payment request details
+  useEffect(() => {
+    getPaymentRequestShareCodeData(shareId).then((res) => {
+      if (res) {
+        setPaymentDetails(res);
+      }
+    });
+  }, []);
+  console.log("details", paymentDetails);
+  // if (paymentDetails && paymentDetails.length > 0) {
+  // end
+
   const [selectedCategoryID, setSelectedCategoryID] = useState<number>();
   const handleCategoryDropdown = (
     categoryId: number,
@@ -233,7 +249,6 @@ const ShareWorkspacePaymentRequest = () => {
     createSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
       (res) => {
         if (res) {
-          setSharePaymentRequestForm([]);
           setOpenModal(true);
         }
       }
@@ -247,22 +262,46 @@ const ShareWorkspacePaymentRequest = () => {
     getWorkspaceDetails(Number(workspaceId));
   }, []);
 
+  useEffect(() => {
+    if (paymentDetails && paymentDetails.length > 0) {
+      const updatedForm = paymentDetails.map((paymentDetail) => {
+        return {
+          amount: paymentDetail.amount,
+          currency_name: paymentDetail.currency_name,
+          recipient: paymentDetail.recipient,
+          decimals: paymentDetail.decimals,
+          category_id: paymentDetail.category_id,
+          category_name: paymentDetail.category_name,
+          currency_contract_address: paymentDetail.currency_contract_address,
+          category_properties: Array.isArray(paymentDetail.category_properties)
+            ? paymentDetail.category_properties
+            : JSON.parse(paymentDetail.category_properties),
+        };
+      });
+      setSharePaymentRequestForm(updatedForm);
+    }
+  }, [paymentDetails]);
+
   return (
     <>
       {isLoading && <Loading />}
+      <CustomModal
+        open={openModal}
+        setOpen={setOpenModal}
+        component={PaymentRequestPreview}
+        additionalProps={{ sharePaymentRequestForm }}
+      />
       <Header>
-        <CustomModal
-          open={openModal}
-          setOpen={setOpenModal}
-          component={PaymentRequestPreview}
-          additionalProps={{ sharePaymentRequestForm }}
-        />
         <SharePaymentContainer>
           <SharePaymentForm>
             <ShareHeader>
               <h3>New payment request from {workspace.name}</h3>
             </ShareHeader>
-            {sharePaymentRequestForm.map((_, index) => (
+            {/* {paymentDetails && paymentDetails.length > 0 ? (
+              <p>data</p>
+            ) : (
+              <> */}
+            {sharePaymentRequestForm.map((value, index) => (
               <RequestDetails key={index}>
                 <TableContainer
                   sx={{
@@ -333,6 +372,7 @@ const ShareWorkspacePaymentRequest = () => {
                             autoComplete="off"
                             // id="fullWidth"
                             placeholder="Enter wallet address"
+                            value={value.recipient}
                             onChange={(e) =>
                               handleFormChange(
                                 index,
@@ -361,6 +401,7 @@ const ShareWorkspacePaymentRequest = () => {
                             size="small"
                             fullWidth
                             autoComplete="off"
+                            value={value.amount}
                             // id="fullWidth"
                             placeholder="amount"
                             onChange={(e) =>
@@ -468,7 +509,7 @@ const ShareWorkspacePaymentRequest = () => {
                                   sharePaymentRequestForm[index].category_name
                                 }
                                 size="small"
-                                onChange={handleCategoryChange}
+                                // onChange={handleCategoryChange}
                                 IconComponent={() => (
                                   <InputAdornment position="start">
                                     <img
@@ -670,6 +711,7 @@ const ShareWorkspacePaymentRequest = () => {
                 {/* <ReactSelect /> */}
               </RequestDetails>
             ))}
+
             <Btns>
               <AddBtn onClick={handleAddRequest}>+ Add</AddBtn>
               <SubmitBtns>
@@ -677,6 +719,8 @@ const ShareWorkspacePaymentRequest = () => {
                 <Submit onClick={handleSubmitPaymentRequest}>Submit</Submit>
               </SubmitBtns>
             </Btns>
+            {/* </>
+            )} */}
           </SharePaymentForm>
         </SharePaymentContainer>
       </Header>
