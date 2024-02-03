@@ -64,6 +64,7 @@ import ReactPaginate from "react-paginate";
 import { getShortAddress } from "../../../utils";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
 const Bookkeeping = () => {
   const { id } = useParams();
@@ -79,6 +80,7 @@ const Bookkeeping = () => {
   } = useBookkeeping();
   const { getPaymentRequestDetails } = usePaymentsStore();
   const { workspace } = useWorkspace();
+  const { getWorkspaceCategoryProperties } = useCategoryProperty();
 
   const [paymentRequest, setPaymentRequest] = useState(true);
 
@@ -97,9 +99,13 @@ const Bookkeeping = () => {
 
   // modal
   const [openModal, setOpenModal] = useState(false);
+  const workspaceId = Number(id);
+  // get category
+  useEffect(() => {
+    getWorkspaceCategoryProperties(workspaceId);
+  }, []);
 
   // fetch bookkeeping data
-  const workspaceId = Number(id);
   useEffect(() => {
     getBookkeepingList(workspaceId, visible).then((res) => {
       if (res) {
