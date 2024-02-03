@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import reject from "../../../assets/workspace/reject.svg";
 import back from "../../../assets/workspace/back.svg";
+import view from "../../../assets/workspace/view.svg";
 import { CategoryTitle } from "../category/category.style";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,6 +15,7 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import usePaymentsStore from "../../../store/usePayments";
 import { TransactionListItemType } from "@safe-global/safe-gateway-typescript-sdk";
 import QueueItem from "../../../components/workspace/QueueItem";
+import { BookkeepingTitle, HideBtn } from "../bookkeeping/Bookkeeping";
 
 const Queue = () => {
   const { id } = useParams();
@@ -63,18 +65,22 @@ const Queue = () => {
 
   const afterExecute = () => {
     getQueueList();
-  }
+  };
 
   return (
     <QueueSection>
-      {list.length === 0 ? (
-        <CategoryTitle>
+      {list.length === 0 && paymentRequest ? (
+        <BookkeepingTitle>
           <h3>You don't have any transactions.</h3>
           <p style={{ width: "450px", textAlign: "center" }}>
             Transactions that add tokens to or remove tokens from your Safe will
             show up here.
           </p>
-        </CategoryTitle>
+          <HideBtn onClick={() => setPaymentRequest(!paymentRequest)}>
+            <img src={view} alt="" style={{ width: "20px" }} />
+            <span>View hidden</span>
+          </HideBtn>
+        </BookkeepingTitle>
       ) : (
         <QueueContainer>
           <QueHeader>
@@ -93,7 +99,7 @@ const Queue = () => {
             </ViewReject>
           </QueHeader>
           {/*  */}
-          {paymentRequest ? (
+          {paymentRequest && (
             <>
               {list.map((item, index) => (
                 <QueueItem
@@ -104,10 +110,6 @@ const Queue = () => {
                 />
               ))}
             </>
-          ) : (
-            <RejectSection>
-              <RejectDataTable isInQueue />
-            </RejectSection>
           )}
           <CustomModal
             open={openModal}
@@ -115,6 +117,11 @@ const Queue = () => {
             component={PaymentRequestDetails}
           />
         </QueueContainer>
+      )}
+      {!paymentRequest && (
+        <RejectSection>
+          <RejectDataTable isInQueue />
+        </RejectSection>
       )}
     </QueueSection>
   );

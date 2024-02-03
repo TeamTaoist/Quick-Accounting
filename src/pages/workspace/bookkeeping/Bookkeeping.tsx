@@ -321,150 +321,142 @@ const Bookkeeping = () => {
         </Header>
       )}
 
-      {bookkeepingList.length > 0 && (
-        <>
-          {paymentRequest && (
-            <PaymentRequestBody>
-              <ActionBtn>
-                <Btn onClick={() => inputFileRef.current!.click()}>
-                  <img src={importIcon} alt="" />
-                  <p>{t("bookkeeping.Import")}</p>
-                  <input
-                    type="file"
-                    name=""
-                    id=""
-                    hidden
-                    ref={inputFileRef}
-                    onChange={handleImportBookkeepingList}
-                  />
-                </Btn>
-                <Btn onClick={handleExportBookkeepingList}>
-                  <img src={download} alt="" />
-                  <p>{t("paymentRequest.Download")}</p>
-                </Btn>
-                <Btn onClick={handleHideBookkeepingList}>
-                  <img src={hide} alt="" />
-                  <p>{t("paymentRequest.Hide")}</p>
-                </Btn>
-              </ActionBtn>
-              {/* table */}
-              <TableContainer
-                sx={{
-                  border: "1px solid var(--border)",
-                  borderRadius: "10px",
-                  maxHeight: 500,
-                }}
-              >
-                <Table stickyHeader>
-                  <TableHead style={{ backgroundColor: "#f0f0f0" }}>
+      {paymentRequest ? (
+        <PaymentRequestBody>
+          <ActionBtn>
+            <Btn onClick={() => inputFileRef.current!.click()}>
+              <img src={importIcon} alt="" />
+              <p>{t("bookkeeping.Import")}</p>
+              <input
+                type="file"
+                name=""
+                id=""
+                hidden
+                ref={inputFileRef}
+                onChange={handleImportBookkeepingList}
+              />
+            </Btn>
+            <Btn onClick={handleExportBookkeepingList}>
+              <img src={download} alt="" />
+              <p>{t("paymentRequest.Download")}</p>
+            </Btn>
+            <Btn onClick={handleHideBookkeepingList}>
+              <img src={hide} alt="" />
+              <p>{t("paymentRequest.Hide")}</p>
+            </Btn>
+          </ActionBtn>
+          {/* table */}
+          <TableContainer
+            sx={{
+              border: "1px solid var(--border)",
+              borderRadius: "10px",
+              maxHeight: 500,
+            }}
+          >
+            <Table stickyHeader>
+              <TableHead style={{ backgroundColor: "#f0f0f0" }}>
+                <TableRow>
+                  <TableCell sx={{ background: "var(--bg-primary)" }}>
+                    <Checkbox
+                      indeterminate={
+                        selected.length > 0 &&
+                        selected.length < bookkeepingList.length
+                      }
+                      checked={selected.length === bookkeepingList.length}
+                      onChange={handleSelectAllClick}
+                    />
+                    Safe
+                  </TableCell>
+                  <TableCell sx={{ background: "var(--bg-primary)" }}>
+                    Recipient
+                  </TableCell>
+                  <TableCell sx={{ background: "var(--bg-primary)" }}>
+                    Amount
+                  </TableCell>
+                  <TableCell sx={{ background: "var(--bg-primary)" }}>
+                    Category
+                  </TableCell>
+                  <TableCell sx={{ background: "var(--bg-primary)" }}>
+                    Date
+                  </TableCell>
+                  <TableCell
+                    sx={{ background: "var(--bg-primary)" }}
+                  ></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filterData.map((bookkeeping) => (
+                  <React.Fragment key={bookkeeping.ID}>
                     <TableRow>
-                      <TableCell sx={{ background: "var(--bg-primary)" }}>
-                        <Checkbox
-                          indeterminate={
-                            selected.length > 0 &&
-                            selected.length < bookkeepingList.length
-                          }
-                          checked={selected.length === bookkeepingList.length}
-                          onChange={handleSelectAllClick}
-                        />
-                        Safe
-                      </TableCell>
-                      <TableCell sx={{ background: "var(--bg-primary)" }}>
-                        Recipient
-                      </TableCell>
-                      <TableCell sx={{ background: "var(--bg-primary)" }}>
-                        Amount
-                      </TableCell>
-                      <TableCell sx={{ background: "var(--bg-primary)" }}>
-                        Category
-                      </TableCell>
-                      <TableCell sx={{ background: "var(--bg-primary)" }}>
-                        Date
-                      </TableCell>
                       <TableCell
-                        sx={{ background: "var(--bg-primary)" }}
-                      ></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {filterData.map((bookkeeping) => (
-                      <React.Fragment key={bookkeeping.ID}>
-                        <TableRow>
-                          <TableCell
-                            style={{
-                              padding: 0,
-                              paddingLeft: "16px",
-                              borderBottom: "1px solid #ddd",
-                              borderTop: "none",
-                            }}
-                          >
-                            <SafeSection>
-                              <div>
-                                <Checkbox
-                                  checked={isSelected(bookkeeping.ID)}
-                                  onChange={(event) =>
-                                    handleCheckboxClick(event, bookkeeping.ID)
-                                  }
-                                />
-                                {getShortAddress(workspace?.vault_wallet)}
-                              </div>
-                              <Logo>
-                                <img src={rightArrow} alt="" />
-                              </Logo>
-                            </SafeSection>
-                          </TableCell>
-                          <TableCell>
-                            {getShortAddress(bookkeeping.recipient)}
-                          </TableCell>
-                          <TableCell>
-                            {formatNumber(Number(bookkeeping.amount))}{" "}
-                            {bookkeeping.currency_name}
-                          </TableCell>
-                          <TableCell>
-                            <CategoryCell>
-                              {bookkeeping.category_name}
-                            </CategoryCell>
-                          </TableCell>
-                          <TableCell>
-                            {bookkeeping.CreatedAt.slice(0, 10)}
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              variant="outlined"
-                              sx={{
-                                borderColor: "black",
-                                color: "black",
-                                textTransform: "lowercase",
-                              }}
-                              onClick={() =>
-                                handleBookkeepingDetails(
-                                  bookkeeping.payment_request_id,
-                                  bookkeeping.ID
-                                )
+                        style={{
+                          padding: 0,
+                          paddingLeft: "16px",
+                          borderBottom: "1px solid #ddd",
+                          borderTop: "none",
+                        }}
+                      >
+                        <SafeSection>
+                          <div>
+                            <Checkbox
+                              checked={isSelected(bookkeeping.ID)}
+                              onChange={(event) =>
+                                handleCheckboxClick(event, bookkeeping.ID)
                               }
-                            >
-                              view more
-                            </Button>
-                            {/* modal */}
-                            {/* <CustomModal
+                            />
+                            {getShortAddress(workspace?.vault_wallet)}
+                          </div>
+                          <Logo>
+                            <img src={rightArrow} alt="" />
+                          </Logo>
+                        </SafeSection>
+                      </TableCell>
+                      <TableCell>
+                        {getShortAddress(bookkeeping.recipient)}
+                      </TableCell>
+                      <TableCell>
+                        {formatNumber(Number(bookkeeping.amount))}{" "}
+                        {bookkeeping.currency_name}
+                      </TableCell>
+                      <TableCell>
+                        <CategoryCell>{bookkeeping.category_name}</CategoryCell>
+                      </TableCell>
+                      <TableCell>
+                        {bookkeeping.CreatedAt.slice(0, 10)}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          sx={{
+                            borderColor: "black",
+                            color: "black",
+                            textTransform: "lowercase",
+                          }}
+                          onClick={() =>
+                            handleBookkeepingDetails(
+                              bookkeeping.payment_request_id,
+                              bookkeeping.ID
+                            )
+                          }
+                        >
+                          view more
+                        </Button>
+                        {/* modal */}
+                        {/* <CustomModal
                                 open={openModal}
                                 setOpen={setOpenModal}
                                 component={BookkeepingTransferDetails}
                                 // additionalProps={{}}
                               /> */}
-                          </TableCell>
-                        </TableRow>
-                      </React.Fragment>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </PaymentRequestBody>
-          )}
-          {/* )} */}
-        </>
-      )}
-      {!paymentRequest && (
+                      </TableCell>
+                    </TableRow>
+                  </React.Fragment>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </PaymentRequestBody>
+      ) : (
         <RejectSection>
           <BookkeepingRejectTable
             workspaceId={workspaceId}
@@ -474,7 +466,6 @@ const Bookkeeping = () => {
           />
         </RejectSection>
       )}
-      {/*  */}
       {/* pagination */}
       {totalItem > 10 && (
         <PaymentPagination>
@@ -515,7 +506,7 @@ export const Logo = styled.div`
     width: 20px;
   }
 `;
-const BookkeepingTitle = styled.div`
+export const BookkeepingTitle = styled.div`
   height: 90vh;
   /* border: 1px solid var(--border); */
   display: flex;
@@ -531,7 +522,7 @@ const BookkeepingTitle = styled.div`
     padding: 30px 0;
   }
 `;
-const HideBtn = styled.button`
+export const HideBtn = styled.button`
   position: absolute;
   top: 0;
   right: 5%;
