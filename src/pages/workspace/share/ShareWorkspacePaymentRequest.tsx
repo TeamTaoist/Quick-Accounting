@@ -167,7 +167,12 @@ const ShareWorkspacePaymentRequest = () => {
   ) => {
     const updatedRequests = [...sharePaymentRequestForm];
     if (field === "currency_address") {
-      // ... (no change here)
+      const token = assetsList.find((item) => item.tokenInfo.address === value);
+      if (token) {
+        updatedRequests[index].currency_name = token.tokenInfo.symbol;
+        updatedRequests[index].decimals = token.tokenInfo.decimals;
+      }
+      updatedRequests[index].currency_contract_address = value;
     }
 
     if (field === "categoryProperties") {
@@ -233,51 +238,11 @@ const ShareWorkspacePaymentRequest = () => {
     });
   }, []);
   console.log("details", paymentDetails);
-  // if (paymentDetails && paymentDetails.length > 0) {
-  // end
-
-  // const [selectedCategoryID, setSelectedCategoryID] = useState<number>();
-  // const handleCategoryDropdown = (
-  //   categoryId: number,
-  //   categoryName: string,
-  //   index: number
-  // ) => {
-  //   setSelectedCategoryID(categoryId);
-  //   console.log(categoryId, categoryName, index);
-
-  //   const updatedRequests = [...sharePaymentRequestForm];
-  //   updatedRequests[index] = {
-  //     ...updatedRequests[index],
-  //     category_id: categoryId,
-  //     category_name: categoryName,
-  //     category_properties: [],
-  //   };
-  //   setSharePaymentRequestForm(updatedRequests);
-  // };
   // new
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<any>([]);
+  const [selectedCategories, setSelectedCategories] = useState<any>([]);
+
   console.log("selected category", selectedCategoryIDs);
-
-  // const handleCategoryDropdown = (
-  //   categoryId: number,
-  //   categoryName: string,
-  //   index: number
-  // ) => {
-  //   const updatedCategoryIDs = [...selectedCategoryIDs];
-  //   updatedCategoryIDs[index] = categoryId;
-  //   setSelectedCategoryIDs(updatedCategoryIDs);
-
-  //   const updatedRequests = [...sharePaymentRequestForm];
-  //   updatedRequests[index] = {
-  //     ...updatedRequests[index],
-  //     category_id: categoryId,
-  //     category_name: categoryName,
-  //     category_properties: [],
-  //   };
-  //   setSharePaymentRequestForm(updatedRequests);
-  // };
-
-  // another one
   const handleCategoryDropdown = (
     categoryId: number,
     categoryName: string,
@@ -295,20 +260,23 @@ const ShareWorkspacePaymentRequest = () => {
       category_properties: [],
     };
     setSharePaymentRequestForm(updatedRequests);
+    const updatedSelectedCategories = updatedCategoryIDs.map((id: any) =>
+      workspaceCategoryProperties?.find((category) => category.ID === id)
+    );
+    setSelectedCategories(updatedSelectedCategories);
   };
   // const [selectedCategories, setSelectedCategories] = useState([])
   //   const selectedCategorie = selectedCategoryIDs.map((id: any) =>
   //     workspaceCategoryProperties?.find((category) => category.ID === id)
   //   );
   // console.log(selectedCategories);
-  const [selectedCategories, setSelectedCategories] = useState<any>([]);
 
-  useEffect(() => {
-    const updatedSelectedCategories = selectedCategoryIDs.map((id: any) =>
-      workspaceCategoryProperties?.find((category) => category.ID === id)
-    );
-    setSelectedCategories(updatedSelectedCategories);
-  }, [selectedCategoryIDs, workspaceCategoryProperties]);
+  // useEffect(() => {
+  //   const updatedSelectedCategories = selectedCategoryIDs.map((id: any) =>
+  //     workspaceCategoryProperties?.find((category) => category.ID === id)
+  //   );
+  //   setSelectedCategories(updatedSelectedCategories);
+  // }, [selectedCategoryIDs, workspaceCategoryProperties]);
 
   // get asset list
   useEffect(() => {
@@ -399,19 +367,18 @@ const ShareWorkspacePaymentRequest = () => {
       });
       setSharePaymentRequestForm(updatedForm);
 
-      // Update selectedCategoryIDs based on the fetched payment details
       const updatedCategoryIDs = updatedForm.map(
         (formItem) => formItem.category_id
       );
       setSelectedCategoryIDs(updatedCategoryIDs);
 
-      // Update selectedCategories based on the fetched payment details
       const updatedSelectedCategories = updatedCategoryIDs.map((id: any) =>
         workspaceCategoryProperties?.find((category) => category.ID === id)
       );
       setSelectedCategories(updatedSelectedCategories);
     }
   }, [paymentDetails]);
+  console.log("property", selectedCategories);
 
   return (
     <>
@@ -725,16 +692,34 @@ const ShareWorkspacePaymentRequest = () => {
                                             property.type
                                           )
                                         }
-                                        // onChange={(selectedOption: any) =>
-                                        //   handleChange(selectedOption)
-                                        // }
                                         options={property.values
                                           .split(";")
-                                          .map((v: any) => ({
+                                          .map((v: string) => ({
                                             value: v,
                                             label: v,
                                           }))}
-                                        // defaultValues={[options[1]]}
+                                        defaultValues={sharePaymentRequestForm[
+                                          index
+                                        ].category_properties
+                                          .filter(
+                                            (p: any) =>
+                                              p.type === "single-select"
+                                          )
+                                          .map((p: any) =>
+                                            p.values
+                                              .split(";")
+                                              .map((v: string) => ({
+                                                value: v,
+                                                label: v,
+                                              }))
+                                          )
+                                          .flat()}
+                                        // defaultValues={[
+                                        //   {
+                                        //     value: property.values,
+                                        //     label: property.values,
+                                        //   },
+                                        // ]}
                                       />
                                     </TableCell>
                                   </TableRow>
@@ -777,7 +762,28 @@ const ShareWorkspacePaymentRequest = () => {
                                             value: v,
                                             label: v,
                                           }))}
-                                        // defaultValues={[options[1], options[2]]}
+                                        // defaultValues={property.values
+                                        //   .split(";")
+                                        //   .map((v: string) => ({
+                                        //     value: v,
+                                        //     label: v,
+                                        //   }))}
+                                        defaultValues={sharePaymentRequestForm[
+                                          index
+                                        ].category_properties
+                                          .filter(
+                                            (p: any) =>
+                                              p.type === "multi-select"
+                                          )
+                                          .map((p: any) =>
+                                            p.values
+                                              .split(";")
+                                              .map((v: string) => ({
+                                                value: v,
+                                                label: v,
+                                              }))
+                                          )
+                                          .flat()}
                                       />
                                     </TableCell>
                                   </TableRow>
@@ -806,7 +812,14 @@ const ShareWorkspacePaymentRequest = () => {
                                         }}
                                         size="small"
                                         fullWidth
-                                        // value="test"
+                                        // value={property.values}
+                                        value={
+                                          sharePaymentRequestForm[
+                                            index
+                                          ].category_properties.find(
+                                            (p) => p.type === "Text"
+                                          )?.values || ""
+                                        }
                                         // id="fullWidth"
                                         placeholder="Enter content"
                                         // onChange={(e) =>
