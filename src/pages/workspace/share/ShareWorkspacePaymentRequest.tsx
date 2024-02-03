@@ -94,6 +94,69 @@ const ShareWorkspacePaymentRequest = () => {
   };
   console.log(sharePaymentRequestForm);
 
+  // const handleFormChange = (
+  //   index: number,
+  //   field: string,
+  //   value: any,
+  //   propertyName?: string,
+  //   propertyType?: string,
+  //   categoryId?: number
+  // ) => {
+  //   const updatedRequests = [...sharePaymentRequestForm];
+  //   if (field === "currency_address") {
+  //     const token = assetsList.find((item) => item.tokenInfo.address === value);
+  //     if (token) {
+  //       updatedRequests[index].currency_name = token.tokenInfo.symbol;
+  //       updatedRequests[index].decimals = token.tokenInfo.decimals;
+  //     }
+  //     updatedRequests[index].currency_contract_address = value;
+  //   }
+
+  //   if (field === "categoryProperties") {
+  //     const existingCategoryPropertyIndex = updatedRequests[
+  //       index
+  //     ].category_properties.findIndex(
+  //       (property: any) => property.name === propertyName
+  //     );
+  //     if (existingCategoryPropertyIndex !== -1) {
+  //       const values =
+  //         propertyType === "single-select"
+  //           ? value.value
+  //           : propertyType === "Text"
+  //           ? value
+  //           : value.map((v: ReactSelectOption) => v.value).join(";");
+
+  //       updatedRequests[index].category_properties[
+  //         existingCategoryPropertyIndex
+  //       ].values = values;
+  //     } else {
+  //       const newCategoryProperty =
+  //         propertyType === "Text"
+  //           ? {
+  //               name: propertyName,
+  //               type: propertyType,
+  //               values: value,
+  //             }
+  //           : {
+  //               name: propertyName,
+  //               type: propertyType,
+  //               values:
+  //                 propertyType === "single-select"
+  //                   ? value.value
+  //                   : value.map((v: ReactSelectOption) => v.value).join(";"),
+  //             };
+
+  //       updatedRequests[index].category_properties.push(newCategoryProperty);
+  //     }
+  //   } else {
+  //     (updatedRequests[index] as any)[field] = value;
+  //   }
+  //   setSharePaymentRequestForm(updatedRequests);
+  // };
+
+  // handle delete request form
+
+  // new
   const handleFormChange = (
     index: number,
     field: string,
@@ -104,21 +167,18 @@ const ShareWorkspacePaymentRequest = () => {
   ) => {
     const updatedRequests = [...sharePaymentRequestForm];
     if (field === "currency_address") {
-      const token = assetsList.find((item) => item.tokenInfo.address === value);
-      if (token) {
-        updatedRequests[index].currency_name = token.tokenInfo.symbol;
-        updatedRequests[index].decimals = token.tokenInfo.decimals;
-      }
-      updatedRequests[index].currency_contract_address = value;
+      // ... (no change here)
     }
 
     if (field === "categoryProperties") {
-      const existingCategoryPropertyIndex = updatedRequests[
+      const existingCategoryProperty = updatedRequests[
         index
-      ].category_properties.findIndex(
-        (property: any) => property.name === propertyName
+      ].category_properties.find(
+        (property) =>
+          property.name === propertyName && property.type === propertyType
       );
-      if (existingCategoryPropertyIndex !== -1) {
+
+      if (existingCategoryProperty) {
         const values =
           propertyType === "single-select"
             ? value.value
@@ -126,9 +186,7 @@ const ShareWorkspacePaymentRequest = () => {
             ? value
             : value.map((v: ReactSelectOption) => v.value).join(";");
 
-        updatedRequests[index].category_properties[
-          existingCategoryPropertyIndex
-        ].values = values;
+        existingCategoryProperty.values = values;
       } else {
         const newCategoryProperty =
           propertyType === "Text"
@@ -154,7 +212,6 @@ const ShareWorkspacePaymentRequest = () => {
     setSharePaymentRequestForm(updatedRequests);
   };
 
-  // handle delete request form
   const handleDeleteRequestForm = (index: number) => {
     const updatedRequest = sharePaymentRequestForm.filter(
       (_, i) => i !== index
@@ -179,14 +236,56 @@ const ShareWorkspacePaymentRequest = () => {
   // if (paymentDetails && paymentDetails.length > 0) {
   // end
 
-  const [selectedCategoryID, setSelectedCategoryID] = useState<number>();
+  // const [selectedCategoryID, setSelectedCategoryID] = useState<number>();
+  // const handleCategoryDropdown = (
+  //   categoryId: number,
+  //   categoryName: string,
+  //   index: number
+  // ) => {
+  //   setSelectedCategoryID(categoryId);
+  //   console.log(categoryId, categoryName, index);
+
+  //   const updatedRequests = [...sharePaymentRequestForm];
+  //   updatedRequests[index] = {
+  //     ...updatedRequests[index],
+  //     category_id: categoryId,
+  //     category_name: categoryName,
+  //     category_properties: [],
+  //   };
+  //   setSharePaymentRequestForm(updatedRequests);
+  // };
+  // new
+  const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<any>([]);
+  console.log("selected category", selectedCategoryIDs);
+
+  // const handleCategoryDropdown = (
+  //   categoryId: number,
+  //   categoryName: string,
+  //   index: number
+  // ) => {
+  //   const updatedCategoryIDs = [...selectedCategoryIDs];
+  //   updatedCategoryIDs[index] = categoryId;
+  //   setSelectedCategoryIDs(updatedCategoryIDs);
+
+  //   const updatedRequests = [...sharePaymentRequestForm];
+  //   updatedRequests[index] = {
+  //     ...updatedRequests[index],
+  //     category_id: categoryId,
+  //     category_name: categoryName,
+  //     category_properties: [],
+  //   };
+  //   setSharePaymentRequestForm(updatedRequests);
+  // };
+
+  // another one
   const handleCategoryDropdown = (
     categoryId: number,
     categoryName: string,
     index: number
   ) => {
-    setSelectedCategoryID(categoryId);
-    console.log(categoryId, categoryName, index);
+    const updatedCategoryIDs = [...selectedCategoryIDs];
+    updatedCategoryIDs[index] = categoryId;
+    setSelectedCategoryIDs(updatedCategoryIDs);
 
     const updatedRequests = [...sharePaymentRequestForm];
     updatedRequests[index] = {
@@ -197,9 +296,20 @@ const ShareWorkspacePaymentRequest = () => {
     };
     setSharePaymentRequestForm(updatedRequests);
   };
-  const selectedCategory = workspaceCategoryProperties?.find(
-    (f) => f.ID === selectedCategoryID
-  );
+  // const [selectedCategories, setSelectedCategories] = useState([])
+  //   const selectedCategorie = selectedCategoryIDs.map((id: any) =>
+  //     workspaceCategoryProperties?.find((category) => category.ID === id)
+  //   );
+  // console.log(selectedCategories);
+  const [selectedCategories, setSelectedCategories] = useState<any>([]);
+
+  useEffect(() => {
+    const updatedSelectedCategories = selectedCategoryIDs.map((id: any) =>
+      workspaceCategoryProperties?.find((category) => category.ID === id)
+    );
+    setSelectedCategories(updatedSelectedCategories);
+  }, [selectedCategoryIDs, workspaceCategoryProperties]);
+
   // get asset list
   useEffect(() => {
     workspace?.vault_wallet && getAssets();
@@ -288,6 +398,18 @@ const ShareWorkspacePaymentRequest = () => {
         };
       });
       setSharePaymentRequestForm(updatedForm);
+
+      // Update selectedCategoryIDs based on the fetched payment details
+      const updatedCategoryIDs = updatedForm.map(
+        (formItem) => formItem.category_id
+      );
+      setSelectedCategoryIDs(updatedCategoryIDs);
+
+      // Update selectedCategories based on the fetched payment details
+      const updatedSelectedCategories = updatedCategoryIDs.map((id: any) =>
+        workspaceCategoryProperties?.find((category) => category.ID === id)
+      );
+      setSelectedCategories(updatedSelectedCategories);
     }
   }, [paymentDetails]);
 
@@ -566,150 +688,155 @@ const ShareWorkspacePaymentRequest = () => {
                           </TableCell>
                         </TableRow>
                         {/* category property */}
-                        {selectedCategory?.properties?.map((property, i) => (
-                          <React.Fragment key={i}>
-                            {property.type === "single-select" && (
-                              <TableRow
-                                sx={{
-                                  td: {
-                                    border: "1px solid var(--border-table)",
-                                    padding: 0,
-                                    paddingInline: "16px",
-                                  },
-                                }}
-                              >
-                                <TableCell sx={{ height: 1, width: 200 }}>
-                                  <NoteInfo>
-                                    <Image src={selectIcon} alt="" />{" "}
-                                    {property.name}
-                                  </NoteInfo>
-                                </TableCell>
-                                {/* add multi select first */}
-                                <TableCell>
-                                  <ReactSelect
-                                    value={selectedValues}
-                                    isMulti={false}
-                                    onChange={(
-                                      selectedOption: ReactSelectOption
-                                    ) =>
-                                      handleFormChange(
-                                        index,
-                                        "categoryProperties",
-                                        selectedOption,
-                                        property.name,
-                                        property.type
-                                      )
-                                    }
-                                    // onChange={(selectedOption: any) =>
-                                    //   handleChange(selectedOption)
-                                    // }
-                                    options={property.values
-                                      .split(";")
-                                      .map((v) => ({
-                                        value: v,
-                                        label: v,
-                                      }))}
-                                    // defaultValues={[options[1]]}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            )}
-                            {property.type === "multi-select" && (
-                              <TableRow
-                                sx={{
-                                  td: {
-                                    border: "1px solid var(--border-table)",
-                                    padding: 0,
-                                    paddingInline: "16px",
-                                  },
-                                }}
-                              >
-                                <TableCell sx={{ height: 1, width: 200 }}>
-                                  <NoteInfo>
-                                    <Image src={multiSelect} alt="" />{" "}
-                                    {property.name}
-                                  </NoteInfo>
-                                </TableCell>
-                                {/* add multi select */}
-                                <TableCell>
-                                  <ReactSelect
-                                    value={selectedValues}
-                                    // onChange={handleSelectChange}
-                                    onChange={(
-                                      selectedOption: ReactSelectOption
-                                    ) =>
-                                      handleFormChange(
-                                        index,
-                                        "categoryProperties",
-                                        selectedOption,
-                                        property.name,
-                                        property.type
-                                      )
-                                    }
-                                    options={property.values
-                                      .split(";")
-                                      .map((v) => ({
-                                        value: v,
-                                        label: v,
-                                      }))}
-                                    // defaultValues={[options[1], options[2]]}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            )}
-                            {property.type === "Text" && (
-                              <TableRow
-                                sx={{
-                                  td: {
-                                    border: "1px solid var(--border-table)",
-                                    padding: 0,
-                                    paddingInline: "16px",
-                                  },
-                                }}
-                              >
-                                <TableCell sx={{ height: 1, width: 200 }}>
-                                  <NoteInfo>
-                                    <Image src={optionsIcon} alt="" />{" "}
-                                    {property.name}
-                                  </NoteInfo>
-                                </TableCell>
-                                {/* add multi select */}
-                                <TableCell>
-                                  <TextField
+                        {/* {paymentDetails && paymentDetails.length === 0 && ( */}
+                        <>
+                          {selectedCategories[index]?.properties?.map(
+                            (property: any, i: number) => (
+                              <React.Fragment key={i}>
+                                {property.type === "single-select" && (
+                                  <TableRow
                                     sx={{
-                                      "& fieldset": { border: "none" },
+                                      td: {
+                                        border: "1px solid var(--border-table)",
+                                        padding: 0,
+                                        paddingInline: "16px",
+                                      },
                                     }}
-                                    size="small"
-                                    fullWidth
-                                    // value="test"
-                                    // id="fullWidth"
-                                    placeholder="Enter content"
-                                    // onChange={(e) =>
-                                    //   handlePropertyText(
-                                    //     e,
-                                    //     property.name,
-                                    //     property.type
-                                    //   )
-                                    // }
-                                    onChange={(e) =>
-                                      handleFormChange(
-                                        index,
-                                        "categoryProperties",
-                                        e.target.value,
-                                        property.name,
-                                        property.type
-                                      )
-                                    }
-                                    InputProps={{
-                                      style: { padding: 0 },
+                                  >
+                                    <TableCell sx={{ height: 1, width: 200 }}>
+                                      <NoteInfo>
+                                        <Image src={selectIcon} alt="" />{" "}
+                                        {property.name}
+                                      </NoteInfo>
+                                    </TableCell>
+                                    {/* add multi select first */}
+                                    <TableCell>
+                                      <ReactSelect
+                                        value={selectedValues}
+                                        isMulti={false}
+                                        onChange={(
+                                          selectedOption: ReactSelectOption
+                                        ) =>
+                                          handleFormChange(
+                                            index,
+                                            "categoryProperties",
+                                            selectedOption,
+                                            property.name,
+                                            property.type
+                                          )
+                                        }
+                                        // onChange={(selectedOption: any) =>
+                                        //   handleChange(selectedOption)
+                                        // }
+                                        options={property.values
+                                          .split(";")
+                                          .map((v: any) => ({
+                                            value: v,
+                                            label: v,
+                                          }))}
+                                        // defaultValues={[options[1]]}
+                                      />
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                                {property.type === "multi-select" && (
+                                  <TableRow
+                                    sx={{
+                                      td: {
+                                        border: "1px solid var(--border-table)",
+                                        padding: 0,
+                                        paddingInline: "16px",
+                                      },
                                     }}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            )}
-                          </React.Fragment>
-                        ))}
-                        {/*  */}
+                                  >
+                                    <TableCell sx={{ height: 1, width: 200 }}>
+                                      <NoteInfo>
+                                        <Image src={multiSelect} alt="" />{" "}
+                                        {property.name}
+                                      </NoteInfo>
+                                    </TableCell>
+                                    {/* add multi select */}
+                                    <TableCell>
+                                      <ReactSelect
+                                        value={selectedValues}
+                                        // onChange={handleSelectChange}
+                                        onChange={(
+                                          selectedOption: ReactSelectOption
+                                        ) =>
+                                          handleFormChange(
+                                            index,
+                                            "categoryProperties",
+                                            selectedOption,
+                                            property.name,
+                                            property.type
+                                          )
+                                        }
+                                        options={property.values
+                                          .split(";")
+                                          .map((v: any) => ({
+                                            value: v,
+                                            label: v,
+                                          }))}
+                                        // defaultValues={[options[1], options[2]]}
+                                      />
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                                {property.type === "Text" && (
+                                  <TableRow
+                                    sx={{
+                                      td: {
+                                        border: "1px solid var(--border-table)",
+                                        padding: 0,
+                                        paddingInline: "16px",
+                                      },
+                                    }}
+                                  >
+                                    <TableCell sx={{ height: 1, width: 200 }}>
+                                      <NoteInfo>
+                                        <Image src={optionsIcon} alt="" />{" "}
+                                        {property.name}
+                                      </NoteInfo>
+                                    </TableCell>
+                                    {/* add multi select */}
+                                    <TableCell>
+                                      <TextField
+                                        sx={{
+                                          "& fieldset": { border: "none" },
+                                        }}
+                                        size="small"
+                                        fullWidth
+                                        // value="test"
+                                        // id="fullWidth"
+                                        placeholder="Enter content"
+                                        // onChange={(e) =>
+                                        //   handlePropertyText(
+                                        //     e,
+                                        //     property.name,
+                                        //     property.type
+                                        //   )
+                                        // }
+                                        onChange={(e) =>
+                                          handleFormChange(
+                                            index,
+                                            "categoryProperties",
+                                            e.target.value,
+                                            property.name,
+                                            property.type
+                                          )
+                                        }
+                                        InputProps={{
+                                          style: { padding: 0 },
+                                        }}
+                                      />
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                              </React.Fragment>
+                            )
+                          )}
+                        </>
+                        {/* )} */}
                       </TableBody>
                     </Table>
                   </TableContainer>
