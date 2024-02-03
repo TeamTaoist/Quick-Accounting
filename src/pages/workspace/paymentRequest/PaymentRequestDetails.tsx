@@ -276,6 +276,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       placeholder="Enter wallet address"
                       InputProps={{
                         style: { padding: 0 },
+                        readOnly: true,
                       }}
                     />
                   </TableCell>
@@ -300,6 +301,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       placeholder="Enter wallet address"
                       InputProps={{
                         style: { padding: 0 },
+                        readOnly: true,
                       }}
                     />
                     {/* {paymentRequestDetails.amount} */}
@@ -330,6 +332,9 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       sx={{
                         minWidth: "100%",
                         "& fieldset": { border: "none" },
+                      }}
+                      inputProps={{
+                        readOnly: true,
                       }}
                     >
                       <MenuItem
