@@ -72,7 +72,7 @@ const QueueTransactionItem = ({
       approveTransaction.confirmationsSubmitted) >= threshold;
   const canExecuteReject =
     (filterRejectSigners.length || rejectTransaction?.confirmationsSubmitted) >=
-    owners.length - threshold + 1;
+    threshold;
 
   const handleApprove = async () => {
     const r = await confirmTx(approveTransaction.safeTxHash);
