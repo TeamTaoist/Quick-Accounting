@@ -12,12 +12,14 @@ import {
 import data from "../../data/tableData";
 import { useNavigate } from "react-router-dom";
 import {
+  HideBtn,
   Logo,
   SafeSection,
 } from "../../pages/workspace/bookkeeping/Bookkeeping";
 import { useEffect, useState } from "react";
 import rightArrow from "../../assets/workspace/right-arrow.svg";
 import hide from "../../assets/workspace/hide.svg";
+import back from "../../assets/workspace/back.svg";
 import styled from "@emotion/styled";
 import { useBookkeeping } from "../../store/useBookkeeping";
 import { CategoryTitle } from "../../pages/workspace/category/category.style";
@@ -33,12 +35,14 @@ interface RejectTableProps {
     paymentRequestId: number,
     paymentId: number
   ) => void;
+  handleBackBtn: () => void;
 }
 const BookkeepingRejectTable = ({
   workspaceId,
   paymentRequest,
   filterData,
   handleBookkeepingDetails,
+  handleBackBtn,
 }: RejectTableProps) => {
   const navigate = useNavigate();
 
@@ -91,6 +95,10 @@ const BookkeepingRejectTable = ({
             Transactions that add tokens to or remove tokens from your Safe will
             show up here.
           </p>
+          <HideBtn onClick={handleBackBtn}>
+            <img src={back} alt="" style={{ width: "20px" }} />
+            <span>Back</span>
+          </HideBtn>
         </Message>
       ) : (
         <>

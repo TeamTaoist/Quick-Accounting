@@ -229,24 +229,25 @@ const Bookkeeping = () => {
     getBookkeepingList(workspaceId, true).then((res) => {
       if (res) {
         setTotalItem(res);
-        setPaymentRequest(!paymentRequest);
         setSelected([]);
       }
     });
+    setPaymentRequest(false);
   };
   const handleBackBtn = () => {
     getBookkeepingList(workspaceId, false).then((res) => {
       if (res) {
         setTotalItem(res);
-        setPaymentRequest(!paymentRequest);
         setSelected([]);
       }
     });
+    setPaymentRequest(true);
   };
   // unique category name
   const uniqueCategoryNames = Array.from(
     new Set(bookkeepingList.map((payment) => payment.category_name))
   );
+  console.log("payment request", paymentRequest);
 
   return (
     <PaymentRequestContainer>
@@ -256,7 +257,7 @@ const Bookkeeping = () => {
         component={BookkeepingTransferDetails}
         // additionalProps={{}}
       />
-      {bookkeepingList.length === 0 && paymentRequest ? (
+      {bookkeepingList.length === 0 && paymentRequest && (
         <BookkeepingTitle>
           <h3>You don't have any transactions.</h3>
           <p style={{ width: "509px", textAlign: "center" }}>
@@ -268,7 +269,8 @@ const Bookkeeping = () => {
             <span>View hidden</span>
           </HideBtn>
         </BookkeepingTitle>
-      ) : (
+      )}
+      {bookkeepingList.length > 0 && (
         <Header>
           <TextField
             id="search"
@@ -327,7 +329,7 @@ const Bookkeeping = () => {
         </Header>
       )}
 
-      {paymentRequest ? (
+      {bookkeepingList.length && paymentRequest && (
         <PaymentRequestBody>
           <ActionBtn>
             <Btn onClick={() => inputFileRef.current!.click()}>
@@ -462,11 +464,13 @@ const Bookkeeping = () => {
             </Table>
           </TableContainer>
         </PaymentRequestBody>
-      ) : (
+      )}
+      {!paymentRequest && (
         <RejectSection>
           <BookkeepingRejectTable
             workspaceId={workspaceId}
             paymentRequest={paymentRequest}
+            handleBackBtn={handleBackBtn}
             filterData={filterData}
             handleBookkeepingDetails={handleBookkeepingDetails}
           />
