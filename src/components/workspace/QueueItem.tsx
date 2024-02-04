@@ -111,7 +111,12 @@ const QueueTransactionItem = ({
     }
   };
   const handleExecuteReject = async () => {
-    const r = await executeTx(workspace.ID, rejectTransaction.safeTxHash, payments, true);
+    const r = await executeTx(
+      workspace.ID,
+      rejectTransaction.safeTxHash,
+      payments,
+      true
+    );
     if (r) {
       afterExecute();
     }
