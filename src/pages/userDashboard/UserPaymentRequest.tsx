@@ -88,7 +88,7 @@ const UserPaymentRequest = () => {
         id="search"
         type="search"
         autoComplete="off"
-        placeholder="Search Token"
+        placeholder="Search workspace name"
         value={searchTerm}
         onChange={handleChange}
         sx={{ width: 350 }}

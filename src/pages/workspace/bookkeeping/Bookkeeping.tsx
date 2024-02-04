@@ -276,7 +276,7 @@ const Bookkeeping = () => {
             id="search"
             type="search"
             autoComplete="off"
-            placeholder={t("paymentRequest.SearchToken")}
+            placeholder={t("paymentRequest.Search")}
             value={searchTerm}
             onChange={handleChange}
             sx={{ width: 350 }}

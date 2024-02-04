@@ -43,6 +43,7 @@
   },
   "paymentRequest": {
     "SearchToken": "Search Token",
+    "Search": "Search",
     "Filter": "Filter by Category",
     "ViewRejection": "View rejection",
     "Download": "Download",

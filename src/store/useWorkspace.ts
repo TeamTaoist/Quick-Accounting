@@ -138,7 +138,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
     getUserWorkspace: async () => {
       try {
         setLoading(true);
-        const { data } = await axiosClient.get("/workspaces/my_workspace");
+        const { data } = await axiosClient.get("/workspaces/my_workspaces");
         set({ userWorkspaces: data });
         if (data.msg === "success" && data.code === 200) {
           return data;

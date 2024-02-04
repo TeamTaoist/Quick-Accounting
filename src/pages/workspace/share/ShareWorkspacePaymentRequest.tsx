@@ -94,69 +94,6 @@ const ShareWorkspacePaymentRequest = () => {
   };
   console.log(sharePaymentRequestForm);
 
-  // const handleFormChange = (
-  //   index: number,
-  //   field: string,
-  //   value: any,
-  //   propertyName?: string,
-  //   propertyType?: string,
-  //   categoryId?: number
-  // ) => {
-  //   const updatedRequests = [...sharePaymentRequestForm];
-  //   if (field === "currency_address") {
-  //     const token = assetsList.find((item) => item.tokenInfo.address === value);
-  //     if (token) {
-  //       updatedRequests[index].currency_name = token.tokenInfo.symbol;
-  //       updatedRequests[index].decimals = token.tokenInfo.decimals;
-  //     }
-  //     updatedRequests[index].currency_contract_address = value;
-  //   }
-
-  //   if (field === "categoryProperties") {
-  //     const existingCategoryPropertyIndex = updatedRequests[
-  //       index
-  //     ].category_properties.findIndex(
-  //       (property: any) => property.name === propertyName
-  //     );
-  //     if (existingCategoryPropertyIndex !== -1) {
-  //       const values =
-  //         propertyType === "single-select"
-  //           ? value.value
-  //           : propertyType === "Text"
-  //           ? value
-  //           : value.map((v: ReactSelectOption) => v.value).join(";");
-
-  //       updatedRequests[index].category_properties[
-  //         existingCategoryPropertyIndex
-  //       ].values = values;
-  //     } else {
-  //       const newCategoryProperty =
-  //         propertyType === "Text"
-  //           ? {
-  //               name: propertyName,
-  //               type: propertyType,
-  //               values: value,
-  //             }
-  //           : {
-  //               name: propertyName,
-  //               type: propertyType,
-  //               values:
-  //                 propertyType === "single-select"
-  //                   ? value.value
-  //                   : value.map((v: ReactSelectOption) => v.value).join(";"),
-  //             };
-
-  //       updatedRequests[index].category_properties.push(newCategoryProperty);
-  //     }
-  //   } else {
-  //     (updatedRequests[index] as any)[field] = value;
-  //   }
-  //   setSharePaymentRequestForm(updatedRequests);
-  // };
-
-  // handle delete request form
-
-  // new
   const handleFormChange = (
     index: number,
     field: string,
@@ -240,7 +177,7 @@ const ShareWorkspacePaymentRequest = () => {
   }, [shareDataLoading]);
   console.log("details", paymentDetails);
   // new
-  const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<any>([]);
+  const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<any>([]);
 
   console.log("selected category", selectedCategoryIDs);
@@ -373,7 +310,7 @@ const ShareWorkspacePaymentRequest = () => {
       );
       setSelectedCategoryIDs(updatedCategoryIDs);
 
-      const updatedSelectedCategories = updatedCategoryIDs.map((id: any) =>
+      const updatedSelectedCategories = updatedCategoryIDs.map((id: number) =>
         workspaceCategoryProperties?.find((category) => category.ID === id)
       );
       setSelectedCategories(updatedSelectedCategories);
@@ -669,7 +606,7 @@ const ShareWorkspacePaymentRequest = () => {
                         {/* {paymentDetails && paymentDetails.length === 0 && ( */}
                         <>
                           {selectedCategories[index]?.properties?.map(
-                            (property: any, i: number) => (
+                            (property: ICategoryProperties, i: number) => (
                               <React.Fragment key={i}>
                                 {property.type === "single-select" && (
                                   <TableRow
@@ -726,12 +663,6 @@ const ShareWorkspacePaymentRequest = () => {
                                               }))
                                           )
                                           .flat()}
-                                        // defaultValues={[
-                                        //   {
-                                        //     value: property.values,
-                                        //     label: property.values,
-                                        //   },
-                                        // ]}
                                       />
                                     </TableCell>
                                   </TableRow>
@@ -775,12 +706,6 @@ const ShareWorkspacePaymentRequest = () => {
                                             value: v,
                                             label: v,
                                           }))}
-                                        // defaultValues={property.values
-                                        //   .split(";")
-                                        //   .map((v: string) => ({
-                                        //     value: v,
-                                        //     label: v,
-                                        //   }))}
                                         defaultValues={sharePaymentRequestForm[
                                           index
                                         ].category_properties
