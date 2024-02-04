@@ -111,7 +111,7 @@ const LoginPopup = () => {
         }
       } catch (error) {}
     };
-    if (address && isConnected) {
+    if (token && address && isConnected) {
       handleVerify();
     }
   }, []);

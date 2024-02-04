@@ -8,9 +8,13 @@ import { useEffect } from "react";
 import { useLoading } from "../../../store/useLoading";
 import Loading from "../../../utils/Loading";
 import styled from "@emotion/styled";
+import { useAccount } from "wagmi";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
+  const { address } = useAccount();
+  const { user } = useAuthStore();
   const { getUserWorkspace, userWorkspaces, getWorkspaceDetails, workspace } =
     useWorkspace();
   const { isLoading } = useLoading();
@@ -23,6 +27,12 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const handleFetchWorkspaceDetails = (workspaceId: number) => {
     getWorkspaceDetails(workspaceId, navigate);
   };
+
+  useEffect(() => {
+    if (address && user?.wallet && address !== user.wallet) {
+      navigate("/login");
+    }
+  }, [address, user]);
 
   return (
     <div className="sidebar-container">
@@ -70,7 +80,6 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default Sidebar;
-
 
 const WorkspaceList = styled.div`
   display: flex;
