@@ -129,7 +129,6 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           navigate(`/workspace/${data.data.ID}/assets`);
         }
       } catch (error: any) {
-        console.log(error);
         toast.error(error?.response?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
@@ -139,13 +138,13 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
     getUserWorkspace: async () => {
       try {
         setLoading(true);
-        const { data } = await axiosClient.get("/workspaces/my_workspaces");
+        const { data } = await axiosClient.get("/workspaces/my_workspace");
         set({ userWorkspaces: data });
         if (data.msg === "success" && data.code === 200) {
           return data;
         }
       } catch (error: any) {
-        console.log(error);
+        toast.error(error?.response?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
         // navigate("/assets");
@@ -162,7 +161,6 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           navigate(`/workspace/${data.data.ID}/assets`);
         }
       } catch (error: any) {
-        console.log(error);
         toast.error(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
@@ -175,7 +173,6 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         const { data } = await axiosClient.put(`/workspace/${workspaceId}`, {
           name: workspaceName,
         });
-        console.log(data.msg);
         if (data.msg === "success" && data.code === 200) {
           toast.success("Workspace name updated");
           return true;

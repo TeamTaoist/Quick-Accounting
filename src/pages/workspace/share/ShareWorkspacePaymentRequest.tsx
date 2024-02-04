@@ -229,6 +229,7 @@ const ShareWorkspacePaymentRequest = () => {
     getWorkspaceCategoryProperties(Number(workspaceId));
   }, [getWorkspaceCategoryProperties, workspaceId]);
 
+  const [shareDataLoading, setShareDataLoading] = useState<boolean>(false);
   // get payment request details
   useEffect(() => {
     getPaymentRequestShareCodeData(shareId).then((res) => {
@@ -236,7 +237,7 @@ const ShareWorkspacePaymentRequest = () => {
         setPaymentDetails(res);
       }
     });
-  }, []);
+  }, [shareDataLoading]);
   console.log("details", paymentDetails);
   // new
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<any>([]);
@@ -339,7 +340,7 @@ const ShareWorkspacePaymentRequest = () => {
     saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
       (res) => {
         if (res) {
-          setOpenModal(true);
+          setShareDataLoading(!shareDataLoading);
         }
       }
     );
@@ -379,6 +380,8 @@ const ShareWorkspacePaymentRequest = () => {
     }
   }, [paymentDetails]);
   console.log("property", selectedCategories);
+  const isEditable =
+    paymentDetails[0]?.status !== 0 && paymentDetails.length !== 0;
 
   return (
     <>
@@ -480,6 +483,7 @@ const ShareWorkspacePaymentRequest = () => {
                             }
                             InputProps={{
                               style: { padding: 0 },
+                              readOnly: isEditable,
                             }}
                           />
                         </TableCell>
@@ -507,6 +511,7 @@ const ShareWorkspacePaymentRequest = () => {
                             }
                             InputProps={{
                               style: { padding: 0 },
+                              readOnly: isEditable,
                             }}
                           />
                         </TableCell>
@@ -544,6 +549,9 @@ const ShareWorkspacePaymentRequest = () => {
                             sx={{
                               minWidth: "100%",
                               "& fieldset": { border: "none" },
+                            }}
+                            inputProps={{
+                              readOnly: isEditable,
                             }}
                           >
                             {assetsList.map((asset, i: number) => (
@@ -621,6 +629,9 @@ const ShareWorkspacePaymentRequest = () => {
                                   minWidth: "100%",
                                   "& fieldset": { border: "none" },
                                 }}
+                                inputProps={{
+                                  readOnly: isEditable,
+                                }}
                               >
                                 <MenuItem disabled value="">
                                   {sharePaymentRequestForm[index].category_name}
@@ -681,6 +692,7 @@ const ShareWorkspacePaymentRequest = () => {
                                       <ReactSelect
                                         value={selectedValues}
                                         isMulti={false}
+                                        isDisabled={isEditable}
                                         onChange={(
                                           selectedOption: ReactSelectOption
                                         ) =>
@@ -744,6 +756,7 @@ const ShareWorkspacePaymentRequest = () => {
                                     <TableCell>
                                       <ReactSelect
                                         value={selectedValues}
+                                        isDisabled={isEditable}
                                         // onChange={handleSelectChange}
                                         onChange={(
                                           selectedOption: ReactSelectOption
@@ -840,6 +853,7 @@ const ShareWorkspacePaymentRequest = () => {
                                         }
                                         InputProps={{
                                           style: { padding: 0 },
+                                          readOnly: isEditable,
                                         }}
                                       />
                                     </TableCell>
@@ -860,14 +874,21 @@ const ShareWorkspacePaymentRequest = () => {
                 {/* <ReactSelect /> */}
               </RequestDetails>
             ))}
-
-            <Btns>
-              <AddBtn onClick={handleAddRequest}>+ Add</AddBtn>
-              <SubmitBtns>
-                <Save onClick={handleSavePaymentRequest}>Save</Save>
-                <Submit onClick={handleSubmitPaymentRequest}>Submit</Submit>
-              </SubmitBtns>
-            </Btns>
+            {paymentDetails[0]?.status !== 0 && paymentDetails.length ? (
+              <Btns>
+                <ViewProgressBtn onClick={() => navigate("/user")}>
+                  View the progress of your payment request
+                </ViewProgressBtn>
+              </Btns>
+            ) : (
+              <Btns>
+                <AddBtn onClick={handleAddRequest}>+ Add</AddBtn>
+                <SubmitBtns>
+                  <Save onClick={handleSavePaymentRequest}>Save</Save>
+                  <Submit onClick={handleSubmitPaymentRequest}>Submit</Submit>
+                </SubmitBtns>
+              </Btns>
+            )}
             {/* </>
             )} */}
           </SharePaymentForm>
@@ -970,6 +991,17 @@ const AddBtn = styled.button`
   border-radius: 7px;
   cursor: pointer;
   margin-bottom: 30px;
+`;
+const ViewProgressBtn = styled.button`
+  background: var(--bg-primary);
+  font-size: 16px;
+  width: 100%;
+  padding: 8px 0;
+  border: 1px solid var(--border-table);
+  border-radius: 7px;
+  cursor: pointer;
+  margin: 20px 0;
+  padding-inline: 30px;
 `;
 const SubmitBtns = styled.div`
   width: 100%;
