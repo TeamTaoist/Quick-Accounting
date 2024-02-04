@@ -28,6 +28,7 @@ import usePaymentsStore from "../../store/usePayments";
 import { useWorkspace } from "../../store/useWorkspace";
 import BigNumber from "bignumber.js";
 import { getShortDisplay } from "../../utils/number";
+import { toast } from "react-toastify";
 
 // label
 const QueueLabelItem = ({ data }: { data: IQueueGroupItemProps }) => {
@@ -48,12 +49,12 @@ const QueueTransactionItem = ({
   const rejectTransaction = transactions[1];
   const { workspace, assetsList } = useWorkspace();
   const {
-    owners,
     threshold,
     confirmTx,
     executeTx,
     createRejectTx,
     getConfirmedOwners,
+    currentNonce,
   } = useSafeStore();
   const { paymentRquestMap, setCurrentPaymentRequestDetail } =
     usePaymentsStore();
@@ -81,6 +82,10 @@ const QueueTransactionItem = ({
     }
   };
   const handleExecuteApprove = async () => {
+    if (currentNonce && approveTransaction.nonce > currentNonce) {
+      toast.error("please execute the previous transaction first");
+      return;
+    }
     const r = await executeTx(
       workspace.ID,
       approveTransaction.safeTxHash,
@@ -111,6 +116,10 @@ const QueueTransactionItem = ({
     }
   };
   const handleExecuteReject = async () => {
+    if (currentNonce && rejectTransaction.nonce > currentNonce) {
+      toast.error("please execute the previous transaction first");
+      return;
+    }
     const r = await executeTx(
       workspace.ID,
       rejectTransaction.safeTxHash,

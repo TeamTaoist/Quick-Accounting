@@ -24,6 +24,7 @@ interface ISafeStore {
   isReady: boolean;
   owners: string[];
   threshold: number;
+  currentNonce?: number;
   initSafeSDK: (chainId: number, signer: any, safeAddress: string) => void;
   signAndCreateTx: (
     address: string,
@@ -103,11 +104,15 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
           nonce: -1,
           transactions: [],
         };
+        let currentNonce: number | undefined = undefined;
         result.results.forEach((item: TransactionListItem) => {
           if (item.type === TransactionListItemType.LABEL) {
             array.push(item);
           } else if (item.type === TransactionListItemType.CONFLICT_HEADER) {
             currentConflict.nonce = item.nonce;
+            if (!currentNonce) {
+              currentNonce = item.nonce;
+            }
           } else if (item.type === TransactionListItemType.TRANSACTION) {
             if (
               item.transaction.executionInfo?.type === "MULTISIG" &&
@@ -116,6 +121,9 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
                 TransactionInfoType.TRANSFER,
               ].includes(item.transaction.txInfo.type)
             ) {
+              if (!currentNonce) {
+                currentNonce = item.transaction.executionInfo?.nonce;
+              }
               const tx = {
                 nonce: item.transaction.executionInfo?.nonce,
                 confirmationsRequired:
@@ -169,8 +177,9 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
             return { type: item.type };
           }
         });
+        set({ currentNonce });
         return array;
-      } catch (error:any) {
+      } catch (error: any) {
         console.error(error);
         toast.error(error);
       } finally {
