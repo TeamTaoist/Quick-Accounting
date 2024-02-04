@@ -50,7 +50,7 @@ interface UseWorkspace {
   updateWorkspaceName: (
     workspaceId: string,
     workspaceName: string
-  ) => Promise<void>;
+  ) => Promise<boolean | undefined>;
   getAssets: () => Promise<void>;
   totalAssetsValue: string;
   assetsList: {
@@ -178,6 +178,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         console.log(data.msg);
         if (data.msg === "success" && data.code === 200) {
           toast.success("Workspace name updated");
+          return true;
         }
       } catch (error: any) {
         toast.error(error?.data?.msg || error?.status || error);

@@ -10,6 +10,7 @@ import {
   SafeInfo,
 } from "@safe-global/safe-gateway-typescript-sdk";
 import { useSafeStore } from "../../../store/useSafeStore";
+import { toast } from "react-toastify";
 
 const Settings = () => {
   const { t } = useTranslation();
@@ -29,13 +30,20 @@ const Settings = () => {
   useEffect(() => {
     getWorkspaceDetails(id || "");
     getUserWorkspace();
-  }, [id, settingLoading]);
+  }, [id, settingLoading, getUserWorkspace, getWorkspaceDetails]);
   const handleUpdateWorkspaceName = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (id) {
-      await updateWorkspaceName(id, workspaceName);
-      isSettingLoading(!settingLoading);
+    if (!workspaceName) {
+      toast.error("Workspace name is empty");
+    } else {
+      if (id) {
+        updateWorkspaceName(id, workspaceName).then((res) => {
+          if (res) {
+            isSettingLoading(!settingLoading);
+          }
+        });
+      }
     }
   };
   console.log(workspace);
