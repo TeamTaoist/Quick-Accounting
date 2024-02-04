@@ -44,10 +44,10 @@ const Queue = () => {
   }, [isReady, workspace?.vault_wallet]);
 
   useEffect(() => {
-    if (!assetsList.length) {
+    if (!assetsList.length && workspace.ID) {
       getAssets();
     }
-  }, [assetsList]);
+  }, [assetsList, workspace]);
 
   useEffect(() => {
     const ids: string[] = [];
