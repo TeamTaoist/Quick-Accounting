@@ -90,9 +90,6 @@ const WorkSpaceForm = () => {
               sx={{ minWidth: "100%" }}
               value={workspaceName}
               onChange={(e) => setWorkspaceName(e.target.value)}
-              inputProps={{
-                maxLength: 10,
-              }}
             />
             <CreateSafe>
               <p>{t("workspaceForm.AddASafe")}</p>
