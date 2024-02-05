@@ -78,7 +78,7 @@ const Queue = () => {
           </p>
           <HideBtn onClick={() => setPaymentRequest(!paymentRequest)}>
             <img src={view} alt="" style={{ width: "20px" }} />
-            <span>View hidden</span>
+            <span>View rejection</span>
           </HideBtn>
         </BookkeepingTitle>
       ) : (
