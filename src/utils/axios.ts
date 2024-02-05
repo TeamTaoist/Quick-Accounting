@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: `https://quick-accounting-be.vercel.app`,
+  baseURL: `https://qa-api.taoist.dev`,
 });
 
 axiosClient.interceptors.request.use((config) => {
