@@ -31,9 +31,11 @@ const Settings = () => {
     getWorkspaceDetails(id || "");
     getUserWorkspace();
   }, [id, settingLoading, getUserWorkspace, getWorkspaceDetails]);
+
   const handleUpdateWorkspaceName = async (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.FormEvent<HTMLFormElement> | React.ChangeEvent<HTMLInputElement>
   ) => {
+    e.preventDefault();
     if (!workspaceName) {
       toast.error("Workspace name is empty");
     } else {
@@ -50,7 +52,7 @@ const Settings = () => {
 
   return (
     <SettingsContainer>
-      <WorkspaceForm>
+      <WorkspaceForm onSubmit={handleUpdateWorkspaceName}>
         <InputSection>
           <label htmlFor="">{t("workspaceForm.WorkspaceName")}</label>
           <input
