@@ -329,7 +329,7 @@ const Bookkeeping = () => {
         </Header>
       )}
 
-      {bookkeepingList.length && paymentRequest && (
+      {bookkeepingList.length > 0 && paymentRequest && (
         <PaymentRequestBody>
           <ActionBtn>
             <Btn onClick={() => inputFileRef.current!.click()}>
@@ -353,7 +353,6 @@ const Bookkeeping = () => {
               <p>{t("paymentRequest.Hide")}</p>
             </Btn>
           </ActionBtn>
-          {/* table */}
           <TableContainer
             sx={{
               border: "1px solid var(--border)",
@@ -449,13 +448,6 @@ const Bookkeeping = () => {
                         >
                           view more
                         </Button>
-                        {/* modal */}
-                        {/* <CustomModal
-                                open={openModal}
-                                setOpen={setOpenModal}
-                                component={BookkeepingTransferDetails}
-                                // additionalProps={{}}
-                              /> */}
                       </TableCell>
                     </TableRow>
                   </React.Fragment>
