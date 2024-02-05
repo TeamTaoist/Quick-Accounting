@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   InputAdornment,
@@ -38,6 +38,17 @@ import WorkspaceItemDetailsLayout from "../layout/WorkspaceItemDetailsLayout";
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
 }
+declare interface paymentRequestBody {
+  id: number;
+  amount: string;
+  currency_name: string;
+  recipient: string;
+  decimals: number;
+  category_id: null | number;
+  category_name: string;
+  currency_contract_address?: string;
+  category_properties: CategoryProperties[];
+}
 
 const PaymentRequestGroupDetails = ({
   setOpen,
@@ -65,6 +76,67 @@ const PaymentRequestGroupDetails = ({
     setSelectedValues(selectedOptions);
   };
 
+  // update
+  const [sharePaymentRequestForm, setSharePaymentRequestForm] = useState<
+    paymentRequestBody[]
+  >([
+    {
+      id: 0,
+      amount: "",
+      currency_name: "",
+      recipient: "",
+      decimals: 18,
+      category_id: null,
+      category_name: "",
+      currency_contract_address: "",
+      category_properties: [],
+    },
+  ]);
+
+  console.log("form data", sharePaymentRequestForm);
+
+  useEffect(() => {
+    if (paymentRequestGroupDetails && paymentRequestGroupDetails.length > 0) {
+      const updatedForm = paymentRequestGroupDetails.map((paymentDetail) => {
+        return {
+          id: paymentDetail.ID,
+          amount: paymentDetail.amount,
+          currency_name: paymentDetail.currency_name,
+          recipient: paymentDetail.recipient,
+          decimals: paymentDetail.decimals,
+          category_id: paymentDetail.category_id,
+          category_name: paymentDetail.category_name,
+          currency_contract_address: paymentDetail.currency_contract_address,
+          category_properties: Array.isArray(paymentDetail.category_properties)
+            ? paymentDetail.category_properties
+            : JSON.parse(paymentDetail.category_properties),
+        };
+      });
+      setSharePaymentRequestForm(updatedForm);
+
+      // const updatedCategoryIDs = updatedForm.map(
+      //   (formItem) => formItem.category_id
+      // );
+      // setSelectedCategoryIDs(updatedCategoryIDs);
+
+      // const updatedSelectedCategories = updatedCategoryIDs.map((id: number) =>
+      //   workspaceCategoryProperties?.find((category) => category.ID === id)
+      // );
+      // setSelectedCategories(updatedSelectedCategories);
+    }
+  }, [paymentRequestGroupDetails]);
+  const handleUpdatePaymentRequest = (id: number) => {
+    const selectedPayment = sharePaymentRequestForm.find((f) => f.id === id);
+    console.log(id);
+    console.log("selectedPayment", selectedPayment);
+    const paymentRequestBody = {
+      category_id: selectedPayment?.id,
+      category_name: selectedPayment?.category_name,
+      category_Properties: selectedPayment?.category_properties,
+    };
+    console.log("paymentRequestBody", paymentRequestBody);
+  };
+
   return (
     <>
       <WorkspaceItemDetailsLayout
@@ -72,8 +144,8 @@ const PaymentRequestGroupDetails = ({
         setOpen={setOpen}
       >
         <RequestDetails>
-          {paymentRequestGroupDetails.map((payment) => (
-            <>
+          {sharePaymentRequestForm.map((payment: any) => (
+            <React.Fragment key={payment.ID}>
               <TableContainer
                 sx={{ paddingInline: "46px", paddingTop: "30px" }}
               >
@@ -233,6 +305,9 @@ const PaymentRequestGroupDetails = ({
                               label="Age"
                               size="small"
                               onChange={handleCategoryChange}
+                              onBlur={() =>
+                                handleUpdatePaymentRequest(payment.id)
+                              }
                               IconComponent={() => (
                                 <InputAdornment position="start">
                                   <img
@@ -254,91 +329,52 @@ const PaymentRequestGroupDetails = ({
                           </FormControl>
                         </TableCell>
                       </TableRow>
-                      {JSON.parse(payment?.category_properties).map(
-                        (properties: any) => (
-                          <>
-                            {properties.type === "single-select" && (
-                              <TableRow
-                                sx={{
-                                  td: {
-                                    border: "1px solid var(--border-table)",
-                                    padding: 1,
-                                    paddingInline: 1,
-                                  },
-                                }}
+                      {payment?.category_properties.map((properties: any) => (
+                        <>
+                          {properties.type === "single-select" && (
+                            <TableRow
+                              sx={{
+                                td: {
+                                  border: "1px solid var(--border-table)",
+                                  padding: 1,
+                                  paddingInline: 1,
+                                },
+                              }}
+                            >
+                              <TableCell sx={{ height: 1, width: 200 }}>
+                                <NoteInfo>
+                                  <Image src={selectIcon} alt="" />{" "}
+                                  {properties.name}
+                                </NoteInfo>
+                              </TableCell>
+                              <TableCell
+                                onBlur={() =>
+                                  handleUpdatePaymentRequest(payment.id)
+                                }
                               >
-                                <TableCell sx={{ height: 1, width: 200 }}>
-                                  <NoteInfo>
-                                    <Image src={selectIcon} alt="" />{" "}
-                                    {properties.name}
-                                  </NoteInfo>
-                                </TableCell>
-                                <TableCell>
-                                  <ReactSelect
-                                    // isDisabled={paymentRequestDetails.status === 1}
-                                    value={selectedValues}
-                                    onChange={handleSelectChange}
-                                    options={[
-                                      {
-                                        value: properties.values,
-                                        label: properties.values,
-                                      },
-                                    ]}
-                                    defaultValues={[
-                                      {
-                                        value: properties.values,
-                                        label: properties.values,
-                                      },
-                                    ]}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            )}
-                            {
-                              <>
-                                {properties.type === "multi-select" && (
-                                  <TableRow
-                                    sx={{
-                                      td: {
-                                        border: "1px solid var(--border-table)",
-                                        padding: 1,
-                                        paddingInline: 1,
-                                      },
-                                    }}
-                                  >
-                                    <TableCell sx={{ height: 1, width: 200 }}>
-                                      <NoteInfo>
-                                        <Image src={multiSelect} alt="" />{" "}
-                                        {properties.name}
-                                      </NoteInfo>
-                                    </TableCell>
-                                    <TableCell>
-                                      <ReactSelect
-                                        // isDisabled={
-                                        //   paymentRequestDetails.status === 1
-                                        // }
-                                        value={selectedValues}
-                                        onChange={handleSelectChange}
-                                        options={properties.values
-                                          .split(";")
-                                          .map((v: string) => ({
-                                            value: v,
-                                            label: v,
-                                          }))}
-                                        defaultValues={properties.values
-                                          .split(";")
-                                          .map((v: string) => ({
-                                            value: v,
-                                            label: v,
-                                          }))}
-                                      />
-                                    </TableCell>
-                                  </TableRow>
-                                )}
-                              </>
-                            }
+                                <ReactSelect
+                                  // isDisabled={paymentRequestDetails.status === 1}
+                                  value={selectedValues}
+                                  onChange={handleSelectChange}
+                                  options={[
+                                    {
+                                      value: properties.values,
+                                      label: properties.values,
+                                    },
+                                  ]}
+                                  defaultValues={[
+                                    {
+                                      value: properties.values,
+                                      label: properties.values,
+                                    },
+                                  ]}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          )}
+                          {
                             <>
-                              {properties.type === "Text" && (
+                              {properties.type === "multi-select" && (
                                 <TableRow
                                   sx={{
                                     td: {
@@ -350,27 +386,68 @@ const PaymentRequestGroupDetails = ({
                                 >
                                   <TableCell sx={{ height: 1, width: 200 }}>
                                     <NoteInfo>
-                                      <Image src={optionsIcon} alt="" />{" "}
+                                      <Image src={multiSelect} alt="" />{" "}
                                       {properties.name}
                                     </NoteInfo>
                                   </TableCell>
                                   <TableCell>
-                                    <p style={{ paddingLeft: "10px" }}>
-                                      {properties.values}
-                                    </p>
+                                    <ReactSelect
+                                      // isDisabled={
+                                      //   paymentRequestDetails.status === 1
+                                      // }
+                                      value={selectedValues}
+                                      onChange={handleSelectChange}
+                                      options={properties.values
+                                        .split(";")
+                                        .map((v: string) => ({
+                                          value: v,
+                                          label: v,
+                                        }))}
+                                      defaultValues={properties.values
+                                        .split(";")
+                                        .map((v: string) => ({
+                                          value: v,
+                                          label: v,
+                                        }))}
+                                    />
                                   </TableCell>
                                 </TableRow>
                               )}
                             </>
+                          }
+                          <>
+                            {properties.type === "Text" && (
+                              <TableRow
+                                sx={{
+                                  td: {
+                                    border: "1px solid var(--border-table)",
+                                    padding: 1,
+                                    paddingInline: 1,
+                                  },
+                                }}
+                              >
+                                <TableCell sx={{ height: 1, width: 200 }}>
+                                  <NoteInfo>
+                                    <Image src={optionsIcon} alt="" />{" "}
+                                    {properties.name}
+                                  </NoteInfo>
+                                </TableCell>
+                                <TableCell>
+                                  <p style={{ paddingLeft: "10px" }}>
+                                    {properties.values}
+                                  </p>
+                                </TableCell>
+                              </TableRow>
+                            )}
                           </>
-                        )
-                      )}
+                        </>
+                      ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
                 {/* ))} */}
               </NoteInformation>
-            </>
+            </React.Fragment>
           ))}
         </RequestDetails>
         {/* {paymentRequestDetails.status === 1 && (

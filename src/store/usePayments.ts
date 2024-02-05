@@ -52,7 +52,7 @@ interface IPaymentsStore {
   ) => Promise<IPageResponse<IPaymentRequest>>;
   updatePaymentRequestCategory: (
     workspaceId: string | undefined,
-    paymentRequestId: string,
+    paymentId: string,
     updatedPaymentBody: any
   ) => Promise<void>;
   exportPaymentList: (
@@ -275,13 +275,13 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
     // update payment request category & property
     updatePaymentRequestCategory: async (
       workspaceId,
-      paymentRequestId,
+      paymentId,
       updatedPaymentBody
     ) => {
       // setLoading(true);
       try {
         const { data } = await axiosClient.put(
-          `/payment_request/${workspaceId}/${paymentRequestId}`,
+          `/payment_request/${workspaceId}/${paymentId}`,
           updatedPaymentBody
         );
         if (data.msg === "success" && data.code === 200) {
