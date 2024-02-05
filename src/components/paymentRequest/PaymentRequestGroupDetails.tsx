@@ -62,7 +62,8 @@ const PaymentRequestGroupDetails = ({
 
   const [selectedValue, setSelectedValue] = useState("Option1");
 
-  const { paymentRequestGroupDetails } = usePaymentsStore();
+  const { paymentRequestGroupDetails, updatePaymentRequestCategory } =
+    usePaymentsStore();
   const { isLoading } = useLoading();
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -160,6 +161,9 @@ const PaymentRequestGroupDetails = ({
 
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<any>([]);
+  console.log("selectedCategoryIDs", selectedCategoryIDs);
+  console.log("selectedCategories", selectedCategories);
+
   const handleCategoryDropdown = (
     categoryId: number,
     categoryName: string,
@@ -212,16 +216,24 @@ const PaymentRequestGroupDetails = ({
       );
       setSelectedCategories(updatedSelectedCategories);
     }
-  }, [paymentRequestGroupDetails]);
-  const handleUpdatePaymentRequest = (id: number) => {
-    const selectedPayment = sharePaymentRequestForm.find((f) => f.id === id);
+  }, [workspaceCategoryProperties]);
+
+  const handleUpdatePaymentRequest = async (paymentId: number) => {
+    const selectedPayment = sharePaymentRequestForm.find(
+      (f) => f.id === paymentId
+    );
     console.log(id);
     console.log("selectedPayment", selectedPayment);
     const paymentRequestBody = {
-      category_id: selectedPayment?.id,
+      category_id: selectedPayment?.category_id,
       category_name: selectedPayment?.category_name,
       category_Properties: selectedPayment?.category_properties,
     };
+    await updatePaymentRequestCategory(
+      id,
+      paymentId.toString(),
+      paymentRequestBody
+    );
     console.log("paymentRequestBody", paymentRequestBody);
   };
 
@@ -288,6 +300,7 @@ const PaymentRequestGroupDetails = ({
                           placeholder="Enter wallet address"
                           InputProps={{
                             style: { padding: 0 },
+                            readOnly: true,
                           }}
                         />
                       </TableCell>
@@ -312,6 +325,7 @@ const PaymentRequestGroupDetails = ({
                           placeholder="Enter wallet address"
                           InputProps={{
                             style: { padding: 0 },
+                            readOnly: true,
                           }}
                         />
                       </TableCell>
@@ -341,6 +355,9 @@ const PaymentRequestGroupDetails = ({
                           sx={{
                             minWidth: "100%",
                             "& fieldset": { border: "none" },
+                          }}
+                          inputProps={{
+                            readOnly: true,
                           }}
                         >
                           <MenuItem
@@ -415,7 +432,6 @@ const PaymentRequestGroupDetails = ({
                               }}
                             >
                               <MenuItem disabled value="Category">
-                                {/* {payment?.category_name} */}
                                 {sharePaymentRequestForm[index].category_name}
                               </MenuItem>
                               {/* dynamic category */}
@@ -446,7 +462,6 @@ const PaymentRequestGroupDetails = ({
                           </FormControl>
                         </TableCell>
                       </TableRow>
-                      {/* {payment?.category_properties.map((properties: any) => ( */}
                       {selectedCategories[index]?.properties?.map(
                         (properties: ICategoryProperties, i: number) => (
                           <>
@@ -471,23 +486,6 @@ const PaymentRequestGroupDetails = ({
                                     handleUpdatePaymentRequest(payment.id)
                                   }
                                 >
-                                  {/* <ReactSelect
-                                    // isDisabled={paymentRequestDetails.status === 1}
-                                    value={selectedValues}
-                                    onChange={handleSelectChange}
-                                    options={[
-                                      {
-                                        value: properties.values,
-                                        label: properties.values,
-                                      },
-                                    ]}
-                                    defaultValues={[
-                                      {
-                                        value: properties.values,
-                                        label: properties.values,
-                                      },
-                                    ]}
-                                  /> */}
                                   <ReactSelect
                                     value={selectedValues}
                                     isMulti={false}
@@ -551,25 +549,6 @@ const PaymentRequestGroupDetails = ({
                                         handleUpdatePaymentRequest(payment.id)
                                       }
                                     >
-                                      {/* <ReactSelect
-                                        // isDisabled={
-                                        //   paymentRequestDetails.status === 1
-                                        // }
-                                        value={selectedValues}
-                                        onChange={handleSelectChange}
-                                        options={properties.values
-                                          .split(";")
-                                          .map((v: string) => ({
-                                            value: v,
-                                            label: v,
-                                          }))}
-                                        defaultValues={properties.values
-                                          .split(";")
-                                          .map((v: string) => ({
-                                            value: v,
-                                            label: v,
-                                          }))}
-                                      /> */}
                                       <ReactSelect
                                         value={selectedValues}
                                         // isDisabled={isEditable}
@@ -630,11 +609,6 @@ const PaymentRequestGroupDetails = ({
                                       {properties.name}
                                     </NoteInfo>
                                   </TableCell>
-                                  {/* <TableCell>
-                                    <p style={{ paddingLeft: "10px" }}>
-                                      {properties.values}
-                                    </p>
-                                  </TableCell> */}
                                   <TableCell
                                     onBlur={() =>
                                       handleUpdatePaymentRequest(payment.id)

@@ -195,6 +195,7 @@ const PaymentRequest = () => {
     newPaymentsVisible,
     pageNumbers,
     openModal,
+    openGroupPaymentModal,
   ]);
   // payment_request_id
 
