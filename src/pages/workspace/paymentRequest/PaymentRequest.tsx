@@ -136,7 +136,7 @@ const PaymentRequest = () => {
       }
     );
   };
-
+  // TODO: add separate modal for group details
   // group payment details
   const handleGroupPaymentDetails = (paymentRequestId: string) => {
     getPaymentRequestGroupDetails(Number(id), paymentRequestId).then((r) => {
