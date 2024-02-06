@@ -99,7 +99,7 @@ const LoginPopup = () => {
       try {
         const data = await getUserWorkspace();
         if (data?.code === 200) {
-          const firstWorkspaceId = data.data.rows[0].ID;
+          const firstWorkspaceId = data.data.rows[0]?.ID;
           if (firstWorkspaceId) {
             navigate(`/workspace/${firstWorkspaceId}/assets`);
           } else if (user.token) {
@@ -108,7 +108,7 @@ const LoginPopup = () => {
         }
       } catch (error) {}
     };
-    if (user.token && address && isConnected) {
+    if (user.token && address && isConnected && user.wallet === address) {
       handleVerify();
     }
   }, [user]);
