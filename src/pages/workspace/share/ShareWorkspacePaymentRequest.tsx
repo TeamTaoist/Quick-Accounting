@@ -338,7 +338,7 @@ const ShareWorkspacePaymentRequest = () => {
   console.log("property", selectedCategories);
   const isEditable =
     shareData?.payment_request_items?.[0]?.status !== 0 &&
-    shareData?.payment_request_items?.length !== 0;
+    shareData?.payment_request_items !== null;
 
   console.log("shareData", shareData);
 
@@ -378,7 +378,7 @@ const ShareWorkspacePaymentRequest = () => {
                       <TableRow>
                         <TableCell
                           sx={{
-                            width: 200,
+                            width: "30%",
                             borderRight: "1px solid var(--border-table)",
                             // paddingInline: 0,
                             fontSize: "18px",
@@ -389,7 +389,7 @@ const ShareWorkspacePaymentRequest = () => {
                         </TableCell>
                         <TableCell
                           sx={{
-                            width: 150,
+                            width: "23%",
                             borderRight: "1px solid var(--border-table)",
                             fontSize: "18px",
                             fontWeight: "500",
@@ -399,7 +399,7 @@ const ShareWorkspacePaymentRequest = () => {
                         </TableCell>
                         <TableCell
                           sx={{
-                            width: 200,
+                            width: "37%",
                             fontSize: "18px",
                             fontWeight: "500",
                           }}
@@ -421,6 +421,7 @@ const ShareWorkspacePaymentRequest = () => {
                           sx={{
                             borderRight: "1px solid var(--border-table)",
                             padding: 0,
+                            // paddingInline: "16px",
                           }}
                         >
                           <TextField
@@ -506,7 +507,7 @@ const ShareWorkspacePaymentRequest = () => {
                               </InputAdornment>
                             )}
                             sx={{
-                              minWidth: "100%",
+                              width: "100%",
                               "& fieldset": { border: "none" },
                             }}
                             inputProps={{
@@ -546,7 +547,7 @@ const ShareWorkspacePaymentRequest = () => {
                   <h3>Note Information</h3>
 
                   <TableContainer>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table sx={{ minWidth: 600 }} aria-label="simple table">
                       <TableBody>
                         <TableRow
                           sx={{
@@ -557,7 +558,7 @@ const ShareWorkspacePaymentRequest = () => {
                             },
                           }}
                         >
-                          <TableCell sx={{ height: 1, width: 200 }}>
+                          <TableCell sx={{ height: 1, width: "33.5%" }}>
                             <NoteInfo>
                               <Image src={categoryIcon} alt="" /> Category
                             </NoteInfo>
@@ -640,7 +641,7 @@ const ShareWorkspacePaymentRequest = () => {
                                       },
                                     }}
                                   >
-                                    <TableCell sx={{ height: 1, width: 200 }}>
+                                    <TableCell sx={{ height: 1, width: 252 }}>
                                       <NoteInfo>
                                         <Image src={selectIcon} alt="" />{" "}
                                         {property.name}
@@ -699,7 +700,7 @@ const ShareWorkspacePaymentRequest = () => {
                                       },
                                     }}
                                   >
-                                    <TableCell sx={{ height: 1, width: 200 }}>
+                                    <TableCell sx={{ height: 1, width: 252 }}>
                                       <NoteInfo>
                                         <Image src={multiSelect} alt="" />{" "}
                                         {property.name}
@@ -758,7 +759,7 @@ const ShareWorkspacePaymentRequest = () => {
                                       },
                                     }}
                                   >
-                                    <TableCell sx={{ height: 1, width: 200 }}>
+                                    <TableCell sx={{ height: 1, width: 252 }}>
                                       <NoteInfo>
                                         <Image src={optionsIcon} alt="" />{" "}
                                         {property.name}
