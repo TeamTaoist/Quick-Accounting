@@ -232,7 +232,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
   };
   if (isLoading) return <p></p>;
 
-  const formatTimestamp = (timestamp: string) => {
+  const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);
 
     const options: Intl.DateTimeFormatOptions = {
@@ -347,7 +347,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
           <h3>Transaction date</h3>
           <div>
             {/* <p>Oct-15-2023 01:04:34 PM +UTC</p> */}
-            <p>{formatTimestamp(paymentRequestDetails.UpdatedAt)}</p>
+            <p>{formatTimestamp(paymentRequestDetails.tx_timestamp * 1000)}</p>
           </div>
         </TransactionHash>
         {/* note info */}
