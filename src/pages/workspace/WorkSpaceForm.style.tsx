@@ -8,8 +8,7 @@ export const WorkspaceContainer = styled.div`
   padding-top: 90px;
 `;
 export const WorkspaceForm = styled.div`
-  width: 530px;
-
+  width: 620px;
   h3 {
     font-size: 32px;
     font-weight: 500;
