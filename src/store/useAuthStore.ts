@@ -17,6 +17,7 @@ interface Auth {
   setAuthData: (data: AuthResponse) => void;
   loginAsync: (formValue: any, navigate: any) => void;
   logout: (navigate: any) => void;
+  clearAuth: () => void;
   refreshNounce: (wallet: string) => Promise<string>;
 }
 
@@ -26,7 +27,7 @@ export const useAuthStore = create<Auth>((set) => {
   return {
     user: {
       wallet: "",
-      token: localStorage.getItem("token") || "",
+      token: "",
       token_expired: 0,
       CreatedAt: "",
       UpdatedAt: "",
@@ -40,7 +41,7 @@ export const useAuthStore = create<Auth>((set) => {
         set({ user: data.data });
         console.log(data);
 
-        localStorage.setItem("token", data.data.token);
+        localStorage.setItem("qa-user", JSON.stringify(data.data));
         navigate("/user");
       } catch (error: any) {
         console.log(error);
@@ -62,8 +63,19 @@ export const useAuthStore = create<Auth>((set) => {
           UpdatedAt: "",
         },
       });
-      localStorage.removeItem("token");
+      localStorage.removeItem("qa-user");
       navigate("/");
+    },
+    clearAuth() {
+      set({
+        user: {
+          wallet: "",
+          token: "",
+          token_expired: 0,
+          CreatedAt: "",
+          UpdatedAt: "",
+        },
+      });
     },
     // get new nonce
     refreshNounce: async (wallet: string): Promise<string> => {

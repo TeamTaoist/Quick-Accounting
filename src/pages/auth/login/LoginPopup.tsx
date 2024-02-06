@@ -31,7 +31,7 @@ const LoginPopup = () => {
   const [clickConnectFlag, setClickConnectFlag] = useState(false);
 
   const { isLoading, setLoading } = useLoading();
-  const { loginAsync, refreshNounce } = useAuthStore();
+  const { loginAsync, refreshNounce, user } = useAuthStore();
 
   console.log("loading", isLoading);
 
@@ -95,26 +95,23 @@ const LoginPopup = () => {
     useWorkspace();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     const handleVerify = async () => {
       try {
         const data = await getUserWorkspace();
         if (data?.code === 200) {
-          const firstWorkspaceId = data.data.rows[0].ID;
-          if (token && firstWorkspaceId) {
+          const firstWorkspaceId = data.data.rows[0]?.ID;
+          if (firstWorkspaceId) {
             navigate(`/workspace/${firstWorkspaceId}/assets`);
-          } else if (token) {
+          } else if (user.token) {
             navigate("/user");
-          } else {
-            navigate("/login");
           }
         }
       } catch (error) {}
     };
-    if (token && address && isConnected) {
+    if (user.token && address && isConnected && user.wallet === address) {
       handleVerify();
     }
-  }, []);
+  }, [user]);
 
   return (
     <>

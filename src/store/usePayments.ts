@@ -109,7 +109,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           return data.data.total;
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast.error(error?.data?.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
