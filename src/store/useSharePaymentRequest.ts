@@ -2,8 +2,10 @@ import { create } from "zustand";
 import { useLoading } from "./useLoading";
 import axiosClient from "../utils/axios";
 import { toast } from "react-toastify";
+import { Workspace, useWorkspace } from "./useWorkspace";
 
 interface UseSharePaymentRequest {
+  shareData: ISharePaymentList;
   createSharePaymentRequest: (
     shareCode: string | undefined,
     sharePaymentRequestFormData: any
@@ -13,7 +15,7 @@ interface UseSharePaymentRequest {
   ) => Promise<string | undefined>;
   getPaymentRequestShareCodeData: (
     shareCode: string | undefined
-  ) => Promise<ISharePayment[]>;
+  ) => Promise<Workspace>;
   saveSharePaymentRequest: (
     shareCode: string | undefined,
     sharePaymentRequestFormData: any
@@ -22,7 +24,23 @@ interface UseSharePaymentRequest {
 
 export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
   const { setLoading } = useLoading.getState();
+  // const { updateWorkspace } = useWorkspace();
   return {
+    shareData: {
+      category_and_properties: [],
+      payment_request_items: null,
+      workspace: {
+        ID: 0,
+        CreatedAt: "",
+        UpdatedAt: "",
+        DeletedAt: "",
+        name: "",
+        avatar: "",
+        vault_wallet: "",
+        chain_id: 0,
+        creator: "",
+      },
+    },
     createSharePaymentRequest: async (
       shareCode,
       sharePaymentRequestFormData
@@ -67,8 +85,10 @@ export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
         const { data } = await axiosClient.get(
           `/payment_request_share/${shareCode}`
         );
+        set({ shareData: data.data });
+        // updateWorkspace(data.data.workspace);
         if (data.msg === "success" && data.code === 200) {
-          return data.data;
+          return data.data.workspace;
         }
       } catch (error: any) {
         console.log(error);

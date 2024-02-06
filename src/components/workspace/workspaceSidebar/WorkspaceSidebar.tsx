@@ -111,9 +111,7 @@ const WorkspaceSidebar = () => {
     getPaymentRequestShareCode(id).then((res) => {
       if (res) {
         setShareLink(res);
-        navigator.clipboard.writeText(
-          `${window.location.origin}/workspace/${id}/share/${res}`
-        );
+        navigator.clipboard.writeText(`${window.location.origin}/share/${res}`);
       }
     });
   };

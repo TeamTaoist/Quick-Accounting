@@ -44,16 +44,25 @@ const ShareWorkspacePaymentRequest = () => {
   const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
     useCategoryProperty();
   const { isLoading } = useLoading();
-  const { workspace, assetsList, getAssets, getWorkspaceDetails } =
-    useWorkspace();
+  const {
+    workspace,
+    assetsList,
+    getAssets,
+    getWorkspaceDetails,
+    updateWorkspace,
+  } = useWorkspace();
   const {
     createSharePaymentRequest,
     getPaymentRequestShareCodeData,
     saveSharePaymentRequest,
+    shareData,
   } = useSharePaymentRequest();
 
+  console.log("workspace", workspace);
+
   // payments details
-  const [paymentDetails, setPaymentDetails] = useState<ISharePayment[]>([]);
+  // const [shareList, setShareList] = useState<ISharePaymentList>();
+  // const [paymentDetails, setPaymentDetails] = useState<ISharePaymentItem[]>([]);
 
   // const [age, setAge] = useState("Category");
 
@@ -92,7 +101,7 @@ const ShareWorkspacePaymentRequest = () => {
       },
     ]);
   };
-  console.log(sharePaymentRequestForm);
+  console.log("sharePaymentRequestForm", sharePaymentRequestForm);
 
   const handleFormChange = (
     index: number,
@@ -162,20 +171,24 @@ const ShareWorkspacePaymentRequest = () => {
   };
 
   // get category details
-  useEffect(() => {
-    getWorkspaceCategoryProperties(Number(workspaceId));
-  }, [getWorkspaceCategoryProperties, workspaceId]);
+  // useEffect(() => {
+  //   getWorkspaceCategoryProperties(Number(workspaceId));
+  // }, [getWorkspaceCategoryProperties, workspaceId]);
 
   const [shareDataLoading, setShareDataLoading] = useState<boolean>(false);
   // get payment request details
   useEffect(() => {
-    getPaymentRequestShareCodeData(shareId).then((res) => {
-      if (res) {
-        setPaymentDetails(res);
-      }
-    });
+    const fetchPaymentRequestData = async () => {
+      await getPaymentRequestShareCodeData(shareId).then((res) => {
+        if (res) {
+          updateWorkspace(res);
+          // setPaymentDetails(shareData?.payment_request_items!);
+        }
+      });
+    };
+    fetchPaymentRequestData();
   }, [shareDataLoading]);
-  console.log("details", paymentDetails);
+  // console.log("details", paymentDetails);
   // new
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<any>([]);
@@ -199,7 +212,7 @@ const ShareWorkspacePaymentRequest = () => {
     };
     setSharePaymentRequestForm(updatedRequests);
     const updatedSelectedCategories = updatedCategoryIDs.map((id: any) =>
-      workspaceCategoryProperties?.find((category) => category.ID === id)
+      shareData?.category_and_properties?.find((category) => category.ID === id)
     );
     setSelectedCategories(updatedSelectedCategories);
   };
@@ -220,6 +233,7 @@ const ShareWorkspacePaymentRequest = () => {
   useEffect(() => {
     workspace?.vault_wallet && getAssets();
   }, [workspace?.vault_wallet, getAssets]);
+  console.log("assetsList", assetsList);
 
   // modal
   const [openModal, setOpenModal] = useState(false);
@@ -283,26 +297,30 @@ const ShareWorkspacePaymentRequest = () => {
     );
   };
 
-  useEffect(() => {
-    getWorkspaceDetails(Number(workspaceId));
-  }, []);
+  // useEffect(() => {
+  //   getWorkspaceDetails(Number(workspaceId));
+  // }, []);
 
   useEffect(() => {
-    if (paymentDetails && paymentDetails.length > 0) {
-      const updatedForm = paymentDetails.map((paymentDetail) => {
-        return {
-          amount: paymentDetail.amount,
-          currency_name: paymentDetail.currency_name,
-          recipient: paymentDetail.recipient,
-          decimals: paymentDetail.decimals,
-          category_id: paymentDetail.category_id,
-          category_name: paymentDetail.category_name,
-          currency_contract_address: paymentDetail.currency_contract_address,
-          category_properties: Array.isArray(paymentDetail.category_properties)
-            ? paymentDetail.category_properties
-            : JSON.parse(paymentDetail.category_properties),
-        };
-      });
+    if (shareData && shareData.payment_request_items !== null) {
+      const updatedForm = shareData?.payment_request_items?.map(
+        (paymentDetail) => {
+          return {
+            amount: paymentDetail.amount,
+            currency_name: paymentDetail.currency_name,
+            recipient: paymentDetail.recipient,
+            decimals: paymentDetail.decimals,
+            category_id: paymentDetail.category_id,
+            category_name: paymentDetail.category_name,
+            currency_contract_address: paymentDetail.currency_contract_address,
+            category_properties: Array.isArray(
+              paymentDetail.category_properties
+            )
+              ? paymentDetail.category_properties
+              : JSON.parse(paymentDetail.category_properties),
+          };
+        }
+      );
       setSharePaymentRequestForm(updatedForm);
 
       const updatedCategoryIDs = updatedForm.map(
@@ -311,14 +329,17 @@ const ShareWorkspacePaymentRequest = () => {
       setSelectedCategoryIDs(updatedCategoryIDs);
 
       const updatedSelectedCategories = updatedCategoryIDs.map((id: number) =>
-        workspaceCategoryProperties?.find((category) => category.ID === id)
+        shareData?.category_and_properties?.find(
+          (category) => category.ID === id
+        )
       );
       setSelectedCategories(updatedSelectedCategories);
     }
-  }, [paymentDetails]);
+  }, [shareData]);
   console.log("property", selectedCategories);
-  const isEditable =
-    paymentDetails[0]?.status !== 0 && paymentDetails.length !== 0;
+  const isEditable = false;
+  // paymentDetails[0]?.status !== 0 && paymentDetails.length !== 0;
+  console.log("shareData", shareData);
 
   return (
     <>
@@ -573,7 +594,7 @@ const ShareWorkspacePaymentRequest = () => {
                                 <MenuItem disabled value="">
                                   {sharePaymentRequestForm[index].category_name}
                                 </MenuItem>
-                                {workspaceCategoryProperties?.map(
+                                {shareData?.category_and_properties?.map(
                                   (category) => (
                                     <MenuItem
                                       key={category.ID}
@@ -799,21 +820,21 @@ const ShareWorkspacePaymentRequest = () => {
                 {/* <ReactSelect /> */}
               </RequestDetails>
             ))}
-            {paymentDetails[0]?.status !== 0 && paymentDetails.length ? (
-              <Btns>
-                <ViewProgressBtn onClick={() => navigate("/user")}>
-                  View the progress of your payment request
-                </ViewProgressBtn>
-              </Btns>
-            ) : (
-              <Btns>
-                <AddBtn onClick={handleAddRequest}>+ Add</AddBtn>
-                <SubmitBtns>
-                  <Save onClick={handleSavePaymentRequest}>Save</Save>
-                  <Submit onClick={handleSubmitPaymentRequest}>Submit</Submit>
-                </SubmitBtns>
-              </Btns>
-            )}
+            {/* {paymentDetails[0]?.status !== 0 && paymentDetails.length ? ( */}
+            {/* <Btns>
+              <ViewProgressBtn onClick={() => navigate("/user")}>
+                View the progress of your payment request
+              </ViewProgressBtn>
+            </Btns> */}
+            {/* ) : ( */}
+            <Btns>
+              <AddBtn onClick={handleAddRequest}>+ Add</AddBtn>
+              <SubmitBtns>
+                <Save onClick={handleSavePaymentRequest}>Save</Save>
+                <Submit onClick={handleSubmitPaymentRequest}>Submit</Submit>
+              </SubmitBtns>
+            </Btns>
+            {/* )} */}
             {/* </>
             )} */}
           </SharePaymentForm>

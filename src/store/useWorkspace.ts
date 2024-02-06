@@ -15,7 +15,7 @@ interface FormData {
   vault_wallet: string;
 }
 
-interface Workspace {
+export interface Workspace {
   ID: number;
   CreatedAt: string;
   UpdatedAt: string;
@@ -59,6 +59,7 @@ interface UseWorkspace {
     fiatBalance: string;
     fiatConversion: string;
   }[];
+  updateWorkspace: (data: any) => void;
 }
 
 export const useWorkspace = create<UseWorkspace>((set, get) => {
@@ -112,6 +113,9 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         chain_id: 0,
         creator: "",
       },
+    },
+    updateWorkspace: (data: any) => {
+      set({ workspace: data });
     },
     createWorkspace: async (formData, navigate) => {
       const { chain_id, name, vault_wallet } = formData;

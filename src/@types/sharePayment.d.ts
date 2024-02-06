@@ -15,7 +15,7 @@ declare interface SharePaymentRequestBody {
   category_properties: CategoryProperties[];
 }
 
-declare interface ISharePayment {
+declare interface ISharePaymentItem {
   ID: number;
   CreatedAt: string;
   UpdatedAt: string;
@@ -35,4 +35,21 @@ declare interface ISharePayment {
   tx_timestamp: number;
   status: number;
   hide: boolean;
+}
+
+interface IShareCategoryProperties {
+  ID: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string;
+  workspace_id: number;
+  name: string;
+  archived: boolean;
+  properties: CategoryProperties[];
+}
+
+declare interface ISharePaymentList {
+  category_and_properties: IShareCategoryProperties[];
+  payment_request_items: ISharePaymentItem[] | null;
+  workspace: Workspace;
 }
