@@ -233,7 +233,6 @@ const ShareWorkspacePaymentRequest = () => {
   useEffect(() => {
     workspace?.vault_wallet && getAssets();
   }, [workspace?.vault_wallet, getAssets]);
-  console.log("assetsList", assetsList);
 
   // modal
   const [openModal, setOpenModal] = useState(false);
@@ -337,8 +336,10 @@ const ShareWorkspacePaymentRequest = () => {
     }
   }, [shareData]);
   console.log("property", selectedCategories);
-  const isEditable = false;
-  // paymentDetails[0]?.status !== 0 && paymentDetails.length !== 0;
+  const isEditable =
+    shareData?.payment_request_items?.[0]?.status !== 0 &&
+    shareData?.payment_request_items?.length !== 0;
+
   console.log("shareData", shareData);
 
   return (
@@ -813,28 +814,32 @@ const ShareWorkspacePaymentRequest = () => {
                       </TableBody>
                     </Table>
                   </TableContainer>
-                  <DeleteBtn onClick={() => handleDeleteRequestForm(index)}>
+                  <DeleteBtn
+                    disabled={isEditable}
+                    onClick={() => handleDeleteRequestForm(index)}
+                  >
                     Delete
                   </DeleteBtn>
                 </NoteInformation>
                 {/* <ReactSelect /> */}
               </RequestDetails>
             ))}
-            {/* {paymentDetails[0]?.status !== 0 && paymentDetails.length ? ( */}
-            {/* <Btns>
-              <ViewProgressBtn onClick={() => navigate("/user")}>
-                View the progress of your payment request
-              </ViewProgressBtn>
-            </Btns> */}
-            {/* ) : ( */}
-            <Btns>
-              <AddBtn onClick={handleAddRequest}>+ Add</AddBtn>
-              <SubmitBtns>
-                <Save onClick={handleSavePaymentRequest}>Save</Save>
-                <Submit onClick={handleSubmitPaymentRequest}>Submit</Submit>
-              </SubmitBtns>
-            </Btns>
-            {/* )} */}
+            {shareData?.payment_request_items?.[0]?.status !== 0 &&
+            shareData?.payment_request_items?.length ? (
+              <Btns>
+                <ViewProgressBtn onClick={() => navigate("/user")}>
+                  View the progress of your payment request
+                </ViewProgressBtn>
+              </Btns>
+            ) : (
+              <Btns>
+                <AddBtn onClick={handleAddRequest}>+ Add</AddBtn>
+                <SubmitBtns>
+                  <Save onClick={handleSavePaymentRequest}>Save</Save>
+                  <Submit onClick={handleSubmitPaymentRequest}>Submit</Submit>
+                </SubmitBtns>
+              </Btns>
+            )}
             {/* </>
             )} */}
           </SharePaymentForm>
