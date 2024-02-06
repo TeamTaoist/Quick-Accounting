@@ -347,7 +347,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
           <h3>Transaction date</h3>
           <div>
             {/* <p>Oct-15-2023 01:04:34 PM +UTC</p> */}
-            <p>{formatTimestamp(paymentRequestDetails.tx_timestamp * 1000)}</p>
+            <p>{formatTimestamp(paymentRequestDetails.tx_timestamp)}</p>
           </div>
         </TransactionHash>
         {/* note info */}
