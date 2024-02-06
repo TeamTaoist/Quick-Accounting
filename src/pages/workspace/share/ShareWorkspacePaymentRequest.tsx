@@ -815,12 +815,11 @@ const ShareWorkspacePaymentRequest = () => {
                       </TableBody>
                     </Table>
                   </TableContainer>
-                  <DeleteBtn
-                    disabled={isEditable}
-                    onClick={() => handleDeleteRequestForm(index)}
-                  >
-                    Delete
-                  </DeleteBtn>
+                  {!isEditable && (
+                    <DeleteBtn onClick={() => handleDeleteRequestForm(index)}>
+                      Delete
+                    </DeleteBtn>
+                  )}
                 </NoteInformation>
                 {/* <ReactSelect /> */}
               </RequestDetails>
