@@ -4,7 +4,7 @@ import WagmiProvider from "./providers/wagmiProvider";
 const App = () => {
   return (
     <WagmiProvider>
-      <RouterLink />
+        <RouterLink />
     </WagmiProvider>
   );
 };

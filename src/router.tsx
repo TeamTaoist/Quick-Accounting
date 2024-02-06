@@ -19,6 +19,7 @@ import Reports from "./pages/workspace/reports/Reports";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WorkspaceIndex from "./pages/workspace";
+import AuthChecker from "./components/authChecker";
 
 const RouterLink = () => {
   return (
@@ -60,6 +61,7 @@ const RouterLink = () => {
           element={<PaymentRequestPreview />}
         />
       </Routes>
+      <AuthChecker />
     </Router>
   );
 };
