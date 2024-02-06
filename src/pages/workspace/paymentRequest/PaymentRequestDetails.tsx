@@ -408,7 +408,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                             {/* {paymentRequestDetails.category_name} */}
                             {selectedCategory?.name}
                           </MenuItem>
-                          {workspaceCategoryProperties.map((category) => (
+                          {workspaceCategoryProperties?.map((category) => (
                             <MenuItem
                               key={category.ID}
                               value={category.name}
