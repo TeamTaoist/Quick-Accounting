@@ -212,11 +212,12 @@ const PaymentRequest = () => {
 
   const sortedPayment = Object.entries(groupedData).sort(
     ([idA, itemsA], [idB, itemsB]) => {
-      const lengthComparison = itemsA.length - itemsB.length;
-
-      return lengthComparison !== 0
-        ? lengthComparison
-        : Number(idA) - Number(idB);
+      if (itemsA.length && itemsB.length) {
+        const aTime = new Date(itemsA[0].UpdatedAt).getTime();
+        const bTime = new Date(itemsB[0].UpdatedAt).getTime();
+        return bTime - aTime;
+      }
+      return Number(idA) - Number(idB);
     }
   );
   // approve modal
