@@ -65,6 +65,7 @@ import { getShortAddress } from "../../../utils";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import { formatDate } from "../../../utils/time";
 
 const Bookkeeping = () => {
   const { id } = useParams();
@@ -190,7 +191,7 @@ const Bookkeeping = () => {
     const filterByCategory =
       selectedValue === "" || bookkeeping.category_name === selectedValue;
     return searchItem && filterByCategory;
-  });
+  })
 
   // export
   const paymentRequestIds = selected.join(",");
@@ -428,9 +429,7 @@ const Bookkeeping = () => {
                       <TableCell>
                         <CategoryCell>{bookkeeping.category_name}</CategoryCell>
                       </TableCell>
-                      <TableCell>
-                        {bookkeeping.CreatedAt.slice(0, 10)}
-                      </TableCell>
+                      <TableCell>{formatDate(bookkeeping.CreatedAt)}</TableCell>
                       <TableCell>
                         <Button
                           variant="outlined"
