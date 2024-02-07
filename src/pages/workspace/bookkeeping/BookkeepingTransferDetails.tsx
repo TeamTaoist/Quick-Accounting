@@ -226,7 +226,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
   const handleUpdateCategory = async () => {
     await updatePaymentRequestCategory(
       id,
-      paymentRequestDetails.payment_request_id.toString(),
+      paymentRequestDetails.ID.toString(),
       updatedPaymentBody
     );
   };
