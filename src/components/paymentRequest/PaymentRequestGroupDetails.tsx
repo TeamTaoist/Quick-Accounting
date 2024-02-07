@@ -254,7 +254,7 @@ const PaymentRequestGroupDetails = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          width: 200,
+                          width: "30%",
                           border: 0,
                           paddingInline: 0,
                         }}
@@ -262,12 +262,12 @@ const PaymentRequestGroupDetails = ({
                         Recipient
                       </TableCell>
                       <TableCell
-                        sx={{ width: 150, border: 0, paddingInline: 0 }}
+                        sx={{ width: "23%", border: 0, paddingInline: 0 }}
                       >
                         Amount
                       </TableCell>
                       <TableCell
-                        sx={{ width: 200, border: 0, paddingInline: 0 }}
+                        sx={{ width: "37%", border: 0, paddingInline: 0 }}
                       >
                         Currency
                       </TableCell>
@@ -393,7 +393,7 @@ const PaymentRequestGroupDetails = ({
                           },
                         }}
                       >
-                        <TableCell sx={{ height: 1, width: 200 }}>
+                        <TableCell sx={{ height: 1, width: "33.5%" }}>
                           <NoteInfo>
                             <Image src={categoryIcon} alt="" /> Category
                           </NoteInfo>

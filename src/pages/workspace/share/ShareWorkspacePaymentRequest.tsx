@@ -38,19 +38,11 @@ import { isAddress } from "viem";
 import { parseUnits } from "ethers";
 
 const ShareWorkspacePaymentRequest = () => {
-  const { workspaceId, shareId } = useParams();
+  const { shareId } = useParams();
   const navigate = useNavigate();
 
-  const { getWorkspaceCategoryProperties, workspaceCategoryProperties } =
-    useCategoryProperty();
   const { isLoading } = useLoading();
-  const {
-    workspace,
-    assetsList,
-    getAssets,
-    getWorkspaceDetails,
-    updateWorkspace,
-  } = useWorkspace();
+  const { workspace, assetsList, getAssets, updateWorkspace } = useWorkspace();
   const {
     createSharePaymentRequest,
     getPaymentRequestShareCodeData,
@@ -162,6 +154,73 @@ const ShareWorkspacePaymentRequest = () => {
     }
     setSharePaymentRequestForm(updatedRequests);
   };
+
+  // const handleFormChange = (
+  //   index: number,
+  //   field: string,
+  //   value: any,
+  //   propertyName?: string,
+  //   propertyType?: string,
+  //   categoryId?: number
+  // ) => {
+  //   const updatedRequests = [...sharePaymentRequestForm];
+
+  //   if (field === "currency_address") {
+  //     const token = assetsList.find((item) => item.tokenInfo.address === value);
+  //     if (token) {
+  //       updatedRequests[index].currency_name = token.tokenInfo.symbol;
+  //       updatedRequests[index].decimals = token.tokenInfo.decimals;
+  //     }
+  //     updatedRequests[index].currency_contract_address = value;
+  //   } else if (field === "categoryProperties") {
+  //     const existingCategoryProperty = updatedRequests[
+  //       index
+  //     ].category_properties.find(
+  //       (property) =>
+  //         property.name === propertyName && property.type === propertyType
+  //     );
+
+  //     if (existingCategoryProperty) {
+  //       // If property exists, update its value
+  //       if (propertyType === "Text") {
+  //         existingCategoryProperty.values = value;
+  //       } else {
+  //         const values =
+  //           propertyType === "single-select"
+  //             ? value.value
+  //             : value.map((v: ReactSelectOption) => v.value).join(";");
+  //         existingCategoryProperty.values = values;
+  //       }
+  //     } else {
+  //       // If property doesn't exist, create a new one
+  //       if (propertyType === "Text") {
+  //         const newCategoryProperty = {
+  //           name: propertyName,
+  //           type: propertyType,
+  //           values: value,
+  //         };
+  //         updatedRequests[index].category_properties.push(newCategoryProperty);
+  //       } else {
+  //         const newCategoryProperty = {
+  //           name: propertyName,
+  //           type: propertyType,
+  //           values:
+  //             propertyType === "single-select"
+  //               ? value.value
+  //               : value.map((v: ReactSelectOption) => v.value).join(";"),
+  //         };
+  //         updatedRequests[index].category_properties.push(newCategoryProperty);
+  //       }
+  //     }
+  //   } else {
+  //     // Your existing code for handling other fields
+  //     if (field !== "currency_address" && field !== "categoryProperties") {
+  //       (updatedRequests[index] as any)[field] = value;
+  //     }
+  //   }
+
+  //   setSharePaymentRequestForm(updatedRequests);
+  // };
 
   const handleDeleteRequestForm = (index: number) => {
     const updatedRequest = sharePaymentRequestForm.filter(
@@ -772,24 +831,18 @@ const ShareWorkspacePaymentRequest = () => {
                                           "& fieldset": { border: "none" },
                                         }}
                                         size="small"
+                                        autoComplete="off"
                                         fullWidth
-                                        // value={property.values}
                                         value={
                                           sharePaymentRequestForm[
                                             index
                                           ].category_properties.find(
-                                            (p) => p.type === "Text"
+                                            (p) =>
+                                              p.name === property.name &&
+                                              p.type === "Text"
                                           )?.values || ""
                                         }
-                                        // id="fullWidth"
                                         placeholder="Enter content"
-                                        // onChange={(e) =>
-                                        //   handlePropertyText(
-                                        //     e,
-                                        //     property.name,
-                                        //     property.type
-                                        //   )
-                                        // }
                                         onChange={(e) =>
                                           handleFormChange(
                                             index,
