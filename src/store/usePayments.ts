@@ -102,7 +102,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       setLoading(true);
       try {
         const { data } = await axiosClient.get(
-          `/payment_request/${workspaceId}?rejected=${isRejected}&page=${page}&size=${size}`
+          `/payment_request/${workspaceId}?rejected=${isRejected}&page=${page}&size=${size}&sort_field=updated_at&sort_order=desc`
         );
         set({ paymentRequestList: data.data.rows });
         if (data.msg === "success" && data.code === 200) {
