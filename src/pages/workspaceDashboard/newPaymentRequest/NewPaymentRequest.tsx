@@ -97,9 +97,14 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   const [selectedValues, setSelectedValues] = useState<ReactSelectOption[]>([]);
 
   // property values
-  const [propertyValues, setPropertyValues] = useState<PropertyValues>({});
-  const [propertyMultiValues, setPropertyMultiValues] =
-    useState<PropertyValues>({});
+  const [propertyValues, setPropertyValues] = useState<{
+    [key: string]: PropertyValues;
+  }>({});
+  const [propertyMultiValues, setPropertyMultiValues] = useState<{
+    [key: string]: PropertyValues;
+  }>({});
+  console.log("single", propertyValues);
+  console.log("multi", propertyMultiValues);
 
   const handleSelectChange = (
     selectedOptions: ReactSelectOption[],
@@ -109,10 +114,27 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     setSelectedValues(selectedOptions);
     console.log(selectedOptions, name, type);
     const v = selectedOptions?.map((p) => p.value);
+    // setPropertyMultiValues({
+    //   name: name,
+    //   type: type,
+    //   values: v.join(";"),
+    // });
+    // Update the state for the specific property name
+    // setPropertyMultiValues((prevState) => ({
+    //   ...prevState,
+    //   [name]: {
+    //     name: name,
+    //     type: type,
+    //     values: selectedOptions.map((option) => option.value).join(";"),
+    //   },
+    // }));
     setPropertyMultiValues({
-      name: name,
-      type: type,
-      values: v.join(";"),
+      ...propertyMultiValues,
+      [name]: {
+        name: name,
+        type: type,
+        values: selectedOptions.map((option) => option.value).join(";"),
+      },
     });
     if (v.length === 0) {
       setPropertyMultiValues({});
@@ -125,9 +147,16 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     type: string
   ) => {
     setSelectSingleValue(selectedOption);
-    setPropertyValues({ name: name, type: type, values: selectedOption.value });
+    setPropertyValues({
+      ...propertyValues,
+      [name]: {
+        name: name,
+        type: type,
+        values: selectedOption.value,
+      },
+    });
     if (selectedOption.value === "") {
-      setPropertyMultiValues({});
+      setSelectSingleValue(undefined);
     }
   };
 
@@ -175,28 +204,63 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   // property text content
   const [propertyContent, setPropertyContent] = useState<string>("");
   const [proPertyTextValue, setPropertyTextValue] = useState<any>({});
+
+  const [textPropertyValues, setTextPropertyValues] = useState<{
+    [key: string]: string;
+  }>({});
+
+  // Update the handlePropertyText function to set values for each property separately
   const handlePropertyText = (e: any, name: string, type: string) => {
-    setPropertyContent(e.target.value);
-    setPropertyTextValue({
-      name: name,
-      type: type,
-      values: e.target.value,
-    });
+    const value = e.target.value;
+    setTextPropertyValues({ ...textPropertyValues, [name]: value });
     if (e.target.value === "") {
-      setPropertyTextValue({});
+      setTextPropertyValues({});
     }
   };
+  console.log("textPropertyValues", textPropertyValues);
+  const handleSelectedCategory = (id: number) => {
+    setSelectedCategoryID(id);
+    setPropertyValues({});
+    setPropertyMultiValues({});
+    setTextPropertyValues({});
+    setSelectSingleValue(undefined);
+    setSelectedValues([]);
+  };
+
   const paymentRequestBody = {
     category_id: selectedCategory?.ID,
     category_name: selectedCategory?.name,
     category_properties: [
-      ...(Object.keys(propertyValues).length !== 0 ? [propertyValues] : []),
-      ...(Object.keys(propertyMultiValues).length !== 0
-        ? [propertyMultiValues]
-        : []),
-      ...(Object.keys(proPertyTextValue).length !== 0
-        ? [proPertyTextValue]
-        : []),
+      // ...(Object.keys(propertyValues).length !== 0
+      //   ? [propertyValues as ICategoryProperties]
+      //   : []),
+      ...Object.keys(propertyValues).map(
+        (key) =>
+          ({
+            name: key as string,
+            type: "single-select",
+            values: propertyValues[key as keyof PropertyValues]?.values,
+          } as ICategoryProperties)
+      ),
+      // ...(Object.keys(propertyMultiValues).length !== 0
+      //   ? [propertyMultiValues as ICategoryProperties]
+      //   : []),
+      ...Object.keys(propertyMultiValues).map(
+        (key) =>
+          ({
+            name: key as string,
+            type: "multi-select",
+            values: propertyMultiValues[key as keyof PropertyValues]?.values,
+          } as ICategoryProperties)
+      ),
+      ...Object.keys(textPropertyValues).map(
+        (key) =>
+          ({
+            name: key,
+            type: "Text",
+            values: textPropertyValues[key],
+          } as ICategoryProperties)
+      ),
     ],
     rows: rows.map((row) => {
       const token = data?.items.find(
@@ -505,7 +569,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             {workspaceCategoryProperties?.map((property) => (
                               <MenuItem
                                 onClick={() =>
-                                  setSelectedCategoryID(property.ID)
+                                  handleSelectedCategory(property.ID)
                                 }
                                 value={property.name}
                                 sx={{
@@ -636,7 +700,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                     {/* single select */}
                     {selectedCategory?.properties?.map((property) => (
                       <>
-                        {property.type === "Text" && (
+                        {/* {property.type === "Text" && (
                           <TableRow
                             sx={{
                               td: {
@@ -652,7 +716,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 {property.name}
                               </NoteInfo>
                             </TableCell>
-                            {/* add multi select */}
                             <TableCell>
                               <TextField
                                 sx={{
@@ -662,6 +725,46 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 fullWidth
                                 value={propertyContent}
                                 // id="fullWidth"
+                                placeholder="Enter content"
+                                onChange={(e) =>
+                                  handlePropertyText(
+                                    e,
+                                    property.name,
+                                    property.type
+                                  )
+                                }
+                                InputProps={{
+                                  style: { padding: 0 },
+                                }}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )} */}
+                        {property.type === "Text" && (
+                          <TableRow
+                            key={property.name} // Add a unique key for each property
+                            sx={{
+                              td: {
+                                border: "1px solid var(--border-table)",
+                                padding: 0,
+                                paddingInline: "16px",
+                              },
+                            }}
+                          >
+                            <TableCell sx={{ height: 1, width: 200 }}>
+                              <NoteInfo>
+                                <Image src={optionsIcon} alt="" />{" "}
+                                {property.name}
+                              </NoteInfo>
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                sx={{
+                                  "& fieldset": { border: "none" },
+                                }}
+                                size="small"
+                                fullWidth
+                                value={textPropertyValues[property.name] || ""} // Get value from state based on property name
                                 placeholder="Enter content"
                                 onChange={(e) =>
                                   handlePropertyText(

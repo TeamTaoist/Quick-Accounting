@@ -35,8 +35,8 @@ declare interface IRows {
   currency_contract_address?: string;
 }
 declare interface IPaymentRequestBody {
-  category_id?: number;
-  category_name?: string;
+  category_id?: number | undefined;
+  category_name?: string | undefined;
   category_properties?: ICategoryProperties[];
   rows: IRows[];
 }
