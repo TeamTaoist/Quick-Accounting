@@ -18,7 +18,7 @@ import searchIcon from "../../assets/workspace/search-icon.svg";
 import statusIcon from "../../assets/workspace/status-icon.svg";
 import { Status } from "../../components/workspace/RejectDataTable";
 import CustomModal from "../../utils/CustomModal";
-import PaymentRequestDetails from "../workspace/paymentRequest/PaymentRequestDetails";
+import PaymentRequestDetails from "../workspace/paymentRequest/PaymentRequestDetailsReadOnly";
 import { useUserPayment } from "../../store/useUserPayment";
 import usePaymentsStore from "../../store/usePayments";
 import { formatNumber } from "../../utils/number";
@@ -30,7 +30,7 @@ const recipientFormate = (n: string) => {
 const UserPaymentRequest = () => {
   const { id } = useParams();
   const { userPayment, getUserPayment } = useUserPayment();
-  const { getPaymentRequestDetails } = usePaymentsStore();
+  const { setCurrentPaymentRequestDetail } = usePaymentsStore();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -48,18 +48,9 @@ const UserPaymentRequest = () => {
   // modal
   const [openModal, setOpenModal] = useState(false);
 
-  const handleOpenModal = (
-    workspaceId: number,
-    paymentRequestId: number,
-    paymentId: number
-  ) => {
-    getPaymentRequestDetails(workspaceId, paymentRequestId, paymentId).then(
-      (res) => {
-        if (res) {
-          setOpenModal(true);
-        }
-      }
-    );
+  const handleOpenModal = (data: IPaymentRequest) => {
+    setCurrentPaymentRequestDetail(data);
+    setOpenModal(true);
   };
   const paymentStatus = (status: number) => {
     if (status === 0) {
@@ -150,13 +141,7 @@ const UserPaymentRequest = () => {
                         color: "black",
                         textTransform: "lowercase",
                       }}
-                      onClick={() =>
-                        handleOpenModal(
-                          payment.workspace_id,
-                          payment.payment_request_id,
-                          payment.ID
-                        )
-                      }
+                      onClick={() => handleOpenModal(payment)}
                     >
                       view more
                     </Button>
