@@ -11,6 +11,15 @@ import {
 } from "@safe-global/safe-gateway-typescript-sdk";
 import { useSafeStore } from "../../../store/useSafeStore";
 import { toast } from "react-toastify";
+import CHAINS from "../../../utils/chain";
+import LinkIcon from "../../../assets/link.svg";
+import CopyIcon from "../../../assets/copy.svg";
+import CopyBox from "../../../components/copy";
+
+const formatSafeAddress = (address: string, chainId: number) => {
+  const short = CHAINS.find((chain) => chain.chainId === chainId)?.short;
+  return `${short}:${address}`;
+};
 
 const Settings = () => {
   const { t } = useTranslation();
@@ -50,6 +59,11 @@ const Settings = () => {
   };
   console.log(workspace);
 
+  const safeAddress = formatSafeAddress(
+    workspace.vault_wallet,
+    workspace.chain_id
+  );
+
   return (
     <SettingsContainer>
       <WorkspaceForm onSubmit={handleUpdateWorkspaceName}>
@@ -64,10 +78,28 @@ const Settings = () => {
           />
         </InputSection>
       </WorkspaceForm>
+      <SafeAddress>
+        <h3>{t("settings.SafeAddress")}</h3>
+        <p className="safe">
+          <a
+            href={`https://app.safe.global/transactions/queue?safe=${safeAddress}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>{safeAddress}</span>
+            <img src={LinkIcon} alt="" className="icon" />
+          </a>
+        </p>
+      </SafeAddress>
       <MultiSigner>
         <h3>{t("settings.MultiSigner")}</h3>
         {owners?.map((owner) => (
-          <p key={owner}>{owner}</p>
+          <p key={owner}>
+            <CopyBox text={owner}>
+              <span>{owner}</span>
+              <img src={CopyIcon} alt="" className="icon" />
+            </CopyBox>
+          </p>
         ))}
       </MultiSigner>
     </SettingsContainer>
@@ -106,5 +138,18 @@ const MultiSigner = styled.div`
   p {
     font-size: 18px;
     color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  p div,
+  a {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    color: var(--text-secondary);
+  }
+  .icon {
+    width: 20px;
   }
 `;
+
+const SafeAddress = styled(MultiSigner)``;

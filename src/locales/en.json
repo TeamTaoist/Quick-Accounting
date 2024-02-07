@@ -68,6 +68,7 @@
     "Report": "Report"
   },
   "settings": {
-    "MultiSigner": "Multi-signer"
+    "MultiSigner": "Multi-signer",
+    "SafeAddress": "Workspace address"
   }
 }

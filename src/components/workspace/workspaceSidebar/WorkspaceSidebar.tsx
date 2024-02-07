@@ -33,6 +33,9 @@ import { useLoading } from "../../../store/useLoading";
 import { toast } from "react-toastify";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
+import CopyBox from "../../copy";
+import CopyIcon from "../../../assets/copy.svg"
+import styled from "@emotion/styled";
 
 const WorkspaceSidebar = () => {
   const { t } = useTranslation();
@@ -121,7 +124,12 @@ const WorkspaceSidebar = () => {
         <WorkspaceInfo>
           <div>
             <h5>{workspace.name}</h5>
-            <p>{recipientFormate(workspace.vault_wallet)}</p>
+            <SafeAddress>
+              <span>{recipientFormate(workspace.vault_wallet)}</span>
+              <CopyBox text={workspace.vault_wallet}>
+                <img src={CopyIcon} alt="" />
+              </CopyBox>
+            </SafeAddress>
           </div>
           <img src={arrow} alt="" />
         </WorkspaceInfo>
@@ -192,3 +200,12 @@ const WorkspaceSidebar = () => {
 };
 
 export default WorkspaceSidebar;
+
+const SafeAddress = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  img {
+    width: 18px;
+  }
+`;
