@@ -103,8 +103,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   const [propertyMultiValues, setPropertyMultiValues] = useState<{
     [key: string]: PropertyValues;
   }>({});
-  console.log("single", propertyValues);
-  console.log("multi", propertyMultiValues);
 
   const handleSelectChange = (
     selectedOptions: ReactSelectOption[],
@@ -114,20 +112,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     setSelectedValues(selectedOptions);
     console.log(selectedOptions, name, type);
     const v = selectedOptions?.map((p) => p.value);
-    // setPropertyMultiValues({
-    //   name: name,
-    //   type: type,
-    //   values: v.join(";"),
-    // });
-    // Update the state for the specific property name
-    // setPropertyMultiValues((prevState) => ({
-    //   ...prevState,
-    //   [name]: {
-    //     name: name,
-    //     type: type,
-    //     values: selectedOptions.map((option) => option.value).join(";"),
-    //   },
-    // }));
     setPropertyMultiValues({
       ...propertyMultiValues,
       [name]: {
@@ -202,14 +186,11 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   );
 
   // property text content
-  const [propertyContent, setPropertyContent] = useState<string>("");
-  const [proPertyTextValue, setPropertyTextValue] = useState<any>({});
 
   const [textPropertyValues, setTextPropertyValues] = useState<{
     [key: string]: string;
   }>({});
 
-  // Update the handlePropertyText function to set values for each property separately
   const handlePropertyText = (e: any, name: string, type: string) => {
     const value = e.target.value;
     setTextPropertyValues({ ...textPropertyValues, [name]: value });
@@ -217,7 +198,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
       setTextPropertyValues({});
     }
   };
-  console.log("textPropertyValues", textPropertyValues);
   const handleSelectedCategory = (id: number) => {
     setSelectedCategoryID(id);
     setPropertyValues({});
@@ -231,9 +211,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     category_id: selectedCategory?.ID,
     category_name: selectedCategory?.name,
     category_properties: [
-      // ...(Object.keys(propertyValues).length !== 0
-      //   ? [propertyValues as ICategoryProperties]
-      //   : []),
       ...Object.keys(propertyValues).map(
         (key) =>
           ({
@@ -242,9 +219,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
             values: propertyValues[key as keyof PropertyValues]?.values,
           } as ICategoryProperties)
       ),
-      // ...(Object.keys(propertyMultiValues).length !== 0
-      //   ? [propertyMultiValues as ICategoryProperties]
-      //   : []),
       ...Object.keys(propertyMultiValues).map(
         (key) =>
           ({
@@ -764,7 +738,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 }}
                                 size="small"
                                 fullWidth
-                                value={textPropertyValues[property.name] || ""} // Get value from state based on property name
+                                value={textPropertyValues[property.name] || ""}
                                 placeholder="Enter content"
                                 onChange={(e) =>
                                   handlePropertyText(
