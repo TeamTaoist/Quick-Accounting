@@ -91,9 +91,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
         values: selectedOptions.map((option) => option.value).join(";"),
       },
     });
-    if (v.length === 0) {
-      setPropertyMultiValues({});
-    }
   };
 
   const handleSelectSingleChange = (
@@ -110,9 +107,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
         values: selectedOption.value,
       },
     });
-    if (selectedOption.value === "") {
-      setSelectSingleValue(undefined);
-    }
   };
 
   // property value input
@@ -131,9 +125,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
         values: value,
       },
     });
-    if (e.target.value === "") {
-      setPropertyTextValue({});
-    }
   };
 
   const [age, setAge] = useState("Category");

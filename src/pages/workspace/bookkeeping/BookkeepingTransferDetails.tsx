@@ -78,23 +78,13 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
   const [selectedValues, setSelectedValues] = useState<ReactSelectOption[]>([]);
   const [selectSingleValue, setSelectSingleValue] =
     useState<ReactSelectOption>();
-  const [propertyValues, setPropertyValues] = useState<PropertyValues>({});
-  const [propertyMultiValues, setPropertyMultiValues] =
-    useState<PropertyValues>({});
+  const [propertyValues, setPropertyValues] = useState<{
+    [key: string]: PropertyValues;
+  }>({});
+  const [propertyMultiValues, setPropertyMultiValues] = useState<{
+    [key: string]: PropertyValues;
+  }>({});
 
-  const handleSelectSingleChange = (
-    selectedOption: ReactSelectOption,
-    name: string,
-    type: string
-  ) => {
-    setSelectSingleValue(selectedOption);
-    setPropertyValues({ name: name, type: type, values: selectedOption.value });
-    if (selectedOption.value === "") {
-      setPropertyMultiValues({});
-    }
-  };
-
-  // handle multi select
   const handleSelectChange = (
     selectedOptions: ReactSelectOption[],
     name: string,
@@ -104,28 +94,45 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
     console.log(selectedOptions, name, type);
     const v = selectedOptions?.map((p) => p.value);
     setPropertyMultiValues({
-      name: name,
-      type: type,
-      values: v.join(";"),
+      ...propertyMultiValues,
+      [name]: {
+        name: name,
+        type: type,
+        values: selectedOptions.map((option) => option.value).join(";"),
+      },
     });
-    if (v.length === 0) {
-      setPropertyMultiValues({});
-    }
+  };
+
+  const handleSelectSingleChange = (
+    selectedOption: ReactSelectOption,
+    name: string,
+    type: string
+  ) => {
+    setSelectSingleValue(selectedOption);
+    setPropertyValues({
+      ...propertyValues,
+      [name]: {
+        name: name,
+        type: type,
+        values: selectedOption.value,
+      },
+    });
   };
 
   // property value input
   const [propertyContent, setPropertyContent] = useState<string>("");
-  const [proPertyTextValue, setPropertyTextValue] = useState<any>({});
+  const [proPertyTextValue, setPropertyTextValue] = useState<{
+    [name: string]: any;
+  }>({});
   const handlePropertyText = (e: any, name: string, type: string) => {
-    setPropertyContent(e.target.value);
+    const value = e.target.value;
     setPropertyTextValue({
-      name: name,
-      type: type,
-      values: e.target.value,
+      ...proPertyTextValue,
+      [name]: {
+        ...proPertyTextValue[name],
+        values: value,
+      },
     });
-    if (e.target.value === "") {
-      setPropertyTextValue({});
-    }
   };
 
   const [age, setAge] = useState("Category");
@@ -171,13 +178,30 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
     category_id: selectedCategory?.ID,
     category_name: selectedCategory?.name,
     category_properties: [
-      ...(Object.keys(propertyValues).length !== 0 ? [propertyValues] : []),
-      ...(Object.keys(propertyMultiValues).length !== 0
-        ? [propertyMultiValues]
-        : []),
-      ...(Object.keys(proPertyTextValue).length !== 0
-        ? [proPertyTextValue]
-        : []),
+      ...Object.keys(propertyValues).map(
+        (key) =>
+          ({
+            name: key as string,
+            type: "single-select",
+            values: propertyValues[key as keyof PropertyValues]?.values,
+          } as ICategoryProperties)
+      ),
+      ...Object.keys(propertyMultiValues).map(
+        (key) =>
+          ({
+            name: key as string,
+            type: "multi-select",
+            values: propertyMultiValues[key as keyof PropertyValues]?.values,
+          } as ICategoryProperties)
+      ),
+      ...Object.keys(proPertyTextValue).map(
+        (key) =>
+          ({
+            name: key,
+            type: "Text",
+            values: proPertyTextValue[key].values,
+          } as ICategoryProperties)
+      ),
     ],
   };
   let parseCategoryProperties: any;
@@ -189,38 +213,49 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
     }
   }
   useEffect(() => {
-    const initialSelectSingleValue = parseCategoryProperties
-      .filter((p: any) => p.type === "single-select")
-      .map((p: any) => ({
-        name: p.name,
-        type: p.type,
-        values: p.values,
-      }));
+    const initialSelectSingleValue: { [name: string]: any } = {};
+    const initialSelectedValues: { [name: string]: any } = {};
+    const initialPropertyTextValue: { [name: string]: any } = {};
+    const initialText: { [name: string]: any } = {};
 
-    const initialSelectedValues = parseCategoryProperties
-      .filter((p: any) => p.type === "multi-select")
-      .map((p: any) => ({
-        name: p.name,
-        type: p.type,
-        values: p.values,
-      }));
+    parseCategoryProperties.forEach((property: any) => {
+      if (property.type === "single-select") {
+        initialSelectSingleValue[property.name] = {
+          name: property.name,
+          type: property.type,
+          values: property.values,
+        };
+        // initialSelectSingleValue[property.name] = property.values;
+      } else if (property.type === "multi-select") {
+        initialSelectedValues[property.name] = {
+          name: property.name,
+          type: property.type,
+          values: property.values,
+        };
+      } else if (property.type === "Text") {
+        initialPropertyTextValue[property.name] = {
+          name: property.name,
+          type: property.type,
+          values: property.values,
+        };
+        // initialText[property.name] = property.values;
+      }
+    });
 
-    const initialPropertyTextValue = parseCategoryProperties
-      .filter((p: any) => p.type === "Text")
-      .map((p: any) => ({
-        name: p.name,
-        type: p.type,
-        values: p.values,
-      }));
-    const initialText = parseCategoryProperties
-      .filter((p: any) => p.type === "Text")
-      .map((p: any) => p.values);
+    // setPropertyTextValue(initialPropertyTextValue);
+    setPropertyMultiValues(initialSelectedValues);
+    setPropertyValues(initialSelectSingleValue);
+    setPropertyTextValue(initialPropertyTextValue);
+  }, []);
 
-    setPropertyTextValue(initialPropertyTextValue[0] || {});
-    setPropertyMultiValues(initialSelectedValues[0] || {});
-    setPropertyValues(initialSelectSingleValue[0] || {});
-
-    setPropertyContent(initialText[0]);
+  useEffect(() => {
+    const initialSelectedCategory = workspaceCategoryProperties?.find(
+      (f) => f?.ID === selectedCategoryID
+    );
+    setSelectedCategory(initialSelectedCategory);
+    if (initialSelectedCategory) {
+      setCategoryProperties(initialSelectedCategory?.properties);
+    }
   }, []);
 
   const handleUpdateCategory = async () => {
@@ -230,6 +265,8 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
       updatedPaymentBody
     );
   };
+  console.log("body", updatedPaymentBody);
+
   if (isLoading) return <p></p>;
 
   const formatTimestamp = (timestamp: number) => {
@@ -416,7 +453,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                     </FormControl>
                   </TableCell>
                 </TableRow>
-                {categoryProperties?.map((property: any) => (
+                {selectedCategory.properties?.map((property: any) => (
                   <>
                     {property.type === "single-select" && (
                       <TableRow
@@ -452,7 +489,11 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                                 label: v,
                               }))}
                             defaultValues={parseCategoryProperties
-                              .filter((p: any) => p.type === "single-select")
+                              .filter(
+                                (p: any) =>
+                                  p.type === "single-select" &&
+                                  p.name === property.name
+                              )
                               .map((p: any) =>
                                 p.values.split(";").map((v: string) => ({
                                   value: v,
@@ -466,7 +507,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                     )}
                   </>
                 ))}
-                {categoryProperties?.map((property: any) => (
+                {selectedCategory.properties?.map((property: any) => (
                   <>
                     {property.type === "multi-select" && (
                       <TableRow
@@ -508,7 +549,11 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                             //     label: v,
                             //   }))}
                             defaultValues={parseCategoryProperties
-                              .filter((p: any) => p.type === "multi-select")
+                              .filter(
+                                (p: any) =>
+                                  p.type === "multi-select" &&
+                                  p.name === property.name
+                              )
                               .map((p: any) =>
                                 p.values.split(";").map((v: string) => ({
                                   value: v,
@@ -522,7 +567,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                     )}
                   </>
                 ))}
-                {categoryProperties?.map((property: any) => (
+                {selectedCategory.properties?.map((property: any) => (
                   <>
                     {property.type === "Text" && (
                       <TableRow
@@ -548,7 +593,9 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                             }}
                             size="small"
                             fullWidth
-                            value={propertyContent}
+                            value={
+                              proPertyTextValue[property.name]?.values || ""
+                            }
                             // id="fullWidth"
                             placeholder="Enter content"
                             onChange={(e) =>
