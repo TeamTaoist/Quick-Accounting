@@ -20,6 +20,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WorkspaceIndex from "./pages/workspace";
 import AuthChecker from "./components/authChecker";
+import PrivateRoute from "./utils/PrivateRoute";
 
 const RouterLink = () => {
   return (
@@ -41,7 +42,14 @@ const RouterLink = () => {
 
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPopup />} />
-        <Route path="/user" element={<UserDashboard />} />
+        <Route
+          path="/user"
+          element={
+            <PrivateRoute>
+              <UserDashboard />
+            </PrivateRoute>
+          }
+        />
         <Route path="/workspace/:id" element={<WorkspaceIndex />}>
           <Route path="assets" element={<Assets />} />
           <Route path="category" element={<Category />} />

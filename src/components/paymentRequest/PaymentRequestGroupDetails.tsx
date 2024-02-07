@@ -463,7 +463,7 @@ const PaymentRequestGroupDetails = ({
                       </TableRow>
                       {selectedCategories[index]?.properties?.map(
                         (properties: ICategoryProperties, i: number) => (
-                          <>
+                          <React.Fragment key={i}>
                             {properties.type === "single-select" && (
                               <TableRow
                                 sx={{
@@ -652,7 +652,7 @@ const PaymentRequestGroupDetails = ({
                                 </TableRow>
                               )}
                             </>
-                          </>
+                          </React.Fragment>
                         )
                       )}
                     </TableBody>
