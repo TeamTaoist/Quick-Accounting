@@ -234,7 +234,6 @@ const PaymentRequestGroupDetails = ({
       paymentId.toString(),
       paymentRequestBody
     );
-    console.log("paymentRequestBody", paymentRequestBody);
   };
 
   return (
@@ -511,7 +510,9 @@ const PaymentRequestGroupDetails = ({
                                       index
                                     ].category_properties
                                       .filter(
-                                        (p: any) => p.type === "single-select"
+                                        (p: any) =>
+                                          p.type === "single-select" &&
+                                          p.name === properties.name
                                       )
                                       .map((p: any) =>
                                         p.values
@@ -575,7 +576,8 @@ const PaymentRequestGroupDetails = ({
                                         ].category_properties
                                           .filter(
                                             (p: any) =>
-                                              p.type === "multi-select"
+                                              p.type === "multi-select" &&
+                                              p.name === properties.name
                                           )
                                           .map((p: any) =>
                                             p.values
@@ -625,7 +627,9 @@ const PaymentRequestGroupDetails = ({
                                         sharePaymentRequestForm[
                                           index
                                         ].category_properties.find(
-                                          (p) => p.type === "Text"
+                                          (p) =>
+                                            p.type === "Text" &&
+                                            p.name === properties.name
                                         )?.values || ""
                                       }
                                       // id="fullWidth"
