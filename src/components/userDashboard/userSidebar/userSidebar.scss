@@ -1,0 +1,62 @@
+.user-sidebar {
+  border-right: 1px solid var(--border);
+  width: 327px;
+  height: 100vh;
+  position: relative;
+  // height: 100%;
+  // padding-top: 137px;
+  .arrow-icon {
+    width: 24px;
+    position: absolute;
+    right: 0;
+    top: 36px;
+    right: 30px;
+  }
+  .user-address {
+    padding-top: 140px;
+    padding-inline: 18px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    .address {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      img {
+        width: 30px;
+      }
+      p {
+        font-size: 22px;
+        font-weight: 500px;
+      }
+    }
+    .disconnect {
+      border: none;
+      outline: none;
+      background: var(--bg-primary);
+      font-size: 15px;
+      padding: 8px 20px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+  }
+  // payment request
+  .payment-request {
+    padding: 40px 0;
+    ul > li {
+      list-style: none;
+      background: var(--bg-primary);
+      font-size: 18px;
+      padding: 10px 0;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 16px;
+        padding-top: 3.5px;
+      }
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "name": "quick-accounting",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "/",
+  "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.3",
+    "@mui/material": "^5.15.3",
+    "@mui/x-charts": "^6.18.7",
+    "@nivo/bar": "^0.84.0",
+    "@nivo/core": "^0.84.0",
+    "@safe-global/api-kit": "^2.0.0",
+    "@safe-global/protocol-kit": "^2.0.0",
+    "@safe-global/safe-core-sdk": "^3.3.5",
+    "@safe-global/safe-core-sdk-types": "^3.0.1",
+    "@safe-global/safe-ethers-lib": "^1.9.4",
+    "@safe-global/safe-gateway-typescript-sdk": "^3.14.0",
+    "@tanstack/react-query": "^5.17.19",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "assert": "^2.1.0",
+    "axios": "^1.6.5",
+    "bignumber.js": "^9.1.2",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "customize-cra": "^1.0.0",
+    "dayjs": "^1.11.10",
+    "ethers": "^6.10.0",
+    "https-browserify": "^1.0.0",
+    "i18next": "^23.7.16",
+    "path-browserify": "^1.0.1",
+    "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^14.0.0",
+    "react-paginate": "^8.2.0",
+    "react-router-dom": "^6.21.1",
+    "react-scripts": "5.0.1",
+    "react-select": "^5.8.0",
+    "react-toastify": "^10.0.0",
+    "sass": "^1.69.7",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "typescript": "^5.0.4",
+    "url": "^0.11.3",
+    "viem": "^2.5.0",
+    "wagmi": "^2.5.2",
+    "web-vitals": "^2.1.0",
+    "zustand": "^4.4.7"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "build:prod": "REACT_APP_ENV_VERSION=prod npm run build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "overrides": {
+    "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@types/react-copy-to-clipboard": "^5.0.7"
+  }
+}

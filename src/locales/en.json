@@ -1,0 +1,74 @@
+{
+  "header": {
+    "QuickAccounting": "Quick Accounting"
+  },
+  "home": {
+    "HomeTitle": "Web3 accounting software for crypto organizations.",
+    "HomeDescription": "Quick Accounting has the ability to tracking the transactions of crypto assets for organizations, maintain balance sheet of organizations, and generate financial reports. Everything in QA is trackable, and transparent.",
+    "ConnectBtn": "Connect Wallet"
+  },
+  "login": {
+    "LoginTitle": "Select your wallet",
+    "MetaMask": "MetaMask"
+  },
+  "user": {
+    "Disconnect": "Disconnect",
+    "MyPayment": "My payment request"
+  },
+  "workspaceForm": {
+    "FormTitle": "Set up a workspace",
+    "FormDescription": "A workspace is where you send, swap, and offramp crypto from your Safe.",
+    "WorkspaceName": "Workspace name",
+    "AddASafe": "Add a Safe",
+    "CreateASafe": "Create a Safe",
+    "FormSubmitBtn": "Set up workspace"
+  },
+  "workspace": {
+    "New": "New",
+    "Share": "Share",
+    "Assets": "Assets",
+    "Category": "Category",
+    "PaymentRequest": "Payment Request",
+    "Queue": "Queue (Signing)",
+    "Bookkeeping": "Bookkeeping",
+    "Reports": "Reports",
+    "Settings": "Settings"
+  },
+  "assets": {
+    "SearchPlaceholder": "Search Token"
+  },
+  "category": {
+    "CreateCategory": "Create category",
+    "ViewArchives": "View archives"
+  },
+  "paymentRequest": {
+    "SearchToken": "Search Token",
+    "Search": "Search",
+    "Filter": "Filter by Category",
+    "ViewRejection": "View rejection",
+    "Download": "Download",
+    "Reject": "Reject",
+    "Approve": "Approve",
+    "Back": "Back",
+    "Hide": "Hide"
+  },
+  "queue": {
+    "NextUp": "Next Up",
+    "Nonce": "Nonce",
+    "Action": "Action",
+    "Approve": "Approve",
+    "Execute": "Execute",
+    "Import": "Import"
+  },
+  "bookkeeping": {
+    "ViewHidden": "View hidden",
+    "Import": "Import"
+  },
+  "reports": {
+    "Report": "Report"
+  },
+  "settings": {
+    "MultiSigner": "Multi-signer",
+    "SafeAddress": "Workspace address"
+  }
+}
