@@ -61,6 +61,7 @@ import NewPaymentRequest from "../../workspaceDashboard/newPaymentRequest/NewPay
 import ReactPaginate from "react-paginate";
 import { formatNumber } from "../../../utils/number";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import { formatDate } from "../../../utils/time";
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -213,8 +214,8 @@ const PaymentRequest = () => {
   const sortedPayment = Object.entries(groupedData).sort(
     ([idA, itemsA], [idB, itemsB]) => {
       if (itemsA.length && itemsB.length) {
-        const aTime = new Date(itemsA[0].UpdatedAt).getTime();
-        const bTime = new Date(itemsB[0].UpdatedAt).getTime();
+        const aTime = new Date(itemsA[0].CreatedAt).getTime();
+        const bTime = new Date(itemsB[0].CreatedAt).getTime();
         return bTime - aTime;
       }
       return Number(idA) - Number(idB);
@@ -505,7 +506,7 @@ const PaymentRequest = () => {
                                   )}
                                 </TableCell>
                                 <TableCell>
-                                  {payment.CreatedAt.slice(0, 10)}
+                                  {formatDate(payment.CreatedAt)}
                                 </TableCell>
                                 <TableCell>
                                   <Button
@@ -574,7 +575,7 @@ const PaymentRequest = () => {
                                         </CategoryCell>
                                       </TableCell>
                                       <TableCell>
-                                        {payments.CreatedAt.slice(0, 10)}
+                                        {formatDate(payments.CreatedAt)}
                                       </TableCell>
                                       <TableCell
                                       // sx={{ width: "100px" }}
