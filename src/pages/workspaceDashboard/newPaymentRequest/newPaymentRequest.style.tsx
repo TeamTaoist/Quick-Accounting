@@ -77,11 +77,14 @@ export const AddPayment = styled.button`
 `;
 
 export const NoteInformation = styled.div`
-  padding-top: 21px;
+  padding-top: 30px;
   padding-inline: 40px;
   h3 {
     font-size: 18px;
     font-weight: 400;
+    padding-bottom: 8px;
+  }
+  .note {
     padding-bottom: 8px;
   }
 `;

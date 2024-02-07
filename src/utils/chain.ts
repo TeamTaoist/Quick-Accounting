@@ -24,3 +24,8 @@ const CHAINS = [
 ];
 
 export default CHAINS;
+
+export const getChainExplorer = (chainId: number) => {
+  const chainData = CHAINS.find((chain) => chain.chainId === chainId);
+  return chainData?.explore;
+};

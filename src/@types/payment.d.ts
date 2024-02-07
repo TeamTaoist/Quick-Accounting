@@ -4,6 +4,7 @@ declare interface IPaymentRequest {
   UpdatedAt: string;
   DeletedAt: null | string;
   workspace_id: number;
+  workspace_chain_id: number;
   payment_request_id: number;
   recipient: string;
   amount: string;

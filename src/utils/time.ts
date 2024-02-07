@@ -17,3 +17,21 @@ export const formatDate = (time: number | string, formatter?: "-" | ".") => {
   const f = formatter || "-";
   return dayjs(time).format(`YYYY${f}MM${f}DD`);
 };
+
+export const formatTimestamp = (timestamp: number) => {
+  const date = new Date(timestamp);
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+    timeZoneName: "short",
+  };
+
+  const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
+  return formattedDate + " +UTC";
+};
