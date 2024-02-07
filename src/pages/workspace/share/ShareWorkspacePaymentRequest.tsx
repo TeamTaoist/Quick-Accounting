@@ -734,7 +734,8 @@ const ShareWorkspacePaymentRequest = () => {
                                         ].category_properties
                                           .filter(
                                             (p: any) =>
-                                              p.type === "single-select"
+                                              p.type === "single-select" &&
+                                              p.name === property.name
                                           )
                                           .map((p: any) =>
                                             p.values
@@ -793,7 +794,8 @@ const ShareWorkspacePaymentRequest = () => {
                                         ].category_properties
                                           .filter(
                                             (p: any) =>
-                                              p.type === "multi-select"
+                                              p.type === "multi-select" &&
+                                              p.name === property.name
                                           )
                                           .map((p: any) =>
                                             p.values
