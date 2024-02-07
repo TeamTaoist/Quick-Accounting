@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: `https://qa-api.taoist.dev`,
+  baseURL:
+    process.env.REACT_APP_ENV_VERSION === "prod"
+      ? "https://qa-api.taoist.dev"
+      : `https://qa-api.taoist.dev`,
 });
 
 const getLocalUserData = () => {
@@ -9,7 +12,7 @@ const getLocalUserData = () => {
   if (userData) {
     try {
       const user = JSON.parse(userData);
-      return user?.token
+      return user?.token;
     } catch (error) {}
   }
   return null;

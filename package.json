@@ -60,6 +60,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    "build:prod": "REACT_APP_ENV_VERSION=prod npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
