@@ -5,7 +5,7 @@ export const getUTC = () => {
   return `UTC+${offset / 60}`;
 };
 
-export const formatTime = (time: number, formatter?: "-" | ".") => {
+export const formatTime = (time: number | string, formatter?: "-" | ".") => {
   if (!time) return "";
   const f = formatter || "-";
 
