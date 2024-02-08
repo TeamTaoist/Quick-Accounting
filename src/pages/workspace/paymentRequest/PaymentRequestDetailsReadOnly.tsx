@@ -199,6 +199,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
     PAYMENT_REQUEST_STATUS.Draft,
     PAYMENT_REQUEST_STATUS.Submitted,
     PAYMENT_REQUEST_STATUS.Rejected,
+    PAYMENT_REQUEST_STATUS.Pending,
   ].includes(paymentRequestDetails.status);
 
   return (
