@@ -315,7 +315,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                       borderRight: "1px solid var(--border-table)",
                       borderLeft: "1px solid var(--border-table)",
                       borderBottom: "1px solid var(--border-table)",
-                      // borderRadius: "7px",
                       padding: 0,
                       paddingLeft: "12px",
                     }}
@@ -331,7 +330,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                     sx={{
                       borderRight: "1px solid var(--border-table)",
                       borderBottom: "1px solid var(--border-table)",
-                      // borderRadius: "7px",
                       padding: 0,
                       paddingLeft: "12px",
                     }}
@@ -342,7 +340,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                     sx={{
                       borderRight: "1px solid var(--border-table)",
                       borderBottom: "1px solid var(--border-table)",
-                      // borderRadius: "7px",
                       padding: 0,
                       paddingLeft: "12px",
                     }}
@@ -353,7 +350,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                     sx={{
                       borderBottom: "1px solid var(--border-table)",
                       borderRight: "1px solid var(--border-table)",
-                      // borderRadius: "7px",
                       padding: 0,
                       paddingLeft: "12px",
                     }}
@@ -391,7 +387,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
         <NoteInformation>
           <h3>Note Information</h3>
 
-          <TableContainer sx={{ borderRadius: "7px" }}>
+          <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableBody>
                 <TableRow
@@ -632,11 +628,11 @@ const RequestDetails = styled.div`
 `;
 const TransferTable = styled.div`
   /* padding-bottom: 50px; */
-  margin-inline: 46px;
+  margin-inline: 40px;
   margin-top: 20px;
 `;
 const TransactionHash = styled.div`
-  margin-inline: 46px;
+  margin-inline: 40px;
   margin-top: 30px;
   img {
     cursor: pointer;
