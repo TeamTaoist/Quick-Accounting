@@ -108,7 +108,7 @@ const Bookkeeping = () => {
 
   // fetch bookkeeping data
   useEffect(() => {
-    getBookkeepingList(workspaceId, visible).then((res) => {
+    getBookkeepingList(workspaceId, visible, pageNumbers).then((res) => {
       if (res) {
         setTotalItem(res);
       }
@@ -191,7 +191,7 @@ const Bookkeeping = () => {
     const filterByCategory =
       selectedValue === "" || bookkeeping.category_name === selectedValue;
     return searchItem && filterByCategory;
-  })
+  });
 
   // export
   const paymentRequestIds = selected.join(",");
@@ -227,7 +227,7 @@ const Bookkeeping = () => {
   };
 
   const handleViewHiddenList = () => {
-    getBookkeepingList(workspaceId, true).then((res) => {
+    getBookkeepingList(workspaceId, true, pageNumbers).then((res) => {
       if (res) {
         setTotalItem(res);
         setSelected([]);
@@ -236,7 +236,7 @@ const Bookkeeping = () => {
     setPaymentRequest(false);
   };
   const handleBackBtn = () => {
-    getBookkeepingList(workspaceId, false).then((res) => {
+    getBookkeepingList(workspaceId, false, pageNumbers).then((res) => {
       if (res) {
         setTotalItem(res);
         setSelected([]);
@@ -248,7 +248,6 @@ const Bookkeeping = () => {
   const uniqueCategoryNames = Array.from(
     new Set(bookkeepingList.map((payment) => payment.category_name))
   );
-  console.log("payment request", paymentRequest);
 
   return (
     <PaymentRequestContainer>

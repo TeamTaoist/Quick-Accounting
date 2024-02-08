@@ -8,7 +8,8 @@ interface UseBookkeeping {
   bookkeepingList: IBookkeeping[];
   getBookkeepingList: (
     workspaceId: number,
-    visibility: boolean
+    visibility: boolean,
+    page?: number
   ) => Promise<number>;
   exportBookkeepingList: (
     workspaceId: number,
@@ -33,7 +34,7 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
   return {
     bookkeepingList: [],
     // fetch bookkeeping list
-    getBookkeepingList: async (workspaceId, visibility) => {
+    getBookkeepingList: async (workspaceId, visibility, page = 0) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
