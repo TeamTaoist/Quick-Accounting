@@ -4,7 +4,7 @@ const axiosClient = axios.create({
   baseURL:
     process.env.REACT_APP_ENV_VERSION === "prod"
       ? "https://qa-api.taoist.dev"
-      : `https://qa-api.taoist.dev`,
+      : `https://dev-qa-api.taoist.dev`,
 });
 
 const getLocalUserData = () => {
