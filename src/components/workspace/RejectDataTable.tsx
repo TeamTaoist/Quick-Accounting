@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   CategoryCell,
   PaymentPagination,
+  TableSection,
 } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import statusIcon from "../../assets/workspace/status-icon.svg";
 import styled from "@emotion/styled";
@@ -87,85 +88,96 @@ const RejectDataTable = ({
         setOpen={setOpenModal}
         component={PaymentRequestDetails}
       />
-      <TableContainer component={Paper} sx={{ maxHeight: 600, minWidth: 800 }}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ background: "var(--bg-primary)" }}>
-                Recipient
-              </TableCell>
-              <TableCell sx={{ background: "var(--bg-primary)" }}>
-                Amount
-              </TableCell>
-              <TableCell sx={{ background: "var(--bg-primary)" }}>
-                Category
-              </TableCell>
-              <TableCell sx={{ background: "var(--bg-primary)" }}>
-                Status
-              </TableCell>
-              <TableCell sx={{ background: "var(--bg-primary)" }}>
-                Date
-              </TableCell>
-              <TableCell sx={{ background: "var(--bg-primary)" }}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filterData?.map((payment) => (
-              <TableRow key={payment.ID}>
-                <TableCell>{recipientFormate(payment.recipient)}</TableCell>
-                <TableCell>
-                  {formatNumber(Number(payment.amount))} {payment.currency_name}
+      <TableSection>
+        <TableContainer
+          component={Paper}
+          sx={{
+            minWidth: 800,
+            borderRadius: "10px",
+            maxHeight: "100%",
+            overflow: "auto",
+          }}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ background: "var(--bg-primary)" }}>
+                  Recipient
                 </TableCell>
-                <TableCell>
-                  <CategoryCell>{payment.category_name}</CategoryCell>
+                <TableCell sx={{ background: "var(--bg-primary)" }}>
+                  Amount
                 </TableCell>
-                <TableCell>
-                  <Status>
-                    <img src={statusIcon} alt="" />
-                    {"Rejected"}
-                  </Status>
+                <TableCell sx={{ background: "var(--bg-primary)" }}>
+                  Category
                 </TableCell>
-                <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      borderColor: "black",
-                      color: "black",
-                      textTransform: "lowercase",
-                    }}
-                    onClick={() =>
-                      handleOpenModal(payment.payment_request_id, payment.ID)
-                    }
-                  >
-                    view more
-                  </Button>
+                <TableCell sx={{ background: "var(--bg-primary)" }}>
+                  Status
                 </TableCell>
+                <TableCell sx={{ background: "var(--bg-primary)" }}>
+                  Date
+                </TableCell>
+                <TableCell sx={{ background: "var(--bg-primary)" }}></TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {total > 10 && (
-        <PaymentPagination>
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel=">"
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={3}
-            pageCount={pageCount}
-            previousLabel="<"
-            renderOnZeroPageCount={null}
-            containerClassName="pagination"
-            pageLinkClassName="page-num"
-            previousLinkClassName="page-arrow"
-            nextLinkClassName="page-arrow"
-            activeLinkClassName="active"
-            // initialPage={2}
-            forcePage={0}
-          />
-        </PaymentPagination>
-      )}
+            </TableHead>
+            <TableBody>
+              {filterData?.map((payment) => (
+                <TableRow key={payment.ID}>
+                  <TableCell>{recipientFormate(payment.recipient)}</TableCell>
+                  <TableCell>
+                    {formatNumber(Number(payment.amount))}{" "}
+                    {payment.currency_name}
+                  </TableCell>
+                  <TableCell>
+                    <CategoryCell>{payment.category_name}</CategoryCell>
+                  </TableCell>
+                  <TableCell>
+                    <Status>
+                      <img src={statusIcon} alt="" />
+                      {"Rejected"}
+                    </Status>
+                  </TableCell>
+                  <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        borderColor: "black",
+                        color: "black",
+                        textTransform: "lowercase",
+                      }}
+                      onClick={() =>
+                        handleOpenModal(payment.payment_request_id, payment.ID)
+                      }
+                    >
+                      view more
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {total > 10 && (
+          <PaymentPagination>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel=">"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={3}
+              pageCount={pageCount}
+              previousLabel="<"
+              renderOnZeroPageCount={null}
+              containerClassName="pagination"
+              pageLinkClassName="page-num"
+              previousLinkClassName="page-arrow"
+              nextLinkClassName="page-arrow"
+              activeLinkClassName="active"
+              // initialPage={2}
+              forcePage={0}
+            />
+          </PaymentPagination>
+        )}
+      </TableSection>
     </div>
   );
 };
