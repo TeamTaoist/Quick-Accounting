@@ -124,7 +124,8 @@ const UserPaymentRequest = () => {
                     </Safe>
                   </TableCell>
                   <TableCell>
-                    {formatNumber(Number(payment.amount))} USDT
+                    {formatNumber(Number(payment.amount))}{" "}
+                    {payment.currency_name}
                   </TableCell>
                   <TableCell>
                     <Status>

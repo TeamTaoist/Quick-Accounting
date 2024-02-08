@@ -264,6 +264,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
 
         console.log("Added a new signature to transaction with safeTxGas");
         console.log("- Signer signature:", signatureResponse.signature);
+        toast.success("successfully");
         return true;
       } catch (error: any) {
         toast.error(error?.data?.msg || error?.status || error);
@@ -349,6 +350,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
               contractReceipt?.hash
             }&timestamp=${Date.now()}`
           );
+          toast.success("Executed");
           return true;
         } else {
           console.log("Transaction invalid. Transaction was not executed.");

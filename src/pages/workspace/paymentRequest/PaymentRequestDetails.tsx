@@ -266,7 +266,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
         setOpen={setOpen}
       >
         <RequestDetails>
-          <TableContainer sx={{ paddingInline: "46px", paddingTop: "30px" }}>
+          <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -291,7 +291,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                 <TableRow
                   sx={{
                     height: "30px",
-                    borderRadius: "10px",
                   }}
                 >
                   <TableCell
@@ -320,7 +319,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                   <TableCell
                     sx={{
                       border: "1px solid var(--border-table)",
-                      borderRadius: "5px",
                       padding: 0,
                       paddingLeft: "10px",
                       // minHeight: "40px",
@@ -397,7 +395,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
           <NoteInformation>
             <h3>Note Information</h3>
 
-            <TableContainer sx={{ borderRadius: "7px" }}>
+            <TableContainer>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
                   <TableRow

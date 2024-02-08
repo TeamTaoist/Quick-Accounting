@@ -90,6 +90,7 @@ const Bookkeeping = () => {
   const [totalItem, setTotalItem] = useState(0);
 
   const pageCount = Math.ceil(totalItem / 10);
+  console.log(pageNumbers);
 
   const handlePageClick = (event: any) => {
     setPageNumbers(event.selected);
@@ -108,7 +109,7 @@ const Bookkeeping = () => {
 
   // fetch bookkeeping data
   useEffect(() => {
-    getBookkeepingList(workspaceId, visible).then((res) => {
+    getBookkeepingList(workspaceId, visible, pageNumbers).then((res) => {
       if (res) {
         setTotalItem(res);
       }
@@ -170,7 +171,7 @@ const Bookkeeping = () => {
 
   // modal end
   // filter
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const handleChange = (event: any) => {
     setSearchTerm(event.target.value);
@@ -191,7 +192,7 @@ const Bookkeeping = () => {
     const filterByCategory =
       selectedValue === "" || bookkeeping.category_name === selectedValue;
     return searchItem && filterByCategory;
-  })
+  });
 
   // export
   const paymentRequestIds = selected.join(",");
@@ -227,16 +228,16 @@ const Bookkeeping = () => {
   };
 
   const handleViewHiddenList = () => {
-    getBookkeepingList(workspaceId, true).then((res) => {
-      if (res) {
-        setTotalItem(res);
-        setSelected([]);
-      }
-    });
+    // getBookkeepingList(workspaceId, true, pageNumbers).then((res) => {
+    //   if (res) {
+    //     setTotalItem(res);
+    //   }
+    // });
+    setSelected([]);
     setPaymentRequest(false);
   };
   const handleBackBtn = () => {
-    getBookkeepingList(workspaceId, false).then((res) => {
+    getBookkeepingList(workspaceId, false, pageNumbers).then((res) => {
       if (res) {
         setTotalItem(res);
         setSelected([]);
@@ -248,7 +249,6 @@ const Bookkeeping = () => {
   const uniqueCategoryNames = Array.from(
     new Set(bookkeepingList.map((payment) => payment.category_name))
   );
-  console.log("payment request", paymentRequest);
 
   return (
     <PaymentRequestContainer>
@@ -454,6 +454,27 @@ const Bookkeeping = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          {/* pagination */}
+          {totalItem > 10 && (
+            <PaymentPagination>
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel=">"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={3}
+                pageCount={pageCount}
+                previousLabel="<"
+                renderOnZeroPageCount={null}
+                containerClassName="pagination"
+                pageLinkClassName="page-num"
+                previousLinkClassName="page-arrow"
+                nextLinkClassName="page-arrow"
+                activeLinkClassName="active"
+                // initialPage={2}
+                forcePage={0}
+              />
+            </PaymentPagination>
+          )}
         </PaymentRequestBody>
       )}
       {!paymentRequest && (
@@ -462,31 +483,11 @@ const Bookkeeping = () => {
             workspaceId={workspaceId}
             paymentRequest={paymentRequest}
             handleBackBtn={handleBackBtn}
-            filterData={filterData}
             handleBookkeepingDetails={handleBookkeepingDetails}
+            searchTerm={searchTerm}
+            selectedValue={selectedValue}
           />
         </RejectSection>
-      )}
-      {/* pagination */}
-      {totalItem > 10 && (
-        <PaymentPagination>
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel=">"
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={3}
-            pageCount={pageCount}
-            previousLabel="<"
-            renderOnZeroPageCount={null}
-            containerClassName="pagination"
-            pageLinkClassName="page-num"
-            previousLinkClassName="page-arrow"
-            nextLinkClassName="page-arrow"
-            activeLinkClassName="active"
-            // initialPage={2}
-            forcePage={0}
-          />
-        </PaymentPagination>
       )}
 
       {/* header */}
