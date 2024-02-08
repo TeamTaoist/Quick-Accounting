@@ -1,4 +1,8 @@
 {
+  "general": {
+    "Cancel": "Cancel",
+    "Confirm": "Confirm"
+  },
   "header": {
     "QuickAccounting": "Quick Accounting"
   },

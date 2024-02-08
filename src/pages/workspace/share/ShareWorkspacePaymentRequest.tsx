@@ -36,6 +36,7 @@ import { formatBalance } from "../../../utils/number";
 import { toast } from "react-toastify";
 import { isAddress } from "viem";
 import { parseUnits } from "ethers";
+import ConfirmModal from "../../../components/confirmModal";
 
 const ShareWorkspacePaymentRequest = () => {
   const { shareId } = useParams();
@@ -49,6 +50,7 @@ const ShareWorkspacePaymentRequest = () => {
     saveSharePaymentRequest,
     shareData,
   } = useSharePaymentRequest();
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
   console.log("workspace", workspace);
 
@@ -309,7 +311,7 @@ const ShareWorkspacePaymentRequest = () => {
         toast.error(`Invalid address: ${item.recipient}`);
         return;
       }
-      if (Number(item.amount) < 0) {
+      if (Number(item.amount) <= 0) {
         toast.error(`Invalid amount: ${item.amount}`);
         return;
       }
@@ -332,18 +334,23 @@ const ShareWorkspacePaymentRequest = () => {
     return true;
   };
 
-  // create payment request
-  const handleSubmitPaymentRequest = () => {
-    if (!checkAllFields()) {
-      return;
-    }
+  const handleConfirmSubmit = () => {
     createSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
       (res) => {
+        setConfirmVisible(false);
         if (res) {
           setShareDataLoading(!shareDataLoading);
         }
       }
     );
+  };
+
+  // create payment request
+  const handleSubmitPaymentRequest = () => {
+    if (!checkAllFields()) {
+      return;
+    }
+    setConfirmVisible(true);
   };
   const handleSavePaymentRequest = () => {
     saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
@@ -897,6 +904,13 @@ const ShareWorkspacePaymentRequest = () => {
             )}
             {/* </>
             )} */}
+            {confirmVisible && (
+              <ConfirmModal
+                msg="Confirm to submit?"
+                onConfirm={handleConfirmSubmit}
+                onClose={() => setConfirmVisible(false)}
+              />
+            )}
           </SharePaymentForm>
         </SharePaymentContainer>
       </Header>

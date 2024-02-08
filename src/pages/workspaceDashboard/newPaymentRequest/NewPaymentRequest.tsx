@@ -271,7 +271,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
         toast.error(`Invalid address: ${item.recipient}`);
         return;
       }
-      if (Number(item.amount) < 0) {
+      if (Number(item.amount) <= 0) {
         toast.error(`Invalid amount: ${item.amount}`);
         return;
       }
