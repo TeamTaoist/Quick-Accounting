@@ -10,6 +10,7 @@ import Loading from "../../../utils/Loading";
 import styled from "@emotion/styled";
 import { useAccount } from "wagmi";
 import { useAuthStore } from "../../../store/useAuthStore";
+import config from "../../../envConfig";
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
@@ -68,11 +69,16 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             </Link>
           </WorkspaceList>
         </div>
-        <Link to="/user" className="user">
-          {/* <div className="user"> */}
-          <img src={avatar} alt="" />
-          {/* </div> */}
-        </Link>
+        <UserBox>
+          <Link to="/user">
+            {/* <div className="user"> */}
+            <img src={avatar} alt="" />
+            {/* </div> */}
+          </Link>
+          <p className="version">
+            {config.version} {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}
+          </p>
+        </UserBox>
       </div>
       <div className="sidebar-details">{children}</div>
     </div>
@@ -91,5 +97,25 @@ const WorkspaceList = styled.div`
   &::-webkit-scrollbar {
     display: none;
     width: 0;
+  }
+`;
+
+const UserBox = styled.div`
+  height: 130px;
+  width: 131px;
+  padding-top: 35px;
+  border-top: 1px solid var(--border);
+  img {
+    width: 55px;
+    margin-left: 35px;
+  }
+  text-align: center;
+  a {
+    height: 100px;
+  }
+  .version {
+    color: #ccc;
+    font-size: 13px;
+    margin-top: 10px;
   }
 `;
