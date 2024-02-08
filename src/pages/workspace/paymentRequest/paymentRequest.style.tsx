@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
 
 export const PaymentRequestContainer = styled.div`
-  padding-top: 30px;
+  padding-top: 3%;
   margin-inline: 40px;
+  /* height: 90vh; */
 `;
 export const Header = styled.div`
   display: flex;
@@ -54,7 +55,15 @@ export const ViewReject = styled.div`
   }
 `;
 export const RejectSection = styled.div`
-  margin-top: 70px;
+  margin-top: 90px;
+`;
+export const BookkeepingRejectSection = styled.div`
+  margin-top: 40px;
+`;
+export const TableSection = styled.div`
+  height: 100%;
+  height: 70vh;
+  width: 100%;
 `;
 export const PaymentPagination = styled.div`
   padding: 20px 0;
