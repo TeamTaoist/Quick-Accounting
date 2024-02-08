@@ -246,7 +246,7 @@ const PaymentRequestGroupDetails = ({
           {sharePaymentRequestForm.map((payment: any, index: number) => (
             <React.Fragment key={payment.ID}>
               <TableContainer
-                sx={{ paddingInline: "46px", paddingTop: "30px" }}
+                sx={{ paddingInline: "40px", paddingTop: "30px" }}
               >
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
@@ -380,7 +380,7 @@ const PaymentRequestGroupDetails = ({
               {/* note info */}
               <NoteInformation>
                 {/* {paymentRequestGroupDetails.map((payment) => ( */}
-                <TableContainer sx={{ borderRadius: "7px" }}>
+                <TableContainer>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableBody>
                       <TableRow

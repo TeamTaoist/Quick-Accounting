@@ -7,6 +7,7 @@ export const SidebarContainer = styled.div`
   overflow-y: auto;
 `;
 export const WorkspaceInfo = styled.div`
+  background-color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
