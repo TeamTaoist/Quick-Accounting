@@ -38,7 +38,7 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
-          `/bookkeeping/${workspaceId}?hided=${visibility}&sort_field=tx_timestamp&sort_order=desc`
+          `/bookkeeping/${workspaceId}?hided=${visibility}&page=${page}&sort_field=tx_timestamp&sort_order=desc`
         );
         set({ bookkeepingList: data.data.rows });
         if (data?.msg === "success" && data?.code === 200) {

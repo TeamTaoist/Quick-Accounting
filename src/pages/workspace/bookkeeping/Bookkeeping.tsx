@@ -90,6 +90,7 @@ const Bookkeeping = () => {
   const [totalItem, setTotalItem] = useState(0);
 
   const pageCount = Math.ceil(totalItem / 10);
+  console.log(pageNumbers);
 
   const handlePageClick = (event: any) => {
     setPageNumbers(event.selected);
@@ -170,7 +171,7 @@ const Bookkeeping = () => {
 
   // modal end
   // filter
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const handleChange = (event: any) => {
     setSearchTerm(event.target.value);
@@ -227,12 +228,12 @@ const Bookkeeping = () => {
   };
 
   const handleViewHiddenList = () => {
-    getBookkeepingList(workspaceId, true, pageNumbers).then((res) => {
-      if (res) {
-        setTotalItem(res);
-        setSelected([]);
-      }
-    });
+    // getBookkeepingList(workspaceId, true, pageNumbers).then((res) => {
+    //   if (res) {
+    //     setTotalItem(res);
+    //   }
+    // });
+    setSelected([]);
     setPaymentRequest(false);
   };
   const handleBackBtn = () => {
@@ -453,6 +454,27 @@ const Bookkeeping = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          {/* pagination */}
+          {totalItem > 10 && (
+            <PaymentPagination>
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel=">"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={3}
+                pageCount={pageCount}
+                previousLabel="<"
+                renderOnZeroPageCount={null}
+                containerClassName="pagination"
+                pageLinkClassName="page-num"
+                previousLinkClassName="page-arrow"
+                nextLinkClassName="page-arrow"
+                activeLinkClassName="active"
+                // initialPage={2}
+                forcePage={0}
+              />
+            </PaymentPagination>
+          )}
         </PaymentRequestBody>
       )}
       {!paymentRequest && (
@@ -461,31 +483,11 @@ const Bookkeeping = () => {
             workspaceId={workspaceId}
             paymentRequest={paymentRequest}
             handleBackBtn={handleBackBtn}
-            filterData={filterData}
             handleBookkeepingDetails={handleBookkeepingDetails}
+            searchTerm={searchTerm}
+            selectedValue={selectedValue}
           />
         </RejectSection>
-      )}
-      {/* pagination */}
-      {totalItem > 10 && (
-        <PaymentPagination>
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel=">"
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={3}
-            pageCount={pageCount}
-            previousLabel="<"
-            renderOnZeroPageCount={null}
-            containerClassName="pagination"
-            pageLinkClassName="page-num"
-            previousLinkClassName="page-arrow"
-            nextLinkClassName="page-arrow"
-            activeLinkClassName="active"
-            // initialPage={2}
-            forcePage={0}
-          />
-        </PaymentPagination>
       )}
 
       {/* header */}

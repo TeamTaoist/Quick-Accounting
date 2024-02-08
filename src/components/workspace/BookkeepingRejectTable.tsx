@@ -26,23 +26,27 @@ import { CategoryTitle } from "../../pages/workspace/category/category.style";
 import { getShortAddress } from "../../utils";
 import { useWorkspace } from "../../store/useWorkspace";
 import { formatNumber } from "../../utils/number";
+import { PaymentPagination } from "../../pages/workspace/paymentRequest/paymentRequest.style";
+import ReactPaginate from "react-paginate";
 
 interface RejectTableProps {
   workspaceId: number;
   paymentRequest: boolean;
-  filterData: IBookkeeping[];
   handleBookkeepingDetails: (
     paymentRequestId: number,
     paymentId: number
   ) => void;
   handleBackBtn: () => void;
+  searchTerm?: string | undefined;
+  selectedValue?: string;
 }
 const BookkeepingRejectTable = ({
   workspaceId,
   paymentRequest,
-  filterData,
   handleBookkeepingDetails,
   handleBackBtn,
+  searchTerm,
+  selectedValue,
 }: RejectTableProps) => {
   const navigate = useNavigate();
 
@@ -78,6 +82,33 @@ const BookkeepingRejectTable = ({
     return selected.indexOf(categoryId) !== -1;
   };
 
+  // pagination
+  const [pageNumbers, setPageNumbers] = useState(0);
+  const [totalItem, setTotalItem] = useState(0);
+
+  const pageCount = Math.ceil(totalItem / 10);
+
+  const handlePageClick = (event: any) => {
+    setPageNumbers(event.selected);
+  };
+
+  useEffect(() => {
+    getBookkeepingList(workspaceId, true, pageNumbers).then((res) => {
+      if (res) {
+        setTotalItem(res);
+      }
+    });
+  }, [pageNumbers]);
+
+  // filter table data
+  const filterData = bookkeepingList.filter((bookkeeping) => {
+    const searchItem = bookkeeping.recipient
+      .toLowerCase()
+      .includes(searchTerm?.toLowerCase() || "");
+    const filterByCategory =
+      selectedValue === "" || bookkeeping.category_name === selectedValue;
+    return searchItem && filterByCategory;
+  });
   // un-hide item
   const paymentRequestIds = selected.join(",");
   const handleUnHideBookkeepingList = async () => {
@@ -196,6 +227,27 @@ const BookkeepingRejectTable = ({
               </TableBody>
             </Table>
           </TableContainer>
+          {/* pagination */}
+          {totalItem > 10 && (
+            <PaymentPagination>
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel=">"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={3}
+                pageCount={pageCount}
+                previousLabel="<"
+                renderOnZeroPageCount={null}
+                containerClassName="pagination"
+                pageLinkClassName="page-num"
+                previousLinkClassName="page-arrow"
+                nextLinkClassName="page-arrow"
+                activeLinkClassName="active"
+                // initialPage={2}
+                forcePage={0}
+              />
+            </PaymentPagination>
+          )}
         </>
       )}
     </div>
