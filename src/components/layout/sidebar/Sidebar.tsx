@@ -75,7 +75,9 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             <img src={avatar} alt="" />
             {/* </div> */}
           </Link>
-          <p className="version">{config.version}</p>
+          <p className="version">
+            {config.version} {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}
+          </p>
         </UserBox>
       </div>
       <div className="sidebar-details">{children}</div>
