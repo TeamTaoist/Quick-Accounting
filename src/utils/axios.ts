@@ -1,10 +1,8 @@
 import axios from "axios";
+import config from "../envConfig";
 
 const axiosClient = axios.create({
-  baseURL:
-    process.env.REACT_APP_ENV_VERSION === "prod"
-      ? "https://qa-api.taoist.dev"
-      : `https://dev-qa-api.taoist.dev`,
+  baseURL: config.endpoint,
 });
 
 const getLocalUserData = () => {
