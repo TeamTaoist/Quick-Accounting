@@ -242,7 +242,7 @@ const QueueTransactionItem = ({
           <TableContainer
             component={Paper}
             sx={{
-              maxHeight: 200,
+              // maxHeight: 200,
               minWidth: 800,
               boxShadow: "none",
             }}
