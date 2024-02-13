@@ -60,7 +60,7 @@ export interface CategoryProperty {
   type: string;
   value: "";
 }
-interface CategoryPropertiesState {
+export interface CategoryPropertiesState {
   [categoryId: number]: CategoryProperty[];
 }
 
@@ -192,7 +192,7 @@ const Category = () => {
   const [propertyValues, setPropertyValues] = useState<string[]>([]);
 
   const handleAddButtonClick = (categoryId: number, index: number) => {
-    setPropertyValues((prevValues) => [...prevValues, ""]);
+    setPropertyValues([...propertyValues, ""]);
   };
   const handleDeleteProperty = (index: number) => {
     const updatedProperty = propertyValues.filter((_, i) => i !== index);
@@ -501,139 +501,24 @@ const Category = () => {
                             {categoryProperties[category.ID] &&
                               categoryProperties[category.ID].map(
                                 (property, index) => (
-                                  // <div>
-                                  //   {showProperty === index && (
-                                  //     <DetailsInput>
-                                  //       <h3>Property name</h3>
-                                  //       <PropertyInput
-                                  //         placeholder="Property name"
-                                  //         value={property.name}
-                                  //         onChange={(e) =>
-                                  //           handlePropertyNameChange(
-                                  //             category.ID,
-                                  //             index,
-                                  //             e.target.value
-                                  //           )
-                                  //         }
-                                  //       />
-                                  //       <h3>Property Type</h3>
-                                  //       <Select
-                                  //         labelId={`property-type-label-${index}`}
-                                  //         id={`property-type-${index}`}
-                                  //         value={property.type}
-                                  //         onChange={(e) =>
-                                  //           handlePropertyTypeChange(
-                                  //             category.ID,
-                                  //             index,
-                                  //             e.target.value
-                                  //           )
-                                  //         }
-                                  //         size="small"
-                                  //         IconComponent={() => (
-                                  //           <InputAdornment position="start">
-                                  //             <img
-                                  //               src={arrowBottom}
-                                  //               alt="Custom Arrow Icon"
-                                  //               style={{ marginRight: "20px" }}
-                                  //             />
-                                  //           </InputAdornment>
-                                  //         )}
-                                  //         sx={{
-                                  //           minWidth: "100%",
-                                  //           "& fieldset": { border: 1 },
-                                  //         }}
-                                  //       >
-                                  //         <MenuItem
-                                  //           value="Text"
-                                  //           sx={{
-                                  //             "&:hover": {
-                                  //               backgroundColor:
-                                  //                 "var(--hover-bg)",
-                                  //             },
-                                  //             "&.Mui-selected": {
-                                  //               backgroundColor:
-                                  //                 "var(--hover-bg)",
-                                  //             },
-                                  //           }}
-                                  //         >
-                                  //           <DropdownOption>
-                                  //             <img src={option} alt="" /> Text
-                                  //           </DropdownOption>
-                                  //         </MenuItem>
-                                  //         <MenuItem value="single-select">
-                                  //           <DropdownOption>
-                                  //             <img src={select} alt="" />{" "}
-                                  //             Single-select
-                                  //           </DropdownOption>
-                                  //         </MenuItem>
-                                  //         <MenuItem value="multi-select">
-                                  //           <DropdownOption>
-                                  //             <img src={multiSelect} alt="" />
-                                  //             Multi-select
-                                  //           </DropdownOption>
-                                  //         </MenuItem>
-                                  //       </Select>
-                                  //       {/* property value */}
-                                  //       {property.type !== "Text" && (
-                                  //         <>
-                                  //           {/* <PropertyInputValue
-                                  //           placeholder=""
-                                  //           value={property.value}
-                                  //           onChange={(e) =>
-                                  //             handlePropertyValueChange(
-                                  //               category.ID,
-                                  //               index,
-                                  //               e.target.value
-                                  //             )
-                                  //           }
-                                  //         /> */}
-                                  //           {propertyValues.map(
-                                  //             (value, valueIndex) => (
-                                  //               <PropertyOptionsValue>
-                                  //                 <img
-                                  //                   src={propertyAdd}
-                                  //                   alt=""
-                                  //                 />
-                                  //                 <PropertyInputValue
-                                  //                   key={valueIndex}
-                                  //                   placeholder=""
-                                  //                   value={value}
-                                  //                   onChange={(e) =>
-                                  //                     handlePropertyValueChang(
-                                  //                       category.ID,
-                                  //                       valueIndex,
-                                  //                       e.target.value
-                                  //                     )
-                                  //                   }
-                                  //                 />
-                                  //                 <img
-                                  //                   onClick={() =>
-                                  //                     handleDeleteProperty(
-                                  //                       valueIndex
-                                  //                     )
-                                  //                   }
-                                  //                   src={propertyDelete}
-                                  //                   alt=""
-                                  //                 />
-                                  //               </PropertyOptionsValue>
-                                  //             )
-                                  //           )}
-                                  //           <PropertyOptionsValueBtn
-                                  //             onClick={() =>
-                                  //               handleAddButtonClick(
-                                  //                 category.ID,
-                                  //                 index
-                                  //               )
-                                  //             }
-                                  //           >
-                                  //             + Add option
-                                  //           </PropertyOptionsValueBtn>
-                                  //         </>
-                                  //       )}
-                                  //     </DetailsInput>
-                                  //   )}
-                                  // </div>
-                                  <LocalCategoryPropertyDetails />
+                                  <LocalCategoryPropertyDetails
+                                    showProperty={showProperty}
+                                    property={property}
+                                    index={index}
+                                    handlePropertyNameChange={
+                                      handlePropertyNameChange
+                                    }
+                                    category={category}
+                                    handlePropertyTypeChange={
+                                      handlePropertyTypeChange
+                                    }
+                                    propertyValues={propertyValues}
+                                    handlePropertyValueChang={
+                                      handlePropertyValueChang
+                                    }
+                                    handleDeleteProperty={handleDeleteProperty}
+                                    handleAddButtonClick={handleAddButtonClick}
+                                  />
                                 )
                               )}
                           </>
