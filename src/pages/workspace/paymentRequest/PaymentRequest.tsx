@@ -128,6 +128,7 @@ const PaymentRequest = () => {
   const [openGroupPaymentModal, setOpenGroupPaymentModal] = useState(false);
   const [openSignPaymentModal, setSignPaymentModal] = useState(false);
   console.log("modal", openModal);
+  // don't need to fetch data again for details section
 
   const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
     getPaymentRequestDetails(Number(id), paymentRequestId, paymentId).then(
