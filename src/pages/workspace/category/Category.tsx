@@ -2,23 +2,10 @@ import { useEffect, useState } from "react";
 import add from "../../../assets/workspace/add.svg";
 import archive from "../../../assets/workspace/archive.svg";
 import property1 from "../../../assets/workspace/property1.svg";
-import option from "../../../assets/workspace/option.svg";
-import select from "../../../assets/workspace/select.svg";
-import multiSelect from "../../../assets/workspace/multi-select.svg";
-import propertyAdd from "../../../assets/workspace/property-add.svg";
-import propertyDelete from "../../../assets/workspace/property-delete.svg";
-
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import {
-  InputAdornment,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
-import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -35,19 +22,13 @@ import {
   CreateCategoryBtn,
   CreateOptionButton,
   Details,
-  DetailsInput,
-  DropdownOption,
   Header,
   Option,
   OptionCreateButtons,
   Options,
   PropertyBtns,
   PropertyCreateButtons,
-  PropertyInput,
-  PropertyInputValue,
   PropertyOptions,
-  PropertyOptionsValue,
-  PropertyOptionsValueBtn,
   PropertyTitle,
 } from "./category.style";
 import { useCategory } from "../../../store/useCategory";
@@ -569,21 +550,3 @@ const Category = () => {
 };
 
 export default Category;
-
-// const SingleCategoryProperty = ({
-//   property,
-//   handleSelectedProperty,
-//   propertyName,
-// }: any) => {
-//   return (
-//     <div onClick={() => handleSelectedProperty(property)}>
-//       <Option>
-//         <PropertyTitle>
-//           <img src={property1} alt="" />
-//           <p>{property.name}</p>
-//         </PropertyTitle>
-//         <img src={archive} alt="" />
-//       </Option>
-//     </div>
-//   );
-// };
