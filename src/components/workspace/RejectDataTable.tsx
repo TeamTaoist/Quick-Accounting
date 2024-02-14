@@ -46,9 +46,10 @@ const RejectDataTable = ({
   const { getPaymentRequestDetails, getFailedPaymentRequestList } =
     usePaymentsStore();
 
-  const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
+  const [paymentId, setPaymentId] = useState<number | null>(null);
+  const handleOpenModal = (paymentId: number) => {
+    setPaymentId(paymentId);
     setOpenModal(true);
-    getPaymentRequestDetails(Number(id), paymentRequestId, paymentId);
   };
   // filter table data
   const filterData = searchTerm
@@ -87,6 +88,7 @@ const RejectDataTable = ({
         open={openModal}
         setOpen={setOpenModal}
         component={PaymentRequestDetails}
+        additionalProps={{ paymentId, data: list }}
       />
       <TableSection>
         <TableContainer
@@ -145,9 +147,7 @@ const RejectDataTable = ({
                         color: "black",
                         textTransform: "lowercase",
                       }}
-                      onClick={() =>
-                        handleOpenModal(payment.payment_request_id, payment.ID)
-                      }
+                      onClick={() => handleOpenModal(payment.ID)}
                     >
                       view more
                     </Button>

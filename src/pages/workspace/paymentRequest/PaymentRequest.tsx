@@ -127,23 +127,11 @@ const PaymentRequest = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openGroupPaymentModal, setOpenGroupPaymentModal] = useState(false);
   const [openSignPaymentModal, setSignPaymentModal] = useState(false);
-  console.log("modal", openModal);
-  // don't need to fetch data again for details section
 
-  // const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
-  //   getPaymentRequestDetails(Number(id), paymentRequestId, paymentId).then(
-  //     (res) => {
-  //       if (res) {
-  //         setOpenModal(true);
-  //       }
-  //     }
-  //   );
-  // };
   const [paymentId, setPaymentId] = useState<number | null>(null);
   const handleOpenModal = (paymentId: number) => {
     setPaymentId(paymentId);
     setOpenModal(true);
-    console.log(paymentId);
   };
   // TODO: add separate modal for group details
   // group payment details
@@ -301,7 +289,11 @@ const PaymentRequest = () => {
             open={openModal}
             setOpen={setOpenModal}
             component={PaymentRequestDetails}
-            additionalProps={{ paymentId }}
+            additionalProps={{
+              paymentId,
+              data: paymentRequestList,
+              pageName: "payment",
+            }}
           />
           {/* payment request group details modal */}
           <CustomModal
