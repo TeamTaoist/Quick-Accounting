@@ -157,73 +157,6 @@ const ShareWorkspacePaymentRequest = () => {
     setSharePaymentRequestForm(updatedRequests);
   };
 
-  // const handleFormChange = (
-  //   index: number,
-  //   field: string,
-  //   value: any,
-  //   propertyName?: string,
-  //   propertyType?: string,
-  //   categoryId?: number
-  // ) => {
-  //   const updatedRequests = [...sharePaymentRequestForm];
-
-  //   if (field === "currency_address") {
-  //     const token = assetsList.find((item) => item.tokenInfo.address === value);
-  //     if (token) {
-  //       updatedRequests[index].currency_name = token.tokenInfo.symbol;
-  //       updatedRequests[index].decimals = token.tokenInfo.decimals;
-  //     }
-  //     updatedRequests[index].currency_contract_address = value;
-  //   } else if (field === "categoryProperties") {
-  //     const existingCategoryProperty = updatedRequests[
-  //       index
-  //     ].category_properties.find(
-  //       (property) =>
-  //         property.name === propertyName && property.type === propertyType
-  //     );
-
-  //     if (existingCategoryProperty) {
-  //       // If property exists, update its value
-  //       if (propertyType === "Text") {
-  //         existingCategoryProperty.values = value;
-  //       } else {
-  //         const values =
-  //           propertyType === "single-select"
-  //             ? value.value
-  //             : value.map((v: ReactSelectOption) => v.value).join(";");
-  //         existingCategoryProperty.values = values;
-  //       }
-  //     } else {
-  //       // If property doesn't exist, create a new one
-  //       if (propertyType === "Text") {
-  //         const newCategoryProperty = {
-  //           name: propertyName,
-  //           type: propertyType,
-  //           values: value,
-  //         };
-  //         updatedRequests[index].category_properties.push(newCategoryProperty);
-  //       } else {
-  //         const newCategoryProperty = {
-  //           name: propertyName,
-  //           type: propertyType,
-  //           values:
-  //             propertyType === "single-select"
-  //               ? value.value
-  //               : value.map((v: ReactSelectOption) => v.value).join(";"),
-  //         };
-  //         updatedRequests[index].category_properties.push(newCategoryProperty);
-  //       }
-  //     }
-  //   } else {
-  //     // Your existing code for handling other fields
-  //     if (field !== "currency_address" && field !== "categoryProperties") {
-  //       (updatedRequests[index] as any)[field] = value;
-  //     }
-  //   }
-
-  //   setSharePaymentRequestForm(updatedRequests);
-  // };
-
   const handleDeleteRequestForm = (index: number) => {
     const updatedRequest = sharePaymentRequestForm.filter(
       (_, i) => i !== index
@@ -232,9 +165,6 @@ const ShareWorkspacePaymentRequest = () => {
   };
 
   // get category details
-  // useEffect(() => {
-  //   getWorkspaceCategoryProperties(Number(workspaceId));
-  // }, [getWorkspaceCategoryProperties, workspaceId]);
 
   const [shareDataLoading, setShareDataLoading] = useState<boolean>(false);
   // get payment request details
@@ -352,6 +282,7 @@ const ShareWorkspacePaymentRequest = () => {
     }
     setConfirmVisible(true);
   };
+  // TODO: don't need to fetch data again after submit & save
   const handleSavePaymentRequest = () => {
     saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
       (res) => {
@@ -411,12 +342,12 @@ const ShareWorkspacePaymentRequest = () => {
   return (
     <>
       {isLoading && <Loading />}
-      <CustomModal
+      {/* <CustomModal
         open={openModal}
         setOpen={setOpenModal}
         component={PaymentRequestPreview}
         additionalProps={{ sharePaymentRequestForm }}
-      />
+      /> */}
       <Header>
         <SharePaymentContainer>
           <SharePaymentForm>

@@ -130,14 +130,20 @@ const PaymentRequest = () => {
   console.log("modal", openModal);
   // don't need to fetch data again for details section
 
-  const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
-    getPaymentRequestDetails(Number(id), paymentRequestId, paymentId).then(
-      (res) => {
-        if (res) {
-          setOpenModal(true);
-        }
-      }
-    );
+  // const handleOpenModal = (paymentRequestId: number, paymentId: number) => {
+  //   getPaymentRequestDetails(Number(id), paymentRequestId, paymentId).then(
+  //     (res) => {
+  //       if (res) {
+  //         setOpenModal(true);
+  //       }
+  //     }
+  //   );
+  // };
+  const [paymentId, setPaymentId] = useState<number | null>(null);
+  const handleOpenModal = (paymentId: number) => {
+    setPaymentId(paymentId);
+    setOpenModal(true);
+    console.log(paymentId);
   };
   // TODO: add separate modal for group details
   // group payment details
@@ -197,7 +203,7 @@ const PaymentRequest = () => {
     rejectPaymentLoading,
     newPaymentsVisible,
     pageNumbers,
-    openModal,
+    // openModal,
     openGroupPaymentModal,
   ]);
   // payment_request_id
@@ -295,6 +301,7 @@ const PaymentRequest = () => {
             open={openModal}
             setOpen={setOpenModal}
             component={PaymentRequestDetails}
+            additionalProps={{ paymentId }}
           />
           {/* payment request group details modal */}
           <CustomModal
@@ -520,10 +527,7 @@ const PaymentRequest = () => {
                                         textTransform: "lowercase",
                                       }}
                                       onClick={() =>
-                                        handleOpenModal(
-                                          payment.payment_request_id,
-                                          payment.ID
-                                        )
+                                        handleOpenModal(payment.ID)
                                       }
                                     >
                                       view more

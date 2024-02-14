@@ -40,6 +40,7 @@ import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
+  paymentId?: number | null;
 }
 export interface ReactSelectOption {
   value: string;
@@ -50,15 +51,28 @@ interface PropertyValues {
   type?: string;
   values?: string;
 }
-const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
+const PaymentRequestDetails = ({
+  setOpen,
+  paymentId,
+}: PaymentRequestDetailsProps) => {
   const { id } = useParams();
 
   const [selectedValue, setSelectedValue] = useState("Option1");
 
-  const { paymentRequestDetails, updatePaymentRequestCategory } =
-    usePaymentsStore();
+  const {
+    getPaymentRequestList,
+    paymentRequestList,
+    paymentRequestDetails,
+    updatePaymentRequestCategory,
+  } = usePaymentsStore();
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
+
+  // get selected payment request
+  const selectedPaymentRequest = paymentRequestList?.find(
+    (payment) => payment.ID === paymentId
+  ) as IPaymentRequest;
+  console.log(selectedPaymentRequest);
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
@@ -82,7 +96,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   ) => {
     setSelectedValues(selectedOptions);
     console.log(selectedOptions, name, type);
-    const v = selectedOptions?.map((p) => p.value);
+    // const v = selectedOptions?.map((p) => p.value);
     setPropertyMultiValues({
       ...propertyMultiValues,
       [name]: {
@@ -111,7 +125,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
   // property value input
   const [propertyContent, setPropertyContent] = useState<string>("");
-  // const [proPertyTextValue, setPropertyTextValue] = useState<any>({});
   const [proPertyTextValue, setPropertyTextValue] = useState<{
     [name: string]: any;
   }>({});
@@ -135,12 +148,12 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   // get the selected category list
   const [categoryProperties, setCategoryProperties] = useState<any>([]);
 
-  const [selectedCategoryID, setSelectedCategoryID] = useState<number>(
-    paymentRequestDetails?.category_id
-  );
+  const [selectedCategoryID, setSelectedCategoryID] = useState<
+    number | undefined
+  >(selectedPaymentRequest?.category_id);
   const [selectedCategory, setSelectedCategory] = useState<any>({});
   useEffect(() => {
-    setSelectedCategoryID(paymentRequestDetails.category_id);
+    setSelectedCategoryID(selectedPaymentRequest.category_id);
   }, [setOpen]);
   useEffect(() => {
     const selectedCategory = workspaceCategoryProperties?.find(
@@ -160,6 +173,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
     setPropertyMultiValues({});
     setPropertyTextValue({});
     setPropertyContent("");
+    parseCategoryProperties = {};
   };
   // form data
   const updatedPaymentBody = {
@@ -194,8 +208,8 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   };
 
   let parseCategoryProperties: any;
-  if (paymentRequestDetails) {
-    const categoryProperties = paymentRequestDetails?.category_properties;
+  if (selectedPaymentRequest) {
+    const categoryProperties = selectedPaymentRequest?.category_properties;
     if (categoryProperties) {
       parseCategoryProperties = JSON.parse(categoryProperties);
     }
@@ -206,7 +220,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
     const initialSelectSingleValue: { [name: string]: any } = {};
     const initialSelectedValues: { [name: string]: any } = {};
     const initialPropertyTextValue: { [name: string]: any } = {};
-    const initialText: { [name: string]: any } = {};
 
     parseCategoryProperties.forEach((property: any) => {
       if (property.type === "single-select") {
@@ -215,7 +228,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
           type: property.type,
           values: property.values,
         };
-        // initialSelectSingleValue[property.name] = property.values;
       } else if (property.type === "multi-select") {
         initialSelectedValues[property.name] = {
           name: property.name,
@@ -228,11 +240,9 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
           type: property.type,
           values: property.values,
         };
-        // initialText[property.name] = property.values;
       }
     });
 
-    // setPropertyTextValue(initialPropertyTextValue);
     setPropertyMultiValues(initialSelectedValues);
     setPropertyValues(initialSelectSingleValue);
     setPropertyTextValue(initialPropertyTextValue);
@@ -251,9 +261,10 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   const handleUpdateCategory = async () => {
     await updatePaymentRequestCategory(
       id,
-      paymentRequestDetails.ID.toString(),
+      selectedPaymentRequest?.ID.toString(),
       updatedPaymentBody
     );
+    await getPaymentRequestList(selectedPaymentRequest.workspace_id, false);
   };
   console.log(updatedPaymentBody);
 
@@ -304,9 +315,9 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       sx={{
                         "& fieldset": { border: "none" },
                       }}
-                      disabled={paymentRequestDetails.status === 2}
+                      disabled={selectedPaymentRequest.status === 2}
                       size="small"
-                      value={paymentRequestDetails.recipient}
+                      value={selectedPaymentRequest.recipient}
                       fullWidth
                       // id="fullWidth"
                       placeholder="Enter wallet address"
@@ -328,9 +339,9 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       sx={{
                         "& fieldset": { border: "none" },
                       }}
-                      disabled={paymentRequestDetails.status === 2}
+                      disabled={selectedPaymentRequest.status === 2}
                       size="small"
-                      value={paymentRequestDetails.amount}
+                      value={selectedPaymentRequest.amount}
                       fullWidth
                       // id="fullWidth"
                       placeholder="Enter wallet address"
@@ -349,7 +360,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                     }}
                   >
                     <Select
-                      disabled={paymentRequestDetails.status === 2}
+                      disabled={selectedPaymentRequest.status === 2}
                       labelId="demo-select-small-label"
                       id="demo-select-small"
                       value={selectedValue}
@@ -381,7 +392,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           },
                         }}
                       >
-                        {paymentRequestDetails.currency_name}
+                        {selectedPaymentRequest.currency_name}
                       </MenuItem>
                       {/* <MenuItem value="Option2">Twenty</MenuItem> */}
                     </Select>
@@ -415,7 +426,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                     <TableCell>
                       <FormControl
                         fullWidth
-                        disabled={paymentRequestDetails.status === 2}
+                        disabled={selectedPaymentRequest.status === 2}
                       >
                         <Select
                           labelId="demo-simple-select-label"
@@ -459,7 +470,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                   </TableRow>
                   {/* {categoryProperties?.map((property: any) => ( */}
                   {selectedCategory.properties?.map((property: any) => (
-                    <>
+                    <React.Fragment key={property.ID}>
                       {property.type === "single-select" && (
                         <TableRow
                           sx={{
@@ -478,7 +489,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           <TableCell onBlur={handleUpdateCategory}>
                             <ReactSelect
                               isMulti={false}
-                              isDisabled={paymentRequestDetails.status === 2}
+                              isDisabled={selectedPaymentRequest.status === 2}
                               value={selectSingleValue}
                               onChange={(selectedOption: ReactSelectOption) =>
                                 handleSelectSingleChange(
@@ -510,7 +521,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           </TableCell>
                         </TableRow>
                       )}
-                    </>
+                    </React.Fragment>
                   ))}
                   {/* {categoryProperties?.map((property: any) => ( */}
                   {selectedCategory.properties?.map(
@@ -535,7 +546,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
                             <TableCell onBlur={handleUpdateCategory}>
                               <ReactSelect
-                                isDisabled={paymentRequestDetails.status === 2}
+                                isDisabled={selectedPaymentRequest.status === 2}
                                 value={selectedValues}
                                 onChange={(
                                   selectedOptions: ReactSelectOption[]
@@ -593,7 +604,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
                           <TableCell onBlur={handleUpdateCategory}>
                             <TextField
-                              disabled={paymentRequestDetails.status === 2}
+                              disabled={selectedPaymentRequest.status === 2}
                               sx={{
                                 "& fieldset": { border: "none" },
                               }}
@@ -625,7 +636,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
               </Table>
             </TableContainer>
             {/* rejected status */}
-            {paymentRequestDetails.status === 2 && (
+            {selectedPaymentRequest.status === 2 && (
               <PaymentStatus>
                 <img src={statusIcon} alt="" />
                 <p>Status: Rejected</p>
