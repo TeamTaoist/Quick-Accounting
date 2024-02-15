@@ -76,6 +76,7 @@ const PaymentRequest = () => {
     rejectPaymentRequest,
     getPaymentRequestGroupDetails,
     exportPaymentList,
+    setCurrentPaymentRequestDetail,
   } = usePaymentsStore();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
   // table logic
@@ -128,9 +129,8 @@ const PaymentRequest = () => {
   const [openGroupPaymentModal, setOpenGroupPaymentModal] = useState(false);
   const [openSignPaymentModal, setSignPaymentModal] = useState(false);
 
-  const [paymentId, setPaymentId] = useState<number | null>(null);
-  const handleOpenModal = (paymentId: number) => {
-    setPaymentId(paymentId);
+  const handleOpenModal = (payment: IPaymentRequest) => {
+    setCurrentPaymentRequestDetail(payment);
     setOpenModal(true);
   };
   // TODO: add separate modal for group details
@@ -183,7 +183,6 @@ const PaymentRequest = () => {
     getPaymentRequestList(workspaceId, false, pageNumbers).then((res) => {
       setTotalItem(res);
     });
-    getWorkspaceCategoryProperties(Number(id));
   }, [
     getPaymentRequestList,
     workspaceId,
@@ -191,9 +190,12 @@ const PaymentRequest = () => {
     rejectPaymentLoading,
     newPaymentsVisible,
     pageNumbers,
-    // openModal,
+    openModal,
     openGroupPaymentModal,
   ]);
+  useEffect(() => {
+    getWorkspaceCategoryProperties(Number(id));
+  }, []);
   // payment_request_id
 
   const groupedData = filterData.reduce((acc, item) => {
@@ -237,16 +239,11 @@ const PaymentRequest = () => {
 
   // get rejected payments
   const handleRejectedPayments = () => {
-    // getPaymentRequestList(workspaceId, true);
-    // setRejectPaymentLoading(rejectPaymentLoading);
     setSearchTerm("");
     setSelectedValue("");
     setPaymentRequest(false);
-    // setPaymentLoading(!paymentLoading);
-    console.log("click");
   };
   const handleBackBtn = () => {
-    setPaymentLoading(!paymentLoading);
     setSearchTerm("");
     setSelectedValue("");
   };
@@ -289,11 +286,6 @@ const PaymentRequest = () => {
             open={openModal}
             setOpen={setOpenModal}
             component={PaymentRequestDetails}
-            additionalProps={{
-              paymentId,
-              data: paymentRequestList,
-              pageName: "payment",
-            }}
           />
           {/* payment request group details modal */}
           <CustomModal
@@ -518,9 +510,7 @@ const PaymentRequest = () => {
                                         color: "black",
                                         textTransform: "lowercase",
                                       }}
-                                      onClick={() =>
-                                        handleOpenModal(payment.ID)
-                                      }
+                                      onClick={() => handleOpenModal(payment)}
                                     >
                                       view more
                                     </Button>

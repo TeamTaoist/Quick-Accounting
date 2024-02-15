@@ -40,9 +40,6 @@ import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
-  paymentId?: number | null;
-  data?: IPaymentRequest[];
-  pageName?: string;
 }
 export interface ReactSelectOption {
   value: string;
@@ -53,32 +50,20 @@ interface PropertyValues {
   type?: string;
   values?: string;
 }
-const PaymentRequestDetails = ({
-  setOpen,
-  paymentId,
-  data,
-  pageName,
-}: PaymentRequestDetailsProps) => {
+const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   const { id } = useParams();
 
   const [selectedValue, setSelectedValue] = useState("Option1");
 
   const {
     getPaymentRequestList,
-    paymentRequestList,
-    paymentRequestDetails,
     updatePaymentRequestCategory,
+    paymentRequestDetails,
   } = usePaymentsStore();
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
 
-  // get selected payment request
-  const selectedPaymentRequest = data?.find(
-    (payment) => payment.ID === paymentId
-  ) as IPaymentRequest;
-  console.log("selectedPaymentRequest", selectedPaymentRequest);
-  console.log("data", data);
-
+  const selectedPaymentRequest = paymentRequestDetails;
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
   };
@@ -272,9 +257,6 @@ const PaymentRequestDetails = ({
       selectedPaymentRequest?.ID.toString(),
       updatedPaymentBody
     );
-    if (pageName === "payment") {
-      await getPaymentRequestList(selectedPaymentRequest.workspace_id, false);
-    }
   };
   console.log(updatedPaymentBody);
 
@@ -325,9 +307,9 @@ const PaymentRequestDetails = ({
                       sx={{
                         "& fieldset": { border: "none" },
                       }}
-                      disabled={selectedPaymentRequest.status === 2}
+                      disabled={selectedPaymentRequest?.status === 2}
                       size="small"
-                      value={selectedPaymentRequest.recipient}
+                      value={selectedPaymentRequest?.recipient}
                       fullWidth
                       // id="fullWidth"
                       placeholder="Enter wallet address"
@@ -349,9 +331,9 @@ const PaymentRequestDetails = ({
                       sx={{
                         "& fieldset": { border: "none" },
                       }}
-                      disabled={selectedPaymentRequest.status === 2}
+                      disabled={selectedPaymentRequest?.status === 2}
                       size="small"
-                      value={selectedPaymentRequest.amount}
+                      value={selectedPaymentRequest?.amount}
                       fullWidth
                       // id="fullWidth"
                       placeholder="Enter wallet address"
@@ -370,7 +352,7 @@ const PaymentRequestDetails = ({
                     }}
                   >
                     <Select
-                      disabled={selectedPaymentRequest.status === 2}
+                      disabled={selectedPaymentRequest?.status === 2}
                       labelId="demo-select-small-label"
                       id="demo-select-small"
                       value={selectedValue}
@@ -402,7 +384,7 @@ const PaymentRequestDetails = ({
                           },
                         }}
                       >
-                        {selectedPaymentRequest.currency_name}
+                        {selectedPaymentRequest?.currency_name}
                       </MenuItem>
                       {/* <MenuItem value="Option2">Twenty</MenuItem> */}
                     </Select>
@@ -436,7 +418,7 @@ const PaymentRequestDetails = ({
                     <TableCell>
                       <FormControl
                         fullWidth
-                        disabled={selectedPaymentRequest.status === 2}
+                        disabled={selectedPaymentRequest?.status === 2}
                       >
                         <Select
                           labelId="demo-simple-select-label"
@@ -503,7 +485,7 @@ const PaymentRequestDetails = ({
                                 <ReactSelect
                                   isMulti={false}
                                   isDisabled={
-                                    selectedPaymentRequest.status === 2
+                                    selectedPaymentRequest?.status === 2
                                   }
                                   value={selectSingleValue}
                                   onChange={(
@@ -564,7 +546,7 @@ const PaymentRequestDetails = ({
                                 <TableCell onBlur={handleUpdateCategory}>
                                   <ReactSelect
                                     isDisabled={
-                                      selectedPaymentRequest.status === 2
+                                      selectedPaymentRequest?.status === 2
                                     }
                                     value={selectedValues}
                                     onChange={(
@@ -626,7 +608,9 @@ const PaymentRequestDetails = ({
 
                               <TableCell onBlur={handleUpdateCategory}>
                                 <TextField
-                                  disabled={selectedPaymentRequest.status === 2}
+                                  disabled={
+                                    selectedPaymentRequest?.status === 2
+                                  }
                                   sx={{
                                     "& fieldset": { border: "none" },
                                   }}
@@ -661,7 +645,7 @@ const PaymentRequestDetails = ({
               </Table>
             </TableContainer>
             {/* rejected status */}
-            {selectedPaymentRequest.status === 2 && (
+            {selectedPaymentRequest?.status === 2 && (
               <PaymentStatus>
                 <img src={statusIcon} alt="" />
                 <p>Status: Rejected</p>

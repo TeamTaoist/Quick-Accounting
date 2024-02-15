@@ -33,6 +33,7 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
   const { setLoading } = useLoading.getState();
   return {
     bookkeepingList: [],
+    bookkeepingHiddenList: [],
     // fetch bookkeeping list
     getBookkeepingList: async (workspaceId, visibility, page = 0) => {
       try {
