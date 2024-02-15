@@ -7,6 +7,7 @@ import { useWorkspace } from "./useWorkspace";
 interface UseBookkeeping {
   bookkeepingList: IBookkeeping[];
   bookkeepingHiddenList: IBookkeeping[];
+  bookkeepingDetails: any;
   getBookkeepingList: (
     workspaceId: number,
     visibility: boolean,
@@ -28,6 +29,7 @@ interface UseBookkeeping {
     workspaceId: number,
     paymentRequestIds: string
   ) => Promise<void>;
+  setCurrentBookkeepingDetail: (bookkeeping: IBookkeeping) => void;
 }
 
 export const useBookkeeping = create<UseBookkeeping>((set) => {
@@ -35,6 +37,7 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
   return {
     bookkeepingList: [],
     bookkeepingHiddenList: [],
+    bookkeepingDetails: {},
     // fetch bookkeeping list
     getBookkeepingList: async (workspaceId, visibility, page = 0) => {
       try {
@@ -136,6 +139,9 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
       } finally {
         setLoading(false);
       }
+    },
+    setCurrentBookkeepingDetail: (bookkeeping: IBookkeeping) => {
+      set({ bookkeepingDetails: bookkeeping });
     },
   };
 });

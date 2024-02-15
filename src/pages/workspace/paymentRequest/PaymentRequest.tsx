@@ -190,7 +190,7 @@ const PaymentRequest = () => {
     rejectPaymentLoading,
     newPaymentsVisible,
     pageNumbers,
-    openModal,
+    // openModal,
     openGroupPaymentModal,
   ]);
   useEffect(() => {
@@ -286,6 +286,7 @@ const PaymentRequest = () => {
             open={openModal}
             setOpen={setOpenModal}
             component={PaymentRequestDetails}
+            additionalProps={{ pageName: "payment-request" }}
           />
           {/* payment request group details modal */}
           <CustomModal

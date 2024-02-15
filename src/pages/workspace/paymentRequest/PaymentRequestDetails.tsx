@@ -40,6 +40,7 @@ import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
+  pageName?: string;
 }
 export interface ReactSelectOption {
   value: string;
@@ -50,7 +51,10 @@ interface PropertyValues {
   type?: string;
   values?: string;
 }
-const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
+const PaymentRequestDetails = ({
+  setOpen,
+  pageName,
+}: PaymentRequestDetailsProps) => {
   const { id } = useParams();
 
   const [selectedValue, setSelectedValue] = useState("Option1");
@@ -63,7 +67,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
 
-  const selectedPaymentRequest = paymentRequestDetails;
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
   };
@@ -140,10 +143,10 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
   const [selectedCategoryID, setSelectedCategoryID] = useState<
     number | undefined
-  >(selectedPaymentRequest?.category_id);
+  >(paymentRequestDetails?.category_id);
   const [selectedCategory, setSelectedCategory] = useState<any>({});
   useEffect(() => {
-    setSelectedCategoryID(selectedPaymentRequest.category_id);
+    setSelectedCategoryID(paymentRequestDetails.category_id);
   }, [setOpen]);
   useEffect(() => {
     const selectedCategory = workspaceCategoryProperties?.find(
@@ -201,8 +204,8 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   };
 
   let parseCategoryProperties: any;
-  if (selectedPaymentRequest) {
-    const categoryProperties = selectedPaymentRequest?.category_properties;
+  if (paymentRequestDetails) {
+    const categoryProperties = paymentRequestDetails?.category_properties;
     if (categoryProperties) {
       parseCategoryProperties = JSON.parse(categoryProperties);
     }
@@ -254,9 +257,12 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   const handleUpdateCategory = async () => {
     await updatePaymentRequestCategory(
       id,
-      selectedPaymentRequest?.ID.toString(),
+      paymentRequestDetails?.ID.toString(),
       updatedPaymentBody
     );
+    if (pageName === "payment-request") {
+      getPaymentRequestList(paymentRequestDetails.workspace_id, false);
+    }
   };
   console.log(updatedPaymentBody);
 
@@ -307,9 +313,9 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       sx={{
                         "& fieldset": { border: "none" },
                       }}
-                      disabled={selectedPaymentRequest?.status === 2}
+                      disabled={paymentRequestDetails?.status === 2}
                       size="small"
-                      value={selectedPaymentRequest?.recipient}
+                      value={paymentRequestDetails?.recipient}
                       fullWidth
                       // id="fullWidth"
                       placeholder="Enter wallet address"
@@ -331,9 +337,9 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       sx={{
                         "& fieldset": { border: "none" },
                       }}
-                      disabled={selectedPaymentRequest?.status === 2}
+                      disabled={paymentRequestDetails?.status === 2}
                       size="small"
-                      value={selectedPaymentRequest?.amount}
+                      value={paymentRequestDetails?.amount}
                       fullWidth
                       // id="fullWidth"
                       placeholder="Enter wallet address"
@@ -352,7 +358,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                     }}
                   >
                     <Select
-                      disabled={selectedPaymentRequest?.status === 2}
+                      disabled={paymentRequestDetails?.status === 2}
                       labelId="demo-select-small-label"
                       id="demo-select-small"
                       value={selectedValue}
@@ -384,7 +390,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           },
                         }}
                       >
-                        {selectedPaymentRequest?.currency_name}
+                        {paymentRequestDetails?.currency_name}
                       </MenuItem>
                       {/* <MenuItem value="Option2">Twenty</MenuItem> */}
                     </Select>
@@ -418,7 +424,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                     <TableCell>
                       <FormControl
                         fullWidth
-                        disabled={selectedPaymentRequest?.status === 2}
+                        disabled={paymentRequestDetails?.status === 2}
                       >
                         <Select
                           labelId="demo-simple-select-label"
@@ -485,7 +491,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                                 <ReactSelect
                                   isMulti={false}
                                   isDisabled={
-                                    selectedPaymentRequest?.status === 2
+                                    paymentRequestDetails?.status === 2
                                   }
                                   value={selectSingleValue}
                                   onChange={(
@@ -546,7 +552,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                                 <TableCell onBlur={handleUpdateCategory}>
                                   <ReactSelect
                                     isDisabled={
-                                      selectedPaymentRequest?.status === 2
+                                      paymentRequestDetails?.status === 2
                                     }
                                     value={selectedValues}
                                     onChange={(
@@ -608,9 +614,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 
                               <TableCell onBlur={handleUpdateCategory}>
                                 <TextField
-                                  disabled={
-                                    selectedPaymentRequest?.status === 2
-                                  }
+                                  disabled={paymentRequestDetails?.status === 2}
                                   sx={{
                                     "& fieldset": { border: "none" },
                                   }}
@@ -645,7 +649,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
               </Table>
             </TableContainer>
             {/* rejected status */}
-            {selectedPaymentRequest?.status === 2 && (
+            {paymentRequestDetails?.status === 2 && (
               <PaymentStatus>
                 <img src={statusIcon} alt="" />
                 <p>Status: Rejected</p>

@@ -35,10 +35,10 @@ import ReactPaginate from "react-paginate";
 interface RejectTableProps {
   workspaceId: number;
   paymentRequest: boolean;
-  handleBookkeepingDetails: (
-    paymentRequestId: number,
-    paymentId: number
-  ) => void;
+  // handleBookkeepingDetails: (
+  //   paymentRequestId: number,
+  //   paymentId: number
+  // ) => void;
   handleBackBtn: () => void;
   searchTerm?: string | undefined;
   selectedValue?: string;
@@ -46,7 +46,7 @@ interface RejectTableProps {
 const BookkeepingRejectTable = ({
   workspaceId,
   paymentRequest,
-  handleBookkeepingDetails,
+  // handleBookkeepingDetails,
   handleBackBtn,
   searchTerm,
   selectedValue,
@@ -222,12 +222,12 @@ const BookkeepingRejectTable = ({
                               color: "black",
                               textTransform: "lowercase",
                             }}
-                            onClick={() =>
-                              handleBookkeepingDetails(
-                                bookkeeping.payment_request_id,
-                                bookkeeping.ID
-                              )
-                            }
+                            // onClick={() =>
+                            //   handleBookkeepingDetails(
+                            //     bookkeeping.payment_request_id,
+                            //     bookkeeping.ID
+                            //   )
+                            // }
                           >
                             view more
                           </Button>

@@ -80,8 +80,9 @@ const Bookkeeping = () => {
     importBookkeepingList,
     bookkeepingList,
     hideBookkeepingList,
+    setCurrentBookkeepingDetail,
   } = useBookkeeping();
-  const { getPaymentRequestDetails } = usePaymentsStore();
+  const { setCurrentPaymentRequestDetail } = usePaymentsStore();
   const { workspace } = useWorkspace();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
 
@@ -123,7 +124,6 @@ const Bookkeeping = () => {
     loading,
     // paymentRequest,
     pageNumbers,
-    openModal,
   ]);
 
   // table logic
@@ -155,20 +155,9 @@ const Bookkeeping = () => {
     return selected.indexOf(categoryId) !== -1;
   };
 
-  // end
-  const [hasCategory, setHasCategory] = useState(true);
-
-  const handleBookkeepingDetails = (
-    paymentRequestId: number,
-    paymentId: number
-  ) => {
-    getPaymentRequestDetails(Number(id), paymentRequestId, paymentId).then(
-      (res) => {
-        if (res) {
-          setOpenModal(true);
-        }
-      }
-    );
+  const handleBookkeepingDetails = (bookkeeping: IBookkeeping) => {
+    setCurrentBookkeepingDetail(bookkeeping);
+    setOpenModal(true);
   };
 
   // modal end
@@ -230,20 +219,10 @@ const Bookkeeping = () => {
   };
 
   const handleViewHiddenList = () => {
-    // getBookkeepingList(workspaceId, true, pageNumbers).then((res) => {
-    //   if (res) {
-    //     setTotalItem(res);
-    //   }
-    // });
     setSelected([]);
     setPaymentRequest(false);
   };
   const handleBackBtn = () => {
-    // getBookkeepingList(workspaceId, false, pageNumbers).then((res) => {
-    //   if (res) {
-    //     setTotalItem(res);
-    //   }
-    // });
     setPaymentRequest(true);
     setSelected([]);
   };
@@ -258,7 +237,6 @@ const Bookkeeping = () => {
         open={openModal}
         setOpen={setOpenModal}
         component={BookkeepingTransferDetails}
-        // additionalProps={{}}
       />
       {bookkeepingList.length === 0 && paymentRequest && (
         <BookkeepingTitle>
@@ -448,10 +426,7 @@ const Bookkeeping = () => {
                                 textTransform: "lowercase",
                               }}
                               onClick={() =>
-                                handleBookkeepingDetails(
-                                  bookkeeping.payment_request_id,
-                                  bookkeeping.ID
-                                )
+                                handleBookkeepingDetails(bookkeeping)
                               }
                             >
                               view more
@@ -495,7 +470,7 @@ const Bookkeeping = () => {
             workspaceId={workspaceId}
             paymentRequest={paymentRequest}
             handleBackBtn={handleBackBtn}
-            handleBookkeepingDetails={handleBookkeepingDetails}
+            // handleBookkeepingDetails={handleBookkeepingDetails}
             searchTerm={searchTerm}
             selectedValue={selectedValue}
           />
