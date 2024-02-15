@@ -1,6 +1,4 @@
-import styled from "@emotion/styled";
-import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CategoryTitle,
   CreateBtn,
@@ -14,26 +12,18 @@ import download from "../../../assets/workspace/download.svg";
 import reject from "../../../assets/workspace/reject.svg";
 import back from "../../../assets/workspace/back.svg";
 import filterIcon from "../../../assets/workspace/filtering.svg";
-
-// table
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
+  Checkbox,
   FormControl,
   InputAdornment,
-  InputLabel,
   MenuItem,
   Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -41,7 +31,6 @@ import RejectDataTable from "../../../components/workspace/RejectDataTable";
 import {
   ActionBtn,
   Btn,
-  CategoryCell,
   Header,
   Image,
   Option,
@@ -57,12 +46,11 @@ import CustomModal from "../../../utils/CustomModal";
 import PaymentRequestDetails from "./PaymentRequestDetails";
 import SignPaymentRequest from "./SignPaymentRequest";
 import usePaymentsStore from "../../../store/usePayments";
-import PaymentRequestGroupDetails from "../../../components/paymentRequest/PaymentRequestGroupDetails";
+import PaymentRequestGroupDetails from "../../../components/workspace/paymentRequest/PaymentRequestGroupDetails";
 import NewPaymentRequest from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import ReactPaginate from "react-paginate";
-import { formatNumber } from "../../../utils/number";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
-import { formatDate } from "../../../utils/time";
+import PaymentRequestTableList from "../../../components/workspace/paymentRequest/PaymentRequestTableList";
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -80,12 +68,10 @@ const PaymentRequest = () => {
   } = usePaymentsStore();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
   // table logic
-  const recipientFormate = (n: string) => {
-    return `${n.slice(0, 6)}...${n.slice(-4)}`;
-  };
+
   const [newPaymentsVisible, setNewPaymentsVisible] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
-  const [openRows, setOpenRows] = useState<number[]>([]);
+  // const [openRows, setOpenRows] = useState<number[]>([]);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -97,32 +83,7 @@ const PaymentRequest = () => {
     }
   };
 
-  const handleCheckboxClick = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    categoryId: number
-  ) => {
-    if (event.target.checked) {
-      setSelected((prevSelected) => [...prevSelected, categoryId]);
-    } else {
-      setSelected((prevSelected) =>
-        prevSelected.filter((id) => id !== categoryId)
-      );
-    }
-  };
-
-  const handleRowToggle = (categoryId: number) => {
-    setOpenRows((prevOpenRows) =>
-      prevOpenRows.includes(categoryId)
-        ? prevOpenRows.filter((id) => id !== categoryId)
-        : [...prevOpenRows, categoryId]
-    );
-  };
-
-  const isSelected = (categoryId: number) =>
-    selected.indexOf(categoryId) !== -1;
-
   // end
-  const [hasCategory, setHasCategory] = useState(true);
   const [paymentRequest, setPaymentRequest] = useState(true);
   // modal
   const [openModal, setOpenModal] = useState(false);
@@ -133,18 +94,12 @@ const PaymentRequest = () => {
     setCurrentPaymentRequestDetail(payment);
     setOpenModal(true);
   };
-  // TODO: add separate modal for group details
+
   // group payment details
   const [groupDetails, setGroupDetails] = useState<IPaymentRequest[]>([]);
   const handleGroupPaymentDetails = (items: IPaymentRequest[]) => {
-    // getPaymentRequestGroupDetails(Number(id), paymentRequestId).then((r) => {
-    //   if (r) {
-    //     setOpenGroupPaymentModal(true);
-    //   }
-    // });
     setGroupDetails(items);
     setOpenGroupPaymentModal(true);
-    console.log(items);
   };
 
   // modal end
@@ -168,7 +123,6 @@ const PaymentRequest = () => {
     return searchItem && filterByCategory;
   });
   // fetch payment request
-  const [paymentLoading, setPaymentLoading] = useState<boolean>(false);
   const [rejectPaymentLoading, setRejectPaymentLoading] =
     useState<boolean>(false);
 
@@ -190,16 +144,10 @@ const PaymentRequest = () => {
   }, [
     getPaymentRequestList,
     workspaceId,
-    paymentLoading,
     rejectPaymentLoading,
     newPaymentsVisible,
     pageNumbers,
-    // openModal,
-    // openGroupPaymentModal,
   ]);
-  useEffect(() => {
-    getWorkspaceCategoryProperties(Number(id));
-  }, []);
   // payment_request_id
 
   const groupedData = filterData.reduce((acc, item) => {
@@ -233,7 +181,11 @@ const PaymentRequest = () => {
   const handleRejectPaymentRequest = async () => {
     if (selected.length) {
       await rejectPaymentRequest(id, paymentRequestIds);
-      setPaymentLoading(!paymentLoading);
+      await getPaymentRequestList(workspaceId, false, pageNumbers).then(
+        (res) => {
+          setTotalItem(res);
+        }
+      );
       setSelected([]);
     }
   };
@@ -413,175 +365,15 @@ const PaymentRequest = () => {
                     </TableHead>
                     <TableBody>
                       {sortedPayment.map(([id, items], index) => (
-                        <React.Fragment key={index}>
-                          {items.length > 1 ? (
-                            <TableRow
-                              onClick={() => handleRowToggle(Number(id))}
-                              style={{ cursor: "pointer" }}
-                            >
-                              <TableCell
-                                colSpan={4}
-                                style={{
-                                  padding: 0,
-                                  paddingLeft: "16px",
-                                  borderBottom: "1px solid #ddd",
-                                  borderTop: "none",
-                                  position: "relative",
-                                }}
-                              >
-                                <Checkbox
-                                  checked={isSelected(Number(id))}
-                                  onChange={(event) =>
-                                    handleCheckboxClick(event, Number(id))
-                                  }
-                                />
-                                {items.length} payment requests
-                                <IconButton
-                                  aria-label="expand row"
-                                  size="small"
-                                  style={{
-                                    position: "absolute",
-                                    left: "200px",
-                                  }}
-                                >
-                                  {openRows.includes(Number(id)) ? (
-                                    <KeyboardArrowUpIcon />
-                                  ) : (
-                                    <KeyboardArrowDownIcon />
-                                  )}
-                                </IconButton>
-                              </TableCell>
-                              <TableCell>
-                                <Button
-                                  variant="outlined"
-                                  sx={{
-                                    borderColor: "black",
-                                    color: "black",
-                                    textTransform: "lowercase",
-                                  }}
-                                  onClick={() =>
-                                    handleGroupPaymentDetails(items)
-                                  }
-                                >
-                                  view more
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ) : (
-                            // )}
-                            <>
-                              {items.map((payment) => (
-                                <TableRow key={payment.ID}>
-                                  <TableCell
-                                    style={{
-                                      padding: 0,
-                                      paddingLeft: "16px",
-                                      borderBottom: "1px solid #ddd",
-                                      borderTop: "none",
-                                    }}
-                                  >
-                                    <Checkbox
-                                      checked={isSelected(
-                                        payment.payment_request_id
-                                      )}
-                                      onChange={(event) =>
-                                        handleCheckboxClick(
-                                          event,
-                                          payment.payment_request_id
-                                        )
-                                      }
-                                    />
-                                    {recipientFormate(payment.recipient)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {formatNumber(Number(payment.amount))}{" "}
-                                    {payment.currency_name}
-                                  </TableCell>
-                                  <TableCell>
-                                    {payment.category_name && (
-                                      <CategoryCell>
-                                        {payment.category_name}
-                                      </CategoryCell>
-                                    )}
-                                  </TableCell>
-                                  <TableCell>
-                                    {formatDate(payment.CreatedAt)}
-                                  </TableCell>
-                                  <TableCell>
-                                    <Button
-                                      variant="outlined"
-                                      sx={{
-                                        borderColor: "black",
-                                        color: "black",
-                                        textTransform: "lowercase",
-                                      }}
-                                      onClick={() => handleOpenModal(payment)}
-                                    >
-                                      view more
-                                    </Button>
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </>
-                          )}
-                          <TableRow>
-                            <TableCell
-                              colSpan={5}
-                              sx={{
-                                padding: 0,
-                                // paddingLeft: "16px",
-                                borderTop: "1px solid #ddd",
-                              }}
-                            >
-                              <Collapse
-                                in={openRows.includes(Number(id))}
-                                timeout="auto"
-                                unmountOnExit
-                              >
-                                <Table size="small">
-                                  <TableBody>
-                                    {items.map((payments) => (
-                                      <TableRow key={payments.ID}>
-                                        <TableCell
-                                          // colSpan={1}
-                                          sx={{
-                                            paddingLeft: "58px",
-                                            maxWidth: "112px",
-                                          }}
-                                        >
-                                          {recipientFormate(payments.recipient)}
-                                        </TableCell>
-                                        <TableCell
-                                          sx={{
-                                            maxWidth: "50px",
-                                          }}
-                                        >
-                                          {payments.amount}{" "}
-                                          {payments.currency_name}
-                                        </TableCell>
-                                        <TableCell
-                                          sx={{
-                                            maxWidth: "78px",
-                                          }}
-                                        >
-                                          <CategoryCell>
-                                            {payments.category_name}
-                                          </CategoryCell>
-                                        </TableCell>
-                                        <TableCell>
-                                          {formatDate(payments.CreatedAt)}
-                                        </TableCell>
-                                        <TableCell
-                                        // sx={{ width: "100px" }}
-                                        ></TableCell>
-                                      </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </Collapse>
-                            </TableCell>
-                          </TableRow>
-                        </React.Fragment>
+                        <PaymentRequestTableList
+                          items={items}
+                          index={index}
+                          selected={selected}
+                          setSelected={setSelected}
+                          handleGroupPaymentDetails={handleGroupPaymentDetails}
+                          handleOpenModal={handleOpenModal}
+                          paymentId={id}
+                        />
                       ))}
                     </TableBody>
                   </Table>
@@ -609,14 +401,6 @@ const PaymentRequest = () => {
               </TableSection>
             </PaymentRequestBody>
           )}
-          {/* {!paymentRequest && (
-            <RejectSection>
-              <RejectDataTable
-                searchTerm={searchTerm}
-                selectedValue={selectedValue}
-              />
-            </RejectSection>
-          )} */}
         </>
       )}
       {!paymentRequest && (

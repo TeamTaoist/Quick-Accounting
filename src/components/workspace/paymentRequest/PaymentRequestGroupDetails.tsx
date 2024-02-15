@@ -16,26 +16,26 @@ import {
   Typography,
 } from "@mui/material";
 
-import arrowBottom from "../../assets/workspace/arrow-bottom.svg";
-import multiSelect from "../../assets/workspace/multi-select.svg";
-import selectIcon from "../../assets/workspace/select.svg";
-import categoryIcon from "../../assets/workspace/category-icon.svg";
-import optionsIcon from "../../assets/workspace/option.svg";
-import statusIcon from "../../assets/workspace/status.svg";
+import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
+import multiSelect from "../../../assets/workspace/multi-select.svg";
+import selectIcon from "../../../assets/workspace/select.svg";
+import categoryIcon from "../../../assets/workspace/category-icon.svg";
+import optionsIcon from "../../../assets/workspace/option.svg";
+import statusIcon from "../../../assets/workspace/status.svg";
 import styled from "@emotion/styled";
-import usePaymentsStore from "../../store/usePayments";
-import { useLoading } from "../../store/useLoading";
+import usePaymentsStore from "../../../store/usePayments";
+import { useLoading } from "../../../store/useLoading";
 import {
   DeleteIcon,
   Image,
   NoteInfo,
   NoteInformation,
   RequestSubmit,
-} from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
-import ReactSelect from "../ReactSelect";
-import WorkspaceItemDetailsLayout from "../layout/WorkspaceItemDetailsLayout";
-import { useCategoryProperty } from "../../store/useCategoryProperty";
-import { ReactSelectOption } from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
+} from "../../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
+import ReactSelect from "../../ReactSelect";
+import WorkspaceItemDetailsLayout from "../../layout/WorkspaceItemDetailsLayout";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import { ReactSelectOption } from "../../../pages/workspace/paymentRequest/PaymentRequestDetails";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
