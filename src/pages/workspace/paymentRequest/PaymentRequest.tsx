@@ -135,12 +135,16 @@ const PaymentRequest = () => {
   };
   // TODO: add separate modal for group details
   // group payment details
-  const handleGroupPaymentDetails = (paymentRequestId: string) => {
-    getPaymentRequestGroupDetails(Number(id), paymentRequestId).then((r) => {
-      if (r) {
-        setOpenGroupPaymentModal(true);
-      }
-    });
+  const [groupDetails, setGroupDetails] = useState<IPaymentRequest[]>([]);
+  const handleGroupPaymentDetails = (items: IPaymentRequest[]) => {
+    // getPaymentRequestGroupDetails(Number(id), paymentRequestId).then((r) => {
+    //   if (r) {
+    //     setOpenGroupPaymentModal(true);
+    //   }
+    // });
+    setGroupDetails(items);
+    setOpenGroupPaymentModal(true);
+    console.log(items);
   };
 
   // modal end
@@ -191,7 +195,7 @@ const PaymentRequest = () => {
     newPaymentsVisible,
     pageNumbers,
     // openModal,
-    openGroupPaymentModal,
+    // openGroupPaymentModal,
   ]);
   useEffect(() => {
     getWorkspaceCategoryProperties(Number(id));
@@ -206,8 +210,6 @@ const PaymentRequest = () => {
     acc[paymentRequestId].push(item);
     return acc;
   }, {} as Record<number, IPaymentRequest[]>);
-  console.log(groupedData);
-  console.log(Object.entries(groupedData));
 
   const sortedPayment = Object.entries(groupedData).sort(
     ([idA, itemsA], [idB, itemsB]) => {
@@ -221,7 +223,6 @@ const PaymentRequest = () => {
   );
   // approve modal
   const handlePaymentRequestChaiModal = () => {
-    console.log(selected);
     if (selected.length) {
       setSignPaymentModal(true);
     }
@@ -293,6 +294,7 @@ const PaymentRequest = () => {
             open={openGroupPaymentModal}
             setOpen={setOpenGroupPaymentModal}
             component={PaymentRequestGroupDetails}
+            additionalProps={{ groupDetails }}
           />
           {/* payment request modal */}
           <CustomModal
@@ -457,7 +459,9 @@ const PaymentRequest = () => {
                                     color: "black",
                                     textTransform: "lowercase",
                                   }}
-                                  onClick={() => handleGroupPaymentDetails(id)}
+                                  onClick={() =>
+                                    handleGroupPaymentDetails(items)
+                                  }
                                 >
                                   view more
                                 </Button>

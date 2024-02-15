@@ -39,6 +39,7 @@ import { ReactSelectOption } from "../../pages/workspace/paymentRequest/PaymentR
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
+  groupDetails?: IPaymentRequest[];
 }
 declare interface paymentRequestBody {
   id: number;
@@ -54,6 +55,7 @@ declare interface paymentRequestBody {
 
 const PaymentRequestGroupDetails = ({
   setOpen,
+  groupDetails,
 }: PaymentRequestDetailsProps) => {
   const { id } = useParams();
 
@@ -62,7 +64,7 @@ const PaymentRequestGroupDetails = ({
 
   const [selectedValue, setSelectedValue] = useState("Option1");
 
-  const { paymentRequestGroupDetails, updatePaymentRequestCategory } =
+  const { getPaymentRequestList, updatePaymentRequestCategory } =
     usePaymentsStore();
   const { isLoading } = useLoading();
 
@@ -81,11 +83,6 @@ const PaymentRequestGroupDetails = ({
   const handleSelectChange = (selectedOptions: any) => {
     setSelectedValues(selectedOptions);
   };
-
-  // get category details
-  useEffect(() => {
-    getWorkspaceCategoryProperties(Number(id));
-  }, [getWorkspaceCategoryProperties, id]);
 
   // update
   const [sharePaymentRequestForm, setSharePaymentRequestForm] = useState<
@@ -188,8 +185,8 @@ const PaymentRequestGroupDetails = ({
   };
 
   useEffect(() => {
-    if (paymentRequestGroupDetails && paymentRequestGroupDetails.length > 0) {
-      const updatedForm = paymentRequestGroupDetails.map((paymentDetail) => {
+    if (groupDetails && groupDetails.length > 0) {
+      const updatedForm = groupDetails.map((paymentDetail) => {
         return {
           id: paymentDetail.ID,
           amount: paymentDetail.amount,
@@ -234,6 +231,7 @@ const PaymentRequestGroupDetails = ({
       paymentId.toString(),
       paymentRequestBody
     );
+    getPaymentRequestList(Number(id), false);
   };
 
   return (
