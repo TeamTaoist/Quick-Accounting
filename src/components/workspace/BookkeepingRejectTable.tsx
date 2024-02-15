@@ -51,9 +51,7 @@ const BookkeepingRejectTable = ({
   searchTerm,
   selectedValue,
 }: RejectTableProps) => {
-  const navigate = useNavigate();
-
-  const { bookkeepingList, unHideBookkeepingList, getBookkeepingList } =
+  const { bookkeepingHiddenList, unHideBookkeepingList, getBookkeepingList } =
     useBookkeeping();
   const { workspace } = useWorkspace();
 
@@ -62,7 +60,7 @@ const BookkeepingRejectTable = ({
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelected(bookkeepingList.map((c) => c.ID));
+      setSelected(bookkeepingHiddenList.map((c) => c.ID));
     } else {
       setSelected([]);
     }
@@ -104,7 +102,7 @@ const BookkeepingRejectTable = ({
   }, [pageNumbers]);
 
   // filter table data
-  const filterData = bookkeepingList.filter((bookkeeping) => {
+  const filterData = bookkeepingHiddenList.filter((bookkeeping) => {
     const searchItem = bookkeeping.recipient
       .toLowerCase()
       .includes(searchTerm?.toLowerCase() || "");
@@ -122,7 +120,7 @@ const BookkeepingRejectTable = ({
 
   return (
     <div>
-      {bookkeepingList.length === 0 && !paymentRequest ? (
+      {bookkeepingHiddenList.length === 0 && !paymentRequest ? (
         <Message>
           <h3>You don't have any hidden transactions.</h3>
           <p style={{ width: "509px", textAlign: "center" }}>
@@ -158,9 +156,11 @@ const BookkeepingRejectTable = ({
                       <Checkbox
                         indeterminate={
                           selected.length > 0 &&
-                          selected.length < bookkeepingList.length
+                          selected.length < bookkeepingHiddenList.length
                         }
-                        checked={selected.length === bookkeepingList.length}
+                        checked={
+                          selected.length === bookkeepingHiddenList.length
+                        }
                         onChange={handleSelectAllClick}
                       />
                       Safe

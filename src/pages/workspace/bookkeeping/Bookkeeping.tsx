@@ -239,13 +239,13 @@ const Bookkeeping = () => {
     setPaymentRequest(false);
   };
   const handleBackBtn = () => {
-    getBookkeepingList(workspaceId, false, pageNumbers).then((res) => {
-      if (res) {
-        setTotalItem(res);
-        setSelected([]);
-      }
-    });
+    // getBookkeepingList(workspaceId, false, pageNumbers).then((res) => {
+    //   if (res) {
+    //     setTotalItem(res);
+    //   }
+    // });
     setPaymentRequest(true);
+    setSelected([]);
   };
   // unique category name
   const uniqueCategoryNames = Array.from(

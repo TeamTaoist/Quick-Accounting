@@ -6,6 +6,7 @@ import { useWorkspace } from "./useWorkspace";
 
 interface UseBookkeeping {
   bookkeepingList: IBookkeeping[];
+  bookkeepingHiddenList: IBookkeeping[];
   getBookkeepingList: (
     workspaceId: number,
     visibility: boolean,
@@ -41,7 +42,11 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
         const { data } = await axiosClient.get(
           `/bookkeeping/${workspaceId}?hided=${visibility}&page=${page}&sort_field=tx_timestamp&sort_order=desc`
         );
-        set({ bookkeepingList: data.data.rows });
+        if (visibility) {
+          set({ bookkeepingHiddenList: data.data.rows });
+        } else {
+          set({ bookkeepingList: data.data.rows });
+        }
         if (data?.msg === "success" && data?.code === 200) {
           return data.data.total;
         }
