@@ -1,36 +1,13 @@
 import styled from "@emotion/styled";
-import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import {
-  CategoryTitle,
-  CreateBtn,
-  CreateOptionButton,
-} from "../category/category.style";
-import add from "../../../assets/workspace/add.svg";
-import archive from "../../../assets/workspace/archive.svg";
+import React, { useEffect, useRef, useState } from "react";
 import searchIcon from "../../../assets/workspace/search-icon.svg";
-import approve from "../../../assets/workspace/select.svg";
 import download from "../../../assets/workspace/download.svg";
 import view from "../../../assets/workspace/view.svg";
 import importIcon from "../../../assets/workspace/import-icon.svg";
 import hide from "../../../assets/workspace/hide.svg";
 import back from "../../../assets/workspace/back.svg";
 import filterIcon from "../../../assets/workspace/filtering.svg";
-import rightArrow from "../../../assets/workspace/right-arrow.svg";
 
-// table
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
   FormControl,
   InputAdornment,
@@ -38,40 +15,31 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import RejectDataTable from "../../../components/workspace/RejectDataTable";
+import { useParams } from "react-router-dom";
 import {
   ActionBtn,
   BookkeepingRejectSection,
   Btn,
-  CategoryCell,
   Header,
   Image,
   Option,
   PaymentPagination,
   PaymentRequestBody,
   PaymentRequestContainer,
-  RejectSection,
   TableSection,
   ViewReject,
 } from "../paymentRequest/paymentRequest.style";
-import data from "../../../data/tableData";
 import BookkeepingRejectTable from "../../../components/workspace/BookkeepingRejectTable";
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import BookkeepingTransferDetails from "./BookkeepingTransferDetails";
 import { useBookkeeping } from "../../../store/useBookkeeping";
-import usePaymentsStore from "../../../store/usePayments";
 import ReactPaginate from "react-paginate";
-import { getShortAddress } from "../../../utils";
-import { useWorkspace } from "../../../store/useWorkspace";
-import { formatNumber } from "../../../utils/number";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
-import { formatDate } from "../../../utils/time";
+import BookkeepingTable from "../../../components/workspace/bookkeeping/BookkeepingTable";
 
 const Bookkeeping = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const {
@@ -82,8 +50,6 @@ const Bookkeeping = () => {
     hideBookkeepingList,
     setCurrentBookkeepingDetail,
   } = useBookkeeping();
-  const { setCurrentPaymentRequestDetail } = usePaymentsStore();
-  const { workspace } = useWorkspace();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
 
   const [paymentRequest, setPaymentRequest] = useState(true);
@@ -130,37 +96,11 @@ const Bookkeeping = () => {
   const [selected, setSelected] = useState<number[]>([]);
   console.log(selected);
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      setSelected(bookkeepingList.map((c) => c.ID));
-    } else {
-      setSelected([]);
-    }
-  };
-
-  const handleCheckboxClick = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    categoryId: number
-  ) => {
-    if (event.target.checked) {
-      setSelected((prevSelected) => [...prevSelected, categoryId]);
-    } else {
-      setSelected((prevSelected) =>
-        prevSelected.filter((id) => id !== categoryId)
-      );
-    }
-  };
-
-  const isSelected = (categoryId: number) => {
-    return selected.indexOf(categoryId) !== -1;
-  };
-
   const handleBookkeepingDetails = (bookkeeping: IBookkeeping) => {
     setCurrentBookkeepingDetail(bookkeeping);
     setOpenModal(true);
   };
 
-  // modal end
   // filter
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -172,8 +112,6 @@ const Bookkeeping = () => {
   const handleDropdownChange = (event: any) => {
     setSelectedValue(event.target.value);
   };
-  // hide the selected table row
-  const [hiddenRows, setHiddenRows] = useState<number[]>([]);
 
   // filter table data
   const filterData = bookkeepingList.filter((bookkeeping) => {
@@ -336,108 +274,12 @@ const Bookkeeping = () => {
               </Btn>
             </ActionBtn>
             <TableSection>
-              <TableContainer
-                sx={{
-                  border: "1px solid var(--border)",
-                  borderRadius: "10px",
-                  maxHeight: "100%",
-                  overflow: "auto",
-                }}
-              >
-                <Table stickyHeader>
-                  <TableHead style={{ backgroundColor: "#f0f0f0" }}>
-                    <TableRow>
-                      <TableCell sx={{ background: "var(--bg-primary)" }}>
-                        <Checkbox
-                          indeterminate={
-                            selected.length > 0 &&
-                            selected.length < bookkeepingList.length
-                          }
-                          checked={selected.length === bookkeepingList.length}
-                          onChange={handleSelectAllClick}
-                        />
-                        Safe
-                      </TableCell>
-                      <TableCell sx={{ background: "var(--bg-primary)" }}>
-                        Recipient
-                      </TableCell>
-                      <TableCell sx={{ background: "var(--bg-primary)" }}>
-                        Amount
-                      </TableCell>
-                      <TableCell sx={{ background: "var(--bg-primary)" }}>
-                        Category
-                      </TableCell>
-                      <TableCell sx={{ background: "var(--bg-primary)" }}>
-                        Date
-                      </TableCell>
-                      <TableCell
-                        sx={{ background: "var(--bg-primary)" }}
-                      ></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {filterData.map((bookkeeping) => (
-                      <React.Fragment key={bookkeeping.ID}>
-                        <TableRow>
-                          <TableCell
-                            style={{
-                              padding: 0,
-                              paddingLeft: "16px",
-                              borderBottom: "1px solid #ddd",
-                              borderTop: "none",
-                            }}
-                          >
-                            <SafeSection>
-                              <div>
-                                <Checkbox
-                                  checked={isSelected(bookkeeping.ID)}
-                                  onChange={(event) =>
-                                    handleCheckboxClick(event, bookkeeping.ID)
-                                  }
-                                />
-                                {getShortAddress(workspace?.vault_wallet)}
-                              </div>
-                              <Logo>
-                                <img src={rightArrow} alt="" />
-                              </Logo>
-                            </SafeSection>
-                          </TableCell>
-                          <TableCell>
-                            {getShortAddress(bookkeeping.recipient)}
-                          </TableCell>
-                          <TableCell>
-                            {formatNumber(Number(bookkeeping.amount))}{" "}
-                            {bookkeeping.currency_name}
-                          </TableCell>
-                          <TableCell>
-                            <CategoryCell>
-                              {bookkeeping.category_name}
-                            </CategoryCell>
-                          </TableCell>
-                          <TableCell>
-                            {formatDate(bookkeeping.CreatedAt)}
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              variant="outlined"
-                              sx={{
-                                borderColor: "black",
-                                color: "black",
-                                textTransform: "lowercase",
-                              }}
-                              onClick={() =>
-                                handleBookkeepingDetails(bookkeeping)
-                              }
-                            >
-                              view more
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      </React.Fragment>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              <BookkeepingTable
+                selected={selected}
+                setSelected={setSelected}
+                filterData={filterData}
+                handleBookkeepingDetails={handleBookkeepingDetails}
+              />
 
               {/* pagination */}
               {totalItem > 10 && (
@@ -476,8 +318,6 @@ const Bookkeeping = () => {
           />
         </BookkeepingRejectSection>
       )}
-
-      {/* header */}
     </PaymentRequestContainer>
   );
 };

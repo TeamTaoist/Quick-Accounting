@@ -64,13 +64,8 @@ const PaymentRequestDetails = ({
     updatePaymentRequestCategory,
     paymentRequestDetails,
   } = usePaymentsStore();
-  const { workspaceCategoryProperties, getWorkspaceCategoryProperties } =
-    useCategoryProperty();
+  const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
-
-  useEffect(() => {
-    getWorkspaceCategoryProperties(Number(id));
-  }, []);
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);

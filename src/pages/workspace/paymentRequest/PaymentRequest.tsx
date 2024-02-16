@@ -148,6 +148,10 @@ const PaymentRequest = () => {
     newPaymentsVisible,
     pageNumbers,
   ]);
+
+  useEffect(() => {
+    getWorkspaceCategoryProperties(Number(id));
+  }, []);
   // payment_request_id
 
   const groupedData = filterData.reduce((acc, item) => {
