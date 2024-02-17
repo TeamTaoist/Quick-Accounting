@@ -1,13 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../../components/layout/header/Header";
-import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
 import React, { useEffect, useState } from "react";
 import {
   FormControl,
   InputAdornment,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Table,
   TableBody,
   TableCell,
@@ -24,13 +22,10 @@ import categoryIcon from "../../../assets/workspace/category-icon.svg";
 import optionsIcon from "../../../assets/workspace/option.svg";
 import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
-import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { useLoading } from "../../../store/useLoading";
 import Loading from "../../../utils/Loading";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
-import CustomModal from "../../../utils/CustomModal";
-import PaymentRequestPreview from "./PaymentRequestPreview";
 import { ReactSelectOption } from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import { formatBalance } from "../../../utils/number";
 import { toast } from "react-toastify";
@@ -51,19 +46,6 @@ const ShareWorkspacePaymentRequest = () => {
     shareData,
   } = useSharePaymentRequest();
   const [confirmVisible, setConfirmVisible] = useState(false);
-
-  console.log("workspace", workspace);
-
-  // payments details
-  // const [shareList, setShareList] = useState<ISharePaymentList>();
-  // const [paymentDetails, setPaymentDetails] = useState<ISharePaymentItem[]>([]);
-
-  // const [age, setAge] = useState("Category");
-
-  // const handleCategoryChange = (event: SelectChangeEvent) => {
-  //   setAge(event.target.value as string);
-  // };
-
   const [selectedValues, setSelectedValues] = useState([]);
 
   // dynamic payment request form
@@ -173,14 +155,12 @@ const ShareWorkspacePaymentRequest = () => {
       await getPaymentRequestShareCodeData(shareId).then((res) => {
         if (res) {
           updateWorkspace(res);
-          // setPaymentDetails(shareData?.payment_request_items!);
         }
       });
     };
     fetchPaymentRequestData();
   }, [shareDataLoading]);
-  // console.log("details", paymentDetails);
-  // new
+
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<any>([]);
 
@@ -207,19 +187,6 @@ const ShareWorkspacePaymentRequest = () => {
     );
     setSelectedCategories(updatedSelectedCategories);
   };
-  // const [selectedCategories, setSelectedCategories] = useState([])
-  //   const selectedCategorie = selectedCategoryIDs.map((id: any) =>
-  //     workspaceCategoryProperties?.find((category) => category.ID === id)
-  //   );
-  // console.log(selectedCategories);
-
-  // useEffect(() => {
-  //   const updatedSelectedCategories = selectedCategoryIDs.map((id: any) =>
-  //     workspaceCategoryProperties?.find((category) => category.ID === id)
-  //   );
-  //   setSelectedCategories(updatedSelectedCategories);
-  // }, [selectedCategoryIDs, workspaceCategoryProperties]);
-
   // get asset list
   useEffect(() => {
     workspace?.vault_wallet && getAssets();
@@ -268,9 +235,6 @@ const ShareWorkspacePaymentRequest = () => {
     createSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
       (res) => {
         setConfirmVisible(false);
-        if (res) {
-          setShareDataLoading(!shareDataLoading);
-        }
       }
     );
   };
@@ -283,19 +247,9 @@ const ShareWorkspacePaymentRequest = () => {
     setConfirmVisible(true);
   };
   // TODO: don't need to fetch data again after submit & save
-  const handleSavePaymentRequest = () => {
-    saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
-      (res) => {
-        if (res) {
-          setShareDataLoading(!shareDataLoading);
-        }
-      }
-    );
+  const handleSavePaymentRequest = async () => {
+    await saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm });
   };
-
-  // useEffect(() => {
-  //   getWorkspaceDetails(Number(workspaceId));
-  // }, []);
 
   useEffect(() => {
     if (shareData && shareData.payment_request_items !== null) {
@@ -332,38 +286,23 @@ const ShareWorkspacePaymentRequest = () => {
       setSelectedCategories(updatedSelectedCategories);
     }
   }, [shareData]);
-  console.log("property", selectedCategories);
   const isEditable =
     shareData?.payment_request_items?.[0]?.status !== 0 &&
     shareData?.payment_request_items !== null;
 
-  console.log("shareData", shareData);
-
   return (
     <>
       {isLoading && <Loading />}
-      {/* <CustomModal
-        open={openModal}
-        setOpen={setOpenModal}
-        component={PaymentRequestPreview}
-        additionalProps={{ sharePaymentRequestForm }}
-      /> */}
       <Header>
         <SharePaymentContainer>
           <SharePaymentForm>
             <ShareHeader>
               <h3>New payment request from {workspace.name}</h3>
             </ShareHeader>
-            {/* {paymentDetails && paymentDetails.length > 0 ? (
-              <p>data</p>
-            ) : (
-              <> */}
             {sharePaymentRequestForm.map((value, index) => (
               <RequestDetails key={index}>
                 <TableContainer
                   sx={{
-                    // paddingInline: "46px",
-                    // paddingTop: "30px",
                     boxShadow: "none",
                     border: "1px solid var(--border-table)",
                     borderTopRightRadius: "6px",
@@ -406,8 +345,6 @@ const ShareWorkspacePaymentRequest = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {/* <TableRow sx={{ td: { border: 1, padding: 0 } }}> */}
-                      {/* {rows.map((row) => ( */}
                       <TableRow
                         sx={{
                           height: "30px",
