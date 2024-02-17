@@ -43,11 +43,12 @@ const RejectPaymentRequestTable = ({
   const [total, setTotal] = useState(0);
   const [pageNumbers, setPageNumbers] = useState(0);
 
-  const { getFailedPaymentRequestList } = usePaymentsStore();
+  const { getFailedPaymentRequestList, setCurrentPaymentRequestDetail } =
+    usePaymentsStore();
 
   const [paymentId, setPaymentId] = useState<number | null>(null);
-  const handleOpenModal = (paymentId: number) => {
-    setPaymentId(paymentId);
+  const handleOpenModal = (payment: IPaymentRequest) => {
+    setCurrentPaymentRequestDetail(payment);
     setOpenModal(true);
   };
   // filter table data
@@ -146,7 +147,7 @@ const RejectPaymentRequestTable = ({
                         color: "black",
                         textTransform: "lowercase",
                       }}
-                      onClick={() => handleOpenModal(payment.ID)}
+                      onClick={() => handleOpenModal(payment)}
                     >
                       view more
                     </Button>
