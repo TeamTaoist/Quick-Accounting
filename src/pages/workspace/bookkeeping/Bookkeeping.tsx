@@ -37,6 +37,7 @@ import { useBookkeeping } from "../../../store/useBookkeeping";
 import ReactPaginate from "react-paginate";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import BookkeepingTable from "../../../components/workspace/bookkeeping/BookkeepingTable";
+import Pagination from "../../../components/Pagination";
 
 const Bookkeeping = () => {
   const { id } = useParams();
@@ -284,21 +285,9 @@ const Bookkeeping = () => {
               {/* pagination */}
               {totalItem > 10 && (
                 <PaymentPagination>
-                  <ReactPaginate
-                    breakLabel="..."
-                    nextLabel=">"
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={3}
+                  <Pagination
+                    handlePageClick={handlePageClick}
                     pageCount={pageCount}
-                    previousLabel="<"
-                    renderOnZeroPageCount={null}
-                    containerClassName="pagination"
-                    pageLinkClassName="page-num"
-                    previousLinkClassName="page-arrow"
-                    nextLinkClassName="page-arrow"
-                    activeLinkClassName="active"
-                    // initialPage={2}
-                    forcePage={0}
                   />
                 </PaymentPagination>
               )}

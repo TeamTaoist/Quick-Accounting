@@ -13,15 +13,15 @@ import {
   CategoryCell,
   PaymentPagination,
   TableSection,
-} from "../../pages/workspace/paymentRequest/paymentRequest.style";
-import statusIcon from "../../assets/workspace/status-icon.svg";
+} from "../../../pages/workspace/paymentRequest/paymentRequest.style";
+import statusIcon from "../../../assets/workspace/status-icon.svg";
 import styled from "@emotion/styled";
-import CustomModal from "../../utils/CustomModal";
-import PaymentRequestDetails from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
+import CustomModal from "../../../utils/CustomModal";
+import PaymentRequestDetails from "../../../pages/workspace/paymentRequest/PaymentRequestDetails";
 import { useEffect, useState } from "react";
-import usePaymentsStore from "../../store/usePayments";
-import ReactPaginate from "react-paginate";
-import { formatNumber } from "../../utils/number";
+import usePaymentsStore from "../../../store/usePayments";
+import { formatNumber } from "../../../utils/number";
+import Pagination from "../../Pagination";
 
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
@@ -31,7 +31,7 @@ interface RejectDataTableProps {
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
-const RejectDataTable = ({
+const RejectPaymentRequestTable = ({
   searchTerm,
   selectedValue,
   isInQueue,
@@ -43,8 +43,7 @@ const RejectDataTable = ({
   const [total, setTotal] = useState(0);
   const [pageNumbers, setPageNumbers] = useState(0);
 
-  const { getPaymentRequestDetails, getFailedPaymentRequestList } =
-    usePaymentsStore();
+  const { getFailedPaymentRequestList } = usePaymentsStore();
 
   const [paymentId, setPaymentId] = useState<number | null>(null);
   const handleOpenModal = (paymentId: number) => {
@@ -159,21 +158,9 @@ const RejectDataTable = ({
         </TableContainer>
         {total > 10 && (
           <PaymentPagination>
-            <ReactPaginate
-              breakLabel="..."
-              nextLabel=">"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={3}
+            <Pagination
+              handlePageClick={handlePageClick}
               pageCount={pageCount}
-              previousLabel="<"
-              renderOnZeroPageCount={null}
-              containerClassName="pagination"
-              pageLinkClassName="page-num"
-              previousLinkClassName="page-arrow"
-              nextLinkClassName="page-arrow"
-              activeLinkClassName="active"
-              // initialPage={2}
-              forcePage={0}
             />
           </PaymentPagination>
         )}
@@ -182,7 +169,7 @@ const RejectDataTable = ({
   );
 };
 
-export default RejectDataTable;
+export default RejectPaymentRequestTable;
 
 export const Status = styled.div`
   display: flex;

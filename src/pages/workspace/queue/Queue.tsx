@@ -5,7 +5,7 @@ import view from "../../../assets/workspace/view.svg";
 import { CategoryTitle } from "../category/category.style";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import RejectDataTable from "../../../components/workspace/RejectDataTable";
+import RejectDataTable from "../../../components/workspace/paymentRequest/RejectPaymentRequestTable";
 import { Image, ViewReject } from "../paymentRequest/paymentRequest.style";
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";

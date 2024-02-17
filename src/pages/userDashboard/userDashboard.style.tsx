@@ -21,7 +21,7 @@ export const PaymentTable = styled.div`
   overflow-y: scroll;
   flex: 1;
 `;
-export const Pagination = styled.div`
+export const PaymentPagination = styled.div`
   /* display: flex; */
   padding: 20px 30px;
 `;

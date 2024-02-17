@@ -27,7 +27,6 @@ import {
   TextField,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import RejectDataTable from "../../../components/workspace/RejectDataTable";
 import {
   ActionBtn,
   Btn,
@@ -51,6 +50,8 @@ import NewPaymentRequest from "../../workspaceDashboard/newPaymentRequest/NewPay
 import ReactPaginate from "react-paginate";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import PaymentRequestTableList from "../../../components/workspace/paymentRequest/PaymentRequestTableList";
+import Pagination from "../../../components/Pagination";
+import RejectPaymentRequestTable from "../../../components/workspace/paymentRequest/RejectPaymentRequestTable";
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -384,21 +385,9 @@ const PaymentRequest = () => {
                 </TableContainer>
                 {totalItem > 10 && (
                   <PaymentPagination>
-                    <ReactPaginate
-                      breakLabel="..."
-                      nextLabel=">"
-                      onPageChange={handlePageClick}
-                      pageRangeDisplayed={3}
+                    <Pagination
+                      handlePageClick={handlePageClick}
                       pageCount={pageCount}
-                      previousLabel="<"
-                      renderOnZeroPageCount={null}
-                      containerClassName="pagination"
-                      pageLinkClassName="page-num"
-                      previousLinkClassName="page-arrow"
-                      nextLinkClassName="page-arrow"
-                      activeLinkClassName="active"
-                      // initialPage={2}
-                      forcePage={0}
                     />
                   </PaymentPagination>
                 )}
@@ -409,7 +398,7 @@ const PaymentRequest = () => {
       )}
       {!paymentRequest && (
         <RejectSection>
-          <RejectDataTable
+          <RejectPaymentRequestTable
             searchTerm={searchTerm}
             selectedValue={selectedValue}
           />

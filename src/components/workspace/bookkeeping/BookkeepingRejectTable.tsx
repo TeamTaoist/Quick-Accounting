@@ -27,6 +27,7 @@ import {
   TableSection,
 } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import ReactPaginate from "react-paginate";
+import Pagination from "../../Pagination";
 
 interface RejectTableProps {
   workspaceId: number;
@@ -233,21 +234,9 @@ const BookkeepingRejectTable = ({
             {/* pagination */}
             {totalItem > 10 && (
               <PaymentPagination>
-                <ReactPaginate
-                  breakLabel="..."
-                  nextLabel=">"
-                  onPageChange={handlePageClick}
-                  pageRangeDisplayed={3}
+                <Pagination
+                  handlePageClick={handlePageClick}
                   pageCount={pageCount}
-                  previousLabel="<"
-                  renderOnZeroPageCount={null}
-                  containerClassName="pagination"
-                  pageLinkClassName="page-num"
-                  previousLinkClassName="page-arrow"
-                  nextLinkClassName="page-arrow"
-                  activeLinkClassName="active"
-                  // initialPage={2}
-                  forcePage={0}
                 />
               </PaymentPagination>
             )}
