@@ -56,6 +56,8 @@ const PaymentRequestCategoryProperties = ({
   handlePropertyText,
   status,
 }: PaymentRequestCategoryPropertiesProps) => {
+  console.log(parseCategoryProperties);
+
   return (
     <>
       {selectedCategory?.properties?.map((property: any) => (

@@ -262,8 +262,6 @@ const PaymentRequestDetails = ({
   };
   console.log(updatedPaymentBody);
 
-  if (isLoading) return <p></p>;
-
   return (
     <>
       <WorkspaceItemDetailsLayout
