@@ -34,8 +34,12 @@ import { toast } from "react-toastify";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
 import CopyBox from "../../copy";
-import CopyIcon from "../../../assets/copy.svg"
+import CopyIcon from "../../../assets/copy.svg";
 import styled from "@emotion/styled";
+
+export interface SidebarProps {
+  hideSidebar: boolean;
+}
 
 const WorkspaceSidebar = () => {
   const { t } = useTranslation();
@@ -118,39 +122,43 @@ const WorkspaceSidebar = () => {
       }
     });
   };
+  const [hideSidebar, setHideSidebar] = useState(false);
+  const handleSidebar = () => {
+    setHideSidebar(!hideSidebar);
+  };
   return (
     <>
-      <SidebarContainer>
-        <WorkspaceInfo>
-          <div>
-            <h5>{workspace.name}</h5>
-            <SafeAddress>
-              <span>{recipientFormate(workspace.vault_wallet)}</span>
-              <CopyBox text={workspace.vault_wallet}>
-                <img src={CopyIcon} alt="" />
-              </CopyBox>
-            </SafeAddress>
-          </div>
-          <img src={arrow} alt="" />
+      <SidebarContainer hideSidebar={hideSidebar}>
+        <WorkspaceInfo hideSidebar={hideSidebar}>
+          {!hideSidebar && (
+            <div>
+              <h5>{workspace.name}</h5>
+              <SafeAddress>
+                <span>{recipientFormate(workspace.vault_wallet)}</span>
+                <CopyBox text={workspace.vault_wallet}>
+                  <img src={CopyIcon} alt="" />
+                </CopyBox>
+              </SafeAddress>
+            </div>
+          )}
+          {/* arrow btn for hide the sidebar */}
+          <img onClick={handleSidebar} src={arrow} alt="" />
         </WorkspaceInfo>
         {/* payment request btn and share btn */}
         <PaymentRequest>
           <span>
-            <RequestBtn onClick={() => setNewPaymentsVisible(true)}>
+            <RequestBtn
+              hideSidebar={hideSidebar}
+              onClick={() => setNewPaymentsVisible(true)}
+            >
               <img src={add} alt="" />
-              <span>{t("workspace.New")}</span>
+              {!hideSidebar && <span>{t("workspace.New")}</span>}
             </RequestBtn>
           </span>
-          {/* <CopyToClipboard
-            text={`${window.location.origin}/share/${shareLink}`}
-            onCopy={handleCopy}
-          > */}
-          <RequestBtn onClick={handleCreateShareLink}>
+          <RequestBtn hideSidebar={hideSidebar} onClick={handleCreateShareLink}>
             <img src={share} alt="" />
-            <span>{t("workspace.Share")}</span>
+            {!hideSidebar && <span>{t("workspace.Share")}</span>}
           </RequestBtn>
-          {/* </CopyToClipboard> */}
-          {/* </Link> */}
         </PaymentRequest>
         {/* sidebar list */}
         <SidebarLinkList className="">
@@ -158,43 +166,49 @@ const WorkspaceSidebar = () => {
             icon={assets}
             name={t("workspace.Assets")}
             to={`/workspace/${id}/assets`}
+            hideSidebar={hideSidebar}
           />
           <SidebarLink
             icon={category}
             name={t("workspace.Category")}
             to={`/workspace/${id}/category`}
+            hideSidebar={hideSidebar}
           />
           <SidebarLink
             icon={paymentRequest}
             name={t("workspace.PaymentRequest")}
             to={`/workspace/${id}/payment-request`}
+            hideSidebar={hideSidebar}
           />
           <SidebarLink
             icon={queue}
             name={t("workspace.Queue")}
             to={`/workspace/${id}/queue`}
+            hideSidebar={hideSidebar}
           />
           <SidebarLink
             icon={bookkeeping}
             name={t("workspace.Bookkeeping")}
             to={`/workspace/${id}/bookkeeping`}
+            hideSidebar={hideSidebar}
           />
           <SidebarLink
             icon={reports}
             name={t("workspace.Reports")}
             to={`/workspace/${id}/reports`}
+            hideSidebar={hideSidebar}
           />
           <SidebarLink
             icon={setting}
             name={t("workspace.Settings")}
             to={`/workspace/${id}/settings`}
+            hideSidebar={hideSidebar}
           />
         </SidebarLinkList>
       </SidebarContainer>
       {newPaymentsVisible && (
         <NewPaymentRequest onClose={() => setNewPaymentsVisible(false)} />
       )}
-      {/* {children} */}
     </>
   );
 };

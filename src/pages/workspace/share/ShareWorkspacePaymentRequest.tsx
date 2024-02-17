@@ -246,7 +246,6 @@ const ShareWorkspacePaymentRequest = () => {
     }
     setConfirmVisible(true);
   };
-  // TODO: don't need to fetch data again after submit & save
   const handleSavePaymentRequest = async () => {
     await saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm });
   };
