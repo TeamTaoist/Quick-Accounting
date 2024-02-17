@@ -5,40 +5,32 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Button,
   Checkbox,
 } from "@mui/material";
-import data from "../../data/tableData";
-import { useNavigate } from "react-router-dom";
 import {
   HideBtn,
   Logo,
   SafeSection,
-} from "../../pages/workspace/bookkeeping/Bookkeeping";
+} from "../../../pages/workspace/bookkeeping/Bookkeeping";
 import { useEffect, useState } from "react";
-import rightArrow from "../../assets/workspace/right-arrow.svg";
-import hide from "../../assets/workspace/hide.svg";
-import back from "../../assets/workspace/back.svg";
+import rightArrow from "../../../assets/workspace/right-arrow.svg";
+import hide from "../../../assets/workspace/hide.svg";
+import back from "../../../assets/workspace/back.svg";
 import styled from "@emotion/styled";
-import { useBookkeeping } from "../../store/useBookkeeping";
-import { CategoryTitle } from "../../pages/workspace/category/category.style";
-import { getShortAddress } from "../../utils";
-import { useWorkspace } from "../../store/useWorkspace";
-import { formatNumber } from "../../utils/number";
+import { useBookkeeping } from "../../../store/useBookkeeping";
+import { getShortAddress } from "../../../utils";
+import { useWorkspace } from "../../../store/useWorkspace";
+import { formatNumber } from "../../../utils/number";
 import {
   PaymentPagination,
   TableSection,
-} from "../../pages/workspace/paymentRequest/paymentRequest.style";
+} from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import ReactPaginate from "react-paginate";
 
 interface RejectTableProps {
   workspaceId: number;
   paymentRequest: boolean;
-  // handleBookkeepingDetails: (
-  //   paymentRequestId: number,
-  //   paymentId: number
-  // ) => void;
   handleBackBtn: () => void;
   searchTerm?: string | undefined;
   selectedValue?: string;

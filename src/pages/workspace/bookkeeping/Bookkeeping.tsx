@@ -29,7 +29,7 @@ import {
   TableSection,
   ViewReject,
 } from "../paymentRequest/paymentRequest.style";
-import BookkeepingRejectTable from "../../../components/workspace/BookkeepingRejectTable";
+import BookkeepingRejectTable from "../../../components/workspace/bookkeeping/BookkeepingRejectTable";
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
 import BookkeepingTransferDetails from "./BookkeepingTransferDetails";
