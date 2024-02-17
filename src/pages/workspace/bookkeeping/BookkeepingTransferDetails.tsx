@@ -43,6 +43,7 @@ import { formatNumber } from "../../../utils/number";
 import { getShortAddress } from "../../../utils";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { useBookkeeping } from "../../../store/useBookkeeping";
+import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
 }
@@ -310,7 +311,6 @@ const BookkeepingTransferDetails = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/* {data.slice(0, 1).map((row) => ( */}
                 <TableRow>
                   <TableCell
                     sx={{
@@ -453,172 +453,18 @@ const BookkeepingTransferDetails = ({
                 </TableRow>
                 {selectedCategory && (
                   <>
-                    {selectedCategory.properties?.map((property: any) => (
-                      <>
-                        {property.type === "single-select" && (
-                          <TableRow
-                            sx={{
-                              td: {
-                                border: "1px solid var(--border-table)",
-                                padding: 1,
-                                paddingInline: 1,
-                              },
-                            }}
-                          >
-                            <TableCell sx={{ height: 1, width: 200 }}>
-                              <NoteInfo>
-                                <Image src={selectIcon} alt="" />{" "}
-                                {property.name}
-                              </NoteInfo>
-                            </TableCell>
-                            <TableCell onBlur={handleUpdateCategory}>
-                              <ReactSelect
-                                isMulti={false}
-                                isDisabled={bookkeepingDetails.status === 2}
-                                value={selectSingleValue}
-                                onChange={(selectedOption: ReactSelectOption) =>
-                                  handleSelectSingleChange(
-                                    selectedOption,
-                                    property.name,
-                                    property.type
-                                  )
-                                }
-                                options={property.values
-                                  .split(";")
-                                  .map((v: string) => ({
-                                    value: v,
-                                    label: v,
-                                  }))}
-                                defaultValues={parseCategoryProperties
-                                  .filter(
-                                    (p: any) =>
-                                      p.type === "single-select" &&
-                                      p.name === property.name
-                                  )
-                                  .map((p: any) =>
-                                    p.values.split(";").map((v: string) => ({
-                                      value: v,
-                                      label: v,
-                                    }))
-                                  )
-                                  .flat()}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </>
-                    ))}
-                    {selectedCategory.properties?.map((property: any) => (
-                      <>
-                        {property.type === "multi-select" && (
-                          <TableRow
-                            sx={{
-                              td: {
-                                border: "1px solid var(--border-table)",
-                                padding: 1,
-                                paddingInline: 1,
-                              },
-                            }}
-                          >
-                            <TableCell sx={{ height: 1, width: 200 }}>
-                              <NoteInfo>
-                                <Image src={multiSelect} alt="" />{" "}
-                                {property.name}
-                              </NoteInfo>
-                            </TableCell>
-
-                            <TableCell onBlur={handleUpdateCategory}>
-                              <ReactSelect
-                                isDisabled={bookkeepingDetails.status === 2}
-                                value={selectedValues}
-                                onChange={(
-                                  selectedOptions: ReactSelectOption[]
-                                ) =>
-                                  handleSelectChange(
-                                    selectedOptions,
-                                    property.name,
-                                    property.type
-                                  )
-                                }
-                                options={property.values
-                                  .split(";")
-                                  .map((v: string) => ({
-                                    value: v,
-                                    label: v,
-                                  }))}
-                                // defaultValues={property.values
-                                //   .split(";")
-                                //   .map((v: string) => ({
-                                //     value: v,
-                                //     label: v,
-                                //   }))}
-                                defaultValues={parseCategoryProperties
-                                  .filter(
-                                    (p: any) =>
-                                      p.type === "multi-select" &&
-                                      p.name === property.name
-                                  )
-                                  .map((p: any) =>
-                                    p.values.split(";").map((v: string) => ({
-                                      value: v,
-                                      label: v,
-                                    }))
-                                  )
-                                  .flat()}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </>
-                    ))}
-                    {selectedCategory.properties?.map((property: any) => (
-                      <>
-                        {property.type === "Text" && (
-                          <TableRow
-                            sx={{
-                              td: {
-                                border: "1px solid var(--border-table)",
-                                padding: 1,
-                                paddingInline: 1,
-                              },
-                            }}
-                          >
-                            <TableCell sx={{ height: 1, width: 200 }}>
-                              <NoteInfo>
-                                <Image src={optionsIcon} alt="" />{" "}
-                                {property.name}
-                              </NoteInfo>
-                            </TableCell>
-
-                            <TableCell onBlur={handleUpdateCategory}>
-                              <TextField
-                                disabled={bookkeepingDetails.status === 2}
-                                sx={{
-                                  "& fieldset": { border: "none" },
-                                }}
-                                size="small"
-                                fullWidth
-                                value={
-                                  proPertyTextValue[property.name]?.values || ""
-                                }
-                                // id="fullWidth"
-                                placeholder="Enter content"
-                                onChange={(e) =>
-                                  handlePropertyText(
-                                    e,
-                                    property.name,
-                                    property.type
-                                  )
-                                }
-                                InputProps={{
-                                  style: { padding: 0 },
-                                }}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </>
-                    ))}
+                    <PaymentRequestCategoryProperties
+                      selectedCategory={selectedCategory}
+                      handleUpdateCategory={handleUpdateCategory}
+                      selectSingleValue={selectSingleValue}
+                      handleSelectSingleChange={handleSelectSingleChange}
+                      parseCategoryProperties={parseCategoryProperties}
+                      selectedValues={selectedValues}
+                      handleSelectChange={handleSelectChange}
+                      proPertyTextValue={proPertyTextValue}
+                      handlePropertyText={handlePropertyText}
+                      status={bookkeepingDetails.status}
+                    />
                   </>
                 )}
               </TableBody>

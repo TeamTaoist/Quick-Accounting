@@ -301,7 +301,7 @@ const Bookkeeping = () => {
             workspaceId={workspaceId}
             paymentRequest={paymentRequest}
             handleBackBtn={handleBackBtn}
-            // handleBookkeepingDetails={handleBookkeepingDetails}
+            handleBookkeepingDetails={handleBookkeepingDetails}
             searchTerm={searchTerm}
             selectedValue={selectedValue}
           />

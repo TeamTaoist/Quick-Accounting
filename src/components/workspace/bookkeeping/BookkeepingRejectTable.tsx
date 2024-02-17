@@ -35,14 +35,15 @@ interface RejectTableProps {
   handleBackBtn: () => void;
   searchTerm?: string | undefined;
   selectedValue?: string;
+  handleBookkeepingDetails: (bookkeeping: IBookkeeping) => void;
 }
 const BookkeepingRejectTable = ({
   workspaceId,
   paymentRequest,
-  // handleBookkeepingDetails,
   handleBackBtn,
   searchTerm,
   selectedValue,
+  handleBookkeepingDetails,
 }: RejectTableProps) => {
   const { bookkeepingHiddenList, unHideBookkeepingList, getBookkeepingList } =
     useBookkeeping();
@@ -215,12 +216,9 @@ const BookkeepingRejectTable = ({
                               color: "black",
                               textTransform: "lowercase",
                             }}
-                            // onClick={() =>
-                            //   handleBookkeepingDetails(
-                            //     bookkeeping.payment_request_id,
-                            //     bookkeeping.ID
-                            //   )
-                            // }
+                            onClick={() =>
+                              handleBookkeepingDetails(bookkeeping)
+                            }
                           >
                             view more
                           </Button>
