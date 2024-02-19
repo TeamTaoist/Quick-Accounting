@@ -302,7 +302,7 @@ const ShareWorkspacePaymentRequest = () => {
                   value={value}
                   handleFormChange={handleFormChange}
                   index={index}
-                  isEditable
+                  isEditable={isEditable}
                   sharePaymentRequestForm={sharePaymentRequestForm}
                 />
                 {/* note info */}
@@ -311,7 +311,7 @@ const ShareWorkspacePaymentRequest = () => {
                   <GroupPaymentCategoryProperties
                     sharePaymentRequestForm={sharePaymentRequestForm}
                     index={index}
-                    isEditable
+                    isEditable={isEditable}
                     handleCategoryDropdown={handleCategoryDropdown}
                     selectedCategories={selectedCategories}
                     selectedValues={selectedValues}

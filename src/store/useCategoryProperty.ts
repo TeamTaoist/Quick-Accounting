@@ -55,35 +55,17 @@ interface UseCategoryProperty {
     workspaceCategoryPropertyId: number | undefined,
     updatedPropertyBody: UpdatedPropertyBody
   ) => Promise<boolean | undefined>;
+  archiveWorkspaceCategoryProperties: (
+    workspaceId: number | undefined,
+    workspaceCategoryId: number | undefined,
+    workspaceCategoryPropertyId: string | undefined
+  ) => Promise<boolean | undefined>;
 }
 
 export const useCategoryProperty = create<UseCategoryProperty>((set) => {
   const { setLoading } = useLoading.getState();
   return {
-    workspaceCategoryProperties: [
-      {
-        ID: 0,
-        CreatedAt: "",
-        UpdatedAt: "",
-        DeletedAt: "",
-        workspace_id: 0,
-        name: "",
-        archived: false,
-        properties: [
-          {
-            ID: 0,
-            CreatedAt: "",
-            UpdatedAt: "",
-            DeletedAt: "",
-            workspace_id: 0,
-            category_id: 0,
-            name: "",
-            type: "",
-            values: "",
-          },
-        ],
-      },
-    ],
+    workspaceCategoryProperties: [],
     categoryProperty: {
       code: 0,
       msg: "",
@@ -148,6 +130,25 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
         );
         set({ categoryProperty: data });
         toast.success("Property updated successfully");
+        return true;
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    // archive property
+    archiveWorkspaceCategoryProperties: async (
+      workspaceId,
+      workspaceCategoryId,
+      workspaceCategoryPropertyId
+    ) => {
+      try {
+        setLoading(true);
+        await axiosClient.put(
+          `/workspace_category_property/${workspaceId}/${workspaceCategoryId}/archive?ids=${workspaceCategoryPropertyId}`
+        );
+        toast.success("Archived successfully");
         return true;
       } catch (error: any) {
         console.log(error);

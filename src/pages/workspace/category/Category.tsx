@@ -62,6 +62,7 @@ const Category = () => {
     createWorkspaceCategoryProperties,
     categoryProperty,
     updateWorkspaceCategoryProperties,
+    archiveWorkspaceCategoryProperties,
   } = useCategoryProperty();
 
   const [selectedValue, setSelectedValue] = useState("Text");
@@ -320,6 +321,20 @@ const Category = () => {
       }
     });
   };
+  // archive property
+  const handleArchiveCategoryProperty = async (
+    property: ICategoryProperties
+  ) => {
+    await archiveWorkspaceCategoryProperties(
+      property.workspace_id,
+      property.category_id,
+      property.ID.toString()
+    ).then((res) => {
+      if (res) {
+        getWorkspaceCategoryProperties(workspaceId);
+      }
+    });
+  };
 
   return (
     <CreateCategory>
@@ -435,7 +450,13 @@ const Category = () => {
                                   <img src={property1} alt="" />
                                   <p>{property.name}</p>
                                 </PropertyTitle>
-                                <img src={archive} alt="" />
+                                <img
+                                  onClick={() =>
+                                    handleArchiveCategoryProperty(property)
+                                  }
+                                  src={archive}
+                                  alt=""
+                                />
                               </Option>
                             </div>
                           ))}
