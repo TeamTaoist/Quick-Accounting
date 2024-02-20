@@ -63,6 +63,8 @@ const PaymentRequestDetails = ({
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
 
+  console.log("workspaceCategoryProperties", workspaceCategoryProperties);
+
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
   };
@@ -148,16 +150,26 @@ const PaymentRequestDetails = ({
     const selectedCategory = workspaceCategoryProperties?.find(
       (f) => f?.ID === selectedCategoryID
     );
+    // if(selectedCategory) {
+
+    // }
     if (selectedCategory) {
       setSelectedCategory(selectedCategory);
       setCategoryProperties(selectedCategory?.properties);
     } else {
-      setSelectedCategory({});
-      setCategoryProperties([]);
+      // setSelectedCategory({});
+      // setCategoryProperties([]);
+      // make separate component
+      setSelectedCategory(paymentRequestDetails);
+      setCategoryProperties(
+        JSON.parse(paymentRequestDetails.category_properties)
+      );
     }
   }, [selectedCategoryID, workspaceCategoryProperties]);
 
   console.log("selected category ", selectedCategory);
+  console.log("categoryProperties", categoryProperties);
+  console.log("paymentRequestDetails", paymentRequestDetails);
   // handle category
   const handleCategory = async (categoryId: number) => {
     setSelectedCategoryID(categoryId);

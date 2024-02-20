@@ -41,11 +41,39 @@ const UserPaymentTable = ({
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Safe</TableCell>
-            <TableCell>Amount</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Date</TableCell>
-            <TableCell></TableCell>
+            <TableCell
+              sx={{
+                background: "var(--bg-primary)",
+              }}
+            >
+              Safe
+            </TableCell>
+            <TableCell
+              sx={{
+                background: "var(--bg-primary)",
+              }}
+            >
+              Amount
+            </TableCell>
+            <TableCell
+              sx={{
+                background: "var(--bg-primary)",
+              }}
+            >
+              Status
+            </TableCell>
+            <TableCell
+              sx={{
+                background: "var(--bg-primary)",
+              }}
+            >
+              Date
+            </TableCell>
+            <TableCell
+              sx={{
+                background: "var(--bg-primary)",
+              }}
+            ></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
