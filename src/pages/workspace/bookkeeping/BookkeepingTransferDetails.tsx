@@ -270,8 +270,6 @@ const BookkeepingTransferDetails = ({
     getBookkeepingList(bookkeepingDetails.workspace_id, false);
   };
 
-  if (isLoading) return <p></p>;
-
   const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);
 
