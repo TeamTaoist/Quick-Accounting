@@ -132,6 +132,7 @@ export const OptionCreateButtons = styled.div`
     padding: 28px 40px;
     border: none;
     outline: none;
+    cursor: pointer;
     img {
       width: 16px;
     }
@@ -229,6 +230,7 @@ export const CreateCategoryBtn = styled.button`
   outline: none;
   border-radius: 10px;
   width: 100%;
+  cursor: pointer;
 `;
 export const CancelBtn = styled.button`
   background: transparent;
@@ -238,4 +240,5 @@ export const CancelBtn = styled.button`
   padding: 8px 50px;
   border-radius: 10px;
   width: 100%;
+  cursor: pointer;
 `;

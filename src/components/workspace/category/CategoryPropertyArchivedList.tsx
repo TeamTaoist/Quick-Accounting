@@ -1,4 +1,3 @@
-import Header from "../../../components/layout/header/Header";
 import { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,17 +11,15 @@ import archive from "../../../assets/workspace/archive.svg";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
 import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
-import { useLoading } from "../../../store/useLoading";
-import Loading from "../../../utils/Loading";
 
-const Archived = ({ setOpen }: any) => {
+const CategoryPropertyArchivedList = ({ setOpen }: any) => {
   const { id } = useParams();
   const [selected, setSelected] = useState<number[]>([]);
   const [categoryLoading, setCategoryLoading] = useState<boolean>(false);
 
   const { getWorkspaceCategories, workspaceCategories, unArchiveCategory } =
     useCategory();
-  const { isLoading } = useLoading();
+
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       setSelected(workspaceCategories.data.rows.map((category) => category.ID));
@@ -51,8 +48,6 @@ const Archived = ({ setOpen }: any) => {
   const workspaceId = Number(id);
   const categoryIds = selected;
   const handleUnArchive = async () => {
-    await unArchiveCategory(workspaceId, categoryIds);
-    setCategoryLoading(!categoryLoading);
     setSelected([]);
   };
 
@@ -66,8 +61,8 @@ const Archived = ({ setOpen }: any) => {
   return (
     <>
       <WorkspaceItemDetailsLayout
-        title="Archived categories"
-        subtitle="These categories will continue to be applied to historical transfers."
+        title="Archived category properties"
+        // subtitle="These categories will continue to be applied to historical transfers."
         setOpen={setOpen}
       >
         <Unarchive>
@@ -76,66 +71,13 @@ const Archived = ({ setOpen }: any) => {
             <p>Unarchive</p>
           </div>
         </Unarchive>
-        {workspaceCategories.data.total === 0 ? (
-          <Archivemsg>Archive list is empty</Archivemsg>
-        ) : (
-          <>
-            <ArchiveTable>
-              <TableContainer
-                sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
-              >
-                <Table>
-                  <TableHead
-                    style={{
-                      background: "var(--bg-secondary)",
-                    }}
-                  >
-                    <TableRow>
-                      <TableCell>
-                        <Checkbox
-                          indeterminate={
-                            selected.length > 0 &&
-                            selected.length <
-                              workspaceCategories.data.rows.length
-                          }
-                          checked={
-                            selected.length ===
-                            workspaceCategories.data.rows.length
-                          }
-                          onChange={handleSelectAllClick}
-                        />
-                        Category
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {workspaceCategories.data.rows.map((category) => (
-                      <TableRow key={category.ID}>
-                        <TableCell
-                          sx={{ display: "flex", alignItems: "center" }}
-                        >
-                          <Checkbox
-                            checked={isSelected(category.ID)}
-                            onChange={(event) =>
-                              handleCheckboxClick(event, category.ID)
-                            }
-                          />
-                          <CellValue>{category.name}</CellValue>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </ArchiveTable>
-          </>
-        )}
+        <Archivemsg>Property Archive list is empty</Archivemsg>
       </WorkspaceItemDetailsLayout>
     </>
   );
 };
 
-export default Archived;
+export default CategoryPropertyArchivedList;
 
 const Unarchive = styled.div`
   display: flex;

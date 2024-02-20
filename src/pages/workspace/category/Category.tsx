@@ -10,7 +10,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
-import Archived from "./Archived";
+
 import {
   CancelBtn,
   CategoryForm,
@@ -35,6 +35,8 @@ import { useCategory } from "../../../store/useCategory";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import CategoryPropertyDetails from "../../../components/workspace/category/CategoryPropertyDetails";
 import LocalCategoryPropertyDetails from "../../../components/workspace/category/LocalCategoryPropertyDetails";
+import CategoryArchivedList from "../../../components/workspace/category/CategoryArchivedList";
+import CategoryPropertyArchivedList from "../../../components/workspace/category/CategoryPropertyArchivedList";
 
 export interface CategoryProperty {
   name: string;
@@ -66,11 +68,20 @@ const Category = () => {
   } = useCategoryProperty();
 
   const [selectedValue, setSelectedValue] = useState("Text");
-  const [openModal, setOpenModal] = useState(false);
+  // category archive list
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const handleOpenModal = () => {
+  const handleCategoryArchivedList = () => {
     setOpenModal(true);
     getWorkspaceCategories(workspaceId, true);
+  };
+
+  // category property archive list
+  const [archivePropertyModal, setArchivePropertyModal] =
+    useState<boolean>(false);
+  const handleCategoryPropertyArchivedList = () => {
+    setArchivePropertyModal(true);
+    // getWorkspaceCategories(workspaceId, true);
   };
 
   // end
@@ -341,7 +352,12 @@ const Category = () => {
       <CustomModal
         open={openModal}
         setOpen={setOpenModal}
-        component={Archived}
+        component={CategoryArchivedList}
+      />
+      <CustomModal
+        open={archivePropertyModal}
+        setOpen={setArchivePropertyModal}
+        component={CategoryPropertyArchivedList}
       />
       {workspaceCategoryProperties === null ? (
         <CategoryTitle>
@@ -352,7 +368,7 @@ const Category = () => {
               <img src={add} alt="" />
               <span>{t("category.CreateCategory")}</span>
             </CreateBtn>
-            <CreateBtn onClick={handleOpenModal}>
+            <CreateBtn onClick={handleCategoryArchivedList}>
               <img src={archive} alt="" />
               <span>{t("category.ViewArchives")}</span>
             </CreateBtn>
@@ -368,7 +384,7 @@ const Category = () => {
                 <img src={add} alt="" />
                 <span>Create category</span>
               </CreateBtn>
-              <CreateBtn onClick={handleOpenModal}>
+              <CreateBtn onClick={handleCategoryArchivedList}>
                 <img src={archive} alt="" />
                 <span>View archive</span>
               </CreateBtn>
@@ -535,7 +551,7 @@ const Category = () => {
                             <img src={add} alt="" />
                             <span>Create property</span>
                           </button>
-                          <button>
+                          <button onClick={handleCategoryPropertyArchivedList}>
                             <img src={archive} alt="" />
                             <span>View archive</span>
                           </button>
