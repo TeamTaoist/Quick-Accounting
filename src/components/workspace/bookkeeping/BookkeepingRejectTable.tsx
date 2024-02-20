@@ -114,7 +114,7 @@ const BookkeepingRejectTable = ({
 
   return (
     <div>
-      {bookkeepingHiddenList.length === 0 && !paymentRequest ? (
+      {bookkeepingHiddenList.length === 0 && !paymentRequest && (
         <Message>
           <h3>You don't have any hidden transactions.</h3>
           <p style={{ width: "509px", textAlign: "center" }}>
@@ -126,7 +126,8 @@ const BookkeepingRejectTable = ({
             <span>Back</span>
           </HideBtn>
         </Message>
-      ) : (
+      )}
+      {bookkeepingHiddenList.length > 0 && (
         <>
           <UnhideBtn>
             <Btn onClick={handleUnHideBookkeepingList}>

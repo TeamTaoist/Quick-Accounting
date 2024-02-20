@@ -50,6 +50,7 @@ const Bookkeeping = () => {
     bookkeepingList,
     hideBookkeepingList,
     setCurrentBookkeepingDetail,
+    bookkeepingHiddenList,
   } = useBookkeeping();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
 
@@ -234,12 +235,13 @@ const Bookkeeping = () => {
             </Select>
           </FormControl>
           <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
-            {paymentRequest ? (
+            {paymentRequest && (
               <div onClick={handleViewHiddenList}>
                 <Image src={view} alt="" />
                 <p>{t("bookkeeping.ViewHidden")}</p>
               </div>
-            ) : (
+            )}
+            {bookkeepingHiddenList.length > 0 && !paymentRequest && (
               <div onClick={handleBackBtn}>
                 <Image src={back} alt="" />
                 <p>{t("paymentRequest.Back")}</p>
