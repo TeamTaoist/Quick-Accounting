@@ -233,7 +233,7 @@ const Bookkeeping = () => {
               )}
             </Select>
           </FormControl>
-          <ViewReject>
+          <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
             {paymentRequest ? (
               <div onClick={handleViewHiddenList}>
                 <Image src={view} alt="" />
