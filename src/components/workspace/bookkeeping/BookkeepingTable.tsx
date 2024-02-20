@@ -84,7 +84,7 @@ const BookkeepingTable = ({
               Safe
             </TableCell>
             <TableCell sx={{ background: "var(--bg-primary)" }}>
-              Recipient
+              Counterparty
             </TableCell>
             <TableCell sx={{ background: "var(--bg-primary)" }}>
               Amount
