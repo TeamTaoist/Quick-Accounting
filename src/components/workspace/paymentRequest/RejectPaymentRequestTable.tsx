@@ -17,11 +17,12 @@ import {
 import statusIcon from "../../../assets/workspace/status-icon.svg";
 import styled from "@emotion/styled";
 import CustomModal from "../../../utils/CustomModal";
-import PaymentRequestDetails from "../../../pages/workspace/paymentRequest/PaymentRequestDetails";
+import PaymentRequestDetails from "../../../pages/workspace/paymentRequest/PaymentRequestDetailsReadOnly";
 import { useEffect, useState } from "react";
 import usePaymentsStore from "../../../store/usePayments";
 import { formatNumber } from "../../../utils/number";
 import Pagination from "../../Pagination";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
@@ -45,10 +46,11 @@ const RejectPaymentRequestTable = ({
 
   const { getFailedPaymentRequestList, setCurrentPaymentRequestDetail } =
     usePaymentsStore();
+  const { workspace } = useWorkspace();
 
   const [paymentId, setPaymentId] = useState<number | null>(null);
   const handleOpenModal = (payment: IPaymentRequest) => {
-    setCurrentPaymentRequestDetail(payment);
+    setCurrentPaymentRequestDetail({ ...payment, vault_wallet: workspace.vault_wallet });
     setOpenModal(true);
   };
   // filter table data
@@ -88,7 +90,6 @@ const RejectPaymentRequestTable = ({
         open={openModal}
         setOpen={setOpenModal}
         component={PaymentRequestDetails}
-        additionalProps={{ paymentId, data: list }}
       />
       <TableSection>
         <TableContainer
