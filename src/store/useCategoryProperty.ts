@@ -47,6 +47,7 @@ interface UpdatedPropertyBody {
 interface UseCategoryProperty {
   workspaceCategoryProperties: CategoryProperties[];
   categoryProperty: CategoryProperty;
+  archivedCategoryProperty: ICategoryProperties[];
   getWorkspaceCategoryProperties: (workspaceId: number) => void;
   createWorkspaceCategoryProperties: (propertyValues: any) => Promise<void>;
   updateWorkspaceCategoryProperties: (
@@ -59,6 +60,16 @@ interface UseCategoryProperty {
     workspaceId: number | undefined,
     workspaceCategoryId: number | undefined,
     workspaceCategoryPropertyId: string | undefined
+  ) => Promise<boolean | undefined>;
+  getCategoryPropertyByCategoryId: (
+    workspaceId: number,
+    categoryId: number,
+    archive?: boolean
+  ) => Promise<boolean | undefined>;
+  unArchiveCategoryProperties: (
+    workspaceId: number | undefined,
+    workspaceCategoryId: number | undefined,
+    workspaceCategoryPropertyId: number[] | undefined
   ) => Promise<boolean | undefined>;
 }
 
@@ -81,6 +92,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
         values: "",
       },
     },
+    archivedCategoryProperty: [],
     getWorkspaceCategoryProperties: async (workspaceId) => {
       try {
         setLoading(true);
@@ -149,6 +161,44 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
           `/workspace_category_property/${workspaceId}/${workspaceCategoryId}/archive?ids=${workspaceCategoryPropertyId}`
         );
         toast.success("Archived successfully");
+        return true;
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    // get archive category property list
+    getCategoryPropertyByCategoryId: async (
+      workspaceId,
+      categoryId,
+      archive
+    ) => {
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.get(
+          `/workspace_category_properties/category_properties_by_workspace_id_and_category_id/${workspaceId}/${categoryId}?archived=${archive}`
+        );
+        set({ archivedCategoryProperty: data.data.rows });
+        return true;
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    // un-archive property
+    unArchiveCategoryProperties: async (
+      workspaceId,
+      workspaceCategoryId,
+      workspaceCategoryPropertyId
+    ) => {
+      try {
+        setLoading(true);
+        await axiosClient.put(
+          `/workspace_category_property/${workspaceId}/${workspaceCategoryId}/unarchive?ids=${workspaceCategoryPropertyId}`
+        );
+        toast.success("Un-Archived successfully");
         return true;
       } catch (error: any) {
         console.log(error);

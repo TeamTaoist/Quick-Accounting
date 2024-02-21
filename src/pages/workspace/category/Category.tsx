@@ -65,6 +65,7 @@ const Category = () => {
     categoryProperty,
     updateWorkspaceCategoryProperties,
     archiveWorkspaceCategoryProperties,
+    getCategoryPropertyByCategoryId,
   } = useCategoryProperty();
 
   const [selectedValue, setSelectedValue] = useState("Text");
@@ -79,9 +80,20 @@ const Category = () => {
   // category property archive list
   const [archivePropertyModal, setArchivePropertyModal] =
     useState<boolean>(false);
-  const handleCategoryPropertyArchivedList = () => {
-    setArchivePropertyModal(true);
-    // getWorkspaceCategories(workspaceId, true);
+  const [selectedCategoryWorkspaceId, setSelectedCategoryWorkspaceId] =
+    useState<number | null>(null);
+  const handleCategoryPropertyArchivedList = (categoryId: number) => {
+    getCategoryPropertyByCategoryId(Number(id), categoryId, true).then(
+      (res) => {
+        if (res) {
+          setArchivePropertyModal(true);
+          setSelectedCategoryWorkspaceId(categoryId);
+        }
+      }
+    );
+    // setSelectedCategoryWorkspaceId(categoryId);
+    // setArchivePropertyModal(true);
+    // console.log(categoryId);
   };
 
   // end
@@ -358,6 +370,7 @@ const Category = () => {
         open={archivePropertyModal}
         setOpen={setArchivePropertyModal}
         component={CategoryPropertyArchivedList}
+        additionalProps={{ categoryId: selectedCategoryWorkspaceId }}
       />
       {workspaceCategoryProperties === null ? (
         <CategoryTitle>
@@ -551,7 +564,11 @@ const Category = () => {
                             <img src={add} alt="" />
                             <span>Create property</span>
                           </button>
-                          <button onClick={handleCategoryPropertyArchivedList}>
+                          <button
+                            onClick={() =>
+                              handleCategoryPropertyArchivedList(category.ID)
+                            }
+                          >
                             <img src={archive} alt="" />
                             <span>View archive</span>
                           </button>

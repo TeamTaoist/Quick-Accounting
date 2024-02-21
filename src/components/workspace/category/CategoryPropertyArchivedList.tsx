@@ -11,18 +11,31 @@ import archive from "../../../assets/workspace/archive.svg";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
 import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
-const CategoryPropertyArchivedList = ({ setOpen }: any) => {
+interface CategoryPropertyArchivedListProps {
+  setOpen: (open: boolean) => void;
+  categoryId?: number;
+}
+
+const CategoryPropertyArchivedList = ({
+  setOpen,
+  categoryId,
+}: CategoryPropertyArchivedListProps) => {
   const { id } = useParams();
   const [selected, setSelected] = useState<number[]>([]);
   const [categoryLoading, setCategoryLoading] = useState<boolean>(false);
 
-  const { getWorkspaceCategories, workspaceCategories, unArchiveCategory } =
-    useCategory();
+  const {
+    archivedCategoryProperty,
+    unArchiveCategoryProperties,
+    getCategoryPropertyByCategoryId,
+    getWorkspaceCategoryProperties,
+  } = useCategoryProperty();
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelected(workspaceCategories.data.rows.map((category) => category.ID));
+      setSelected(archivedCategoryProperty.map((category) => category.ID));
     } else {
       setSelected([]);
     }
@@ -48,15 +61,25 @@ const CategoryPropertyArchivedList = ({ setOpen }: any) => {
   const workspaceId = Number(id);
   const categoryIds = selected;
   const handleUnArchive = async () => {
-    setSelected([]);
+    unArchiveCategoryProperties(workspaceId, categoryId, categoryIds).then(
+      (res) => {
+        if (res) {
+          if (categoryId !== undefined) {
+            getCategoryPropertyByCategoryId(workspaceId, categoryId, true);
+          }
+          getWorkspaceCategoryProperties(workspaceId);
+          setSelected([]);
+        }
+      }
+    );
   };
-
-  // get workspace un-archive category
-  const archiveQuery = true;
-  useEffect(() => {
-    getWorkspaceCategories(workspaceId, archiveQuery);
-  }, [getWorkspaceCategories, workspaceId, archiveQuery, categoryLoading]);
-  console.log(selected);
+  // useEffect(() => {
+  //   if (categoryId !== undefined) {
+  //     getCategoryPropertyByCategoryId(workspaceId, categoryId, true);
+  //   }
+  // }, [categoryId, getCategoryPropertyByCategoryId, workspaceId]);
+  console.log(archivedCategoryProperty);
+  console.log(categoryId);
 
   return (
     <>
@@ -71,7 +94,58 @@ const CategoryPropertyArchivedList = ({ setOpen }: any) => {
             <p>Unarchive</p>
           </div>
         </Unarchive>
-        <Archivemsg>Property Archive list is empty</Archivemsg>
+        {archivedCategoryProperty.length === 0 ? (
+          <Archivemsg>Archive list is empty</Archivemsg>
+        ) : (
+          <>
+            <ArchiveTable>
+              <TableContainer
+                sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
+              >
+                <Table>
+                  <TableHead
+                    style={{
+                      background: "var(--bg-secondary)",
+                    }}
+                  >
+                    <TableRow>
+                      <TableCell>
+                        <Checkbox
+                          indeterminate={
+                            selected.length > 0 &&
+                            selected.length < archivedCategoryProperty.length
+                          }
+                          checked={
+                            selected.length === archivedCategoryProperty.length
+                          }
+                          onChange={handleSelectAllClick}
+                        />
+                        Category
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {archivedCategoryProperty.map((category) => (
+                      <TableRow key={category.ID}>
+                        <TableCell
+                          sx={{ display: "flex", alignItems: "center" }}
+                        >
+                          <Checkbox
+                            checked={isSelected(category.ID)}
+                            onChange={(event) =>
+                              handleCheckboxClick(event, category.ID)
+                            }
+                          />
+                          <CellValue>{category.name}</CellValue>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </ArchiveTable>
+          </>
+        )}
       </WorkspaceItemDetailsLayout>
     </>
   );
