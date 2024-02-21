@@ -44,6 +44,8 @@ import { getShortAddress } from "../../../utils";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { useBookkeeping } from "../../../store/useBookkeeping";
 import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
+import { formatTimestamp } from "../../../utils/time";
+
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
 }
@@ -270,25 +272,6 @@ const BookkeepingTransferDetails = ({
     getBookkeepingList(bookkeepingDetails.workspace_id, false);
   };
 
-  const formatTimestamp = (timestamp: number) => {
-    const date = new Date(timestamp);
-
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-      timeZoneName: "short",
-    };
-
-    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-      date
-    );
-    return formattedDate + " +UTC";
-  };
   return (
     // <Header>
     <WorkspaceItemDetailsLayout title="Transfer Detail" setOpen={setOpen}>
