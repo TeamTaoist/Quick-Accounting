@@ -67,16 +67,16 @@ const CategoryArchivedList = ({ setOpen }: any) => {
         subtitle="These categories will continue to be applied to historical transfers."
         setOpen={setOpen}
       >
-        <Unarchive>
-          <div onClick={handleUnArchive}>
-            <img src={archive} alt="" />
-            <p>Unarchive</p>
-          </div>
-        </Unarchive>
         {workspaceCategories.data.total === 0 ? (
           <Archivemsg>Archive list is empty</Archivemsg>
         ) : (
           <>
+            <Unarchive>
+              <div onClick={handleUnArchive}>
+                <img src={archive} alt="" />
+                <p>Unarchive</p>
+              </div>
+            </Unarchive>
             <ArchiveTable>
               <TableContainer
                 sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
@@ -165,5 +165,5 @@ const CellValue = styled.div`
 const Archivemsg = styled.div`
   font-size: 20px;
   text-align: center;
-  padding: 50px;
+  padding: 100px;
 `;

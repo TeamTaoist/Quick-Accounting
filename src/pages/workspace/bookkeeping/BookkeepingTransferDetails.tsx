@@ -274,7 +274,7 @@ const BookkeepingTransferDetails = ({
 
   return (
     // <Header>
-    <WorkspaceItemDetailsLayout title="Transfer Detail" setOpen={setOpen}>
+    <WorkspaceItemDetailsLayout title="Transaction Detail" setOpen={setOpen}>
       <RequestDetails>
         <TransferTable>
           <TableContainer
