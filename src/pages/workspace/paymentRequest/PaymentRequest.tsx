@@ -151,7 +151,7 @@ const PaymentRequest = () => {
   ]);
 
   useEffect(() => {
-    getWorkspaceCategoryProperties(Number(id));
+    getWorkspaceCategoryProperties(Number(id), true);
   }, []);
   // payment_request_id
 

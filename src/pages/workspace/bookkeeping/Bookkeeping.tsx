@@ -75,7 +75,7 @@ const Bookkeeping = () => {
   const workspaceId = Number(id);
   // get category
   useEffect(() => {
-    getWorkspaceCategoryProperties(workspaceId);
+    getWorkspaceCategoryProperties(workspaceId, true);
   }, []);
 
   // fetch bookkeeping data

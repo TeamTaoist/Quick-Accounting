@@ -48,7 +48,10 @@ interface UseCategoryProperty {
   workspaceCategoryProperties: CategoryProperties[];
   categoryProperty: CategoryProperty;
   archivedCategoryProperty: ICategoryProperties[];
-  getWorkspaceCategoryProperties: (workspaceId: number) => void;
+  getWorkspaceCategoryProperties: (
+    workspaceId: number,
+    includeArchived?: boolean
+  ) => void;
   createWorkspaceCategoryProperties: (propertyValues: any) => Promise<void>;
   updateWorkspaceCategoryProperties: (
     workspaceId: number | undefined,
@@ -93,11 +96,14 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
       },
     },
     archivedCategoryProperty: [],
-    getWorkspaceCategoryProperties: async (workspaceId) => {
+    getWorkspaceCategoryProperties: async (
+      workspaceId,
+      includeArchived = false
+    ) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
-          `/workspace_categories/category_and_property_by_workspace_id/${workspaceId}`
+          `/workspace_categories/category_and_property_by_workspace_id/${workspaceId}?include_archived=${includeArchived}`
         );
         set({ workspaceCategoryProperties: data.data });
       } catch (error: any) {

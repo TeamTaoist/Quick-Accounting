@@ -16,6 +16,7 @@ import usePaymentsStore from "../../../store/usePayments";
 import { TransactionListItemType } from "@safe-global/safe-gateway-typescript-sdk";
 import QueueItem from "../../../components/workspace/QueueItem";
 import { BookkeepingTitle, HideBtn } from "../bookkeeping/Bookkeeping";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
 const Queue = () => {
   const { id } = useParams();
@@ -24,6 +25,7 @@ const Queue = () => {
   const { getQueueTx, isReady } = useSafeStore();
   const { workspace, assetsList, getAssets } = useWorkspace();
   const { getPaymentRequestBySafeTxHash } = usePaymentsStore();
+  const { getWorkspaceCategoryProperties } = useCategoryProperty();
 
   const [paymentRequest, setPaymentRequest] = useState(true);
   const [openModal, setOpenModal] = useState(false);
@@ -66,7 +68,9 @@ const Queue = () => {
   const afterExecute = () => {
     getQueueList();
   };
-
+  useEffect(() => {
+    getWorkspaceCategoryProperties(Number(id), true);
+  }, []);
   return (
     <QueueSection>
       {list.length === 0 && paymentRequest ? (
