@@ -120,23 +120,23 @@ const CategoryPropertyArchivedList = ({
                           }
                           onChange={handleSelectAllClick}
                         />
-                        Category
+                        Category Properties
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {archivedCategoryProperty.map((category) => (
-                      <TableRow key={category.ID}>
+                    {archivedCategoryProperty.map((property) => (
+                      <TableRow key={property.ID}>
                         <TableCell
                           sx={{ display: "flex", alignItems: "center" }}
                         >
                           <Checkbox
-                            checked={isSelected(category.ID)}
+                            checked={isSelected(property.ID)}
                             onChange={(event) =>
-                              handleCheckboxClick(event, category.ID)
+                              handleCheckboxClick(event, property.ID)
                             }
                           />
-                          <CellValue>{category.name}</CellValue>
+                          <CellValue>{property.name}</CellValue>
                         </TableCell>
                       </TableRow>
                     ))}
