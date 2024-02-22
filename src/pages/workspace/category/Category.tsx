@@ -497,7 +497,6 @@ const Category = () => {
                                     <img src={property1} alt="" />
                                     <p>{property.name}</p>
                                   </PropertyTitle>
-                                  <img src={archive} alt="" />
                                 </Option>
                               )
                             )}
