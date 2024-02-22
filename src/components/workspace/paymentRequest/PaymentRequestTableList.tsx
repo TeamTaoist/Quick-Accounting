@@ -80,7 +80,9 @@ const PaymentRequestTableList = ({
           >
             <Checkbox
               checked={isSelected(Number(paymentId))}
-              onChange={(event) => handleCheckboxClick(event, Number(id))}
+              onChange={(event) =>
+                handleCheckboxClick(event, Number(paymentId))
+              }
             />
             {items.length} payment requests
             <IconButton
