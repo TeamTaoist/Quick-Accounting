@@ -62,7 +62,7 @@ const PaymentRequestCategoryProperties = ({
     <>
       {selectedCategory?.properties?.map((property: any) => (
         <React.Fragment key={property.ID}>
-          {property.type === "single-select" && (
+          {property.type === "single-select" && !property.archived && (
             <TableRow
               sx={{
                 td: {
@@ -113,7 +113,7 @@ const PaymentRequestCategoryProperties = ({
       ))}
       {selectedCategory?.properties?.map((property: any, index: number) => (
         <>
-          {property.type === "multi-select" && (
+          {property.type === "multi-select" && !property.archived && (
             <TableRow
               sx={{
                 td: {
@@ -164,7 +164,7 @@ const PaymentRequestCategoryProperties = ({
       ))}
       {selectedCategory.properties?.map((property: any) => (
         <>
-          {property.type === "Text" && (
+          {property.type === "Text" && !property.archived && (
             <TableRow
               sx={{
                 td: {
