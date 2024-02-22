@@ -232,7 +232,10 @@ const ShareWorkspacePaymentRequest = () => {
   const handleConfirmSubmit = () => {
     createSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
       (res) => {
-        setConfirmVisible(false);
+        if (res) {
+          setConfirmVisible(false);
+          getPaymentRequestShareCodeData(shareId);
+        }
       }
     );
   };
