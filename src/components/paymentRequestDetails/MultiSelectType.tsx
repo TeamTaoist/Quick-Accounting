@@ -74,6 +74,7 @@ const MultiSelectType = ({
       </TableRow>
     );
   }
+  return null;
 };
 
 export default MultiSelectType;

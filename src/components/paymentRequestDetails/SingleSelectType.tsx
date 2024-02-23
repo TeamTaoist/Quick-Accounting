@@ -78,6 +78,7 @@ const SingleSelectType = ({
       </TableRow>
     );
   }
+  return null;
 };
 
 export default SingleSelectType;
