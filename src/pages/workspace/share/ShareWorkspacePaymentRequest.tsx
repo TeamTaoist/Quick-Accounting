@@ -1,13 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../../components/layout/header/Header";
-import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
 import React, { useEffect, useState } from "react";
 import {
   FormControl,
   InputAdornment,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Table,
   TableBody,
   TableCell,
@@ -17,26 +15,21 @@ import {
   TextField,
 } from "@mui/material";
 
-import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
-import multiSelect from "../../../assets/workspace/multi-select.svg";
-import selectIcon from "../../../assets/workspace/select.svg";
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
-import optionsIcon from "../../../assets/workspace/option.svg";
 import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
-import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { useLoading } from "../../../store/useLoading";
 import Loading from "../../../utils/Loading";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
-import CustomModal from "../../../utils/CustomModal";
-import PaymentRequestPreview from "./PaymentRequestPreview";
 import { ReactSelectOption } from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import { formatBalance } from "../../../utils/number";
 import { toast } from "react-toastify";
 import { isAddress } from "viem";
 import { parseUnits } from "ethers";
 import ConfirmModal from "../../../components/confirmModal";
+import PaymentDetailsForm from "../../../components/paymentRequestGroupDetails/PaymentDetailsForm";
+import GroupPaymentCategoryProperties from "../../../components/paymentRequestGroupDetails/GroupPaymentCategoryProperties";
 
 const ShareWorkspacePaymentRequest = () => {
   const { shareId } = useParams();
@@ -51,19 +44,6 @@ const ShareWorkspacePaymentRequest = () => {
     shareData,
   } = useSharePaymentRequest();
   const [confirmVisible, setConfirmVisible] = useState(false);
-
-  console.log("workspace", workspace);
-
-  // payments details
-  // const [shareList, setShareList] = useState<ISharePaymentList>();
-  // const [paymentDetails, setPaymentDetails] = useState<ISharePaymentItem[]>([]);
-
-  // const [age, setAge] = useState("Category");
-
-  // const handleCategoryChange = (event: SelectChangeEvent) => {
-  //   setAge(event.target.value as string);
-  // };
-
   const [selectedValues, setSelectedValues] = useState([]);
 
   // dynamic payment request form
@@ -157,73 +137,6 @@ const ShareWorkspacePaymentRequest = () => {
     setSharePaymentRequestForm(updatedRequests);
   };
 
-  // const handleFormChange = (
-  //   index: number,
-  //   field: string,
-  //   value: any,
-  //   propertyName?: string,
-  //   propertyType?: string,
-  //   categoryId?: number
-  // ) => {
-  //   const updatedRequests = [...sharePaymentRequestForm];
-
-  //   if (field === "currency_address") {
-  //     const token = assetsList.find((item) => item.tokenInfo.address === value);
-  //     if (token) {
-  //       updatedRequests[index].currency_name = token.tokenInfo.symbol;
-  //       updatedRequests[index].decimals = token.tokenInfo.decimals;
-  //     }
-  //     updatedRequests[index].currency_contract_address = value;
-  //   } else if (field === "categoryProperties") {
-  //     const existingCategoryProperty = updatedRequests[
-  //       index
-  //     ].category_properties.find(
-  //       (property) =>
-  //         property.name === propertyName && property.type === propertyType
-  //     );
-
-  //     if (existingCategoryProperty) {
-  //       // If property exists, update its value
-  //       if (propertyType === "Text") {
-  //         existingCategoryProperty.values = value;
-  //       } else {
-  //         const values =
-  //           propertyType === "single-select"
-  //             ? value.value
-  //             : value.map((v: ReactSelectOption) => v.value).join(";");
-  //         existingCategoryProperty.values = values;
-  //       }
-  //     } else {
-  //       // If property doesn't exist, create a new one
-  //       if (propertyType === "Text") {
-  //         const newCategoryProperty = {
-  //           name: propertyName,
-  //           type: propertyType,
-  //           values: value,
-  //         };
-  //         updatedRequests[index].category_properties.push(newCategoryProperty);
-  //       } else {
-  //         const newCategoryProperty = {
-  //           name: propertyName,
-  //           type: propertyType,
-  //           values:
-  //             propertyType === "single-select"
-  //               ? value.value
-  //               : value.map((v: ReactSelectOption) => v.value).join(";"),
-  //         };
-  //         updatedRequests[index].category_properties.push(newCategoryProperty);
-  //       }
-  //     }
-  //   } else {
-  //     // Your existing code for handling other fields
-  //     if (field !== "currency_address" && field !== "categoryProperties") {
-  //       (updatedRequests[index] as any)[field] = value;
-  //     }
-  //   }
-
-  //   setSharePaymentRequestForm(updatedRequests);
-  // };
-
   const handleDeleteRequestForm = (index: number) => {
     const updatedRequest = sharePaymentRequestForm.filter(
       (_, i) => i !== index
@@ -232,9 +145,6 @@ const ShareWorkspacePaymentRequest = () => {
   };
 
   // get category details
-  // useEffect(() => {
-  //   getWorkspaceCategoryProperties(Number(workspaceId));
-  // }, [getWorkspaceCategoryProperties, workspaceId]);
 
   const [shareDataLoading, setShareDataLoading] = useState<boolean>(false);
   // get payment request details
@@ -243,14 +153,12 @@ const ShareWorkspacePaymentRequest = () => {
       await getPaymentRequestShareCodeData(shareId).then((res) => {
         if (res) {
           updateWorkspace(res);
-          // setPaymentDetails(shareData?.payment_request_items!);
         }
       });
     };
     fetchPaymentRequestData();
   }, [shareDataLoading]);
-  // console.log("details", paymentDetails);
-  // new
+
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<any>([]);
 
@@ -277,19 +185,6 @@ const ShareWorkspacePaymentRequest = () => {
     );
     setSelectedCategories(updatedSelectedCategories);
   };
-  // const [selectedCategories, setSelectedCategories] = useState([])
-  //   const selectedCategorie = selectedCategoryIDs.map((id: any) =>
-  //     workspaceCategoryProperties?.find((category) => category.ID === id)
-  //   );
-  // console.log(selectedCategories);
-
-  // useEffect(() => {
-  //   const updatedSelectedCategories = selectedCategoryIDs.map((id: any) =>
-  //     workspaceCategoryProperties?.find((category) => category.ID === id)
-  //   );
-  //   setSelectedCategories(updatedSelectedCategories);
-  // }, [selectedCategoryIDs, workspaceCategoryProperties]);
-
   // get asset list
   useEffect(() => {
     workspace?.vault_wallet && getAssets();
@@ -337,9 +232,9 @@ const ShareWorkspacePaymentRequest = () => {
   const handleConfirmSubmit = () => {
     createSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
       (res) => {
-        setConfirmVisible(false);
         if (res) {
-          setShareDataLoading(!shareDataLoading);
+          setConfirmVisible(false);
+          getPaymentRequestShareCodeData(shareId);
         }
       }
     );
@@ -352,19 +247,9 @@ const ShareWorkspacePaymentRequest = () => {
     }
     setConfirmVisible(true);
   };
-  const handleSavePaymentRequest = () => {
-    saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
-      (res) => {
-        if (res) {
-          setShareDataLoading(!shareDataLoading);
-        }
-      }
-    );
+  const handleSavePaymentRequest = async () => {
+    await saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm });
   };
-
-  // useEffect(() => {
-  //   getWorkspaceDetails(Number(workspaceId));
-  // }, []);
 
   useEffect(() => {
     if (shareData && shareData.payment_request_items !== null) {
@@ -401,482 +286,41 @@ const ShareWorkspacePaymentRequest = () => {
       setSelectedCategories(updatedSelectedCategories);
     }
   }, [shareData]);
-  console.log("property", selectedCategories);
   const isEditable =
     shareData?.payment_request_items?.[0]?.status !== 0 &&
     shareData?.payment_request_items !== null;
 
-  console.log("shareData", shareData);
-
   return (
     <>
       {isLoading && <Loading />}
-      <CustomModal
-        open={openModal}
-        setOpen={setOpenModal}
-        component={PaymentRequestPreview}
-        additionalProps={{ sharePaymentRequestForm }}
-      />
       <Header>
         <SharePaymentContainer>
           <SharePaymentForm>
             <ShareHeader>
               <h3>New payment request from {workspace.name}</h3>
             </ShareHeader>
-            {/* {paymentDetails && paymentDetails.length > 0 ? (
-              <p>data</p>
-            ) : (
-              <> */}
             {sharePaymentRequestForm.map((value, index) => (
               <RequestDetails key={index}>
-                <TableContainer
-                  sx={{
-                    // paddingInline: "46px",
-                    // paddingTop: "30px",
-                    boxShadow: "none",
-                    border: "1px solid var(--border-table)",
-                    borderTopRightRadius: "6px",
-                    borderTopLeftRadius: "6px",
-                  }}
-                >
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead sx={{ background: "var(--bg-secondary)" }}>
-                      <TableRow>
-                        <TableCell
-                          sx={{
-                            width: "30%",
-                            borderRight: "1px solid var(--border-table)",
-                            // paddingInline: 0,
-                            fontSize: "18px",
-                            fontWeight: "500",
-                          }}
-                        >
-                          Recipient
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            width: "23%",
-                            borderRight: "1px solid var(--border-table)",
-                            fontSize: "18px",
-                            fontWeight: "500",
-                          }}
-                        >
-                          Amount
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            width: "37%",
-                            fontSize: "18px",
-                            fontWeight: "500",
-                          }}
-                        >
-                          Currency
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {/* <TableRow sx={{ td: { border: 1, padding: 0 } }}> */}
-                      {/* {rows.map((row) => ( */}
-                      <TableRow
-                        sx={{
-                          height: "30px",
-                        }}
-                      >
-                        <TableCell
-                          // size="small"
-                          sx={{
-                            borderRight: "1px solid var(--border-table)",
-                            padding: 0,
-                            // paddingInline: "16px",
-                          }}
-                        >
-                          <TextField
-                            sx={{
-                              "& fieldset": { border: "none" },
-                            }}
-                            size="small"
-                            fullWidth
-                            autoComplete="off"
-                            // id="fullWidth"
-                            placeholder="Enter wallet address"
-                            value={value.recipient}
-                            onChange={(e) =>
-                              handleFormChange(
-                                index,
-                                "recipient",
-                                e.target.value
-                              )
-                            }
-                            InputProps={{
-                              style: { padding: 0 },
-                              readOnly: isEditable,
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            borderRight: "1px solid var(--border-table)",
-                            borderRadius: "5px",
-                            padding: 0,
-                            paddingLeft: "10px",
-                            // minHeight: "40px",
-                          }}
-                        >
-                          <TextField
-                            sx={{
-                              "& fieldset": { border: "none" },
-                            }}
-                            size="small"
-                            fullWidth
-                            autoComplete="off"
-                            value={value.amount}
-                            // id="fullWidth"
-                            placeholder="amount"
-                            onChange={(e) =>
-                              handleFormChange(index, "amount", e.target.value)
-                            }
-                            InputProps={{
-                              style: { padding: 0 },
-                              readOnly: isEditable,
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            padding: 0,
-                            // minHeight: "40px",
-                          }}
-                        >
-                          <Select
-                            labelId="demo-select-small-label"
-                            id="demo-select-small"
-                            value={
-                              sharePaymentRequestForm[index]
-                                .currency_contract_address
-                            }
-                            // onChange={handleChange}
-                            size="small"
-                            onChange={(e) =>
-                              handleFormChange(
-                                index,
-                                "currency_address",
-                                e.target.value
-                              )
-                            }
-                            IconComponent={() => (
-                              <InputAdornment position="start">
-                                <img
-                                  src={arrowBottom}
-                                  alt="Custom Arrow Icon"
-                                  style={{ marginRight: "50px" }}
-                                />
-                              </InputAdornment>
-                            )}
-                            sx={{
-                              width: "100%",
-                              "& fieldset": { border: "none" },
-                            }}
-                            inputProps={{
-                              readOnly: isEditable,
-                            }}
-                          >
-                            {assetsList.map((asset, i: number) => (
-                              <MenuItem
-                                key={i}
-                                value={asset.tokenInfo.address}
-                                sx={{
-                                  "&:hover": {
-                                    backgroundColor: "var(--hover-bg)",
-                                  },
-                                  "&.Mui-selected": {
-                                    backgroundColor: "var(--hover-bg)",
-                                  },
-                                }}
-                              >
-                                {asset.tokenInfo.symbol}(
-                                {formatBalance(
-                                  asset.balance,
-                                  asset.tokenInfo.decimals
-                                )}
-                                )
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </TableCell>
-                      </TableRow>
-                      {/* ))} */}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                <PaymentDetailsForm
+                  value={value}
+                  handleFormChange={handleFormChange}
+                  index={index}
+                  isEditable={isEditable}
+                  sharePaymentRequestForm={sharePaymentRequestForm}
+                />
                 {/* note info */}
                 <NoteInformation>
                   <h3>Note Information</h3>
+                  <GroupPaymentCategoryProperties
+                    sharePaymentRequestForm={sharePaymentRequestForm}
+                    index={index}
+                    isEditable={isEditable}
+                    handleCategoryDropdown={handleCategoryDropdown}
+                    selectedCategories={selectedCategories}
+                    selectedValues={selectedValues}
+                    handleFormChange={handleFormChange}
+                  />
 
-                  <TableContainer>
-                    <Table sx={{ minWidth: 600 }} aria-label="simple table">
-                      <TableBody>
-                        <TableRow
-                          sx={{
-                            td: {
-                              border: "1px solid var(--border-table)",
-                              padding: 0,
-                              paddingInline: "16px",
-                            },
-                          }}
-                        >
-                          <TableCell sx={{ height: 1, width: "33.5%" }}>
-                            <NoteInfo>
-                              <Image src={categoryIcon} alt="" /> Category
-                            </NoteInfo>
-                          </TableCell>
-                          <TableCell>
-                            <FormControl fullWidth>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={
-                                  sharePaymentRequestForm[index].category_name
-                                }
-                                label={
-                                  sharePaymentRequestForm[index].category_name
-                                }
-                                size="small"
-                                // onChange={handleCategoryChange}
-                                IconComponent={() => (
-                                  <InputAdornment position="start">
-                                    <img
-                                      src={arrowBottom}
-                                      alt="Custom Arrow Icon"
-                                      style={{ marginRight: "20px" }}
-                                    />
-                                  </InputAdornment>
-                                )}
-                                sx={{
-                                  minWidth: "100%",
-                                  "& fieldset": { border: "none" },
-                                }}
-                                inputProps={{
-                                  readOnly: isEditable,
-                                }}
-                              >
-                                <MenuItem disabled value="">
-                                  {sharePaymentRequestForm[index].category_name}
-                                </MenuItem>
-                                {shareData?.category_and_properties?.map(
-                                  (category) => (
-                                    <MenuItem
-                                      key={category.ID}
-                                      value={category.name}
-                                      onClick={() => {
-                                        handleCategoryDropdown(
-                                          category.ID,
-                                          category.name,
-                                          index
-                                        );
-                                      }}
-                                      sx={{
-                                        "&:hover": {
-                                          backgroundColor: "var(--hover-bg)",
-                                        },
-                                        "&.Mui-selected": {
-                                          backgroundColor: "var(--hover-bg)",
-                                        },
-                                      }}
-                                    >
-                                      {category.name}
-                                    </MenuItem>
-                                  )
-                                )}
-                              </Select>
-                            </FormControl>
-                          </TableCell>
-                        </TableRow>
-                        {/* category property */}
-                        {/* {paymentDetails && paymentDetails.length === 0 && ( */}
-                        <>
-                          {selectedCategories[index]?.properties?.map(
-                            (property: ICategoryProperties, i: number) => (
-                              <React.Fragment key={i}>
-                                {property.type === "single-select" && (
-                                  <TableRow
-                                    sx={{
-                                      td: {
-                                        border: "1px solid var(--border-table)",
-                                        padding: 0,
-                                        paddingInline: "16px",
-                                      },
-                                    }}
-                                  >
-                                    <TableCell sx={{ height: 1, width: 252 }}>
-                                      <NoteInfo>
-                                        <Image src={selectIcon} alt="" />{" "}
-                                        {property.name}
-                                      </NoteInfo>
-                                    </TableCell>
-                                    {/* add multi select first */}
-                                    <TableCell>
-                                      <ReactSelect
-                                        value={selectedValues}
-                                        isMulti={false}
-                                        isDisabled={isEditable}
-                                        onChange={(
-                                          selectedOption: ReactSelectOption
-                                        ) =>
-                                          handleFormChange(
-                                            index,
-                                            "categoryProperties",
-                                            selectedOption,
-                                            property.name,
-                                            property.type
-                                          )
-                                        }
-                                        options={property.values
-                                          .split(";")
-                                          .map((v: string) => ({
-                                            value: v,
-                                            label: v,
-                                          }))}
-                                        defaultValues={sharePaymentRequestForm[
-                                          index
-                                        ].category_properties
-                                          .filter(
-                                            (p: any) =>
-                                              p.type === "single-select" &&
-                                              p.name === property.name
-                                          )
-                                          .map((p: any) =>
-                                            p.values
-                                              .split(";")
-                                              .map((v: string) => ({
-                                                value: v,
-                                                label: v,
-                                              }))
-                                          )
-                                          .flat()}
-                                      />
-                                    </TableCell>
-                                  </TableRow>
-                                )}
-                                {property.type === "multi-select" && (
-                                  <TableRow
-                                    sx={{
-                                      td: {
-                                        border: "1px solid var(--border-table)",
-                                        padding: 0,
-                                        paddingInline: "16px",
-                                      },
-                                    }}
-                                  >
-                                    <TableCell sx={{ height: 1, width: 252 }}>
-                                      <NoteInfo>
-                                        <Image src={multiSelect} alt="" />{" "}
-                                        {property.name}
-                                      </NoteInfo>
-                                    </TableCell>
-                                    {/* add multi select */}
-                                    <TableCell>
-                                      <ReactSelect
-                                        value={selectedValues}
-                                        isDisabled={isEditable}
-                                        // onChange={handleSelectChange}
-                                        onChange={(
-                                          selectedOption: ReactSelectOption
-                                        ) =>
-                                          handleFormChange(
-                                            index,
-                                            "categoryProperties",
-                                            selectedOption,
-                                            property.name,
-                                            property.type
-                                          )
-                                        }
-                                        options={property.values
-                                          .split(";")
-                                          .map((v: any) => ({
-                                            value: v,
-                                            label: v,
-                                          }))}
-                                        defaultValues={sharePaymentRequestForm[
-                                          index
-                                        ].category_properties
-                                          .filter(
-                                            (p: any) =>
-                                              p.type === "multi-select" &&
-                                              p.name === property.name
-                                          )
-                                          .map((p: any) =>
-                                            p.values
-                                              .split(";")
-                                              .map((v: string) => ({
-                                                value: v,
-                                                label: v,
-                                              }))
-                                          )
-                                          .flat()}
-                                      />
-                                    </TableCell>
-                                  </TableRow>
-                                )}
-                                {property.type === "Text" && (
-                                  <TableRow
-                                    sx={{
-                                      td: {
-                                        border: "1px solid var(--border-table)",
-                                        padding: 0,
-                                        paddingInline: "16px",
-                                      },
-                                    }}
-                                  >
-                                    <TableCell sx={{ height: 1, width: 252 }}>
-                                      <NoteInfo>
-                                        <Image src={optionsIcon} alt="" />{" "}
-                                        {property.name}
-                                      </NoteInfo>
-                                    </TableCell>
-                                    {/* add multi select */}
-                                    <TableCell>
-                                      <TextField
-                                        sx={{
-                                          "& fieldset": { border: "none" },
-                                        }}
-                                        size="small"
-                                        autoComplete="off"
-                                        fullWidth
-                                        value={
-                                          sharePaymentRequestForm[
-                                            index
-                                          ].category_properties.find(
-                                            (p) =>
-                                              p.name === property.name &&
-                                              p.type === "Text"
-                                          )?.values || ""
-                                        }
-                                        placeholder="Enter content"
-                                        onChange={(e) =>
-                                          handleFormChange(
-                                            index,
-                                            "categoryProperties",
-                                            e.target.value,
-                                            property.name,
-                                            property.type
-                                          )
-                                        }
-                                        InputProps={{
-                                          style: { padding: 0 },
-                                          readOnly: isEditable,
-                                        }}
-                                      />
-                                    </TableCell>
-                                  </TableRow>
-                                )}
-                              </React.Fragment>
-                            )
-                          )}
-                        </>
-                        {/* )} */}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
                   {!isEditable && (
                     <DeleteBtn onClick={() => handleDeleteRequestForm(index)}>
                       Delete

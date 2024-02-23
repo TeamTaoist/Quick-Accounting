@@ -1,12 +1,21 @@
 import styled from "@emotion/styled";
+import { SidebarProps } from "./WorkspaceSidebar";
 
-export const SidebarContainer = styled.div`
+export const SidebarContainer = styled.div<SidebarProps>`
   border-right: 1px solid var(--border);
-  width: 327px;
+  /* max-width: 327px; */
   height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
+  width: ${({ hideSidebar }) => (hideSidebar ? "80px" : "327px")};
+  transition: width 0.3s ease-in-out;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
-export const WorkspaceInfo = styled.div`
+export const WorkspaceInfo = styled.div<SidebarProps>`
   background-color: white;
   display: flex;
   justify-content: space-between;
@@ -21,6 +30,8 @@ export const WorkspaceInfo = styled.div`
 
   img {
     width: 14px;
+    cursor: pointer;
+    transform: ${({ hideSidebar }) => hideSidebar && "rotate(180deg)"};
   }
   h5 {
     font-size: 21px;
@@ -35,20 +46,21 @@ export const PaymentRequest = styled.div`
   justify-content: center;
   margin-top: 40px;
 `;
-export const RequestBtn = styled.button`
+export const RequestBtn = styled.button<SidebarProps>`
   border: none;
   outline: none;
   display: flex;
+  justify-content: ${({ hideSidebar }) => (hideSidebar ? "center" : "start")};
   align-items: center;
   gap: 40px;
-  width: 235px;
-  padding: 10px 40px;
+  padding: ${({ hideSidebar }) => (hideSidebar ? "10px" : "10px 40px")};
   border-radius: 5px;
   margin-bottom: 30px;
   cursor: pointer;
+  width: ${({ hideSidebar }) => (hideSidebar ? "60px" : "230px")};
 
   img {
-    width: 24px;
+    width: ${({ hideSidebar }) => (hideSidebar ? "20px" : "24px")};
   }
   span {
     font-size: 20px;

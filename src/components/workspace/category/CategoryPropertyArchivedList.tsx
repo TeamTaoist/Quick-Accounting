@@ -1,4 +1,3 @@
-import Header from "../../../components/layout/header/Header";
 import { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,20 +11,31 @@ import archive from "../../../assets/workspace/archive.svg";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
 import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
-import { useLoading } from "../../../store/useLoading";
-import Loading from "../../../utils/Loading";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
-const Archived = ({ setOpen }: any) => {
+interface CategoryPropertyArchivedListProps {
+  setOpen: (open: boolean) => void;
+  categoryId?: number;
+}
+
+const CategoryPropertyArchivedList = ({
+  setOpen,
+  categoryId,
+}: CategoryPropertyArchivedListProps) => {
   const { id } = useParams();
   const [selected, setSelected] = useState<number[]>([]);
   const [categoryLoading, setCategoryLoading] = useState<boolean>(false);
 
-  const { getWorkspaceCategories, workspaceCategories, unArchiveCategory } =
-    useCategory();
-  const { isLoading } = useLoading();
+  const {
+    archivedCategoryProperty,
+    unArchiveCategoryProperties,
+    getCategoryPropertyByCategoryId,
+    getWorkspaceCategoryProperties,
+  } = useCategoryProperty();
+
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelected(workspaceCategories.data.rows.map((category) => category.ID));
+      setSelected(archivedCategoryProperty.map((category) => category.ID));
     } else {
       setSelected([]);
     }
@@ -51,35 +61,43 @@ const Archived = ({ setOpen }: any) => {
   const workspaceId = Number(id);
   const categoryIds = selected;
   const handleUnArchive = async () => {
-    await unArchiveCategory(workspaceId, categoryIds);
-    setCategoryLoading(!categoryLoading);
-    setSelected([]);
+    unArchiveCategoryProperties(workspaceId, categoryId, categoryIds).then(
+      (res) => {
+        if (res) {
+          if (categoryId !== undefined) {
+            getCategoryPropertyByCategoryId(workspaceId, categoryId, true);
+          }
+          getWorkspaceCategoryProperties(workspaceId);
+          setSelected([]);
+        }
+      }
+    );
   };
-
-  // get workspace un-archive category
-  const archiveQuery = true;
-  useEffect(() => {
-    getWorkspaceCategories(workspaceId, archiveQuery);
-  }, [getWorkspaceCategories, workspaceId, archiveQuery, categoryLoading]);
-  console.log(selected);
+  // useEffect(() => {
+  //   if (categoryId !== undefined) {
+  //     getCategoryPropertyByCategoryId(workspaceId, categoryId, true);
+  //   }
+  // }, [categoryId, getCategoryPropertyByCategoryId, workspaceId]);
+  console.log(archivedCategoryProperty);
+  console.log(categoryId);
 
   return (
     <>
       <WorkspaceItemDetailsLayout
-        title="Archived categories"
-        subtitle="These categories will continue to be applied to historical transfers."
+        title="Archived category properties"
+        // subtitle="These categories will continue to be applied to historical transfers."
         setOpen={setOpen}
       >
-        <Unarchive>
-          <div onClick={handleUnArchive}>
-            <img src={archive} alt="" />
-            <p>Unarchive</p>
-          </div>
-        </Unarchive>
-        {workspaceCategories.data.total === 0 ? (
+        {archivedCategoryProperty.length === 0 ? (
           <Archivemsg>Archive list is empty</Archivemsg>
         ) : (
           <>
+            <Unarchive>
+              <div onClick={handleUnArchive}>
+                <img src={archive} alt="" />
+                <p>Unarchive</p>
+              </div>
+            </Unarchive>
             <ArchiveTable>
               <TableContainer
                 sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
@@ -95,32 +113,30 @@ const Archived = ({ setOpen }: any) => {
                         <Checkbox
                           indeterminate={
                             selected.length > 0 &&
-                            selected.length <
-                              workspaceCategories.data.rows.length
+                            selected.length < archivedCategoryProperty.length
                           }
                           checked={
-                            selected.length ===
-                            workspaceCategories.data.rows.length
+                            selected.length === archivedCategoryProperty.length
                           }
                           onChange={handleSelectAllClick}
                         />
-                        Category
+                        Category Properties
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {workspaceCategories.data.rows.map((category) => (
-                      <TableRow key={category.ID}>
+                    {archivedCategoryProperty.map((property) => (
+                      <TableRow key={property.ID}>
                         <TableCell
                           sx={{ display: "flex", alignItems: "center" }}
                         >
                           <Checkbox
-                            checked={isSelected(category.ID)}
+                            checked={isSelected(property.ID)}
                             onChange={(event) =>
-                              handleCheckboxClick(event, category.ID)
+                              handleCheckboxClick(event, property.ID)
                             }
                           />
-                          <CellValue>{category.name}</CellValue>
+                          <CellValue>{property.name}</CellValue>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -135,7 +151,7 @@ const Archived = ({ setOpen }: any) => {
   );
 };
 
-export default Archived;
+export default CategoryPropertyArchivedList;
 
 const Unarchive = styled.div`
   display: flex;
@@ -168,5 +184,5 @@ const CellValue = styled.div`
 const Archivemsg = styled.div`
   font-size: 20px;
   text-align: center;
-  padding: 50px;
+  padding: 100px;
 `;

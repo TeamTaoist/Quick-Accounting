@@ -5,7 +5,7 @@ import view from "../../../assets/workspace/view.svg";
 import { CategoryTitle } from "../category/category.style";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import RejectDataTable from "../../../components/workspace/RejectDataTable";
+import RejectDataTable from "../../../components/workspace/paymentRequest/RejectPaymentRequestTable";
 import { Image, ViewReject } from "../paymentRequest/paymentRequest.style";
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
@@ -16,6 +16,7 @@ import usePaymentsStore from "../../../store/usePayments";
 import { TransactionListItemType } from "@safe-global/safe-gateway-typescript-sdk";
 import QueueItem from "../../../components/workspace/QueueItem";
 import { BookkeepingTitle, HideBtn } from "../bookkeeping/Bookkeeping";
+import { useCategoryProperty } from "../../../store/useCategoryProperty";
 
 const Queue = () => {
   const { id } = useParams();
@@ -24,6 +25,7 @@ const Queue = () => {
   const { getQueueTx, isReady } = useSafeStore();
   const { workspace, assetsList, getAssets } = useWorkspace();
   const { getPaymentRequestBySafeTxHash } = usePaymentsStore();
+  const { getWorkspaceCategoryProperties } = useCategoryProperty();
 
   const [paymentRequest, setPaymentRequest] = useState(true);
   const [openModal, setOpenModal] = useState(false);
@@ -66,7 +68,9 @@ const Queue = () => {
   const afterExecute = () => {
     getQueueList();
   };
-
+  useEffect(() => {
+    getWorkspaceCategoryProperties(Number(id), true);
+  }, []);
   return (
     <QueueSection>
       {list.length === 0 && paymentRequest ? (

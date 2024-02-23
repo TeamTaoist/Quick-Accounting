@@ -10,7 +10,7 @@ import Loading from "../../../utils/Loading";
 import styled from "@emotion/styled";
 import { useAccount } from "wagmi";
 import { useAuthStore } from "../../../store/useAuthStore";
-import config from "../../../envConfig";
+import Version from "../../version";
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
@@ -75,9 +75,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             <img src={avatar} alt="" />
             {/* </div> */}
           </Link>
-          <p className="version">
-            {config.version} {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}
-          </p>
+          <Version />
         </UserBox>
       </div>
       <div className="sidebar-details">{children}</div>

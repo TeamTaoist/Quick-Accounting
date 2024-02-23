@@ -1,30 +1,16 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
+import { useEffect, useState } from "react";
 import add from "../../../assets/workspace/add.svg";
 import archive from "../../../assets/workspace/archive.svg";
 import property1 from "../../../assets/workspace/property1.svg";
-import option from "../../../assets/workspace/option.svg";
-import select from "../../../assets/workspace/select.svg";
-import multiSelect from "../../../assets/workspace/multi-select.svg";
-import propertyAdd from "../../../assets/workspace/property-add.svg";
-import propertyDelete from "../../../assets/workspace/property-delete.svg";
-
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import {
-  InputAdornment,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
-import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../utils/CustomModal";
-import Archived from "./Archived";
+
 import {
   CancelBtn,
   CategoryForm,
@@ -36,50 +22,41 @@ import {
   CreateCategoryBtn,
   CreateOptionButton,
   Details,
-  DetailsInput,
-  DropdownOption,
   Header,
   Option,
   OptionCreateButtons,
   Options,
   PropertyBtns,
   PropertyCreateButtons,
-  PropertyInput,
-  PropertyInputValue,
   PropertyOptions,
-  PropertyOptionsValue,
-  PropertyOptionsValueBtn,
   PropertyTitle,
 } from "./category.style";
 import { useCategory } from "../../../store/useCategory";
-import { useLoading } from "../../../store/useLoading";
-import Loading from "../../../utils/Loading";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import CategoryPropertyDetails from "../../../components/workspace/category/CategoryPropertyDetails";
+import LocalCategoryPropertyDetails from "../../../components/workspace/category/LocalCategoryPropertyDetails";
+import CategoryArchivedList from "../../../components/workspace/category/CategoryArchivedList";
+import CategoryPropertyArchivedList from "../../../components/workspace/category/CategoryPropertyArchivedList";
 
 export interface CategoryProperty {
   name: string;
   type: string;
   value: "";
 }
-interface CategoryPropertiesState {
+export interface CategoryPropertiesState {
   [categoryId: number]: CategoryProperty[];
 }
 
 const Category = () => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const { id } = useParams();
 
   const {
     getWorkspaceCategories,
-    workspaceCategories,
     createWorkspaceCategory,
-    getWorkspaceCategoryDetails,
-    workspaceCategory,
     updateCategoryName,
     updateCategoryArchive,
   } = useCategory();
-  const { isLoading } = useLoading();
 
   const {
     getWorkspaceCategoryProperties,
@@ -87,18 +64,36 @@ const Category = () => {
     createWorkspaceCategoryProperties,
     categoryProperty,
     updateWorkspaceCategoryProperties,
+    archiveWorkspaceCategoryProperties,
+    getCategoryPropertyByCategoryId,
   } = useCategoryProperty();
 
   const [selectedValue, setSelectedValue] = useState("Text");
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedValue(event.target.value);
-  };
-  const [openModal, setOpenModal] = useState(false);
+  // category archive list
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const handleOpenModal = () => {
+  const handleCategoryArchivedList = () => {
     setOpenModal(true);
     getWorkspaceCategories(workspaceId, true);
-    console.log("click");
+  };
+
+  // category property archive list
+  const [archivePropertyModal, setArchivePropertyModal] =
+    useState<boolean>(false);
+  const [selectedCategoryWorkspaceId, setSelectedCategoryWorkspaceId] =
+    useState<number | null>(null);
+  const handleCategoryPropertyArchivedList = (categoryId: number) => {
+    getCategoryPropertyByCategoryId(Number(id), categoryId, true).then(
+      (res) => {
+        if (res) {
+          setArchivePropertyModal(true);
+          setSelectedCategoryWorkspaceId(categoryId);
+        }
+      }
+    );
+    // setSelectedCategoryWorkspaceId(categoryId);
+    // setArchivePropertyModal(true);
+    // console.log(categoryId);
   };
 
   // end
@@ -161,8 +156,6 @@ const Category = () => {
   const archiveQuery = false;
   const workspaceId = Number(id);
   useEffect(() => {
-    // getWorkspaceCategories(workspaceId, archiveQuery);
-    // get workspace category properties
     getWorkspaceCategoryProperties(workspaceId);
   }, [
     getWorkspaceCategories,
@@ -204,7 +197,7 @@ const Category = () => {
   const [propertyValues, setPropertyValues] = useState<string[]>([]);
 
   const handleAddButtonClick = (categoryId: number, index: number) => {
-    setPropertyValues((prevValues) => [...prevValues, ""]);
+    setPropertyValues([...propertyValues, ""]);
   };
   const handleDeleteProperty = (index: number) => {
     const updatedProperty = propertyValues.filter((_, i) => i !== index);
@@ -271,9 +264,6 @@ const Category = () => {
     });
   };
   // update category properties
-  // property name
-  // const [selectedProperty, setSelectedProperty] =
-  //   useState<ICategoryProperties>();
   const [propertyName, setPropertyName] = useState<string>("");
   const [propertyType, setPropertyType] = useState<string>("");
   const [propertyValue, setPropertyValue] = useState<string[]>([]);
@@ -354,13 +344,33 @@ const Category = () => {
       }
     });
   };
+  // archive property
+  const handleArchiveCategoryProperty = async (
+    property: ICategoryProperties
+  ) => {
+    await archiveWorkspaceCategoryProperties(
+      property.workspace_id,
+      property.category_id,
+      property.ID.toString()
+    ).then((res) => {
+      if (res) {
+        getWorkspaceCategoryProperties(workspaceId);
+      }
+    });
+  };
 
   return (
     <CreateCategory>
       <CustomModal
         open={openModal}
         setOpen={setOpenModal}
-        component={Archived}
+        component={CategoryArchivedList}
+      />
+      <CustomModal
+        open={archivePropertyModal}
+        setOpen={setArchivePropertyModal}
+        component={CategoryPropertyArchivedList}
+        additionalProps={{ categoryId: selectedCategoryWorkspaceId }}
       />
       {workspaceCategoryProperties === null ? (
         <CategoryTitle>
@@ -371,7 +381,7 @@ const Category = () => {
               <img src={add} alt="" />
               <span>{t("category.CreateCategory")}</span>
             </CreateBtn>
-            <CreateBtn onClick={handleOpenModal}>
+            <CreateBtn onClick={handleCategoryArchivedList}>
               <img src={archive} alt="" />
               <span>{t("category.ViewArchives")}</span>
             </CreateBtn>
@@ -387,7 +397,7 @@ const Category = () => {
                 <img src={add} alt="" />
                 <span>Create category</span>
               </CreateBtn>
-              <CreateBtn onClick={handleOpenModal}>
+              <CreateBtn onClick={handleCategoryArchivedList}>
                 <img src={archive} alt="" />
                 <span>View archive</span>
               </CreateBtn>
@@ -469,14 +479,15 @@ const Category = () => {
                                   <img src={property1} alt="" />
                                   <p>{property.name}</p>
                                 </PropertyTitle>
-                                <img src={archive} alt="" />
+                                <img
+                                  onClick={() =>
+                                    handleArchiveCategoryProperty(property)
+                                  }
+                                  src={archive}
+                                  alt=""
+                                />
                               </Option>
                             </div>
-                            // <SingleCategoryProperty
-                            //   property={property}
-                            //   handleSelectedProperty={handleSelectedProperty}
-                            //   propertyName={propertyName}
-                            // />
                           ))}
                           {categoryProperties[category.ID] &&
                             categoryProperties[category.ID].map(
@@ -486,7 +497,6 @@ const Category = () => {
                                     <img src={property1} alt="" />
                                     <p>{property.name}</p>
                                   </PropertyTitle>
-                                  <img src={archive} alt="" />
                                 </Option>
                               )
                             )}
@@ -496,294 +506,49 @@ const Category = () => {
                           <>
                             {/* TODO: update */}
                             {category.properties?.map((property, index) => (
-                              <div>
-                                {showProperty === property.ID && (
-                                  <DetailsInput>
-                                    <h3>Property name</h3>
-                                    <PropertyInput
-                                      placeholder="Property name"
-                                      // value={property.name}
-                                      value={propertyName}
-                                      onChange={(e) =>
-                                        setPropertyName(e.target.value)
-                                      }
-                                      onBlur={() =>
-                                        handleUpdatedCategoryProperty(
-                                          property.workspace_id,
-                                          property.category_id,
-                                          property.ID
-                                        )
-                                      }
-                                    />
-                                    <h3>Property Type</h3>
-                                    <Select
-                                      labelId={`property-type-label-${index}`}
-                                      id={`property-type-${index}`}
-                                      // value={property.type}
-                                      value={propertyType}
-                                      onChange={(e) => handleSetPropertyType(e)}
-                                      onBlur={() =>
-                                        handleUpdatedCategoryProperty(
-                                          property.workspace_id,
-                                          property.category_id,
-                                          property.ID
-                                        )
-                                      }
-                                      // onChange={(e) =>
-                                      //   handlePropertyTypeChange(
-                                      //     category.ID,
-                                      //     index,
-                                      //     e.target.value
-                                      //   )
-                                      // }
-                                      size="small"
-                                      IconComponent={() => (
-                                        <InputAdornment position="start">
-                                          <img
-                                            src={arrowBottom}
-                                            alt="Custom Arrow Icon"
-                                            style={{ marginRight: "20px" }}
-                                          />
-                                        </InputAdornment>
-                                      )}
-                                      sx={{
-                                        minWidth: "100%",
-                                        "& fieldset": { border: 1 },
-                                      }}
-                                    >
-                                      <MenuItem
-                                        value="Text"
-                                        sx={{
-                                          "&:hover": {
-                                            backgroundColor: "var(--hover-bg)",
-                                          },
-                                          "&.Mui-selected": {
-                                            backgroundColor: "var(--hover-bg)",
-                                          },
-                                        }}
-                                      >
-                                        <DropdownOption>
-                                          <img src={option} alt="" /> Text
-                                        </DropdownOption>
-                                      </MenuItem>
-                                      <MenuItem value="single-select">
-                                        <DropdownOption>
-                                          <img src={select} alt="" />{" "}
-                                          Single-select
-                                        </DropdownOption>
-                                      </MenuItem>
-                                      <MenuItem value="multi-select">
-                                        <DropdownOption>
-                                          <img src={multiSelect} alt="" />
-                                          Multi-select
-                                        </DropdownOption>
-                                      </MenuItem>
-                                    </Select>
-                                    {/* property value */}
-                                    {propertyType !== "Text" && (
-                                      <>
-                                        {propertyValue.map(
-                                          (value, valueIndex) => (
-                                            <PropertyOptionsValue>
-                                              <img src={propertyAdd} alt="" />
-                                              <PropertyInputValue
-                                                key={valueIndex}
-                                                placeholder=""
-                                                value={value}
-                                                onChange={(e) =>
-                                                  handlePropertyValue(
-                                                    valueIndex,
-                                                    e.target.value
-                                                  )
-                                                }
-                                                onBlur={() =>
-                                                  handleUpdatedCategoryProperty(
-                                                    property.workspace_id,
-                                                    property.category_id,
-                                                    property.ID
-                                                  )
-                                                }
-                                              />
-                                              <img
-                                                onClick={() =>
-                                                  handleUpdateDeleteProperty(
-                                                    valueIndex,
-                                                    property.workspace_id,
-                                                    property.category_id,
-                                                    property.ID
-                                                  )
-                                                }
-                                                src={propertyDelete}
-                                                alt=""
-                                              />
-                                            </PropertyOptionsValue>
-                                          )
-                                        )}
-                                        <PropertyOptionsValueBtn
-                                          onClick={handleUpdateAddButtonClick}
-                                        >
-                                          + Add option
-                                        </PropertyOptionsValueBtn>
-                                      </>
-                                    )}
-                                    {/* {property.type !== "Text" && (
-                                    <>
-                                      <PropertyInputValue
-                                        placeholder=""
-                                        value={property.values}
-                                        onChange={(e) =>
-                                          handlePropertyNameChange(
-                                            category.ID,
-                                            index,
-                                            e.target.value
-                                          )
-                                        }
-                                      />
-                                      <button onClick={handleAddButtonClick}>
-                                        Add
-                                      </button>
-                                    </>
-                                  )} */}
-                                  </DetailsInput>
-                                )}
-                              </div>
+                              <CategoryPropertyDetails
+                                showProperty={showProperty}
+                                propertyName={propertyName}
+                                setPropertyName={setPropertyName}
+                                property={property}
+                                index={index}
+                                handleUpdatedCategoryProperty={
+                                  handleUpdatedCategoryProperty
+                                }
+                                propertyType={propertyType}
+                                handleSetPropertyType={handleSetPropertyType}
+                                propertyValue={propertyValue}
+                                handlePropertyValue={handlePropertyValue}
+                                handleUpdateDeleteProperty={
+                                  handleUpdateDeleteProperty
+                                }
+                                handleUpdateAddButtonClick={
+                                  handleUpdateAddButtonClick
+                                }
+                              />
                             ))}
                             {/*  */}
                             {categoryProperties[category.ID] &&
                               categoryProperties[category.ID].map(
                                 (property, index) => (
-                                  <div>
-                                    {showProperty === index && (
-                                      <DetailsInput>
-                                        <h3>Property name</h3>
-                                        <PropertyInput
-                                          placeholder="Property name"
-                                          value={property.name}
-                                          onChange={(e) =>
-                                            handlePropertyNameChange(
-                                              category.ID,
-                                              index,
-                                              e.target.value
-                                            )
-                                          }
-                                        />
-                                        <h3>Property Type</h3>
-                                        <Select
-                                          labelId={`property-type-label-${index}`}
-                                          id={`property-type-${index}`}
-                                          value={property.type}
-                                          onChange={(e) =>
-                                            handlePropertyTypeChange(
-                                              category.ID,
-                                              index,
-                                              e.target.value
-                                            )
-                                          }
-                                          size="small"
-                                          IconComponent={() => (
-                                            <InputAdornment position="start">
-                                              <img
-                                                src={arrowBottom}
-                                                alt="Custom Arrow Icon"
-                                                style={{ marginRight: "20px" }}
-                                              />
-                                            </InputAdornment>
-                                          )}
-                                          sx={{
-                                            minWidth: "100%",
-                                            "& fieldset": { border: 1 },
-                                          }}
-                                        >
-                                          <MenuItem
-                                            value="Text"
-                                            sx={{
-                                              "&:hover": {
-                                                backgroundColor:
-                                                  "var(--hover-bg)",
-                                              },
-                                              "&.Mui-selected": {
-                                                backgroundColor:
-                                                  "var(--hover-bg)",
-                                              },
-                                            }}
-                                          >
-                                            <DropdownOption>
-                                              <img src={option} alt="" /> Text
-                                            </DropdownOption>
-                                          </MenuItem>
-                                          <MenuItem value="single-select">
-                                            <DropdownOption>
-                                              <img src={select} alt="" />{" "}
-                                              Single-select
-                                            </DropdownOption>
-                                          </MenuItem>
-                                          <MenuItem value="multi-select">
-                                            <DropdownOption>
-                                              <img src={multiSelect} alt="" />
-                                              Multi-select
-                                            </DropdownOption>
-                                          </MenuItem>
-                                        </Select>
-                                        {/* property value */}
-                                        {property.type !== "Text" && (
-                                          <>
-                                            {/* <PropertyInputValue
-                                            placeholder=""
-                                            value={property.value}
-                                            onChange={(e) =>
-                                              handlePropertyValueChange(
-                                                category.ID,
-                                                index,
-                                                e.target.value
-                                              )
-                                            }
-                                          /> */}
-                                            {propertyValues.map(
-                                              (value, valueIndex) => (
-                                                <PropertyOptionsValue>
-                                                  <img
-                                                    src={propertyAdd}
-                                                    alt=""
-                                                  />
-                                                  <PropertyInputValue
-                                                    key={valueIndex}
-                                                    placeholder=""
-                                                    value={value}
-                                                    onChange={(e) =>
-                                                      handlePropertyValueChang(
-                                                        category.ID,
-                                                        valueIndex,
-                                                        e.target.value
-                                                      )
-                                                    }
-                                                  />
-                                                  <img
-                                                    onClick={() =>
-                                                      handleDeleteProperty(
-                                                        valueIndex
-                                                      )
-                                                    }
-                                                    src={propertyDelete}
-                                                    alt=""
-                                                  />
-                                                </PropertyOptionsValue>
-                                              )
-                                            )}
-                                            <PropertyOptionsValueBtn
-                                              onClick={() =>
-                                                handleAddButtonClick(
-                                                  category.ID,
-                                                  index
-                                                )
-                                              }
-                                            >
-                                              + Add option
-                                            </PropertyOptionsValueBtn>
-                                          </>
-                                        )}
-                                      </DetailsInput>
-                                    )}
-                                  </div>
+                                  <LocalCategoryPropertyDetails
+                                    showProperty={showProperty}
+                                    property={property}
+                                    index={index}
+                                    handlePropertyNameChange={
+                                      handlePropertyNameChange
+                                    }
+                                    category={category}
+                                    handlePropertyTypeChange={
+                                      handlePropertyTypeChange
+                                    }
+                                    propertyValues={propertyValues}
+                                    handlePropertyValueChang={
+                                      handlePropertyValueChang
+                                    }
+                                    handleDeleteProperty={handleDeleteProperty}
+                                    handleAddButtonClick={handleAddButtonClick}
+                                  />
                                 )
                               )}
                           </>
@@ -798,7 +563,11 @@ const Category = () => {
                             <img src={add} alt="" />
                             <span>Create property</span>
                           </button>
-                          <button>
+                          <button
+                            onClick={() =>
+                              handleCategoryPropertyArchivedList(category.ID)
+                            }
+                          >
                             <img src={archive} alt="" />
                             <span>View archive</span>
                           </button>
@@ -834,21 +603,3 @@ const Category = () => {
 };
 
 export default Category;
-
-// const SingleCategoryProperty = ({
-//   property,
-//   handleSelectedProperty,
-//   propertyName,
-// }: any) => {
-//   return (
-//     <div onClick={() => handleSelectedProperty(property)}>
-//       <Option>
-//         <PropertyTitle>
-//           <img src={property1} alt="" />
-//           <p>{property.name}</p>
-//         </PropertyTitle>
-//         <img src={archive} alt="" />
-//       </Option>
-//     </div>
-//   );
-// };

@@ -8,4 +8,5 @@ declare interface ICategoryProperties {
   name: string;
   type: string;
   values: string;
+  archived?: boolean;
 }

@@ -5,7 +5,7 @@ import { useUserPayment } from "../../store/useUserPayment";
 import UserPaymentRequest from "./UserPaymentRequest";
 import {
   Details,
-  Pagination,
+  PaymentPagination,
   PaymentTable,
   UserDashboardSection,
 } from "./userDashboard.style";
@@ -13,6 +13,7 @@ import { useLoading } from "../../store/useLoading";
 import Loading from "../../utils/Loading";
 import ReactPaginate from "react-paginate";
 import styled from "@emotion/styled";
+import Pagination from "../../components/Pagination";
 
 const UserDashboard = () => {
   const { getUserPayment, userPayment } = useUserPayment();
@@ -49,24 +50,12 @@ const UserDashboard = () => {
                 <UserPaymentRequest />
                 {/* pagination */}
                 {totalItem >= 10 && (
-                  <Pagination>
-                    <ReactPaginate
-                      breakLabel="..."
-                      nextLabel=">"
-                      onPageChange={handlePageClick}
-                      pageRangeDisplayed={3}
+                  <PaymentPagination>
+                    <Pagination
+                      handlePageClick={handlePageClick}
                       pageCount={pageCount}
-                      previousLabel="<"
-                      renderOnZeroPageCount={null}
-                      containerClassName="pagination"
-                      pageLinkClassName="page-num"
-                      previousLinkClassName="page-arrow"
-                      nextLinkClassName="page-arrow"
-                      activeLinkClassName="active"
-                      // initialPage={2}
-                      forcePage={0}
                     />
-                  </Pagination>
+                  </PaymentPagination>
                 )}
               </PaymentTable>
             )}

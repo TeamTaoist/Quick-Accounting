@@ -42,6 +42,10 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
 import { getShortAddress } from "../../../utils";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import { useBookkeeping } from "../../../store/useBookkeeping";
+import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
+import { formatTimestamp } from "../../../utils/time";
+
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
 }
@@ -55,7 +59,9 @@ interface PropertyValues {
   values?: string;
 }
 
-const BookkeepingTransferDetails = ({ setOpen }: any) => {
+const BookkeepingTransferDetails = ({
+  setOpen,
+}: PaymentRequestDetailsProps) => {
   const { id } = useParams();
 
   const { workspace } = useWorkspace();
@@ -63,8 +69,8 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
     (chain) => chain.chainId === workspace?.chain_id
   );
 
-  const { paymentRequestDetails, updatePaymentRequestCategory } =
-    usePaymentsStore();
+  const { updatePaymentRequestCategory } = usePaymentsStore();
+  const { bookkeepingDetails, getBookkeepingList } = useBookkeeping();
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
 
@@ -149,11 +155,11 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
   const [categoryProperties, setCategoryProperties] = useState<any>([]);
 
   const [selectedCategoryID, setSelectedCategoryID] = useState<number>(
-    paymentRequestDetails?.category_id
+    bookkeepingDetails?.category_id
   );
   const [selectedCategory, setSelectedCategory] = useState<any>({});
   useEffect(() => {
-    setSelectedCategoryID(paymentRequestDetails.category_id);
+    setSelectedCategoryID(bookkeepingDetails.category_id);
   }, [setOpen]);
   useEffect(() => {
     const selectedCategory = workspaceCategoryProperties?.find(
@@ -165,7 +171,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
     }
   }, [selectedCategoryID, workspaceCategoryProperties]);
 
-  console.log("selected category ", selectedCategory);
   const handleCategory = async (categoryId: number) => {
     setSelectedCategoryID(categoryId);
     setPropertyValues({});
@@ -206,8 +211,8 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
   };
   let parseCategoryProperties: any;
   // if (paymentRequestDetails) {
-  if (paymentRequestDetails.category_properties !== "") {
-    const categoryProperties = paymentRequestDetails?.category_properties;
+  if (bookkeepingDetails.category_properties !== "") {
+    const categoryProperties = bookkeepingDetails?.category_properties;
     if (categoryProperties) {
       parseCategoryProperties = JSON.parse(categoryProperties);
     }
@@ -261,36 +266,15 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
   const handleUpdateCategory = async () => {
     await updatePaymentRequestCategory(
       id,
-      paymentRequestDetails.ID.toString(),
+      bookkeepingDetails.ID.toString(),
       updatedPaymentBody
     );
+    getBookkeepingList(bookkeepingDetails.workspace_id, false);
   };
-  console.log("body", updatedPaymentBody);
 
-  if (isLoading) return <p></p>;
-
-  const formatTimestamp = (timestamp: number) => {
-    const date = new Date(timestamp);
-
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-      timeZoneName: "short",
-    };
-
-    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-      date
-    );
-    return formattedDate + " +UTC";
-  };
   return (
     // <Header>
-    <WorkspaceItemDetailsLayout title="Transfer Detail" setOpen={setOpen}>
+    <WorkspaceItemDetailsLayout title="Transaction Detail" setOpen={setOpen}>
       <RequestDetails>
         <TransferTable>
           <TableContainer
@@ -308,7 +292,6 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/* {data.slice(0, 1).map((row) => ( */}
                 <TableRow>
                   <TableCell
                     sx={{
@@ -334,7 +317,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                       paddingLeft: "12px",
                     }}
                   >
-                    {getShortAddress(paymentRequestDetails.recipient)}
+                    {getShortAddress(bookkeepingDetails.recipient)}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -344,7 +327,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                       paddingLeft: "12px",
                     }}
                   >
-                    {formatNumber(Number(paymentRequestDetails.amount))}
+                    {formatNumber(Number(bookkeepingDetails.amount))}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -354,7 +337,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                       paddingLeft: "12px",
                     }}
                   >
-                    {paymentRequestDetails.currency_name}
+                    {bookkeepingDetails.currency_name}
                   </TableCell>
                 </TableRow>
                 {/* ))} */}
@@ -366,9 +349,9 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
         <TransactionHash>
           <h3>Transaction hash</h3>
           <div>
-            <p>{paymentRequestDetails.tx_hash}</p>
+            <p>{bookkeepingDetails.tx_hash}</p>
             <a
-              href={`${chainData?.explore}/tx/${paymentRequestDetails.tx_hash}`}
+              href={`${chainData?.explore}/tx/${bookkeepingDetails.tx_hash}`}
               target="_blank"
               rel="noreferrer"
             >
@@ -380,7 +363,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
           <h3>Transaction date</h3>
           <div>
             {/* <p>Oct-15-2023 01:04:34 PM +UTC</p> */}
-            <p>{formatTimestamp(paymentRequestDetails.tx_timestamp)}</p>
+            <p>{formatTimestamp(bookkeepingDetails.tx_timestamp)}</p>
           </div>
         </TransactionHash>
         {/* note info */}
@@ -407,7 +390,7 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                   <TableCell>
                     <FormControl
                       fullWidth
-                      disabled={paymentRequestDetails.status === 2}
+                      disabled={bookkeepingDetails.status === 2}
                     >
                       <Select
                         labelId="demo-simple-select-label"
@@ -449,167 +432,22 @@ const BookkeepingTransferDetails = ({ setOpen }: any) => {
                     </FormControl>
                   </TableCell>
                 </TableRow>
-                {selectedCategory.properties?.map((property: any) => (
+                {selectedCategory && (
                   <>
-                    {property.type === "single-select" && (
-                      <TableRow
-                        sx={{
-                          td: {
-                            border: "1px solid var(--border-table)",
-                            padding: 1,
-                            paddingInline: 1,
-                          },
-                        }}
-                      >
-                        <TableCell sx={{ height: 1, width: 200 }}>
-                          <NoteInfo>
-                            <Image src={selectIcon} alt="" /> {property.name}
-                          </NoteInfo>
-                        </TableCell>
-                        <TableCell onBlur={handleUpdateCategory}>
-                          <ReactSelect
-                            isMulti={false}
-                            isDisabled={paymentRequestDetails.status === 2}
-                            value={selectSingleValue}
-                            onChange={(selectedOption: ReactSelectOption) =>
-                              handleSelectSingleChange(
-                                selectedOption,
-                                property.name,
-                                property.type
-                              )
-                            }
-                            options={property.values
-                              .split(";")
-                              .map((v: string) => ({
-                                value: v,
-                                label: v,
-                              }))}
-                            defaultValues={parseCategoryProperties
-                              .filter(
-                                (p: any) =>
-                                  p.type === "single-select" &&
-                                  p.name === property.name
-                              )
-                              .map((p: any) =>
-                                p.values.split(";").map((v: string) => ({
-                                  value: v,
-                                  label: v,
-                                }))
-                              )
-                              .flat()}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    )}
+                    <PaymentRequestCategoryProperties
+                      selectedCategory={selectedCategory}
+                      handleUpdateCategory={handleUpdateCategory}
+                      selectSingleValue={selectSingleValue}
+                      handleSelectSingleChange={handleSelectSingleChange}
+                      parseCategoryProperties={parseCategoryProperties}
+                      selectedValues={selectedValues}
+                      handleSelectChange={handleSelectChange}
+                      proPertyTextValue={proPertyTextValue}
+                      handlePropertyText={handlePropertyText}
+                      status={bookkeepingDetails.status}
+                    />
                   </>
-                ))}
-                {selectedCategory.properties?.map((property: any) => (
-                  <>
-                    {property.type === "multi-select" && (
-                      <TableRow
-                        sx={{
-                          td: {
-                            border: "1px solid var(--border-table)",
-                            padding: 1,
-                            paddingInline: 1,
-                          },
-                        }}
-                      >
-                        <TableCell sx={{ height: 1, width: 200 }}>
-                          <NoteInfo>
-                            <Image src={multiSelect} alt="" /> {property.name}
-                          </NoteInfo>
-                        </TableCell>
-
-                        <TableCell onBlur={handleUpdateCategory}>
-                          <ReactSelect
-                            isDisabled={paymentRequestDetails.status === 2}
-                            value={selectedValues}
-                            onChange={(selectedOptions: ReactSelectOption[]) =>
-                              handleSelectChange(
-                                selectedOptions,
-                                property.name,
-                                property.type
-                              )
-                            }
-                            options={property.values
-                              .split(";")
-                              .map((v: string) => ({
-                                value: v,
-                                label: v,
-                              }))}
-                            // defaultValues={property.values
-                            //   .split(";")
-                            //   .map((v: string) => ({
-                            //     value: v,
-                            //     label: v,
-                            //   }))}
-                            defaultValues={parseCategoryProperties
-                              .filter(
-                                (p: any) =>
-                                  p.type === "multi-select" &&
-                                  p.name === property.name
-                              )
-                              .map((p: any) =>
-                                p.values.split(";").map((v: string) => ({
-                                  value: v,
-                                  label: v,
-                                }))
-                              )
-                              .flat()}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </>
-                ))}
-                {selectedCategory.properties?.map((property: any) => (
-                  <>
-                    {property.type === "Text" && (
-                      <TableRow
-                        sx={{
-                          td: {
-                            border: "1px solid var(--border-table)",
-                            padding: 1,
-                            paddingInline: 1,
-                          },
-                        }}
-                      >
-                        <TableCell sx={{ height: 1, width: 200 }}>
-                          <NoteInfo>
-                            <Image src={optionsIcon} alt="" /> {property.name}
-                          </NoteInfo>
-                        </TableCell>
-
-                        <TableCell onBlur={handleUpdateCategory}>
-                          <TextField
-                            disabled={paymentRequestDetails.status === 2}
-                            sx={{
-                              "& fieldset": { border: "none" },
-                            }}
-                            size="small"
-                            fullWidth
-                            value={
-                              proPertyTextValue[property.name]?.values || ""
-                            }
-                            // id="fullWidth"
-                            placeholder="Enter content"
-                            onChange={(e) =>
-                              handlePropertyText(
-                                e,
-                                property.name,
-                                property.type
-                              )
-                            }
-                            InputProps={{
-                              style: { padding: 0 },
-                            }}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
