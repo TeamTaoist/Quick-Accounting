@@ -1,26 +1,9 @@
-import React from "react";
-import {
-  FormControl,
-  InputAdornment,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  TextField,
-} from "@mui/material";
+import { TableCell, TableRow } from "@mui/material";
 import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import ReactSelect from "../ReactSelect";
-import usePaymentsStore from "../../store/usePayments";
 import selectIcon from "../../assets/workspace/select.svg";
-import multiSelect from "../../assets/workspace/multi-select.svg";
-import optionsIcon from "../../assets/workspace/option.svg";
-import { ReactSelectOption } from "../../pages/workspace/paymentRequest/PaymentRequestDetailsReadOnly";
-
+import { ReactSelectOption } from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
 interface SingleSelectTypeProps {
   property: any;
   handleUpdateCategory: () => void;
