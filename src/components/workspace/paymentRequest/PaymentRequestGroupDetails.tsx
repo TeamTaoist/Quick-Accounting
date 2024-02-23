@@ -102,6 +102,7 @@ const PaymentRequestGroupDetails = ({
   ]);
 
   console.log("form data", sharePaymentRequestForm);
+  console.log("group details", groupDetails);
 
   // handle form value
   const handleFormChange = (
@@ -199,6 +200,7 @@ const PaymentRequestGroupDetails = ({
           category_properties: Array.isArray(paymentDetail.category_properties)
             ? paymentDetail.category_properties
             : JSON.parse(paymentDetail.category_properties),
+          // category_properties: JSON.parse(paymentDetail.category_properties),
         };
       });
       setSharePaymentRequestForm(updatedForm);
@@ -213,14 +215,18 @@ const PaymentRequestGroupDetails = ({
       );
       setSelectedCategories(updatedSelectedCategories);
     }
-  }, [workspaceCategoryProperties]);
+  }, []);
+
+  const [defaultValue, setDefaultValue] = useState<any>([]);
+  useEffect(() => {
+    setDefaultValue(sharePaymentRequestForm);
+  }, []);
+  console.log("default value", defaultValue);
 
   const handleUpdatePaymentRequest = async (paymentId: number) => {
     const selectedPayment = sharePaymentRequestForm.find(
       (f) => f.id === paymentId
     );
-    console.log(id);
-    console.log("selectedPayment", selectedPayment);
     const paymentRequestBody = {
       category_id: selectedPayment?.category_id,
       category_name: selectedPayment?.category_name,
@@ -463,7 +469,8 @@ const PaymentRequestGroupDetails = ({
                         (properties: ICategoryProperties, i: number) => (
                           <React.Fragment key={i}>
                             {properties.type === "single-select" &&
-                              !properties.archived && (
+                              (defaultValue[index]?.category_properties.length >
+                              0 ? (
                                 <TableRow
                                   sx={{
                                     td: {
@@ -525,78 +532,270 @@ const PaymentRequestGroupDetails = ({
                                     />
                                   </TableCell>
                                 </TableRow>
-                              )}
-                            {
-                              <>
-                                {properties.type === "multi-select" &&
-                                  !properties.archived && (
-                                    <TableRow
-                                      sx={{
-                                        td: {
-                                          border:
-                                            "1px solid var(--border-table)",
-                                          padding: 1,
-                                          paddingInline: 1,
-                                        },
-                                      }}
+                              ) : (
+                                !properties.archived && (
+                                  <TableRow
+                                    sx={{
+                                      td: {
+                                        border: "1px solid var(--border-table)",
+                                        padding: 1,
+                                        paddingInline: 1,
+                                      },
+                                    }}
+                                  >
+                                    <TableCell sx={{ height: 1, width: 200 }}>
+                                      <NoteInfo>
+                                        <Image src={selectIcon} alt="" />{" "}
+                                        {properties.name}
+                                      </NoteInfo>
+                                    </TableCell>
+                                    <TableCell
+                                      onBlur={() =>
+                                        handleUpdatePaymentRequest(payment.id)
+                                      }
                                     >
-                                      <TableCell sx={{ height: 1, width: 200 }}>
-                                        <NoteInfo>
-                                          <Image src={multiSelect} alt="" />{" "}
-                                          {properties.name}
-                                        </NoteInfo>
-                                      </TableCell>
-                                      <TableCell
-                                        onBlur={() =>
-                                          handleUpdatePaymentRequest(payment.id)
+                                      <ReactSelect
+                                        value={selectedValues}
+                                        isMulti={false}
+                                        // isDisabled={isEditable}
+                                        onChange={(
+                                          selectedOption: ReactSelectOption
+                                        ) =>
+                                          handleFormChange(
+                                            index,
+                                            "categoryProperties",
+                                            selectedOption,
+                                            properties.name,
+                                            properties.type
+                                          )
                                         }
-                                      >
-                                        <ReactSelect
-                                          value={selectedValues}
-                                          // isDisabled={isEditable}
-                                          // onChange={handleSelectChange}
-                                          onChange={(
-                                            selectedOption: ReactSelectOption
-                                          ) =>
-                                            handleFormChange(
-                                              index,
-                                              "categoryProperties",
-                                              selectedOption,
-                                              properties.name,
-                                              properties.type
-                                            )
-                                          }
-                                          options={properties.values
+                                        options={properties.values
+                                          .split(";")
+                                          .map((v: string) => ({
+                                            value: v,
+                                            label: v,
+                                          }))}
+                                        defaultValues={sharePaymentRequestForm[
+                                          index
+                                        ].category_properties
+                                          .filter(
+                                            (p: any) =>
+                                              p.type === "single-select" &&
+                                              p.name === properties.name
+                                          )
+                                          .map((p: any) =>
+                                            p.values
+                                              .split(";")
+                                              .map((v: string) => ({
+                                                value: v,
+                                                label: v,
+                                              }))
+                                          )
+                                          .flat()}
+                                      />
+                                    </TableCell>
+                                  </TableRow>
+                                )
+                              ))}
+                          </React.Fragment>
+                        )
+                      )}
+                      {selectedCategories[index]?.properties?.map(
+                        (properties: ICategoryProperties, i: number) => (
+                          <React.Fragment key={i}>
+                            {properties.type === "multi-select" &&
+                              (defaultValue[index]?.category_properties.length >
+                              0 ? (
+                                <TableRow
+                                  sx={{
+                                    td: {
+                                      border: "1px solid var(--border-table)",
+                                      padding: 1,
+                                      paddingInline: 1,
+                                    },
+                                  }}
+                                >
+                                  <TableCell sx={{ height: 1, width: 200 }}>
+                                    <NoteInfo>
+                                      <Image src={multiSelect} alt="" />{" "}
+                                      {properties.name}
+                                    </NoteInfo>
+                                  </TableCell>
+                                  <TableCell
+                                    onBlur={() =>
+                                      handleUpdatePaymentRequest(payment.id)
+                                    }
+                                  >
+                                    <ReactSelect
+                                      value={selectedValues}
+                                      // isDisabled={isEditable}
+                                      // onChange={handleSelectChange}
+                                      onChange={(
+                                        selectedOption: ReactSelectOption
+                                      ) =>
+                                        handleFormChange(
+                                          index,
+                                          "categoryProperties",
+                                          selectedOption,
+                                          properties.name,
+                                          properties.type
+                                        )
+                                      }
+                                      options={properties.values
+                                        .split(";")
+                                        .map((v: any) => ({
+                                          value: v,
+                                          label: v,
+                                        }))}
+                                      defaultValues={sharePaymentRequestForm[
+                                        index
+                                      ].category_properties
+                                        .filter(
+                                          (p: any) =>
+                                            p.type === "multi-select" &&
+                                            p.name === properties.name
+                                        )
+                                        .map((p: any) =>
+                                          p.values
                                             .split(";")
-                                            .map((v: any) => ({
+                                            .map((v: string) => ({
                                               value: v,
                                               label: v,
-                                            }))}
-                                          defaultValues={sharePaymentRequestForm[
-                                            index
-                                          ].category_properties
-                                            .filter(
-                                              (p: any) =>
-                                                p.type === "multi-select" &&
-                                                p.name === properties.name
-                                            )
-                                            .map((p: any) =>
-                                              p.values
-                                                .split(";")
-                                                .map((v: string) => ({
-                                                  value: v,
-                                                  label: v,
-                                                }))
-                                            )
-                                            .flat()}
-                                        />
-                                      </TableCell>
-                                    </TableRow>
-                                  )}
-                              </>
-                            }
-                            <>
-                              {properties.type === "Text" &&
+                                            }))
+                                        )
+                                        .flat()}
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                !properties.archived && (
+                                  <TableRow
+                                    sx={{
+                                      td: {
+                                        border: "1px solid var(--border-table)",
+                                        padding: 1,
+                                        paddingInline: 1,
+                                      },
+                                    }}
+                                  >
+                                    <TableCell sx={{ height: 1, width: 200 }}>
+                                      <NoteInfo>
+                                        <Image src={multiSelect} alt="" />{" "}
+                                        {properties.name}
+                                      </NoteInfo>
+                                    </TableCell>
+                                    <TableCell
+                                      onBlur={() =>
+                                        handleUpdatePaymentRequest(payment.id)
+                                      }
+                                    >
+                                      <ReactSelect
+                                        value={selectedValues}
+                                        // isDisabled={isEditable}
+                                        // onChange={handleSelectChange}
+                                        onChange={(
+                                          selectedOption: ReactSelectOption
+                                        ) =>
+                                          handleFormChange(
+                                            index,
+                                            "categoryProperties",
+                                            selectedOption,
+                                            properties.name,
+                                            properties.type
+                                          )
+                                        }
+                                        options={properties.values
+                                          .split(";")
+                                          .map((v: any) => ({
+                                            value: v,
+                                            label: v,
+                                          }))}
+                                        defaultValues={sharePaymentRequestForm[
+                                          index
+                                        ].category_properties
+                                          .filter(
+                                            (p: any) =>
+                                              p.type === "multi-select" &&
+                                              p.name === properties.name
+                                          )
+                                          .map((p: any) =>
+                                            p.values
+                                              .split(";")
+                                              .map((v: string) => ({
+                                                value: v,
+                                                label: v,
+                                              }))
+                                          )
+                                          .flat()}
+                                      />
+                                    </TableCell>
+                                  </TableRow>
+                                )
+                              ))}
+                          </React.Fragment>
+                        )
+                      )}
+                      {selectedCategories[index]?.properties?.map(
+                        (properties: ICategoryProperties, i: number) => (
+                          <React.Fragment key={i}>
+                            {properties.type === "Text" &&
+                              (defaultValue[index]?.category_properties.length >
+                              0 ? (
+                                <TableRow
+                                  sx={{
+                                    td: {
+                                      border: "1px solid var(--border-table)",
+                                      padding: 1,
+                                      paddingInline: 1,
+                                    },
+                                  }}
+                                >
+                                  <TableCell sx={{ height: 1, width: 200 }}>
+                                    <NoteInfo>
+                                      <Image src={optionsIcon} alt="" />{" "}
+                                      {properties.name}
+                                    </NoteInfo>
+                                  </TableCell>
+                                  <TableCell
+                                    onBlur={() =>
+                                      handleUpdatePaymentRequest(payment.id)
+                                    }
+                                  >
+                                    <TextField
+                                      sx={{
+                                        "& fieldset": { border: "none" },
+                                      }}
+                                      size="small"
+                                      fullWidth
+                                      // value={property.values}
+                                      value={
+                                        sharePaymentRequestForm[
+                                          index
+                                        ].category_properties.find(
+                                          (p: any) =>
+                                            p.type === "Text" &&
+                                            p.name === properties.name
+                                        )?.values || ""
+                                      }
+                                      // id="fullWidth"
+                                      placeholder="Enter content"
+                                      onChange={(e) =>
+                                        handleFormChange(
+                                          index,
+                                          "categoryProperties",
+                                          e.target.value,
+                                          properties.name,
+                                          properties.type
+                                        )
+                                      }
+                                      InputProps={{
+                                        style: { padding: 0 },
+                                        // readOnly: isEditable,
+                                      }}
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
                                 !properties.archived && (
                                   <TableRow
                                     sx={{
@@ -629,7 +828,7 @@ const PaymentRequestGroupDetails = ({
                                           sharePaymentRequestForm[
                                             index
                                           ].category_properties.find(
-                                            (p) =>
+                                            (p: any) =>
                                               p.type === "Text" &&
                                               p.name === properties.name
                                           )?.values || ""
@@ -652,8 +851,8 @@ const PaymentRequestGroupDetails = ({
                                       />
                                     </TableCell>
                                   </TableRow>
-                                )}
-                            </>
+                                )
+                              ))}
                           </React.Fragment>
                         )
                       )}

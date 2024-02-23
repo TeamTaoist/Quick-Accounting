@@ -40,7 +40,6 @@ const PaymentRequestCategoryProperties = ({
   status,
 }: PaymentRequestCategoryPropertiesProps) => {
   console.log(parseCategoryProperties);
-  // const hasEmptyValue = parseCategoryProperties.some((p: any) => p[property.name] === "");
   return (
     <>
       {selectedCategory?.properties?.map((property: any) => (
