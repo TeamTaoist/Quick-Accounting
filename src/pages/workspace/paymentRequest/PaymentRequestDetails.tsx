@@ -160,10 +160,10 @@ const PaymentRequestDetails = ({
       // setSelectedCategory({});
       // setCategoryProperties([]);
       // make separate component
-      setSelectedCategory(paymentRequestDetails);
-      setCategoryProperties(
-        JSON.parse(paymentRequestDetails.category_properties)
-      );
+      // setSelectedCategory(paymentRequestDetails);
+      // setCategoryProperties(
+      //   JSON.parse(paymentRequestDetails.category_properties)
+      // );
     }
   }, [selectedCategoryID, workspaceCategoryProperties]);
 

@@ -20,6 +20,8 @@ import selectIcon from "../../assets/workspace/select.svg";
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import optionsIcon from "../../assets/workspace/option.svg";
 import { ReactSelectOption } from "../../pages/workspace/paymentRequest/PaymentRequestDetailsReadOnly";
+import SingleSelectType from "./SingleSelectType";
+import MultiSelectType from "./MultiSelectType";
 
 interface PaymentRequestCategoryPropertiesProps {
   selectedCategory: any;
@@ -57,12 +59,12 @@ const PaymentRequestCategoryProperties = ({
   status,
 }: PaymentRequestCategoryPropertiesProps) => {
   console.log(parseCategoryProperties);
-
+  // const hasEmptyValue = parseCategoryProperties.some((p: any) => p[property.name] === "");
   return (
     <>
       {selectedCategory?.properties?.map((property: any) => (
         <React.Fragment key={property.ID}>
-          {property.type === "single-select" && !property.archived && (
+          {/* {property.type === "single-select" && !property.archived && (
             <TableRow
               sx={{
                 td: {
@@ -108,100 +110,137 @@ const PaymentRequestCategoryProperties = ({
                 />
               </TableCell>
             </TableRow>
-          )}
+          )} */}
+          {property.type === "single-select" &&
+            (parseCategoryProperties.length > 0 ? (
+              <SingleSelectType
+                property={property}
+                handleUpdateCategory={handleUpdateCategory}
+                status={status}
+                selectSingleValue={selectSingleValue}
+                handleSelectSingleChange={handleSelectSingleChange}
+                parseCategoryProperties={parseCategoryProperties}
+              />
+            ) : (
+              !property.archived && (
+                <SingleSelectType
+                  property={property}
+                  handleUpdateCategory={handleUpdateCategory}
+                  status={status}
+                  selectSingleValue={selectSingleValue}
+                  handleSelectSingleChange={handleSelectSingleChange}
+                  parseCategoryProperties={parseCategoryProperties}
+                />
+              )
+            ))}
         </React.Fragment>
       ))}
       {selectedCategory?.properties?.map((property: any, index: number) => (
         <>
-          {property.type === "multi-select" && !property.archived && (
-            <TableRow
-              sx={{
-                td: {
-                  border: "1px solid var(--border-table)",
-                  padding: 1,
-                  paddingInline: 1,
-                },
-              }}
-            >
-              <TableCell sx={{ height: 1, width: 200 }}>
-                <NoteInfo>
-                  <Image src={multiSelect} alt="" /> {property.name}
-                </NoteInfo>
-              </TableCell>
-
-              <TableCell onBlur={handleUpdateCategory}>
-                <ReactSelect
-                  isDisabled={status === 2}
-                  value={selectedValues}
-                  onChange={(selectedOptions: ReactSelectOption[]) =>
-                    handleSelectChange(
-                      selectedOptions,
-                      property.name,
-                      property.type
-                    )
-                  }
-                  options={property.values.split(";").map((v: string) => ({
-                    value: v,
-                    label: v,
-                  }))}
-                  defaultValues={parseCategoryProperties
-                    .filter(
-                      (p: any) =>
-                        p.type === "multi-select" && p.name === property.name
-                    )
-                    .map((p: any) =>
-                      p.values.split(";").map((v: string) => ({
-                        value: v,
-                        label: v,
-                      }))
-                    )
-                    .flat()}
+          {property.type === "multi-select" &&
+            (parseCategoryProperties.length > 0 ? (
+              <MultiSelectType
+                property={property}
+                handleUpdateCategory={handleUpdateCategory}
+                status={status}
+                selectedValues={selectedValues}
+                handleSelectChange={handleSelectChange}
+                parseCategoryProperties={parseCategoryProperties}
+              />
+            ) : (
+              !property.archived && (
+                <MultiSelectType
+                  property={property}
+                  handleUpdateCategory={handleUpdateCategory}
+                  status={status}
+                  selectedValues={selectedValues}
+                  handleSelectChange={handleSelectChange}
+                  parseCategoryProperties={parseCategoryProperties}
                 />
-              </TableCell>
-            </TableRow>
-          )}
+              )
+            ))}
         </>
       ))}
       {selectedCategory.properties?.map((property: any) => (
         <>
-          {property.type === "Text" && !property.archived && (
-            <TableRow
-              sx={{
-                td: {
-                  border: "1px solid var(--border-table)",
-                  padding: 1,
-                  paddingInline: 1,
-                },
-              }}
-            >
-              <TableCell sx={{ height: 1, width: 200 }}>
-                <NoteInfo>
-                  <Image src={optionsIcon} alt="" /> {property.name}
-                </NoteInfo>
-              </TableCell>
+          {property.type === "Text" &&
+            (parseCategoryProperties.length > 0 ? (
+              <TableRow
+                sx={{
+                  td: {
+                    border: "1px solid var(--border-table)",
+                    padding: 1,
+                    paddingInline: 1,
+                  },
+                }}
+              >
+                <TableCell sx={{ height: 1, width: 200 }}>
+                  <NoteInfo>
+                    <Image src={optionsIcon} alt="" /> {property.name}
+                  </NoteInfo>
+                </TableCell>
 
-              <TableCell onBlur={handleUpdateCategory}>
-                <TextField
-                  disabled={status === 2}
+                <TableCell onBlur={handleUpdateCategory}>
+                  <TextField
+                    disabled={status === 2}
+                    sx={{
+                      "& fieldset": { border: "none" },
+                    }}
+                    size="small"
+                    fullWidth
+                    // value={propertyContent}
+                    value={proPertyTextValue[property.name]?.values || ""}
+                    // id="fullWidth"
+                    placeholder="Enter content"
+                    onChange={(e) =>
+                      handlePropertyText(e, property.name, property.type)
+                    }
+                    InputProps={{
+                      style: { padding: 0 },
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ) : (
+              !property.archived && (
+                <TableRow
                   sx={{
-                    "& fieldset": { border: "none" },
+                    td: {
+                      border: "1px solid var(--border-table)",
+                      padding: 1,
+                      paddingInline: 1,
+                    },
                   }}
-                  size="small"
-                  fullWidth
-                  // value={propertyContent}
-                  value={proPertyTextValue[property.name]?.values || ""}
-                  // id="fullWidth"
-                  placeholder="Enter content"
-                  onChange={(e) =>
-                    handlePropertyText(e, property.name, property.type)
-                  }
-                  InputProps={{
-                    style: { padding: 0 },
-                  }}
-                />
-              </TableCell>
-            </TableRow>
-          )}
+                >
+                  <TableCell sx={{ height: 1, width: 200 }}>
+                    <NoteInfo>
+                      <Image src={optionsIcon} alt="" /> {property.name}
+                    </NoteInfo>
+                  </TableCell>
+
+                  <TableCell onBlur={handleUpdateCategory}>
+                    <TextField
+                      disabled={status === 2}
+                      sx={{
+                        "& fieldset": { border: "none" },
+                      }}
+                      size="small"
+                      fullWidth
+                      // value={propertyContent}
+                      value={proPertyTextValue[property.name]?.values || ""}
+                      // id="fullWidth"
+                      placeholder="Enter content"
+                      onChange={(e) =>
+                        handlePropertyText(e, property.name, property.type)
+                      }
+                      InputProps={{
+                        style: { padding: 0 },
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+              )
+            ))}
         </>
       ))}
     </>
