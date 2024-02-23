@@ -157,8 +157,8 @@ const PaymentRequestDetails = ({
       setSelectedCategory(selectedCategory);
       setCategoryProperties(selectedCategory?.properties);
     } else {
-      // setSelectedCategory({});
-      // setCategoryProperties([]);
+      setSelectedCategory({});
+      setCategoryProperties([]);
       // make separate component
       // setSelectedCategory(paymentRequestDetails);
       // setCategoryProperties(
