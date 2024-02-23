@@ -24,20 +24,21 @@ export interface CategoryProperties {
     }
   ];
 }
+export interface ICategoryProperty {
+  ID: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string;
+  workspace_id: number;
+  category_id: number;
+  name: string;
+  type: string;
+  values: string;
+}
 interface CategoryProperty {
   code: number;
   msg: string;
-  data: {
-    ID: number;
-    CreatedAt: string;
-    UpdatedAt: string;
-    DeletedAt: string;
-    workspace_id: number;
-    category_id: number;
-    name: string;
-    type: string;
-    values: string;
-  };
+  data: ICategoryProperty;
 }
 interface UpdatedPropertyBody {
   name: string;

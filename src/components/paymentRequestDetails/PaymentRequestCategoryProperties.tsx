@@ -96,26 +96,18 @@ const PaymentRequestCategoryProperties = ({
       ))}
       {selectedCategory.properties?.map((property: any) => (
         <>
-          {property.type === "Text" &&
-            (parseCategoryProperties.length > 0 ? (
-              <TextType
-                property={property}
-                handleUpdateCategory={handleUpdateCategory}
-                proPertyTextValue={proPertyTextValue}
-                handlePropertyText={handlePropertyText}
-                status={status}
-              />
-            ) : (
-              !property.archived && (
-                <TextType
-                  property={property}
-                  handleUpdateCategory={handleUpdateCategory}
-                  proPertyTextValue={proPertyTextValue}
-                  handlePropertyText={handlePropertyText}
-                  status={status}
-                />
-              )
-            ))}
+          {property.type === "Text" && (
+            <TextType
+              property={property}
+              handleUpdateCategory={handleUpdateCategory}
+              proPertyTextValue={proPertyTextValue}
+              handlePropertyText={handlePropertyText}
+              status={status}
+              defaultPropertyValue={parseCategoryProperties.filter(
+                (p: any) => (p.type === "Text" && p.name) === property.name
+              )[0]}
+            />
+          )}
         </>
       ))}
     </>
