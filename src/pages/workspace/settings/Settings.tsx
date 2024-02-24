@@ -64,6 +64,11 @@ const Settings = () => {
     workspace.chain_id
   );
 
+  // network
+  const chainData = CHAINS.find(
+    (chain) => chain.chainId === workspace.chain_id
+  );
+
   return (
     <SettingsContainer>
       <WorkspaceForm onSubmit={handleUpdateWorkspaceName}>
@@ -78,6 +83,13 @@ const Settings = () => {
           />
         </InputSection>
       </WorkspaceForm>
+      <NetWork>
+        <h3>Network</h3>
+        <div>
+          <img src={chainData?.logoPath} alt="" />
+          <p>{chainData?.chainName}</p>
+        </div>
+      </NetWork>
       <SafeAddress>
         <h3>{t("settings.SafeAddress")}</h3>
         <p className="safe">
@@ -128,8 +140,29 @@ const InputSection = styled.div`
     border-radius: 5px;
   }
 `;
+const NetWork = styled.div`
+  margin-top: 30px;
+  h3 {
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 14px;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    img {
+      width: 26px;
+      height: 26px;
+    }
+    p {
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+  }
+`;
 const MultiSigner = styled.div`
-  margin-top: 40px;
+  margin-top: 30px;
   h3 {
     font-size: 20px;
     font-weight: 400;
