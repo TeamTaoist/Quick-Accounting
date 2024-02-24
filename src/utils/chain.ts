@@ -29,3 +29,8 @@ export const getChainExplorer = (chainId: number) => {
   const chainData = CHAINS.find((chain) => chain.chainId === chainId);
   return chainData?.explore;
 };
+
+export const getChainLogo = (chainId: number) => {
+  const chainData = CHAINS.find((chain) => chain.chainId === chainId);
+  return chainData?.logoPath;
+};

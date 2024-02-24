@@ -11,6 +11,7 @@ import styled from "@emotion/styled";
 import { useAccount } from "wagmi";
 import { useAuthStore } from "../../../store/useAuthStore";
 import Version from "../../version";
+import { getChainLogo } from "../../../utils/chain";
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
       navigate("/login");
     }
   }, [address, user]);
+  console.log(getChainLogo(workspace.chain_id));
 
   return (
     <div className="sidebar-container">
@@ -49,7 +51,6 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             {/* user workspaces */}
             <div className="user-workspaces">
               {userWorkspaces.data.rows.map((workspace) => (
-                // <Link to="/assets">
                 <div
                   key={workspace.ID}
                   className="workspace-logo"
@@ -60,8 +61,12 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
                   ) : (
                     <img src={workspace.avatar} alt={workspace.name} />
                   )}
+                  <img
+                    className="chain-logo"
+                    src={getChainLogo(workspace.chain_id)}
+                    alt="a"
+                  />
                 </div>
-                // </Link>
               ))}
             </div>
             <Link to="/create-workspace">

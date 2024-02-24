@@ -154,6 +154,7 @@ const NetWork = styled.div`
     img {
       width: 26px;
       height: 26px;
+      border-radius: 50%;
     }
     p {
       font-size: 18px;
