@@ -15,6 +15,8 @@ import CHAINS from "../../../utils/chain";
 import LinkIcon from "../../../assets/link.svg";
 import CopyIcon from "../../../assets/copy.svg";
 import CopyBox from "../../../components/copy";
+import CircularProgress from "@mui/material/CircularProgress";
+import successIcon from "../../../assets/success.svg";
 
 const formatSafeAddress = (address: string, chainId: number) => {
   const short = CHAINS.find((chain) => chain.chainId === chainId)?.short;
@@ -41,6 +43,10 @@ const Settings = () => {
     getUserWorkspace();
   }, [id, settingLoading, getUserWorkspace, getWorkspaceDetails]);
 
+  // updating loading state
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
   const handleUpdateWorkspaceName = async (
     e: React.FormEvent<HTMLFormElement> | React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -52,12 +58,16 @@ const Settings = () => {
         updateWorkspaceName(id, workspaceName).then((res) => {
           if (res) {
             isSettingLoading(!settingLoading);
+            setIsSuccess(true);
+            setIsUpdating(false);
+            setTimeout(() => {
+              setIsSuccess(false);
+            }, 1000);
           }
         });
       }
     }
   };
-  console.log(workspace);
 
   const safeAddress = formatSafeAddress(
     workspace.vault_wallet,
@@ -74,13 +84,29 @@ const Settings = () => {
       <WorkspaceForm onSubmit={handleUpdateWorkspaceName}>
         <InputSection>
           <label htmlFor="">{t("workspaceForm.WorkspaceName")}</label>
-          <input
-            type="text"
-            placeholder={t("workspaceForm.WorkspaceName")}
-            value={workspaceName}
-            onChange={(e) => setWorkspaceName(e.target.value)}
-            onBlur={handleUpdateWorkspaceName}
-          />
+          <Input>
+            <input
+              type="text"
+              placeholder={t("workspaceForm.WorkspaceName")}
+              value={workspaceName}
+              onChange={(e) => setWorkspaceName(e.target.value)}
+              onBlur={handleUpdateWorkspaceName}
+              onFocus={() => setIsUpdating(true)}
+            />
+            <UpdateLoadingToast>
+              {isUpdating && (
+                <PendingLoading>
+                  <CircularProgress size="15px" sx={{ color: "gray" }} />{" "}
+                  <p>Updating</p>
+                </PendingLoading>
+              )}
+              {isSuccess && (
+                <SuccessLoading>
+                  <img src={successIcon} alt="" /> <p>Update successfully</p>
+                </SuccessLoading>
+              )}
+            </UpdateLoadingToast>
+          </Input>
         </InputSection>
       </WorkspaceForm>
       <NetWork>
@@ -125,7 +151,29 @@ const SettingsContainer = styled.div`
   margin-left: 63px;
 `;
 const WorkspaceForm = styled.form`
-  max-width: 350px;
+  width: 600px;
+  position: relative;
+  input {
+    width: 60%;
+  }
+`;
+const UpdateLoadingToast = styled.form`
+  p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-left: 7px;
+  }
+`;
+const PendingLoading = styled.form`
+  display: flex;
+  align-items: center;
+`;
+const SuccessLoading = styled.form`
+  display: flex;
+  align-items: center;
+  img {
+    width: 15px;
+  }
 `;
 const InputSection = styled.div`
   display: flex;
@@ -139,6 +187,11 @@ const InputSection = styled.div`
     border: 1px solid var(--border-table);
     border-radius: 5px;
   }
+`;
+const Input = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
 `;
 const NetWork = styled.div`
   margin-top: 30px;
