@@ -191,7 +191,7 @@ const Bookkeeping = () => {
           </HideBtn>
         </BookkeepingTitle>
       )}
-      {bookkeepingList.length > 0 && (
+      {bookkeepingList.length > 0 && paymentRequest && (
         <Header>
           <TextField
             id="search"
@@ -304,8 +304,6 @@ const Bookkeeping = () => {
             paymentRequest={paymentRequest}
             handleBackBtn={handleBackBtn}
             handleBookkeepingDetails={handleBookkeepingDetails}
-            searchTerm={searchTerm}
-            selectedValue={selectedValue}
           />
         </BookkeepingRejectSection>
       )}
