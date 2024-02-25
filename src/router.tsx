@@ -4,7 +4,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import LoginPopup from "./pages/auth/login/LoginPopup";
+import Login from "./pages/auth/login/Login";
 import UserDashboard from "./pages/userDashboard/UserDashboard";
 import WorkSpaceForm from "./pages/workspace/WorkSpaceForm";
 import Assets from "./pages/workspaceDashboard/assets/Assets";
@@ -40,7 +40,7 @@ const RouterLink = () => {
         <Route path="/create-workspace" element={<WorkSpaceForm />} />
 
         <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<LoginPopup />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/user" element={<UserDashboard />} />
         <Route path="/workspace/:id" element={<WorkspaceIndex />}>
           <Route path="assets" element={<Assets />} />

@@ -1,7 +1,7 @@
 import Header from "../../../components/layout/header/Header";
 import metamask from "../../../assets/auth/metamask.svg";
 import logo from "../../../assets/auth/logo.jpg";
-import "./loginPopup.scss";
+import "./login.scss";
 import cancelIcon from "../../../assets/auth/cancel.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
