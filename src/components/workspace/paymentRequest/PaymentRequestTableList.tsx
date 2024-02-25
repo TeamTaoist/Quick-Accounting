@@ -166,7 +166,7 @@ const PaymentRequestTableList = ({
           colSpan={5}
           sx={{
             padding: 0,
-            // paddingLeft: "16px",
+            paddingLeft: "16px",
             borderTop: "1px solid #ddd",
           }}
         >
@@ -182,30 +182,40 @@ const PaymentRequestTableList = ({
                     <TableCell
                       // colSpan={1}
                       sx={{
-                        paddingLeft: "58px",
-                        maxWidth: "112px",
+                        paddingLeft: "42px",
+                        width: "29%",
                       }}
                     >
                       {recipientFormate(payments.recipient)}
                     </TableCell>
                     <TableCell
                       sx={{
-                        maxWidth: "50px",
+                        width: "20.5%",
                       }}
                     >
                       {payments.amount} {payments.currency_name}
                     </TableCell>
                     <TableCell
                       sx={{
-                        maxWidth: "78px",
+                        width: "20%",
                       }}
                     >
                       <CategoryCell>{payments.category_name}</CategoryCell>
                     </TableCell>
                     <TableCell>{formatDate(payments.CreatedAt)}</TableCell>
-                    <TableCell
-                    // sx={{ width: "100px" }}
-                    ></TableCell>
+                    <TableCell sx={{ visibility: "hidden" }}>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          borderColor: "black",
+                          color: "black",
+                          textTransform: "lowercase",
+                        }}
+                        // onClick={() => handleOpenModal(payment)}
+                      >
+                        view more
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -178,7 +178,6 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           name: workspaceName,
         });
         if (data.msg === "success" && data.code === 200) {
-          toast.success("Workspace name updated");
           return true;
         }
       } catch (error: any) {
