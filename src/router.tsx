@@ -21,6 +21,7 @@ import WorkspaceIndex from "./pages/workspace";
 import AuthChecker from "./components/authChecker";
 import UserDashboardIndex from "./pages/userDashboard";
 import UserPaymentRequest from "./pages/userDashboard/userPaymentRequest/UserPaymentRequest";
+import MyPayment from "./pages/userDashboard/MyPayment";
 
 const RouterLink = () => {
   return (
@@ -42,9 +43,9 @@ const RouterLink = () => {
 
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/user" element={<UserDashboard />} /> */}
         <Route path="/user" element={<UserDashboardIndex />}>
           <Route path="payment-request" element={<UserPaymentRequest />} />
+          <Route path="my-payments" element={<MyPayment />} />
         </Route>
         <Route path="/workspace/:id" element={<WorkspaceIndex />}>
           <Route path="assets" element={<Assets />} />

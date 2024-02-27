@@ -37,18 +37,6 @@ const UserSidebar = () => {
           </button>
         </div>
         {/* user payment request */}
-        {/* <div className="payment-request">
-          <ul>
-            <li>
-              <img className="file" src={file} alt="" />
-              <span>{t("user.MyPayment")}</span>
-            </li>
-            <li>
-              <img className="file" src={file} alt="" />
-              <span>{t("user.MyPayment")}</span>
-            </li>
-          </ul>
-        </div> */}
         <SidebarLinkList className="">
           <SidebarLink
             icon={file}
