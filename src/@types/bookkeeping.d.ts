@@ -11,6 +11,7 @@ declare interface IBookkeeping {
   ID: number;
   payment_request_id: number;
   counterparty: string;
+  direction: "i" | "o";
   safe_tx_hash: string;
   status: number;
   tx_hash: string;

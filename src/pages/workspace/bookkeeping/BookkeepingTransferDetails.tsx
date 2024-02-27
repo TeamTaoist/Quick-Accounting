@@ -33,6 +33,8 @@ import {
   RequestSubmit,
 } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
+
 import ReactSelect from "../../../components/ReactSelect";
 import data from "../../../data/tableData";
 import usePaymentsStore from "../../../store/usePayments";
@@ -304,7 +306,7 @@ const BookkeepingTransferDetails = ({
                   >
                     <SafeSection>
                       <div>{getShortAddress(workspace.vault_wallet)}</div>
-                      <Logo>
+                      <Logo $dir={bookkeepingDetails.direction}>
                         <img src={transferArrow} alt="" />
                       </Logo>
                     </SafeSection>
@@ -501,11 +503,17 @@ export const SafeSection = styled.div`
   align-items: center;
   /* height: 100%; */
 `;
-export const Logo = styled.div`
+
+const LeftDirStyle = css`
+  transform: rotate(180deg);
+`;
+
+export const Logo = styled.div<{ $dir?: string }>`
   /* flex: 0 0 30%; */
   /* height: 44px; */
   img {
     /* width: 20px; */
     /* height: 100%; */
+    ${({ $dir }) => $dir === "i" && LeftDirStyle}
   }
 `;

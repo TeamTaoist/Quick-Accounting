@@ -118,7 +118,7 @@ const BookkeepingTable = ({
                       />
                       {getShortAddress(workspace?.vault_wallet)}
                     </div>
-                    <Logo>
+                    <Logo $dir={bookkeeping.direction}>
                       <img src={rightArrow} alt="" />
                     </Logo>
                   </SafeSection>
