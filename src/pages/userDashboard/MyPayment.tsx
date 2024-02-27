@@ -13,7 +13,7 @@ import Pagination from "../../components/Pagination";
 
 const MyPayment = () => {
   const { id } = useParams();
-  const { userPayment, getUserPayment } = useUserPayment();
+  const { myPayment, getMyPayment } = useUserPayment();
   const { setCurrentPaymentRequestDetail } = usePaymentsStore();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,7 +23,7 @@ const MyPayment = () => {
   };
 
   // filter table data
-  const filterData = userPayment.rows.filter(
+  const filterData = myPayment.rows.filter(
     (payment) =>
       payment.workspace_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       payment.vault_wallet.toLowerCase().includes(searchTerm.toLowerCase())
@@ -39,8 +39,8 @@ const MyPayment = () => {
 
   // pagination
   const [pageNumbers, setPageNumbers] = useState(0);
-  const pageSize = userPayment.size;
-  const totalItem = userPayment.total;
+  const pageSize = myPayment.size;
+  const totalItem = myPayment.total;
 
   const pageCount = Math.ceil(totalItem / pageSize);
 
@@ -49,8 +49,8 @@ const MyPayment = () => {
   };
   // get user payment request
   useEffect(() => {
-    getUserPayment(pageNumbers);
-  }, [getUserPayment, pageNumbers]);
+    getMyPayment(pageNumbers);
+  }, [getMyPayment, pageNumbers]);
 
   return (
     <UserPaymentContainer>
@@ -60,7 +60,7 @@ const MyPayment = () => {
         setOpen={setOpenModal}
         component={PaymentRequestDetails}
       />
-      {userPayment.rows.length === 0 ? (
+      {myPayment.rows.length === 0 ? (
         <Details>
           <h2>
             You don't have any payment <br /> request
