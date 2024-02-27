@@ -5,7 +5,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import Login from "./pages/auth/login/Login";
-import UserDashboard from "./pages/userDashboard/UserDashboard";
 import WorkSpaceForm from "./pages/workspace/WorkSpaceForm";
 import Assets from "./pages/workspaceDashboard/assets/Assets";
 import Category from "./pages/workspace/category/Category";
@@ -21,6 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import WorkspaceIndex from "./pages/workspace";
 import AuthChecker from "./components/authChecker";
 import UserDashboardIndex from "./pages/userDashboard";
+import UserPaymentRequest from "./pages/userDashboard/userPaymentRequest/UserPaymentRequest";
 
 const RouterLink = () => {
   return (
@@ -44,7 +44,7 @@ const RouterLink = () => {
         <Route path="/login" element={<Login />} />
         {/* <Route path="/user" element={<UserDashboard />} /> */}
         <Route path="/user" element={<UserDashboardIndex />}>
-          <Route path="payment-request" element={<UserDashboard />} />
+          <Route path="payment-request" element={<UserPaymentRequest />} />
         </Route>
         <Route path="/workspace/:id" element={<WorkspaceIndex />}>
           <Route path="assets" element={<Assets />} />

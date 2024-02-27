@@ -1,23 +1,14 @@
 import React from "react";
 import Sidebar from "../sidebar/Sidebar";
-import { UserDashboardSection } from "../../../pages/userDashboard/userDashboard.style";
 import UserSidebar from "../../userDashboard/userSidebar/UserSidebar";
 import styled from "@emotion/styled";
 
 const UserDashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Sidebar>
-      {/* <UserDashboardSection>
-        <UserSidebar />
-        {children}
-      </UserDashboardSection> */}
       <WorkspaceContent>
-        {/* <div className="user-dashboard"> */}
         <UserSidebar />
-        <Details>
-          {children}
-          {/* <WorkspaceSidebar>{children}</WorkspaceSidebar> */}
-        </Details>
+        <Details>{children}</Details>
       </WorkspaceContent>
     </Sidebar>
   );
