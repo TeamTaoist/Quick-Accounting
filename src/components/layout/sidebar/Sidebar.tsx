@@ -75,7 +75,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
           </WorkspaceList>
         </div>
         <UserBox>
-          <Link to="/user">
+          <Link to="/user/payment-request">
             {/* <div className="user"> */}
             <img src={avatar} alt="" />
             {/* </div> */}

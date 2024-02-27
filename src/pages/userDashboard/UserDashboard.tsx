@@ -35,33 +35,30 @@ const UserDashboard = () => {
   }, [getUserPayment, pageNumbers]);
   return (
     <div>
-      {isLoading && <Loading />}
-      <Sidebar>
-        <UserDashboardSection>
-          <UserSidebar>
-            {userPayment.rows.length === 0 ? (
-              <Details>
-                <h2>
-                  You don't have any payment <br /> request
-                </h2>
-              </Details>
-            ) : (
-              <PaymentTable>
-                <UserPaymentRequest />
-                {/* pagination */}
-                {totalItem >= 10 && (
-                  <PaymentPagination>
-                    <Pagination
-                      handlePageClick={handlePageClick}
-                      pageCount={pageCount}
-                    />
-                  </PaymentPagination>
-                )}
-              </PaymentTable>
+      {/* {isLoading && <Loading />} */}
+      {/* <Sidebar> */}
+      <UserDashboardSection>
+        {userPayment.rows.length === 0 ? (
+          <Details>
+            <h2>
+              You don't have any payment <br /> request
+            </h2>
+          </Details>
+        ) : (
+          <PaymentTable>
+            <UserPaymentRequest />
+            {totalItem >= 10 && (
+              <PaymentPagination>
+                <Pagination
+                  handlePageClick={handlePageClick}
+                  pageCount={pageCount}
+                />
+              </PaymentPagination>
             )}
-          </UserSidebar>
-        </UserDashboardSection>
-      </Sidebar>
+          </PaymentTable>
+        )}
+      </UserDashboardSection>
+      {/* </Sidebar> */}
     </div>
   );
 };
