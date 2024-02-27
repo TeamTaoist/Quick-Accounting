@@ -62,7 +62,7 @@ const PaymentRequestDetails = ({
     paymentRequestDetails,
   } = usePaymentsStore();
   const { workspaceCategoryProperties } = useCategoryProperty();
-  const { workspace, userWorkspaces } = useWorkspace();
+  const { userWorkspaces } = useWorkspace();
   const { isLoading } = useLoading();
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -264,6 +264,8 @@ const PaymentRequestDetails = ({
   const selectedWorkspace = userWorkspaces.data.rows.find(
     (workspace) => workspace.ID === paymentRequestDetails.workspace_id
   );
+  console.log("selectedWorkspace", selectedWorkspace);
+  console.log("paymentRequestDetails", paymentRequestDetails);
 
   return (
     <>

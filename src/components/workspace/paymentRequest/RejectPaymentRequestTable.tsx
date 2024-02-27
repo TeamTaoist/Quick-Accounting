@@ -44,13 +44,19 @@ const RejectPaymentRequestTable = ({
   const [total, setTotal] = useState(0);
   const [pageNumbers, setPageNumbers] = useState(0);
 
-  const { getFailedPaymentRequestList, setCurrentPaymentRequestDetail } =
-    usePaymentsStore();
-  const { workspace } = useWorkspace();
+  const {
+    getFailedPaymentRequestList,
+    setCurrentPaymentRequestDetail,
+    paymentRequestDetails,
+  } = usePaymentsStore();
+  const { workspace, userWorkspaces } = useWorkspace();
 
   const [paymentId, setPaymentId] = useState<number | null>(null);
   const handleOpenModal = (payment: IPaymentRequest) => {
-    setCurrentPaymentRequestDetail({ ...payment, vault_wallet: workspace.vault_wallet });
+    setCurrentPaymentRequestDetail({
+      ...payment,
+      vault_wallet: workspace.vault_wallet,
+    });
     setOpenModal(true);
   };
   // filter table data
@@ -83,6 +89,10 @@ const RejectPaymentRequestTable = ({
   const handlePageClick = (event: any) => {
     setPageNumbers(event.selected);
   };
+
+  // const selectedWorkspace = userWorkspaces.data.rows.find(
+  //   (workspace) => workspace.ID === paymentRequestDetails.workspace_id
+  // );
 
   return (
     <div>

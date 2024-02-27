@@ -30,6 +30,7 @@ import {
 import { getShortAddress } from "../../../utils";
 import { formatTimestamp } from "../../../utils/time";
 import { getChainExplorer } from "../../../utils/chain";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -182,6 +183,7 @@ const TransferTop = ({
 
 const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   const { paymentRequestDetails } = usePaymentsStore();
+  const { userWorkspaces } = useWorkspace();
 
   const [categoryProperties, setCategoryProperties] = useState<any>([]);
 
@@ -202,11 +204,17 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
     PAYMENT_REQUEST_STATUS.Pending,
   ].includes(paymentRequestDetails.status);
 
+  const selectedWorkspace = userWorkspaces.data.rows.find(
+    (workspace) => workspace.ID === paymentRequestDetails.workspace_id
+  );
+
   return (
     <>
       <WorkspaceItemDetailsLayout
         title={isTransfer ? "Transfer Details" : "Payment Request Details"}
         setOpen={setOpen}
+        workspaceInfo={selectedWorkspace}
+        address={paymentRequestDetails.counterparty}
       >
         <RequestDetails>
           <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>
