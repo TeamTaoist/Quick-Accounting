@@ -29,7 +29,8 @@ const UserPaymentTable = ({
     <TableContainer
       component={Paper}
       sx={{
-        maxHeight: 600,
+        maxHeight: "100%",
+        overflow: "auto",
         minWidth: 800,
         "&::-webkit-scrollbar": {
           display: "none",

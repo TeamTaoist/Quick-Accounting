@@ -20,9 +20,14 @@ declare interface IPaymentRequest {
   safe_tx_hash: string;
   tx_timestamp: number;
   status: number;
+  submit_ts: number;
+  approve_ts: number;
+  reject_ts: number;
+  execute_ts: number;
   hide: boolean;
   workspace_name: string;
   vault_wallet: string;
+  workspace_avatar: string;
 }
 
 declare interface ICategoryProperties {
