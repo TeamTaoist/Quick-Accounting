@@ -235,7 +235,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
 
         const txParams = requests.map((item) =>
           createTokenTransferParams(
-            item.recipient,
+            item.counterparty,
             item.amount,
             item.decimals,
             item.currency_contract_address

@@ -85,7 +85,7 @@ const NotTransferTop = ({
               paddingLeft: "10px",
             }}
           >
-            {getShortAddress(paymentRequestDetails?.recipient)}
+            {getShortAddress(paymentRequestDetails?.counterparty)}
           </TableCell>
           <TableCell
             sx={{
@@ -170,7 +170,7 @@ const TransferTop = ({
               </div>
             </SafeSection>
           </TableCell>
-          <Cell>{getShortAddress(paymentRequestDetails?.recipient)}</Cell>
+          <Cell>{getShortAddress(paymentRequestDetails?.counterparty)}</Cell>
           <Cell>{paymentRequestDetails.amount}</Cell>
           <Cell>{paymentRequestDetails?.currency_name}</Cell>
         </TableRow>

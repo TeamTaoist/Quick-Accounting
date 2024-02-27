@@ -7,6 +7,7 @@ declare interface IPaymentRequest {
   workspace_chain_id: number;
   payment_request_id: number;
   counterparty: string;
+  direction: "i" | "o";
   amount: string;
   currency_name: string;
   currency_contract_address: string;

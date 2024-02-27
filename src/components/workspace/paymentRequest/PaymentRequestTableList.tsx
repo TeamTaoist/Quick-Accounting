@@ -133,7 +133,7 @@ const PaymentRequestTableList = ({
                     handleCheckboxClick(event, payment.payment_request_id)
                   }
                 />
-                {recipientFormate(payment.recipient)}
+                {recipientFormate(payment.counterparty)}
               </TableCell>
               <TableCell>
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
@@ -186,7 +186,7 @@ const PaymentRequestTableList = ({
                         width: "29%",
                       }}
                     >
-                      {recipientFormate(payments.recipient)}
+                      {recipientFormate(payments.counterparty)}
                     </TableCell>
                     <TableCell
                       sx={{

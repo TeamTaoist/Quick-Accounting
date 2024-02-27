@@ -123,7 +123,9 @@ const BookkeepingTable = ({
                     </Logo>
                   </SafeSection>
                 </TableCell>
-                <TableCell>{getShortAddress(bookkeeping.recipient)}</TableCell>
+                <TableCell>
+                  {getShortAddress(bookkeeping.counterparty)}
+                </TableCell>
                 <TableCell>
                   {formatNumber(Number(bookkeeping.amount))}{" "}
                   {bookkeeping.currency_name}

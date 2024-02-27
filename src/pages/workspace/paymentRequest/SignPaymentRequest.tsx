@@ -102,7 +102,7 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
             <TableBody>
               {signItems.map((payment) => (
                 <TableRow key={payment.ID}>
-                  <TableCell>{getShortAddress(payment.recipient)}</TableCell>
+                  <TableCell>{getShortAddress(payment.counterparty)}</TableCell>
                   <TableCell>
                     {formatNumber(Number(payment.amount))}{" "}
                     {payment.currency_name}

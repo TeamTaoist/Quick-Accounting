@@ -317,7 +317,7 @@ const BookkeepingTransferDetails = ({
                       paddingLeft: "12px",
                     }}
                   >
-                    {getShortAddress(bookkeepingDetails.recipient)}
+                    {getShortAddress(bookkeepingDetails.counterparty)}
                   </TableCell>
                   <TableCell
                     sx={{

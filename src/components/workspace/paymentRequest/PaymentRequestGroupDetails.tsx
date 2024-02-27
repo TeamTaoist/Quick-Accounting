@@ -195,7 +195,7 @@ const PaymentRequestGroupDetails = ({
           id: paymentDetail.ID,
           amount: paymentDetail.amount,
           currency_name: paymentDetail.currency_name,
-          recipient: paymentDetail.recipient,
+          recipient: paymentDetail.counterparty,
           decimals: paymentDetail.decimals,
           category_id: paymentDetail.category_id,
           category_name: paymentDetail.category_name,

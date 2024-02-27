@@ -117,7 +117,7 @@ const Bookkeeping = () => {
 
   // filter table data
   const filterData = bookkeepingList.filter((bookkeeping) => {
-    const searchItem = bookkeeping.recipient
+    const searchItem = bookkeeping.counterparty
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const filterByCategory =
