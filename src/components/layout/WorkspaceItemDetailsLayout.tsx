@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import cancel from "../../assets/auth/cancel.svg";
 import { useNavigate } from "react-router-dom";
+import { Workspace } from "../../store/useWorkspace";
 
 interface WorkspaceItemProps {
   children: React.ReactNode;
@@ -9,8 +10,8 @@ interface WorkspaceItemProps {
   href?: string;
   subtitle?: string;
   setOpen: (open: boolean) => void;
-  // data?: IPaymentRequest;
-  data?: any;
+  workspaceInfo?: Workspace;
+  address?: string;
 }
 
 const WorkspaceItemDetailsLayout = ({
@@ -19,7 +20,8 @@ const WorkspaceItemDetailsLayout = ({
   href,
   subtitle,
   setOpen,
-  data,
+  workspaceInfo,
+  address,
 }: WorkspaceItemProps) => {
   return (
     <WorkspaceItemContainer>
@@ -30,18 +32,15 @@ const WorkspaceItemDetailsLayout = ({
             <p>{subtitle}</p>
             <WorkspaceInfo>
               <WorkspaceLogo>
-                {data?.workspace_avatar === "" ? (
-                  <p>{data?.workspace_name.slice(0, 1)}</p>
+                {workspaceInfo?.avatar === "" ? (
+                  <p>{workspaceInfo?.name.slice(0, 1)}</p>
                 ) : (
-                  <img
-                    src={data?.workspace_avatar}
-                    alt={data?.workspace_name}
-                  />
+                  <img src={workspaceInfo?.avatar} alt={workspaceInfo?.name} />
                 )}
               </WorkspaceLogo>
               <WorkspaceDetails>
-                <h6>{data.workspace_name}</h6>
-                <p>{data.address}</p>
+                <h6>{workspaceInfo?.name}</h6>
+                <p>{address}</p>
               </WorkspaceDetails>
             </WorkspaceInfo>
           </HeaderDescription>

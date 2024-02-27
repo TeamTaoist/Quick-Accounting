@@ -273,17 +273,12 @@ const BookkeepingTransferDetails = ({
     );
     getBookkeepingList(bookkeepingDetails.workspace_id, false);
   };
-  const data = {
-    workspace_avatar: "",
-    workspace_name: "Workspace name",
-    address: "0x27D4539d19b292b68369Ed588d682Db3aF679005",
-  };
   return (
     // <Header>
     <WorkspaceItemDetailsLayout
       title="Transaction Detail"
       setOpen={setOpen}
-      data={data}
+      // data={data}
     >
       <RequestDetails>
         <TransferTable>

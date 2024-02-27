@@ -33,6 +33,7 @@ import { useLoading } from "../../../store/useLoading";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import PaymentCurrencyTable from "../../../components/paymentRequestDetails/PaymentCurrencyTable";
 import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -61,9 +62,8 @@ const PaymentRequestDetails = ({
     paymentRequestDetails,
   } = usePaymentsStore();
   const { workspaceCategoryProperties } = useCategoryProperty();
+  const { workspace, userWorkspaces } = useWorkspace();
   const { isLoading } = useLoading();
-
-  console.log("workspaceCategoryProperties", workspaceCategoryProperties);
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
@@ -150,26 +150,15 @@ const PaymentRequestDetails = ({
     const selectedCategory = workspaceCategoryProperties?.find(
       (f) => f?.ID === selectedCategoryID
     );
-    // if(selectedCategory) {
-
-    // }
     if (selectedCategory) {
       setSelectedCategory(selectedCategory);
       setCategoryProperties(selectedCategory?.properties);
     } else {
       setSelectedCategory({});
       setCategoryProperties([]);
-      // make separate component
-      // setSelectedCategory(paymentRequestDetails);
-      // setCategoryProperties(
-      //   JSON.parse(paymentRequestDetails.category_properties)
-      // );
     }
   }, [selectedCategoryID, workspaceCategoryProperties]);
 
-  console.log("selected category ", selectedCategory);
-  console.log("categoryProperties", categoryProperties);
-  console.log("paymentRequestDetails", paymentRequestDetails);
   // handle category
   const handleCategory = async (categoryId: number) => {
     setSelectedCategoryID(categoryId);
@@ -218,7 +207,6 @@ const PaymentRequestDetails = ({
       parseCategoryProperties = JSON.parse(categoryProperties);
     }
   }
-  console.log("property", categoryProperties);
   // new
   useEffect(() => {
     const initialSelectSingleValue: { [name: string]: any } = {};
@@ -272,19 +260,18 @@ const PaymentRequestDetails = ({
       getPaymentRequestList(paymentRequestDetails.workspace_id, false);
     }
   };
-  console.log(updatedPaymentBody);
-  const data = {
-    workspace_avatar: "",
-    workspace_name: "Workspace name",
-    address: "0x27D4539d19b292b68369Ed588d682Db3aF679005",
-  };
+
+  const selectedWorkspace = userWorkspaces.data.rows.find(
+    (workspace) => workspace.ID === paymentRequestDetails.workspace_id
+  );
 
   return (
     <>
       <WorkspaceItemDetailsLayout
         title="Payment request details"
         setOpen={setOpen}
-        data={data}
+        workspaceInfo={selectedWorkspace}
+        address={paymentRequestDetails.counterparty}
       >
         <RequestDetails>
           <PaymentCurrencyTable />

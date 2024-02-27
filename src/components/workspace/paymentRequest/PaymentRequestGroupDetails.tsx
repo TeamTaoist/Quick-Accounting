@@ -242,18 +242,12 @@ const PaymentRequestGroupDetails = ({
     );
     getPaymentRequestList(Number(id), false);
   };
-  const data = {
-    workspace_avatar: "",
-    workspace_name: "Workspace name",
-    address: "0x27D4539d19b292b68369Ed588d682Db3aF679005",
-  };
 
   return (
     <>
       <WorkspaceItemDetailsLayout
         title="Payment request details"
         setOpen={setOpen}
-        data={data}
       >
         <RequestDetails>
           {sharePaymentRequestForm.map((payment: any, index: number) => (
