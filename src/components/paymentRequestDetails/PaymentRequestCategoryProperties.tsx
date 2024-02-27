@@ -73,7 +73,7 @@ const PaymentRequestCategoryProperties = ({
               handleSelectChange={handleSelectChange}
               parseCategoryProperties={parseCategoryProperties}
               defaultPropertyValue={
-                parseCategoryProperties.filter(
+                parseCategoryProperties?.filter(
                   (p: any) =>
                     (p.type === "multi-select" && p.name) === property.name
                 )[0]
@@ -92,7 +92,7 @@ const PaymentRequestCategoryProperties = ({
               handlePropertyText={handlePropertyText}
               status={status}
               defaultPropertyValue={
-                parseCategoryProperties.filter(
+                parseCategoryProperties?.filter(
                   (p: any) => (p.type === "Text" && p.name) === property.name
                 )[0]
               }

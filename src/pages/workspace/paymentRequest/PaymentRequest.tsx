@@ -116,7 +116,7 @@ const PaymentRequest = () => {
   };
   // filter table data
   const filterData = paymentRequestList.filter((data) => {
-    const searchItem = data.recipient
+    const searchItem = data.counterparty
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const filterByCategory =

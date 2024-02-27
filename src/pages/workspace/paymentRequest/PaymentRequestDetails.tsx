@@ -225,7 +225,7 @@ const PaymentRequestDetails = ({
     const initialSelectedValues: { [name: string]: any } = {};
     const initialPropertyTextValue: { [name: string]: any } = {};
 
-    parseCategoryProperties.forEach((property: any) => {
+    parseCategoryProperties?.forEach((property: any) => {
       if (property.type === "single-select") {
         initialSelectSingleValue[property.name] = {
           name: property.name,

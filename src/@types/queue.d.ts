@@ -26,7 +26,18 @@ declare interface IQueueGroupItemProps {
   transactions?: IQueueTransaction[];
 }
 
+declare type TxInfoType = {
+  recipient: string;
+  currency_contract_address: string;
+  currency_name: string;
+  amount: string;
+  decimals: number;
+  category_properties?: string;
+};
+
+
 declare interface IQueueTransaction {
+  id: string;
   nonce: number;
   confirmationsRequired: number;
   confirmationsSubmitted: number;
@@ -35,4 +46,6 @@ declare interface IQueueTransaction {
   actionCount: number;
   txStatus: string; // TODO
   missingSigners: string[];
+  isMultiSend?: boolean;
+  transferInfo?: TxInfoType;
 }

@@ -118,7 +118,7 @@ const BookkeepingRejectTable = ({
     setSelectedValue(event.target.value);
   };
   const filterData = bookkeepingHiddenList.filter((bookkeeping) => {
-    const searchItem = bookkeeping.recipient
+    const searchItem = bookkeeping.counterparty
       .toLowerCase()
       .includes(searchTerm?.toLowerCase() || "");
     const filterByCategory =
@@ -267,13 +267,13 @@ const BookkeepingRejectTable = ({
                               />
                               {getShortAddress(workspace.vault_wallet)}
                             </div>
-                            <Logo>
+                            <Logo $dir={bookkeeping.direction}>
                               <img src={rightArrow} alt="" />
                             </Logo>
                           </SafeSection>
                         </TableCell>
                         <TableCell>
-                          {getShortAddress(bookkeeping.recipient)}
+                          {getShortAddress(bookkeeping.counterparty)}
                         </TableCell>
                         <TableCell>
                           {formatNumber(Number(bookkeeping.amount))}{" "}

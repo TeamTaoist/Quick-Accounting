@@ -56,7 +56,7 @@ const RejectPaymentRequestTable = ({
   // filter table data
   const filterData = searchTerm
     ? list.filter((data) => {
-        const searchItem = data.recipient
+        const searchItem = data.counterparty
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
         const filterByCategory =
@@ -125,7 +125,9 @@ const RejectPaymentRequestTable = ({
             <TableBody>
               {filterData?.map((payment) => (
                 <TableRow key={payment.ID}>
-                  <TableCell>{recipientFormate(payment.recipient)}</TableCell>
+                  <TableCell>
+                    {recipientFormate(payment.counterparty)}
+                  </TableCell>
                   <TableCell>
                     {formatNumber(Number(payment.amount))}{" "}
                     {payment.currency_name}

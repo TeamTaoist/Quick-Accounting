@@ -10,7 +10,8 @@ declare interface IBookkeeping {
   hide: boolean;
   ID: number;
   payment_request_id: number;
-  recipient: string;
+  counterparty: string;
+  direction: "i" | "o";
   safe_tx_hash: string;
   status: number;
   tx_hash: string;

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
 import React, { useEffect, useRef, useState } from "react";
 import searchIcon from "../../../assets/workspace/search-icon.svg";
 import download from "../../../assets/workspace/download.svg";
@@ -117,7 +118,7 @@ const Bookkeeping = () => {
 
   // filter table data
   const filterData = bookkeepingList.filter((bookkeeping) => {
-    const searchItem = bookkeeping.recipient
+    const searchItem = bookkeeping.counterparty
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const filterByCategory =
@@ -318,10 +319,16 @@ export const SafeSection = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-export const Logo = styled.div`
+
+const LeftDirStyle = css`
+  transform: rotate(180deg);
+`;
+
+export const Logo = styled.div<{ $dir?: string }>`
   flex: 0 0 30%;
   img {
     width: 20px;
+    ${({ $dir }) => $dir === "i" && LeftDirStyle}
   }
 `;
 export const BookkeepingTitle = styled.div`
