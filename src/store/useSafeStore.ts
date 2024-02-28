@@ -157,15 +157,18 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
                       item.transaction.txInfo.transferInfo.decimals || 18,
                   };
                 } else if (item.transaction.txInfo.transferInfo.type === "NATIVE_COIN") {
+                  const ntoken = CHAINS.find(
+                    (c) => c.chainId === chainId
+                  )?.nativeToken;
                   txInfo = {
                     recipient: item.transaction.txInfo.recipient.value,
                     currency_contract_address: zeroAddress,
-                    currency_name: CHAINS.find((c) => c.chainId === chainId)?.nativeToken?.name!,
+                    currency_name: ntoken?.symbol!,
                     amount: formatUnits(
                       BigInt(item.transaction.txInfo.transferInfo.value),
-                      18
+                      ntoken?.decimals || 18
                     ),
-                    decimals: 18,
+                    decimals: ntoken?.decimals || 18,
                   };
                 }
               }

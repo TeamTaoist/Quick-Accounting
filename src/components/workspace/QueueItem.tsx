@@ -87,9 +87,15 @@ const QueueTransactionItem = ({
   const canExecuteReject =
     (filterRejectSigners.length || rejectTransaction?.confirmationsSubmitted) >=
     threshold;
+  
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
+    if (creating) {
+      return;
+    }
     if (payments && payments.length === 0 && assetsList.length) {
+      setCreating(true);
       // create and approve payment requests
       if (approveTransaction.isMultiSend) {
         getTransactionDetail(workspace.chain_id, approveTransaction.id).then(
@@ -151,7 +157,9 @@ const QueueTransactionItem = ({
                   approveTransaction.nonce,
                   rows,
                   approveTransaction.safeTxHash
-                );
+                ).finally(() => {
+                  setCreating(false);
+                });;
               }
             }
           }
@@ -163,7 +171,9 @@ const QueueTransactionItem = ({
             approveTransaction.nonce,
             [{ ...approveTransaction.transferInfo, category_properties: "[]" }],
             approveTransaction.safeTxHash
-          );
+          ).finally(() => {
+            setCreating(false);
+          });
       }
     }
   }, [payments, assetsList]);
