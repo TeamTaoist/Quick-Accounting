@@ -63,7 +63,8 @@ interface IPaymentsStore {
     workspaceId: number,
     nonce: number,
     payments: TxInfoType[],
-    safe_tx_hash: string
+    safe_tx_hash: string,
+    approve_ts: number // second
   ) => Promise<void>;
 }
 
@@ -262,7 +263,8 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       workspaceId: number,
       nonce: number,
       payments: TxInfoType[],
-      safe_tx_hash: string
+      safe_tx_hash: string,
+      approve_ts: number
     ) => {
       try {
         const { data } = await axiosClient.post(
@@ -270,6 +272,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           {
             rows: payments,
             safe_tx_hash,
+            approve_ts,
           }
         );
         if (data.msg === "success" && data.code === 200) {

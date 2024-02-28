@@ -38,7 +38,6 @@ export const isAddress = (type: string): boolean =>
   type.indexOf("address") === 0;
 export const isByte = (type: string): boolean => type.indexOf("byte") === 0;
 
-
 // label
 const QueueLabelItem = ({ data }: { data: IQueueGroupItemProps }) => {
   return <QueueLabelItemStyle>{data.label}</QueueLabelItemStyle>;
@@ -87,7 +86,7 @@ const QueueTransactionItem = ({
   const canExecuteReject =
     (filterRejectSigners.length || rejectTransaction?.confirmationsSubmitted) >=
     threshold;
-  
+
   const [creating, setCreating] = useState(false);
 
   useEffect(() => {
@@ -156,10 +155,11 @@ const QueueTransactionItem = ({
                   workspace.ID,
                   approveTransaction.nonce,
                   rows,
-                  approveTransaction.safeTxHash
+                  approveTransaction.safeTxHash,
+                  Math.floor(approveTransaction.timestamp / 1000)
                 ).finally(() => {
                   setCreating(false);
-                });;
+                });
               }
             }
           }
@@ -170,7 +170,8 @@ const QueueTransactionItem = ({
             workspace.ID,
             approveTransaction.nonce,
             [{ ...approveTransaction.transferInfo, category_properties: "[]" }],
-            approveTransaction.safeTxHash
+            approveTransaction.safeTxHash,
+            Math.floor(approveTransaction.timestamp / 1000)
           ).finally(() => {
             setCreating(false);
           });
