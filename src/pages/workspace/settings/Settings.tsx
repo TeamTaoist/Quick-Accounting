@@ -124,7 +124,7 @@ const Settings = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span>{safeAddress}</span>
+            <span>{workspace.vault_wallet}</span>
             <img src={LinkIcon} alt="" className="icon" />
           </a>
         </p>
