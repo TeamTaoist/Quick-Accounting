@@ -95,7 +95,7 @@ const UserPaymentTable = ({
               </TableCell>
               <TableCell>
                 <div>
-                  <p>{recipientFormate(payment.applicant)}</p>
+                  <p>{recipientFormate(payment.counterparty)}</p>
                 </div>
               </TableCell>
               <TableCell>
