@@ -155,7 +155,7 @@ const QueueTransactionItem = ({
                   approveTransaction.nonce,
                   rows,
                   approveTransaction.safeTxHash,
-                  Math.floor(approveTransaction.timestamp / 1000)
+                  Math.ceil(approveTransaction.timestamp / 1000)
                 ).finally(() => {
                   setCreating(false);
                 });
@@ -170,7 +170,7 @@ const QueueTransactionItem = ({
             approveTransaction.nonce,
             [{ ...approveTransaction.transferInfo, category_properties: "[]" }],
             approveTransaction.safeTxHash,
-            Math.floor(approveTransaction.timestamp / 1000)
+            Math.ceil(approveTransaction.timestamp / 1000)
           ).finally(() => {
             setCreating(false);
           });
@@ -376,7 +376,7 @@ const QueueTransactionItem = ({
                     <TableCell>
                       <CategoryCell>{queueItem.category_name}</CategoryCell>
                     </TableCell>
-                    <TableCell>{queueItem.CreatedAt.slice(0, 10)}</TableCell>
+                    <TableCell>{formatTime(queueItem.approve_ts * 1000)}</TableCell>
                     <TableCell>
                       <Button
                         variant="outlined"
