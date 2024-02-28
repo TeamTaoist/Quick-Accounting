@@ -39,6 +39,7 @@ import { ReactSelectOption } from "../../../pages/workspace/paymentRequest/Payme
 import GroupTextType from "../../paymentRequestGroupDetails/GroupTextType";
 import GroupMultiSelectType from "../../paymentRequestGroupDetails/GroupMultiSelectType";
 import GroupSingleSelectType from "../../paymentRequestGroupDetails/GroupSingleSelectType";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -70,6 +71,7 @@ const PaymentRequestGroupDetails = ({
   const { getPaymentRequestList, updatePaymentRequestCategory } =
     usePaymentsStore();
   const { isLoading } = useLoading();
+  const { userWorkspaces } = useWorkspace();
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
@@ -242,12 +244,27 @@ const PaymentRequestGroupDetails = ({
     );
     getPaymentRequestList(Number(id), false);
   };
-
+  const [selectedWorkspaceName, setSelectedWorkspaceName] =
+    useState<string>("");
+  const [selectedWorkspaceAvatar, setSelectedWorkspaceAvatar] =
+    useState<string>("");
+  const selectedWorkspace = userWorkspaces.data.rows.find(
+    (workspace) => workspace.ID === groupDetails?.[0]?.workspace_id
+  );
+  useEffect(() => {
+    if (selectedWorkspace) {
+      setSelectedWorkspaceName(selectedWorkspace?.name);
+      setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
+    }
+  }, []);
   return (
     <>
       <WorkspaceItemDetailsLayout
         title="Payment request details"
         setOpen={setOpen}
+        workspaceName={selectedWorkspaceName}
+        workspaceAvatar={selectedWorkspaceAvatar}
+        address={groupDetails?.[0]?.counterparty}
       >
         <RequestDetails>
           {sharePaymentRequestForm.map((payment: any, index: number) => (
