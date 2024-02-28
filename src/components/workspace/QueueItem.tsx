@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
 import {
   TransactionListItemType,
   ConflictType,
@@ -31,6 +31,7 @@ import { getShortDisplay } from "../../utils/number";
 import { toast } from "react-toastify";
 import { formatEther, formatUnits, zeroAddress } from "viem";
 import CHAINS from "../../utils/chain";
+import { UpdateEvent } from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
 
 export const isArrayParameter = (parameter: string): boolean =>
   /(\[\d*?])+$/.test(parameter);
@@ -67,6 +68,7 @@ const QueueTransactionItem = ({
   } = useSafeStore();
   const {
     paymentRquestMap,
+    updatePaymentRquestMap,
     setCurrentPaymentRequestDetail,
     createAndApprovePaymentRequest,
   } = usePaymentsStore();
@@ -88,6 +90,27 @@ const QueueTransactionItem = ({
     threshold;
 
   const [creating, setCreating] = useState(false);
+
+  useEffect(() => {
+    const handleRefresh = (e: any) => {
+      let isUpdate = false;
+      const data = payments?.map((p) => {
+        if (p.ID === e.id) {
+          isUpdate = true;
+          return e.data as IPaymentRequest;
+        } else {
+          return p;
+        }
+      });
+      if (isUpdate && !!data) {
+        updatePaymentRquestMap(approveTransaction.safeTxHash, data);
+      }
+    };
+    document.addEventListener("updatePaymentRequest", handleRefresh);
+    return () => {
+      document.removeEventListener("updatePaymentRequest", handleRefresh);
+    };
+  }, [payments]);
 
   useEffect(() => {
     if (creating) {
@@ -376,7 +399,9 @@ const QueueTransactionItem = ({
                     <TableCell>
                       <CategoryCell>{queueItem.category_name}</CategoryCell>
                     </TableCell>
-                    <TableCell>{formatTime(queueItem.approve_ts * 1000)}</TableCell>
+                    <TableCell>
+                      {formatTime(queueItem.approve_ts * 1000)}
+                    </TableCell>
                     <TableCell>
                       <Button
                         variant="outlined"

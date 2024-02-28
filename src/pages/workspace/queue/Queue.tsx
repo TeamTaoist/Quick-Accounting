@@ -119,6 +119,7 @@ const Queue = () => {
             open={openModal}
             setOpen={setOpenModal}
             component={PaymentRequestDetails}
+            additionalProps={{ pageName: "queue" }}
           />
         </QueueContainer>
       )}

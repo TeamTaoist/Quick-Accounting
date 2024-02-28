@@ -66,6 +66,10 @@ interface IPaymentsStore {
     safe_tx_hash: string,
     approve_ts: number // second
   ) => Promise<void>;
+  updatePaymentRquestMap: (
+    safe_tx_hash: string,
+    data: IPaymentRequest[]
+  ) => void;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set, get) => {
@@ -369,6 +373,11 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         setLoading(false);
       }
     },
+    updatePaymentRquestMap: (safe_tx_hash, data) => { 
+      const { paymentRquestMap } = get();
+      paymentRquestMap.set(safe_tx_hash, data);
+      set({ paymentRquestMap: new Map(paymentRquestMap) });
+    }
   };
 });
 
