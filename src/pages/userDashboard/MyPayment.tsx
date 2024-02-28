@@ -8,7 +8,7 @@ import PaymentRequestDetails from "../workspace/paymentRequest/PaymentRequestDet
 import { useUserPayment } from "../../store/useUserPayment";
 import usePaymentsStore from "../../store/usePayments";
 import { formatNumber } from "../../utils/number";
-import UserPaymentTable from "../../components/userDashboard/UserPaymentTable";
+import MyPaymentTable from "../../components/userDashboard/MyPaymentTable";
 import Pagination from "../../components/Pagination";
 
 const MyPayment = () => {
@@ -85,7 +85,7 @@ const MyPayment = () => {
             }}
           />
           <PaymentLIst>
-            <UserPaymentTable
+            <MyPaymentTable
               filterData={filterData}
               handleUserPaymentDetails={handleUserPaymentDetails}
             />

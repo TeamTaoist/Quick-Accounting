@@ -103,6 +103,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       workspace_name: "",
       vault_wallet: "",
       workspace_avatar: "",
+      applicant: "",
     },
     paymentRequestGroupDetails: [],
     paymentRquestMap: new Map(),

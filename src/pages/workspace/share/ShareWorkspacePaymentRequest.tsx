@@ -357,7 +357,9 @@ const ShareWorkspacePaymentRequest = () => {
             {shareData?.payment_request_items?.[0]?.status !== 0 &&
             shareData?.payment_request_items?.length ? (
               <Btns>
-                <ViewProgressBtn onClick={() => navigate("/user")}>
+                <ViewProgressBtn
+                  onClick={() => navigate("/user/payment-request")}
+                >
                   View the progress of your payment request
                 </ViewProgressBtn>
               </Btns>
