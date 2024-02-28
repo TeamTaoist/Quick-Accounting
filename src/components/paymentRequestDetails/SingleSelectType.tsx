@@ -62,7 +62,7 @@ const SingleSelectType = ({
               label: v,
             }))}
             defaultValues={parseCategoryProperties
-              .filter(
+              ?.filter(
                 (p: any) =>
                   p.type === "single-select" && p.name === property.name
               )

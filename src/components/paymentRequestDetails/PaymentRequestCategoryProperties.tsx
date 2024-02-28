@@ -53,7 +53,7 @@ const PaymentRequestCategoryProperties = ({
               handleSelectSingleChange={handleSelectSingleChange}
               parseCategoryProperties={parseCategoryProperties}
               defaultPropertyValue={
-                parseCategoryProperties.filter(
+                parseCategoryProperties?.filter(
                   (p: any) =>
                     (p.type === "single-select" && p.name) === property.name
                 )[0]
