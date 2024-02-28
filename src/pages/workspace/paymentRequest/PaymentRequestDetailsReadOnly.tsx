@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { css } from "@emotion/react";
 
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
 import statusIcon from "../../../assets/workspace/status.svg";
@@ -166,9 +167,9 @@ const TransferTop = ({
           >
             <SafeSection>
               <div>{getShortAddress(paymentRequestDetails?.vault_wallet)}</div>
-              <div>
+              <Logo $dir={paymentRequestDetails?.direction}>
                 <img src={transferArrow} alt="" />
-              </div>
+              </Logo>
             </SafeSection>
           </TableCell>
           <Cell>{getShortAddress(paymentRequestDetails?.counterparty)}</Cell>
@@ -403,5 +404,15 @@ const TransactionHash = styled.div`
     img {
       width: 22px;
     }
+  }
+`;
+
+const LeftDirStyle = css`
+  transform: rotate(180deg);
+`;
+
+const Logo = styled.div<{ $dir?: string }>`
+  img {
+    ${({ $dir }) => $dir === "i" && LeftDirStyle}
   }
 `;
