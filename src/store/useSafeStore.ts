@@ -19,7 +19,8 @@ import {
   TransactionDetails,
 } from "@safe-global/safe-gateway-typescript-sdk";
 import axiosClient from "../utils/axios";
-import { formatUnits } from "viem";
+import { formatUnits, zeroAddress } from "viem";
+import CHAINS from "../utils/chain";
 
 interface ISafeStore {
   safe?: Safe;
@@ -135,21 +136,38 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
                 item.transaction.txInfo.type === TransactionInfoType.CUSTOM &&
                 item.transaction.txInfo.methodName === "multiSend";
               let txInfo: TxInfoType | undefined;
-              if (!isMultiSend && item.transaction.txInfo.type === TransactionInfoType.TRANSFER && item.transaction.txInfo.transferInfo.type === "ERC20") { 
-                txInfo = {
-                  recipient: item.transaction.txInfo.recipient.value,
-                  currency_contract_address:
-                    item.transaction.txInfo.transferInfo.tokenAddress,
-                  currency_name:
-                    item.transaction.txInfo.transferInfo.tokenSymbol ||
-                    item.transaction.txInfo.transferInfo.tokenName ||
-                    "unknown",
-                  amount: formatUnits(
-                    BigInt(item.transaction.txInfo.transferInfo.value),
-                    item.transaction.txInfo.transferInfo.decimals || 18
-                  ),
-                  decimals: item.transaction.txInfo.transferInfo.decimals || 18,
-                };
+              if (
+                !isMultiSend &&
+                item.transaction.txInfo.type === TransactionInfoType.TRANSFER
+              ) {
+                if (item.transaction.txInfo.transferInfo.type === "ERC20") {
+                  txInfo = {
+                    recipient: item.transaction.txInfo.recipient.value,
+                    currency_contract_address:
+                      item.transaction.txInfo.transferInfo.tokenAddress,
+                    currency_name:
+                      item.transaction.txInfo.transferInfo.tokenSymbol ||
+                      item.transaction.txInfo.transferInfo.tokenName ||
+                      "unknown",
+                    amount: formatUnits(
+                      BigInt(item.transaction.txInfo.transferInfo.value),
+                      item.transaction.txInfo.transferInfo.decimals || 18
+                    ),
+                    decimals:
+                      item.transaction.txInfo.transferInfo.decimals || 18,
+                  };
+                } else if (item.transaction.txInfo.transferInfo.type === "NATIVE_COIN") {
+                  txInfo = {
+                    recipient: item.transaction.txInfo.recipient.value,
+                    currency_contract_address: zeroAddress,
+                    currency_name: CHAINS.find((c) => c.chainId === chainId)?.nativeToken?.name!,
+                    amount: formatUnits(
+                      BigInt(item.transaction.txInfo.transferInfo.value),
+                      18
+                    ),
+                    decimals: 18,
+                  };
+                }
               }
               const tx = {
                 id: item.transaction.id,
@@ -408,7 +426,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
       return [];
     },
     getTransactionDetail: async (chainId: number, txId: string) => {
-      return getTransactionDetails(String(chainId), txId)
+      return getTransactionDetails(String(chainId), txId);
     },
   };
 });
