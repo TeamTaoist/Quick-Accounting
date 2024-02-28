@@ -125,8 +125,7 @@ const QueueTransactionItem = ({
                               BigInt(p.value as string),
                               d.decimals
                             );
-                            d.currency_name =
-                              addressInfoIndex?.[v.to]?.name || "";
+                            d.currency_name = assets?.tokenInfo?.symbol || "";
                             d.category_properties = "[]";
                           }
                         });
@@ -139,7 +138,7 @@ const QueueTransactionItem = ({
                         rows.push({
                           recipient: v.to,
                           currency_contract_address: zeroAddress,
-                          currency_name: chain?.nativeToken?.name || "",
+                          currency_name: chain?.nativeToken?.symbol || "",
                           amount: formatEther(BigInt(v.value)),
                           decimals: chain?.nativeToken?.decimals || 18,
                           category_properties: "[]",
