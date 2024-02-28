@@ -66,7 +66,7 @@ const BookkeepingTransferDetails = ({
 }: PaymentRequestDetailsProps) => {
   const { id } = useParams();
 
-  const { workspace } = useWorkspace();
+  const { workspace, userWorkspaces } = useWorkspace();
   const chainData = CHAINS.find(
     (chain) => chain.chainId === workspace?.chain_id
   );
@@ -273,12 +273,28 @@ const BookkeepingTransferDetails = ({
     );
     getBookkeepingList(bookkeepingDetails.workspace_id, false);
   };
+
+  const [selectedWorkspaceName, setSelectedWorkspaceName] =
+    useState<string>("");
+  const [selectedWorkspaceAvatar, setSelectedWorkspaceAvatar] =
+    useState<string>("");
+  const selectedWorkspace = userWorkspaces.data.rows.find(
+    (workspace) => workspace.ID === bookkeepingDetails.workspace_id
+  );
+  useEffect(() => {
+    if (selectedWorkspace) {
+      setSelectedWorkspaceName(selectedWorkspace?.name);
+      setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
+    }
+  }, []);
   return (
     // <Header>
     <WorkspaceItemDetailsLayout
       title="Transaction Detail"
       setOpen={setOpen}
-      // data={data}
+      workspaceName={selectedWorkspaceName}
+      workspaceAvatar={selectedWorkspaceAvatar}
+      address={bookkeepingDetails.counterparty}
     >
       <RequestDetails>
         <TransferTable>

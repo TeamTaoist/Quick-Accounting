@@ -204,16 +204,39 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
     PAYMENT_REQUEST_STATUS.Pending,
   ].includes(paymentRequestDetails.status);
 
-  const selectedWorkspace = userWorkspaces.data.rows.find(
-    (workspace) => workspace.ID === paymentRequestDetails.workspace_id
-  );
+  // let selectedWorkspace;
+  // const [workspaceinfo, setWorkspaceInfo] = useState({})
+  const [selectedWorkspaceName, setSelectedWorkspaceName] =
+    useState<string>("");
+  const [selectedWorkspaceAvatar, setSelectedWorkspaceAvatar] =
+    useState<string>("");
+  useEffect(() => {
+    if (paymentRequestDetails.workspace_name) {
+      setSelectedWorkspaceName(paymentRequestDetails.workspace_name);
+      setSelectedWorkspaceAvatar(paymentRequestDetails.workspace_avatar);
+      console.log("first");
+    } else {
+      const selectedWorkspace = userWorkspaces?.data.rows.find(
+        (workspace) => workspace.ID === paymentRequestDetails.workspace_id
+      );
+      if (selectedWorkspace) {
+        setSelectedWorkspaceName(selectedWorkspace?.name);
+        setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
+      }
+      console.log("second");
+    }
+  }, []);
+
+  console.log(selectedWorkspaceName);
 
   return (
     <>
       <WorkspaceItemDetailsLayout
         title={isTransfer ? "Transfer Details" : "Payment Request Details"}
         setOpen={setOpen}
-        workspaceInfo={selectedWorkspace}
+        // workspaceInfo={selectedWorkspace}
+        workspaceName={selectedWorkspaceName}
+        workspaceAvatar={selectedWorkspaceAvatar}
         address={paymentRequestDetails.counterparty}
       >
         <RequestDetails>

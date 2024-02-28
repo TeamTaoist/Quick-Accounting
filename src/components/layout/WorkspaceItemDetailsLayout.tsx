@@ -10,7 +10,9 @@ interface WorkspaceItemProps {
   href?: string;
   subtitle?: string;
   setOpen: (open: boolean) => void;
-  workspaceInfo?: Workspace;
+  // workspaceInfo?: Workspace;
+  workspaceName?: string;
+  workspaceAvatar?: string;
   address?: string;
 }
 
@@ -20,7 +22,8 @@ const WorkspaceItemDetailsLayout = ({
   href,
   subtitle,
   setOpen,
-  workspaceInfo,
+  workspaceName,
+  workspaceAvatar,
   address,
 }: WorkspaceItemProps) => {
   return (
@@ -32,14 +35,14 @@ const WorkspaceItemDetailsLayout = ({
             <p>{subtitle}</p>
             <WorkspaceInfo>
               <WorkspaceLogo>
-                {workspaceInfo?.avatar === "" ? (
-                  <p>{workspaceInfo?.name.slice(0, 1)}</p>
+                {workspaceAvatar === "" ? (
+                  <p>{workspaceName?.slice(0, 1)}</p>
                 ) : (
-                  <img src={workspaceInfo?.avatar} alt={workspaceInfo?.name} />
+                  <img src={workspaceAvatar} alt={workspaceName} />
                 )}
               </WorkspaceLogo>
               <WorkspaceDetails>
-                <h6>{workspaceInfo?.name}</h6>
+                <h6>{workspaceName}</h6>
                 <p>{address}</p>
               </WorkspaceDetails>
             </WorkspaceInfo>

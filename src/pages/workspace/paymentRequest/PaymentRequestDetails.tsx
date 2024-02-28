@@ -260,19 +260,27 @@ const PaymentRequestDetails = ({
       getPaymentRequestList(paymentRequestDetails.workspace_id, false);
     }
   };
-
+  const [selectedWorkspaceName, setSelectedWorkspaceName] =
+    useState<string>("");
+  const [selectedWorkspaceAvatar, setSelectedWorkspaceAvatar] =
+    useState<string>("");
   const selectedWorkspace = userWorkspaces.data.rows.find(
     (workspace) => workspace.ID === paymentRequestDetails.workspace_id
   );
-  console.log("selectedWorkspace", selectedWorkspace);
-  console.log("paymentRequestDetails", paymentRequestDetails);
+  useEffect(() => {
+    if (selectedWorkspace) {
+      setSelectedWorkspaceName(selectedWorkspace?.name);
+      setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
+    }
+  }, []);
 
   return (
     <>
       <WorkspaceItemDetailsLayout
         title="Payment request details"
         setOpen={setOpen}
-        workspaceInfo={selectedWorkspace}
+        workspaceName={selectedWorkspaceName}
+        workspaceAvatar={selectedWorkspaceAvatar}
         address={paymentRequestDetails.counterparty}
       >
         <RequestDetails>
