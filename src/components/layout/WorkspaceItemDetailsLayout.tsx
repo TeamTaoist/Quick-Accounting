@@ -33,19 +33,21 @@ const WorkspaceItemDetailsLayout = ({
           <HeaderDescription>
             <h1>{title}</h1>
             <p>{subtitle}</p>
-            <WorkspaceInfo>
-              <WorkspaceLogo>
-                {workspaceAvatar === "" ? (
-                  <p>{workspaceName?.slice(0, 1)}</p>
-                ) : (
-                  <img src={workspaceAvatar} alt={workspaceName} />
-                )}
-              </WorkspaceLogo>
-              <WorkspaceDetails>
-                <h6>{workspaceName}</h6>
-                <p>{address}</p>
-              </WorkspaceDetails>
-            </WorkspaceInfo>
+            {workspaceName && (
+              <WorkspaceInfo>
+                <WorkspaceLogo>
+                  {workspaceAvatar === "" ? (
+                    <p>{workspaceName?.slice(0, 1)}</p>
+                  ) : (
+                    <img src={workspaceAvatar} alt={workspaceName} />
+                  )}
+                </WorkspaceLogo>
+                <WorkspaceDetails>
+                  <h6>{workspaceName}</h6>
+                  <p>{address}</p>
+                </WorkspaceDetails>
+              </WorkspaceInfo>
+            )}
           </HeaderDescription>
           <img onClick={() => setOpen(false)} src={cancel} alt="" />
         </RequestHeader>
