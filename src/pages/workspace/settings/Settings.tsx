@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useWorkspace } from "../../../store/useWorkspace";
@@ -15,8 +14,7 @@ import CHAINS from "../../../utils/chain";
 import LinkIcon from "../../../assets/link.svg";
 import CopyIcon from "../../../assets/copy.svg";
 import CopyBox from "../../../components/copy";
-import CircularProgress from "@mui/material/CircularProgress";
-import successIcon from "../../../assets/success.svg";
+import UpdateLoading from "../../../components/UpdateLoading";
 
 const formatSafeAddress = (address: string, chainId: number) => {
   const short = CHAINS.find((chain) => chain.chainId === chainId)?.short;
@@ -54,6 +52,7 @@ const Settings = () => {
     if (!workspaceName) {
       toast.error("Workspace name is empty");
     } else {
+      setIsUpdating(true);
       if (id) {
         updateWorkspaceName(id, workspaceName).then((res) => {
           if (res) {
@@ -91,21 +90,8 @@ const Settings = () => {
               value={workspaceName}
               onChange={(e) => setWorkspaceName(e.target.value)}
               onBlur={handleUpdateWorkspaceName}
-              onFocus={() => setIsUpdating(true)}
             />
-            <UpdateLoadingToast>
-              {isUpdating && (
-                <PendingLoading>
-                  <CircularProgress size="15px" sx={{ color: "gray" }} />{" "}
-                  <p>Updating</p>
-                </PendingLoading>
-              )}
-              {isSuccess && (
-                <SuccessLoading>
-                  <img src={successIcon} alt="" /> <p>Update successfully</p>
-                </SuccessLoading>
-              )}
-            </UpdateLoadingToast>
+            <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} />
           </Input>
         </InputSection>
       </WorkspaceForm>

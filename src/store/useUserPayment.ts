@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { useLoading } from "./useLoading";
 import axiosClient from "../utils/axios";
+import { toast } from "react-toastify";
 
 interface UserPaymentRequest {
   // userPayment: IPaymentRequest[];
@@ -39,11 +40,11 @@ export const useUserPayment = create<UserPaymentRequest>((set) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
-          `/user/my_payment_requests?page=${pageNumber}`
+          `/user/my_payment_requests?page=${pageNumber}&sort_field=submit_ts`
         );
         set({ userPaymentRequest: data.data });
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        toast.error(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
       }
@@ -52,11 +53,11 @@ export const useUserPayment = create<UserPaymentRequest>((set) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
-          `/user/my_payments?page=${pageNumber}`
+          `/user/my_payments?page=${pageNumber}&sort_field=submit_ts`
         );
         set({ myPayment: data.data });
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        toast.error(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
       }
