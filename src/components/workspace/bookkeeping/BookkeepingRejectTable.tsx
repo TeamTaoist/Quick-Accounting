@@ -23,28 +23,39 @@ import { getShortAddress } from "../../../utils";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
 import {
+  Header,
+  Image,
+  Option,
   PaymentPagination,
   TableSection,
+  ViewReject,
 } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
-import ReactPaginate from "react-paginate";
 import Pagination from "../../Pagination";
+import {
+  FormControl,
+  InputAdornment,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import searchIcon from "../../../assets/workspace/search-icon.svg";
+import filterIcon from "../../../assets/workspace/filtering.svg";
+import { useTranslation } from "react-i18next";
+import { getPaymentUpdateTime } from "../../../utils/payment";
 
 interface RejectTableProps {
   workspaceId: number;
   paymentRequest: boolean;
   handleBackBtn: () => void;
-  searchTerm?: string | undefined;
-  selectedValue?: string;
-  handleBookkeepingDetails: (bookkeeping: IBookkeeping) => void;
+  handleBookkeepingDetails: (bookkeeping: IPaymentRequest) => void;
 }
 const BookkeepingRejectTable = ({
   workspaceId,
   paymentRequest,
   handleBackBtn,
-  searchTerm,
-  selectedValue,
   handleBookkeepingDetails,
 }: RejectTableProps) => {
+  const { t } = useTranslation();
   const { bookkeepingHiddenList, unHideBookkeepingList, getBookkeepingList } =
     useBookkeeping();
   const { workspace } = useWorkspace();
@@ -96,8 +107,19 @@ const BookkeepingRejectTable = ({
   }, [pageNumbers]);
 
   // filter table data
+  // filter
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const handleChange = (event: any) => {
+    setSearchTerm(event.target.value);
+  };
+  const [selectedValue, setSelectedValue] = useState<string>("");
+
+  const handleDropdownChange = (event: any) => {
+    setSelectedValue(event.target.value);
+  };
   const filterData = bookkeepingHiddenList.filter((bookkeeping) => {
-    const searchItem = bookkeeping.recipient
+    const searchItem = bookkeeping.counterparty
       .toLowerCase()
       .includes(searchTerm?.toLowerCase() || "");
     const filterByCategory =
@@ -111,13 +133,17 @@ const BookkeepingRejectTable = ({
     await getBookkeepingList(workspaceId, true);
   };
   console.log(selected);
+  // unique category name
+  const uniqueCategoryNames = Array.from(
+    new Set(bookkeepingHiddenList.map((payment) => payment.category_name))
+  );
 
   return (
     <div>
       {bookkeepingHiddenList.length === 0 && !paymentRequest && (
         <Message>
           <h3>You don't have any hidden transactions.</h3>
-          <p style={{ width: "509px", textAlign: "center" }}>
+          <p style={{ width: "100%", textAlign: "center" }}>
             Transactions that add tokens to or remove tokens from your Safe will
             show up here.
           </p>
@@ -126,6 +152,59 @@ const BookkeepingRejectTable = ({
             <span>Back</span>
           </HideBtn>
         </Message>
+      )}
+      {bookkeepingHiddenList.length > 0 && (
+        <Header>
+          <TextField
+            id="search"
+            type="search"
+            autoComplete="off"
+            placeholder={t("paymentRequest.Search")}
+            value={searchTerm}
+            onChange={handleChange}
+            sx={{ width: 350 }}
+            size="small"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <img src={searchIcon} alt="" />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <FormControl sx={{ minWidth: 100 }}>
+            <Select
+              value={selectedValue}
+              onChange={handleDropdownChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Select a value" }}
+              size="small"
+            >
+              <MenuItem value="" disabled>
+                <Option>
+                  <Image src={filterIcon} alt="" />
+                  {t("paymentRequest.Filter")}
+                </Option>
+              </MenuItem>
+              {uniqueCategoryNames.map(
+                (categoryName) =>
+                  categoryName.trim() !== "" && (
+                    <MenuItem value={categoryName} key={categoryName}>
+                      {categoryName}
+                    </MenuItem>
+                  )
+              )}
+            </Select>
+          </FormControl>
+          <ViewReject>
+            {bookkeepingHiddenList.length > 0 && !paymentRequest && (
+              <div onClick={handleBackBtn}>
+                <Image src={back} alt="" />
+                <p>{t("paymentRequest.Back")}</p>
+              </div>
+            )}
+          </ViewReject>
+        </Header>
       )}
       {bookkeepingHiddenList.length > 0 && (
         <>
@@ -189,13 +268,13 @@ const BookkeepingRejectTable = ({
                               />
                               {getShortAddress(workspace.vault_wallet)}
                             </div>
-                            <Logo>
+                            <Logo $dir={bookkeeping.direction}>
                               <img src={rightArrow} alt="" />
                             </Logo>
                           </SafeSection>
                         </TableCell>
                         <TableCell>
-                          {getShortAddress(bookkeeping.recipient)}
+                          {getShortAddress(bookkeeping.counterparty)}
                         </TableCell>
                         <TableCell>
                           {formatNumber(Number(bookkeeping.amount))}{" "}
@@ -207,7 +286,7 @@ const BookkeepingRejectTable = ({
                           </CategoryCell>
                         </TableCell>
                         <TableCell>
-                          {bookkeeping.CreatedAt.slice(0, 10)}
+                          {getPaymentUpdateTime(bookkeeping)}
                         </TableCell>
                         <TableCell>
                           <Button

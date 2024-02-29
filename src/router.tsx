@@ -4,8 +4,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import LoginPopup from "./pages/auth/login/LoginPopup";
-import UserDashboard from "./pages/userDashboard/UserDashboard";
+import Login from "./pages/auth/login/Login";
 import WorkSpaceForm from "./pages/workspace/WorkSpaceForm";
 import Assets from "./pages/workspaceDashboard/assets/Assets";
 import Category from "./pages/workspace/category/Category";
@@ -20,6 +19,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WorkspaceIndex from "./pages/workspace";
 import AuthChecker from "./components/authChecker";
+import UserDashboardIndex from "./pages/userDashboard";
+import UserPaymentRequest from "./pages/userDashboard/userPaymentRequest/UserPaymentRequest";
+import MyPayment from "./pages/userDashboard/MyPayment";
 
 const RouterLink = () => {
   return (
@@ -40,8 +42,11 @@ const RouterLink = () => {
         <Route path="/create-workspace" element={<WorkSpaceForm />} />
 
         <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<LoginPopup />} />
-        <Route path="/user" element={<UserDashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/user" element={<UserDashboardIndex />}>
+          <Route path="payment-request" element={<UserPaymentRequest />} />
+          <Route path="my-payments" element={<MyPayment />} />
+        </Route>
         <Route path="/workspace/:id" element={<WorkspaceIndex />}>
           <Route path="assets" element={<Assets />} />
           <Route path="category" element={<Category />} />

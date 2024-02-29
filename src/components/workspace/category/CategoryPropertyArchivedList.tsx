@@ -61,25 +61,20 @@ const CategoryPropertyArchivedList = ({
   const workspaceId = Number(id);
   const categoryIds = selected;
   const handleUnArchive = async () => {
-    unArchiveCategoryProperties(workspaceId, categoryId, categoryIds).then(
-      (res) => {
-        if (res) {
-          if (categoryId !== undefined) {
-            getCategoryPropertyByCategoryId(workspaceId, categoryId, true);
+    if (selected.length) {
+      unArchiveCategoryProperties(workspaceId, categoryId, categoryIds).then(
+        (res) => {
+          if (res) {
+            if (categoryId !== undefined) {
+              getCategoryPropertyByCategoryId(workspaceId, categoryId, true);
+            }
+            getWorkspaceCategoryProperties(workspaceId);
+            setSelected([]);
           }
-          getWorkspaceCategoryProperties(workspaceId);
-          setSelected([]);
         }
-      }
-    );
+      );
+    }
   };
-  // useEffect(() => {
-  //   if (categoryId !== undefined) {
-  //     getCategoryPropertyByCategoryId(workspaceId, categoryId, true);
-  //   }
-  // }, [categoryId, getCategoryPropertyByCategoryId, workspaceId]);
-  console.log(archivedCategoryProperty);
-  console.log(categoryId);
 
   return (
     <>

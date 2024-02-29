@@ -44,78 +44,60 @@ const PaymentRequestCategoryProperties = ({
     <>
       {selectedCategory?.properties?.map((property: any) => (
         <React.Fragment key={property.ID}>
-          {property.type === "single-select" &&
-            (parseCategoryProperties.length > 0 ? (
-              <SingleSelectType
-                property={property}
-                handleUpdateCategory={handleUpdateCategory}
-                status={status}
-                selectSingleValue={selectSingleValue}
-                handleSelectSingleChange={handleSelectSingleChange}
-                parseCategoryProperties={parseCategoryProperties}
-              />
-            ) : (
-              !property.archived && (
-                <SingleSelectType
-                  property={property}
-                  handleUpdateCategory={handleUpdateCategory}
-                  status={status}
-                  selectSingleValue={selectSingleValue}
-                  handleSelectSingleChange={handleSelectSingleChange}
-                  parseCategoryProperties={parseCategoryProperties}
-                />
-              )
-            ))}
+          {property.type === "single-select" && (
+            <SingleSelectType
+              property={property}
+              handleUpdateCategory={handleUpdateCategory}
+              status={status}
+              selectSingleValue={selectSingleValue}
+              handleSelectSingleChange={handleSelectSingleChange}
+              parseCategoryProperties={parseCategoryProperties}
+              defaultPropertyValue={
+                parseCategoryProperties?.filter(
+                  (p: any) =>
+                    (p.type === "single-select" && p.name) === property.name
+                )[0]
+              }
+            />
+          )}
         </React.Fragment>
       ))}
       {selectedCategory?.properties?.map((property: any, index: number) => (
         <>
-          {property.type === "multi-select" &&
-            (parseCategoryProperties.length > 0 ? (
-              <MultiSelectType
-                property={property}
-                handleUpdateCategory={handleUpdateCategory}
-                status={status}
-                selectedValues={selectedValues}
-                handleSelectChange={handleSelectChange}
-                parseCategoryProperties={parseCategoryProperties}
-              />
-            ) : (
-              !property.archived && (
-                <MultiSelectType
-                  property={property}
-                  handleUpdateCategory={handleUpdateCategory}
-                  status={status}
-                  selectedValues={selectedValues}
-                  handleSelectChange={handleSelectChange}
-                  parseCategoryProperties={parseCategoryProperties}
-                />
-              )
-            ))}
+          {property.type === "multi-select" && (
+            <MultiSelectType
+              property={property}
+              handleUpdateCategory={handleUpdateCategory}
+              status={status}
+              selectedValues={selectedValues}
+              handleSelectChange={handleSelectChange}
+              parseCategoryProperties={parseCategoryProperties}
+              defaultPropertyValue={
+                parseCategoryProperties?.filter(
+                  (p: any) =>
+                    (p.type === "multi-select" && p.name) === property.name
+                )[0]
+              }
+            />
+          )}
         </>
       ))}
       {selectedCategory.properties?.map((property: any) => (
         <>
-          {property.type === "Text" &&
-            (parseCategoryProperties.length > 0 ? (
-              <TextType
-                property={property}
-                handleUpdateCategory={handleUpdateCategory}
-                proPertyTextValue={proPertyTextValue}
-                handlePropertyText={handlePropertyText}
-                status={status}
-              />
-            ) : (
-              !property.archived && (
-                <TextType
-                  property={property}
-                  handleUpdateCategory={handleUpdateCategory}
-                  proPertyTextValue={proPertyTextValue}
-                  handlePropertyText={handlePropertyText}
-                  status={status}
-                />
-              )
-            ))}
+          {property.type === "Text" && (
+            <TextType
+              property={property}
+              handleUpdateCategory={handleUpdateCategory}
+              proPertyTextValue={proPertyTextValue}
+              handlePropertyText={handlePropertyText}
+              status={status}
+              defaultPropertyValue={
+                parseCategoryProperties?.filter(
+                  (p: any) => (p.type === "Text" && p.name) === property.name
+                )[0]
+              }
+            />
+          )}
         </>
       ))}
     </>

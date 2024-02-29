@@ -6,7 +6,8 @@ declare interface IPaymentRequest {
   workspace_id: number;
   workspace_chain_id: number;
   payment_request_id: number;
-  recipient: string;
+  counterparty: string;
+  direction: "i" | "o";
   amount: string;
   currency_name: string;
   currency_contract_address: string;
@@ -19,9 +20,15 @@ declare interface IPaymentRequest {
   safe_tx_hash: string;
   tx_timestamp: number;
   status: number;
+  submit_ts: number;
+  approve_ts: number;
+  reject_ts: number;
+  execute_ts: number;
   hide: boolean;
   workspace_name: string;
   vault_wallet: string;
+  workspace_avatar: string;
+  applicant: string;
 }
 
 declare interface ICategoryProperties {

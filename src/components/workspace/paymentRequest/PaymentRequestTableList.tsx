@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 import { formatNumber } from "../../../utils/number";
 import { CategoryCell } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import { formatDate } from "../../../utils/time";
+import { getPaymentUpdateTime } from "../../../utils/payment";
 
 interface PaymentRequestTableListProps {
   items: IPaymentRequest[];
@@ -133,7 +134,7 @@ const PaymentRequestTableList = ({
                     handleCheckboxClick(event, payment.payment_request_id)
                   }
                 />
-                {recipientFormate(payment.recipient)}
+                {recipientFormate(payment.counterparty)}
               </TableCell>
               <TableCell>
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
@@ -143,7 +144,7 @@ const PaymentRequestTableList = ({
                   <CategoryCell>{payment.category_name}</CategoryCell>
                 )}
               </TableCell>
-              <TableCell>{formatDate(payment.CreatedAt)}</TableCell>
+              <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
               <TableCell>
                 <Button
                   variant="outlined"
@@ -166,7 +167,7 @@ const PaymentRequestTableList = ({
           colSpan={5}
           sx={{
             padding: 0,
-            // paddingLeft: "16px",
+            paddingLeft: "16px",
             borderTop: "1px solid #ddd",
           }}
         >
@@ -182,30 +183,40 @@ const PaymentRequestTableList = ({
                     <TableCell
                       // colSpan={1}
                       sx={{
-                        paddingLeft: "58px",
-                        maxWidth: "112px",
+                        paddingLeft: "42px",
+                        width: "29%",
                       }}
                     >
-                      {recipientFormate(payments.recipient)}
+                      {recipientFormate(payments.counterparty)}
                     </TableCell>
                     <TableCell
                       sx={{
-                        maxWidth: "50px",
+                        width: "20.5%",
                       }}
                     >
                       {payments.amount} {payments.currency_name}
                     </TableCell>
                     <TableCell
                       sx={{
-                        maxWidth: "78px",
+                        width: "20%",
                       }}
                     >
                       <CategoryCell>{payments.category_name}</CategoryCell>
                     </TableCell>
-                    <TableCell>{formatDate(payments.CreatedAt)}</TableCell>
-                    <TableCell
-                    // sx={{ width: "100px" }}
-                    ></TableCell>
+                    <TableCell>{getPaymentUpdateTime(payments)}</TableCell>
+                    <TableCell sx={{ visibility: "hidden" }}>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          borderColor: "black",
+                          color: "black",
+                          textTransform: "lowercase",
+                        }}
+                        // onClick={() => handleOpenModal(payment)}
+                      >
+                        view more
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

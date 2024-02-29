@@ -30,9 +30,19 @@
           display: flex;
           justify-content: center;
           align-items: center;
-        }
-        p {
-          font-weight: 600;
+          position: relative;
+          .chain-logo {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+          }
+          p {
+            font-weight: 600;
+            text-transform: uppercase;
+          }
         }
       }
 

@@ -59,6 +59,17 @@ interface IPaymentsStore {
     workspaceId: string | undefined,
     paymentRequestIds: string
   ) => Promise<void>;
+  createAndApprovePaymentRequest: (
+    workspaceId: number,
+    nonce: number,
+    payments: TxInfoType[],
+    safe_tx_hash: string,
+    approve_ts: number // second
+  ) => Promise<void>;
+  updatePaymentRquestMap: (
+    safe_tx_hash: string,
+    data: IPaymentRequest[]
+  ) => void;
 }
 
 const usePaymentsStore = create<IPaymentsStore>((set, get) => {
@@ -75,7 +86,8 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       workspace_id: 0,
       workspace_chain_id: 0,
       payment_request_id: 0,
-      recipient: "",
+      counterparty: "",
+      direction: "o",
       amount: "",
       currency_name: "",
       currency_contract_address: "",
@@ -88,9 +100,15 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       safe_tx_hash: "",
       tx_timestamp: 0,
       status: 0,
+      submit_ts: 0,
+      approve_ts: 0,
+      reject_ts: 0,
+      execute_ts: 0,
       hide: false,
       workspace_name: "",
       vault_wallet: "",
+      workspace_avatar: "",
+      applicant: "",
     },
     paymentRequestGroupDetails: [],
     paymentRquestMap: new Map(),
@@ -244,6 +262,40 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       } finally {
       }
     },
+    // create and approve payment request
+    createAndApprovePaymentRequest: async (
+      workspaceId: number,
+      nonce: number,
+      payments: TxInfoType[],
+      safe_tx_hash: string,
+      approve_ts: number
+    ) => {
+      try {
+        const { data } = await axiosClient.post(
+          `/payment_requests/${workspaceId}/create_and_approve`,
+          {
+            rows: payments,
+            safe_tx_hash,
+            approve_ts,
+          }
+        );
+        if (data.msg === "success" && data.code === 200) {
+          toast.success(
+            `Nonce ${nonce}: created payment request automatically`
+          );
+          const { paymentRquestMap } = get();
+          console.log("----resp", data);
+          paymentRquestMap.set(safe_tx_hash, data.data);
+          set({ paymentRquestMap: new Map(paymentRquestMap) });
+          return;
+        }
+        throw Error(data.msg);
+      } catch (error: any) {
+        toast.error(`Nonce ${nonce}: created payment request failed ${error}`);
+        console.error(error);
+      }
+    },
+
     // update current Payment Request detail
     setCurrentPaymentRequestDetail: (paymentRequest: IPaymentRequest) => {
       set({ paymentRequestDetails: paymentRequest });
@@ -321,6 +373,11 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         setLoading(false);
       }
     },
+    updatePaymentRquestMap: (safe_tx_hash, data) => { 
+      const { paymentRquestMap } = get();
+      paymentRquestMap.set(safe_tx_hash, data);
+      set({ paymentRquestMap: new Map(paymentRquestMap) });
+    }
   };
 });
 

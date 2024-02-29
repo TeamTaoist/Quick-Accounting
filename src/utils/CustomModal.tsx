@@ -24,14 +24,12 @@ const CustomModal = ({
       >
         <Box
           sx={{
-            position: "absolute",
-            top: "40%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            display: "block",
-            overflowY: "scroll",
-            height: "100%",
-            minWidth: 450,
+            width: "100%",
+            maxWidth: "100vw",
+            maxHeight: "100%",
+            position: "fixed",
+            inset: "0",
+            overflowY: "auto",
             "&::-webkit-scrollbar": {
               display: "none",
             },
@@ -40,7 +38,6 @@ const CustomModal = ({
           }}
         >
           <Component setOpen={setOpen} {...additionalProps} />
-          {/* {Component} */}
         </Box>
       </Modal>
     </div>

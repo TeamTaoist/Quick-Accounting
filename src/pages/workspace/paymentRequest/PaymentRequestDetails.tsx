@@ -33,6 +33,7 @@ import { useLoading } from "../../../store/useLoading";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import PaymentCurrencyTable from "../../../components/paymentRequestDetails/PaymentCurrencyTable";
 import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -46,6 +47,15 @@ interface PropertyValues {
   name?: string;
   type?: string;
   values?: string;
+}
+export class UpdateEvent extends Event {
+  id: number;
+  data: IPaymentRequest;
+  constructor(type: string, data: { id: number; data: IPaymentRequest }) {
+    super(type);
+    this.id = data.id;
+    this.data = data.data;
+  }
 }
 const PaymentRequestDetails = ({
   setOpen,
@@ -61,9 +71,8 @@ const PaymentRequestDetails = ({
     paymentRequestDetails,
   } = usePaymentsStore();
   const { workspaceCategoryProperties } = useCategoryProperty();
+  const { userWorkspaces } = useWorkspace();
   const { isLoading } = useLoading();
-
-  console.log("workspaceCategoryProperties", workspaceCategoryProperties);
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
@@ -150,26 +159,15 @@ const PaymentRequestDetails = ({
     const selectedCategory = workspaceCategoryProperties?.find(
       (f) => f?.ID === selectedCategoryID
     );
-    // if(selectedCategory) {
-
-    // }
     if (selectedCategory) {
       setSelectedCategory(selectedCategory);
       setCategoryProperties(selectedCategory?.properties);
     } else {
-      // setSelectedCategory({});
-      // setCategoryProperties([]);
-      // make separate component
-      // setSelectedCategory(paymentRequestDetails);
-      // setCategoryProperties(
-      //   JSON.parse(paymentRequestDetails.category_properties)
-      // );
+      setSelectedCategory({});
+      setCategoryProperties([]);
     }
   }, [selectedCategoryID, workspaceCategoryProperties]);
 
-  console.log("selected category ", selectedCategory);
-  console.log("categoryProperties", categoryProperties);
-  console.log("paymentRequestDetails", paymentRequestDetails);
   // handle category
   const handleCategory = async (categoryId: number) => {
     setSelectedCategoryID(categoryId);
@@ -218,14 +216,13 @@ const PaymentRequestDetails = ({
       parseCategoryProperties = JSON.parse(categoryProperties);
     }
   }
-  console.log("property", categoryProperties);
   // new
   useEffect(() => {
     const initialSelectSingleValue: { [name: string]: any } = {};
     const initialSelectedValues: { [name: string]: any } = {};
     const initialPropertyTextValue: { [name: string]: any } = {};
 
-    parseCategoryProperties.forEach((property: any) => {
+    parseCategoryProperties?.forEach((property: any) => {
       if (property.type === "single-select") {
         initialSelectSingleValue[property.name] = {
           name: property.name,
@@ -270,15 +267,46 @@ const PaymentRequestDetails = ({
     );
     if (pageName === "payment-request") {
       getPaymentRequestList(paymentRequestDetails.workspace_id, false);
+    } else if (pageName === "queue") {
+      const category_properties = JSON.stringify(
+        updatedPaymentBody.category_properties
+      );
+      const event = new UpdateEvent("updatePaymentRequest", {
+        id: paymentRequestDetails?.ID,
+        data: {
+          ...paymentRequestDetails,
+          ...updatedPaymentBody,
+          category_properties,
+        },
+      });
+      document.dispatchEvent(event);
     }
   };
-  console.log(updatedPaymentBody);
+  const [selectedWorkspaceName, setSelectedWorkspaceName] =
+    useState<string>("");
+  const [selectedWorkspaceAvatar, setSelectedWorkspaceAvatar] =
+    useState<string>("");
+  const [selectedWorkspaceSafeAddress, setSelectedWorkspaceSafeAddress] =
+    useState<string>("");
+  const selectedWorkspace = userWorkspaces.data.rows.find(
+    (workspace) => workspace.ID === paymentRequestDetails.workspace_id
+  );
+  useEffect(() => {
+    if (selectedWorkspace) {
+      setSelectedWorkspaceName(selectedWorkspace?.name);
+      setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
+      setSelectedWorkspaceSafeAddress(selectedWorkspace.vault_wallet);
+    }
+  }, []);
 
   return (
     <>
       <WorkspaceItemDetailsLayout
         title="Payment request details"
         setOpen={setOpen}
+        workspaceName={selectedWorkspaceName}
+        workspaceAvatar={selectedWorkspaceAvatar}
+        address={selectedWorkspaceSafeAddress}
       >
         <RequestDetails>
           <PaymentCurrencyTable />

@@ -20,12 +20,13 @@ import rightArrow from "../../../assets/workspace/right-arrow.svg";
 import { formatNumber } from "../../../utils/number";
 import { CategoryCell } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import { formatDate } from "../../../utils/time";
+import { getPaymentUpdateTime } from "../../../utils/payment";
 
 interface BookkeepingTableProps {
   selected: number[];
   setSelected: (selected: any) => void;
-  filterData: IBookkeeping[];
-  handleBookkeepingDetails: (bookkeeping: IBookkeeping) => void;
+  filterData: IPaymentRequest[];
+  handleBookkeepingDetails: (bookkeeping: IPaymentRequest) => void;
 }
 
 const BookkeepingTable = ({
@@ -118,12 +119,14 @@ const BookkeepingTable = ({
                       />
                       {getShortAddress(workspace?.vault_wallet)}
                     </div>
-                    <Logo>
+                    <Logo $dir={bookkeeping.direction}>
                       <img src={rightArrow} alt="" />
                     </Logo>
                   </SafeSection>
                 </TableCell>
-                <TableCell>{getShortAddress(bookkeeping.recipient)}</TableCell>
+                <TableCell>
+                  {getShortAddress(bookkeeping.counterparty)}
+                </TableCell>
                 <TableCell>
                   {formatNumber(Number(bookkeeping.amount))}{" "}
                   {bookkeeping.currency_name}
@@ -131,7 +134,7 @@ const BookkeepingTable = ({
                 <TableCell>
                   <CategoryCell>{bookkeeping.category_name}</CategoryCell>
                 </TableCell>
-                <TableCell>{formatDate(bookkeeping.CreatedAt)}</TableCell>
+                <TableCell>{getPaymentUpdateTime(bookkeeping)}</TableCell>
                 <TableCell>
                   <Button
                     variant="outlined"

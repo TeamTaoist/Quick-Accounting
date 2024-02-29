@@ -1,0 +1,85 @@
+import { TableCell, TableRow, TextField } from "@mui/material";
+import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
+import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
+import optionsIcon from "../../assets/workspace/option.svg";
+import { paymentRequestBody } from "../workspace/paymentRequest/PaymentRequestGroupDetails";
+
+interface GroupTextTypeProps {
+  properties: any;
+  handleUpdatePaymentRequest: (paymentId: number) => void;
+  sharePaymentRequestForm: paymentRequestBody[];
+  payment: any;
+  index: number;
+  handleFormChange: (
+    index: number,
+    field: string,
+    value: any,
+    propertyName?: string,
+    propertyType?: string,
+    categoryId?: number
+  ) => void;
+  defaultPropertyValue: any;
+}
+
+const GroupTextType = ({
+  properties,
+  handleUpdatePaymentRequest,
+  payment,
+  sharePaymentRequestForm,
+  index,
+  handleFormChange,
+  defaultPropertyValue,
+}: GroupTextTypeProps) => {
+  if (!!defaultPropertyValue || !properties.archived) {
+    return (
+      <TableRow
+        sx={{
+          td: {
+            border: "1px solid var(--border-table)",
+            padding: 1,
+            paddingInline: 1,
+          },
+        }}
+      >
+        <TableCell sx={{ height: 1, width: 200 }}>
+          <NoteInfo>
+            <Image src={optionsIcon} alt="" /> {properties.name}
+          </NoteInfo>
+        </TableCell>
+        <TableCell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
+          <TextField
+            sx={{
+              "& fieldset": { border: "none" },
+            }}
+            size="small"
+            fullWidth
+            // value={property.values}
+            value={
+              sharePaymentRequestForm[index].category_properties.find(
+                (p: any) => p.type === "Text" && p.name === properties.name
+              )?.values || ""
+            }
+            // id="fullWidth"
+            placeholder="Enter content"
+            onChange={(e) =>
+              handleFormChange(
+                index,
+                "categoryProperties",
+                e.target.value,
+                properties.name,
+                properties.type
+              )
+            }
+            InputProps={{
+              style: { padding: 0 },
+              // readOnly: isEditable,
+            }}
+          />
+        </TableCell>
+      </TableRow>
+    );
+  }
+  return null;
+};
+
+export default GroupTextType;

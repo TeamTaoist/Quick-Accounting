@@ -23,15 +23,15 @@ import usePaymentsStore from "../../../store/usePayments";
 import { formatNumber } from "../../../utils/number";
 import Pagination from "../../Pagination";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { getPaymentUpdateTime } from "../../../utils/payment";
+import { getShortAddress } from "../../../utils";
 
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
   selectedValue?: string;
   isInQueue?: boolean;
 }
-const recipientFormate = (n: string) => {
-  return `${n.slice(0, 6)}...${n.slice(-4)}`;
-};
+
 const RejectPaymentRequestTable = ({
   searchTerm,
   selectedValue,
@@ -44,19 +44,25 @@ const RejectPaymentRequestTable = ({
   const [total, setTotal] = useState(0);
   const [pageNumbers, setPageNumbers] = useState(0);
 
-  const { getFailedPaymentRequestList, setCurrentPaymentRequestDetail } =
-    usePaymentsStore();
-  const { workspace } = useWorkspace();
+  const {
+    getFailedPaymentRequestList,
+    setCurrentPaymentRequestDetail,
+    paymentRequestDetails,
+  } = usePaymentsStore();
+  const { workspace, userWorkspaces } = useWorkspace();
 
   const [paymentId, setPaymentId] = useState<number | null>(null);
   const handleOpenModal = (payment: IPaymentRequest) => {
-    setCurrentPaymentRequestDetail({ ...payment, vault_wallet: workspace.vault_wallet });
+    setCurrentPaymentRequestDetail({
+      ...payment,
+      vault_wallet: workspace.vault_wallet,
+    });
     setOpenModal(true);
   };
   // filter table data
   const filterData = searchTerm
     ? list.filter((data) => {
-        const searchItem = data.recipient
+        const searchItem = data.counterparty
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
         const filterByCategory =
@@ -83,6 +89,10 @@ const RejectPaymentRequestTable = ({
   const handlePageClick = (event: any) => {
     setPageNumbers(event.selected);
   };
+
+  // const selectedWorkspace = userWorkspaces.data.rows.find(
+  //   (workspace) => workspace.ID === paymentRequestDetails.workspace_id
+  // );
 
   return (
     <div>
@@ -125,7 +135,9 @@ const RejectPaymentRequestTable = ({
             <TableBody>
               {filterData?.map((payment) => (
                 <TableRow key={payment.ID}>
-                  <TableCell>{recipientFormate(payment.recipient)}</TableCell>
+                  <TableCell>
+                    {getShortAddress(payment.counterparty)}
+                  </TableCell>
                   <TableCell>
                     {formatNumber(Number(payment.amount))}{" "}
                     {payment.currency_name}
@@ -139,7 +151,7 @@ const RejectPaymentRequestTable = ({
                       {"Rejected"}
                     </Status>
                   </TableCell>
-                  <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
+                  <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
                   <TableCell>
                     <Button
                       variant="outlined"

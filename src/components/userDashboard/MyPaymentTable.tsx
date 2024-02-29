@@ -13,7 +13,7 @@ import { Status } from "../workspace/paymentRequest/RejectPaymentRequestTable";
 import statusIcon from "../../assets/workspace/status-icon.svg";
 import { getPaymentStatus, getPaymentUpdateTime } from "../../utils/payment";
 
-interface UserPaymentTableProps {
+interface MyPaymentTableProps {
   filterData: IPaymentRequest[];
   handleUserPaymentDetails: (data: IPaymentRequest) => void;
 }
@@ -21,10 +21,10 @@ interface UserPaymentTableProps {
 const recipientFormate = (n: string) => {
   return `${n.slice(0, 6)}...${n.slice(-4)}`;
 };
-const UserPaymentTable = ({
+const MyPaymentTable = ({
   filterData,
   handleUserPaymentDetails,
-}: UserPaymentTableProps) => {
+}: MyPaymentTableProps) => {
   return (
     <TableContainer
       component={Paper}
@@ -48,13 +48,6 @@ const UserPaymentTable = ({
               }}
             >
               Safe
-            </TableCell>
-            <TableCell
-              sx={{
-                background: "var(--bg-primary)",
-              }}
-            >
-              Recipient
             </TableCell>
             <TableCell
               sx={{
@@ -94,11 +87,6 @@ const UserPaymentTable = ({
                 </div>
               </TableCell>
               <TableCell>
-                <div>
-                  <p>{recipientFormate(payment.counterparty)}</p>
-                </div>
-              </TableCell>
-              <TableCell>
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
               </TableCell>
               <TableCell>
@@ -129,4 +117,4 @@ const UserPaymentTable = ({
   );
 };
 
-export default UserPaymentTable;
+export default MyPaymentTable;

@@ -5,8 +5,8 @@ import { toast } from "react-toastify";
 import { useWorkspace } from "./useWorkspace";
 
 interface UseBookkeeping {
-  bookkeepingList: IBookkeeping[];
-  bookkeepingHiddenList: IBookkeeping[];
+  bookkeepingList: IPaymentRequest[];
+  bookkeepingHiddenList: IPaymentRequest[];
   bookkeepingDetails: any;
   getBookkeepingList: (
     workspaceId: number,
@@ -29,7 +29,7 @@ interface UseBookkeeping {
     workspaceId: number,
     paymentRequestIds: string
   ) => Promise<void>;
-  setCurrentBookkeepingDetail: (bookkeeping: IBookkeeping) => void;
+  setCurrentBookkeepingDetail: (bookkeeping: IPaymentRequest) => void;
 }
 
 export const useBookkeeping = create<UseBookkeeping>((set) => {
@@ -140,7 +140,7 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
         setLoading(false);
       }
     },
-    setCurrentBookkeepingDetail: (bookkeeping: IBookkeeping) => {
+    setCurrentBookkeepingDetail: (bookkeeping: IPaymentRequest) => {
       set({ bookkeepingDetails: bookkeeping });
     },
   };

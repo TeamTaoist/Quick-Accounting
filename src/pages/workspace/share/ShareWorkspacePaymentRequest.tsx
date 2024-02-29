@@ -30,12 +30,15 @@ import { parseUnits } from "ethers";
 import ConfirmModal from "../../../components/confirmModal";
 import PaymentDetailsForm from "../../../components/paymentRequestGroupDetails/PaymentDetailsForm";
 import GroupPaymentCategoryProperties from "../../../components/paymentRequestGroupDetails/GroupPaymentCategoryProperties";
+import LoginContent from "../../auth/login/LoginContent";
+import useLogin from "../../../hooks/useLogin";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 const ShareWorkspacePaymentRequest = () => {
   const { shareId } = useParams();
   const navigate = useNavigate();
 
-  const { isLoading } = useLoading();
+  const { isLoading, setLoading } = useLoading();
   const { workspace, assetsList, getAssets, updateWorkspace } = useWorkspace();
   const {
     createSharePaymentRequest,
@@ -45,6 +48,9 @@ const ShareWorkspacePaymentRequest = () => {
   } = useSharePaymentRequest();
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
+  const [loginVisible, setLoginVisible] = useState(false);
+  const signAndLogin = useLogin();
+  const { user } = useAuthStore();
 
   // dynamic payment request form
   const [sharePaymentRequestForm, setSharePaymentRequestForm] = useState<
@@ -54,6 +60,7 @@ const ShareWorkspacePaymentRequest = () => {
       amount: "",
       currency_name: "",
       recipient: "",
+      counterparty: "",
       decimals: 18,
       category_id: null,
       category_name: "",
@@ -61,6 +68,7 @@ const ShareWorkspacePaymentRequest = () => {
       category_properties: [],
     },
   ]);
+
   const handleAddRequest = () => {
     setSharePaymentRequestForm([
       ...sharePaymentRequestForm,
@@ -240,12 +248,29 @@ const ShareWorkspacePaymentRequest = () => {
     );
   };
 
+  const handleLoginCallback = () => {
+    setLoginVisible(false);
+    handleConfirmSubmit();
+  };
+
   // create payment request
-  const handleSubmitPaymentRequest = () => {
+  const handleSubmitPaymentRequest = async () => {
     if (!checkAllFields()) {
       return;
     }
-    setConfirmVisible(true);
+    // setConfirmVisible(true);
+    if (!user?.token) {
+      setLoginVisible(true);
+      return;
+    }
+    try {
+      setLoading(true);
+      await signAndLogin(handleLoginCallback);
+    } catch (error) {
+      toast.error(`login failed: ${error}`);
+    } finally {
+      setLoading(false);
+    }
   };
   const handleSavePaymentRequest = async () => {
     await saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm });
@@ -258,7 +283,7 @@ const ShareWorkspacePaymentRequest = () => {
           return {
             amount: paymentDetail.amount,
             currency_name: paymentDetail.currency_name,
-            recipient: paymentDetail.recipient,
+            recipient: paymentDetail.counterparty,
             decimals: paymentDetail.decimals,
             category_id: paymentDetail.category_id,
             category_name: paymentDetail.category_name,
@@ -333,7 +358,9 @@ const ShareWorkspacePaymentRequest = () => {
             {shareData?.payment_request_items?.[0]?.status !== 0 &&
             shareData?.payment_request_items?.length ? (
               <Btns>
-                <ViewProgressBtn onClick={() => navigate("/user")}>
+                <ViewProgressBtn
+                  onClick={() => navigate("/user/payment-request")}
+                >
                   View the progress of your payment request
                 </ViewProgressBtn>
               </Btns>
@@ -357,6 +384,14 @@ const ShareWorkspacePaymentRequest = () => {
             )}
           </SharePaymentForm>
         </SharePaymentContainer>
+        {loginVisible && (
+          <LoginModal>
+            <LoginContent
+              handleClose={() => setLoginVisible(false)}
+              loginCallback={handleLoginCallback}
+            />
+          </LoginModal>
+        )}
       </Header>
     </>
   );
@@ -488,4 +523,14 @@ const Submit = styled.button`
   border: 1px solid var(--border-table);
   border-radius: 7px;
   cursor: pointer;
+`;
+
+const LoginModal = styled.div`
+  background: rgba(10, 22, 11, 0.4);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 9;
+  left: 0;
+  top: 0;
 `;

@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import WorkspaceLayout from "../../../components/layout/workspaceLayout/WorkspaceLayout";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useWorkspace } from "../../../store/useWorkspace";
@@ -15,6 +14,7 @@ import CHAINS from "../../../utils/chain";
 import LinkIcon from "../../../assets/link.svg";
 import CopyIcon from "../../../assets/copy.svg";
 import CopyBox from "../../../components/copy";
+import UpdateLoading from "../../../components/UpdateLoading";
 
 const formatSafeAddress = (address: string, chainId: number) => {
   const short = CHAINS.find((chain) => chain.chainId === chainId)?.short;
@@ -41,6 +41,10 @@ const Settings = () => {
     getUserWorkspace();
   }, [id, settingLoading, getUserWorkspace, getWorkspaceDetails]);
 
+  // updating loading state
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
   const handleUpdateWorkspaceName = async (
     e: React.FormEvent<HTMLFormElement> | React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -48,20 +52,30 @@ const Settings = () => {
     if (!workspaceName) {
       toast.error("Workspace name is empty");
     } else {
+      setIsUpdating(true);
       if (id) {
         updateWorkspaceName(id, workspaceName).then((res) => {
           if (res) {
-            isSettingLoading(!settingLoading);
+            // isSettingLoading(!settingLoading);
+            setIsSuccess(true);
+            setIsUpdating(false);
+            setTimeout(() => {
+              setIsSuccess(false);
+            }, 3000);
           }
         });
       }
     }
   };
-  console.log(workspace);
 
   const safeAddress = formatSafeAddress(
     workspace.vault_wallet,
     workspace.chain_id
+  );
+
+  // network
+  const chainData = CHAINS.find(
+    (chain) => chain.chainId === workspace.chain_id
   );
 
   return (
@@ -69,15 +83,25 @@ const Settings = () => {
       <WorkspaceForm onSubmit={handleUpdateWorkspaceName}>
         <InputSection>
           <label htmlFor="">{t("workspaceForm.WorkspaceName")}</label>
-          <input
-            type="text"
-            placeholder={t("workspaceForm.WorkspaceName")}
-            value={workspaceName}
-            onChange={(e) => setWorkspaceName(e.target.value)}
-            onBlur={handleUpdateWorkspaceName}
-          />
+          <Input>
+            <input
+              type="text"
+              placeholder={t("workspaceForm.WorkspaceName")}
+              value={workspaceName}
+              onChange={(e) => setWorkspaceName(e.target.value)}
+              onBlur={handleUpdateWorkspaceName}
+            />
+            <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} />
+          </Input>
         </InputSection>
       </WorkspaceForm>
+      <NetWork>
+        <h3>Network</h3>
+        <div>
+          <img src={chainData?.logoPath} alt="" />
+          <p>{chainData?.chainName}</p>
+        </div>
+      </NetWork>
       <SafeAddress>
         <h3>{t("settings.SafeAddress")}</h3>
         <p className="safe">
@@ -86,7 +110,7 @@ const Settings = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span>{safeAddress}</span>
+            <span>{workspace.vault_wallet}</span>
             <img src={LinkIcon} alt="" className="icon" />
           </a>
         </p>
@@ -113,7 +137,29 @@ const SettingsContainer = styled.div`
   margin-left: 63px;
 `;
 const WorkspaceForm = styled.form`
-  max-width: 350px;
+  width: 600px;
+  position: relative;
+  input {
+    width: 60%;
+  }
+`;
+const UpdateLoadingToast = styled.form`
+  p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-left: 7px;
+  }
+`;
+const PendingLoading = styled.form`
+  display: flex;
+  align-items: center;
+`;
+const SuccessLoading = styled.form`
+  display: flex;
+  align-items: center;
+  img {
+    width: 15px;
+  }
 `;
 const InputSection = styled.div`
   display: flex;
@@ -128,8 +174,35 @@ const InputSection = styled.div`
     border-radius: 5px;
   }
 `;
+const Input = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+const NetWork = styled.div`
+  margin-top: 30px;
+  h3 {
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 14px;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    img {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+    }
+    p {
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+  }
+`;
 const MultiSigner = styled.div`
-  margin-top: 40px;
+  margin-top: 30px;
   h3 {
     font-size: 20px;
     font-weight: 400;

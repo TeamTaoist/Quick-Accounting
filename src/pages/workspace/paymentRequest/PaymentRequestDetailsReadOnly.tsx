@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { css } from "@emotion/react";
 
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
 import statusIcon from "../../../assets/workspace/status.svg";
@@ -30,6 +31,7 @@ import {
 import { getShortAddress } from "../../../utils";
 import { formatTimestamp } from "../../../utils/time";
 import { getChainExplorer } from "../../../utils/chain";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -85,7 +87,7 @@ const NotTransferTop = ({
               paddingLeft: "10px",
             }}
           >
-            {getShortAddress(paymentRequestDetails?.recipient)}
+            {getShortAddress(paymentRequestDetails?.counterparty)}
           </TableCell>
           <TableCell
             sx={{
@@ -165,12 +167,12 @@ const TransferTop = ({
           >
             <SafeSection>
               <div>{getShortAddress(paymentRequestDetails?.vault_wallet)}</div>
-              <div>
+              <Logo $dir={paymentRequestDetails?.direction}>
                 <img src={transferArrow} alt="" />
-              </div>
+              </Logo>
             </SafeSection>
           </TableCell>
-          <Cell>{getShortAddress(paymentRequestDetails?.recipient)}</Cell>
+          <Cell>{getShortAddress(paymentRequestDetails?.counterparty)}</Cell>
           <Cell>{paymentRequestDetails.amount}</Cell>
           <Cell>{paymentRequestDetails?.currency_name}</Cell>
         </TableRow>
@@ -182,6 +184,7 @@ const TransferTop = ({
 
 const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   const { paymentRequestDetails } = usePaymentsStore();
+  const { userWorkspaces } = useWorkspace();
 
   const [categoryProperties, setCategoryProperties] = useState<any>([]);
 
@@ -196,17 +199,45 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   }, [paymentRequestDetails]);
 
   const isTransfer = ![
-    PAYMENT_REQUEST_STATUS.Draft,
+    // PAYMENT_REQUEST_STATUS.Draft,
     PAYMENT_REQUEST_STATUS.Submitted,
     PAYMENT_REQUEST_STATUS.Rejected,
     PAYMENT_REQUEST_STATUS.Pending,
   ].includes(paymentRequestDetails.status);
 
+  // let selectedWorkspace;
+  // const [workspaceinfo, setWorkspaceInfo] = useState({})
+  const [selectedWorkspaceName, setSelectedWorkspaceName] =
+    useState<string>("");
+  const [selectedWorkspaceAvatar, setSelectedWorkspaceAvatar] =
+    useState<string>("");
+  const [selectedWorkspaceSafeAddress, setSelectedWorkspaceSafeAddress] =
+    useState<string>("");
+  useEffect(() => {
+    if (paymentRequestDetails.workspace_name) {
+      setSelectedWorkspaceName(paymentRequestDetails.workspace_name);
+      setSelectedWorkspaceAvatar(paymentRequestDetails.workspace_avatar);
+      setSelectedWorkspaceSafeAddress(paymentRequestDetails.vault_wallet);
+    } else {
+      const selectedWorkspace = userWorkspaces?.data.rows.find(
+        (workspace) => workspace.ID === paymentRequestDetails.workspace_id
+      );
+      if (selectedWorkspace) {
+        setSelectedWorkspaceName(selectedWorkspace?.name);
+        setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
+        setSelectedWorkspaceSafeAddress(selectedWorkspace.vault_wallet);
+      }
+    }
+  }, []);
   return (
     <>
       <WorkspaceItemDetailsLayout
         title={isTransfer ? "Transfer Details" : "Payment Request Details"}
         setOpen={setOpen}
+        // workspaceInfo={selectedWorkspace}
+        workspaceName={selectedWorkspaceName}
+        workspaceAvatar={selectedWorkspaceAvatar}
+        address={selectedWorkspaceSafeAddress}
       >
         <RequestDetails>
           <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>
@@ -372,5 +403,15 @@ const TransactionHash = styled.div`
     img {
       width: 22px;
     }
+  }
+`;
+
+const LeftDirStyle = css`
+  transform: rotate(180deg);
+`;
+
+const Logo = styled.div<{ $dir?: string }>`
+  img {
+    ${({ $dir }) => $dir === "i" && LeftDirStyle}
   }
 `;

@@ -116,7 +116,7 @@ const PaymentRequest = () => {
   };
   // filter table data
   const filterData = paymentRequestList.filter((data) => {
-    const searchItem = data.recipient
+    const searchItem = data.counterparty
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const filterByCategory =
@@ -349,7 +349,7 @@ const PaymentRequest = () => {
                   <Table size="small">
                     <TableHead style={{ backgroundColor: "#f0f0f0" }}>
                       <TableRow>
-                        <TableCell>
+                        <TableCell sx={{ width: "30%" }}>
                           <Checkbox
                             indeterminate={
                               selected.length > 0 &&
@@ -362,8 +362,8 @@ const PaymentRequest = () => {
                           />
                           Recipient
                         </TableCell>
-                        <TableCell>Amount</TableCell>
-                        <TableCell>Category</TableCell>
+                        <TableCell sx={{ width: "20%" }}>Amount</TableCell>
+                        <TableCell sx={{ width: "20%" }}>Category</TableCell>
                         <TableCell>Date</TableCell>
                         <TableCell></TableCell>
                       </TableRow>

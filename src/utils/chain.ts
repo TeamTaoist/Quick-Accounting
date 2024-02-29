@@ -6,6 +6,11 @@ const CHAINS = [
     logoPath: `${SafePathPrefix}/sep.png`,
     explore: "https://sepolia.etherscan.io",
     short: "sep",
+    nativeToken: {
+      name: "Sepolia Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
   },
   {
     chainId: 1,
@@ -28,4 +33,9 @@ export default CHAINS;
 export const getChainExplorer = (chainId: number) => {
   const chainData = CHAINS.find((chain) => chain.chainId === chainId);
   return chainData?.explore;
+};
+
+export const getChainLogo = (chainId: number) => {
+  const chainData = CHAINS.find((chain) => chain.chainId === chainId);
+  return chainData?.logoPath;
 };

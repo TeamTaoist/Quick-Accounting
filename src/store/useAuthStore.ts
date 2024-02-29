@@ -34,7 +34,7 @@ export const useAuthStore = create<Auth>((set) => {
     },
     setAuthData: (newData) => set({ user: newData }),
     // login
-    loginAsync: async (formValue, navigate) => {
+    loginAsync: async (formValue, callback) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.post("/user/login2", formValue);
@@ -42,7 +42,7 @@ export const useAuthStore = create<Auth>((set) => {
         console.log(data);
 
         localStorage.setItem("qa-user", JSON.stringify(data.data));
-        navigate("/user");
+        callback && callback(); 
       } catch (error: any) {
         console.log(error);
         toast.error(error?.data?.msg || error?.status || error);

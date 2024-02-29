@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
 import {
   TransactionListItemType,
   ConflictType,
@@ -29,6 +29,15 @@ import { useWorkspace } from "../../store/useWorkspace";
 import BigNumber from "bignumber.js";
 import { getShortDisplay } from "../../utils/number";
 import { toast } from "react-toastify";
+import { formatEther, formatUnits, zeroAddress } from "viem";
+import CHAINS from "../../utils/chain";
+import { UpdateEvent } from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
+
+export const isArrayParameter = (parameter: string): boolean =>
+  /(\[\d*?])+$/.test(parameter);
+export const isAddress = (type: string): boolean =>
+  type.indexOf("address") === 0;
+export const isByte = (type: string): boolean => type.indexOf("byte") === 0;
 
 // label
 const QueueLabelItem = ({ data }: { data: IQueueGroupItemProps }) => {
@@ -55,10 +64,15 @@ const QueueTransactionItem = ({
     createRejectTx,
     getConfirmedOwners,
     currentNonce,
+    getTransactionDetail,
   } = useSafeStore();
-  const { paymentRquestMap, setCurrentPaymentRequestDetail } =
-    usePaymentsStore();
-  const payments = paymentRquestMap.get(approveTransaction.safeTxHash) || [];
+  const {
+    paymentRquestMap,
+    updatePaymentRquestMap,
+    setCurrentPaymentRequestDetail,
+    createAndApprovePaymentRequest,
+  } = usePaymentsStore();
+  const payments = paymentRquestMap.get(approveTransaction.safeTxHash);
   const { address } = useAccount();
 
   const [filterConfirmSigners, setConfirmedList] = useState<string[]>([]);
@@ -75,6 +89,117 @@ const QueueTransactionItem = ({
     (filterRejectSigners.length || rejectTransaction?.confirmationsSubmitted) >=
     threshold;
 
+  const [creating, setCreating] = useState(false);
+
+  useEffect(() => {
+    const handleRefresh = (e: any) => {
+      let isUpdate = false;
+      const data = payments?.map((p) => {
+        if (p.ID === e.id) {
+          isUpdate = true;
+          return e.data as IPaymentRequest;
+        } else {
+          return p;
+        }
+      });
+      if (isUpdate && !!data) {
+        updatePaymentRquestMap(approveTransaction.safeTxHash, data);
+      }
+    };
+    document.addEventListener("updatePaymentRequest", handleRefresh);
+    return () => {
+      document.removeEventListener("updatePaymentRequest", handleRefresh);
+    };
+  }, [payments]);
+
+  useEffect(() => {
+    if (creating) {
+      return;
+    }
+    if (payments && payments.length === 0 && assetsList.length) {
+      setCreating(true);
+      // create and approve payment requests
+      if (approveTransaction.isMultiSend) {
+        getTransactionDetail(workspace.chain_id, approveTransaction.id).then(
+          (r) => {
+            if (r) {
+              const data = r.txData?.dataDecoded;
+              const rows: TxInfoType[] = [];
+              console.error(`======= ${approveTransaction.nonce} =======`);
+              if (data) {
+                data.parameters?.forEach((param) => {
+                  if (param.type === "bytes") {
+                    param.valueDecoded?.forEach((v) => {
+                      if (v.dataDecoded?.method === "transfer") {
+                        // transfer erc20
+                        let d: any = {};
+                        v.dataDecoded.parameters?.forEach((p) => {
+                          if (p.name === "to") {
+                            d.recipient = p.value;
+                          } else if (p.name === "value") {
+                            // check decimals
+                            const assets = assetsList.find(
+                              (a) => a.tokenInfo.address === v.to
+                            );
+                            d.decimals = assets?.tokenInfo.decimals || 18;
+                            d.currency_contract_address = v.to;
+                            d.amount = formatUnits(
+                              BigInt(p.value as string),
+                              d.decimals
+                            );
+                            d.currency_name = assets?.tokenInfo?.symbol || "";
+                            d.category_properties = "[]";
+                          }
+                        });
+                        rows.push(d);
+                      } else if (v.value && v.value !== "0") {
+                        // transfer native
+                        const chain = CHAINS.find(
+                          (c) => c.chainId === workspace.chain_id
+                        );
+                        rows.push({
+                          recipient: v.to,
+                          currency_contract_address: zeroAddress,
+                          currency_name: chain?.nativeToken?.symbol || "",
+                          amount: formatEther(BigInt(v.value)),
+                          decimals: chain?.nativeToken?.decimals || 18,
+                          category_properties: "[]",
+                        });
+                      }
+                    });
+                  }
+                });
+              }
+              console.log("rows", rows);
+              if (rows.length) {
+                createAndApprovePaymentRequest(
+                  workspace.ID,
+                  approveTransaction.nonce,
+                  rows,
+                  approveTransaction.safeTxHash,
+                  approveTransaction.timestamp
+                ).finally(() => {
+                  setCreating(false);
+                });
+              }
+            }
+          }
+        );
+      } else {
+        if (approveTransaction.transferInfo)
+          createAndApprovePaymentRequest(
+            workspace.ID,
+            approveTransaction.nonce,
+            [{ ...approveTransaction.transferInfo, category_properties: "[]" }],
+            approveTransaction.safeTxHash,
+            approveTransaction.timestamp
+          ).finally(() => {
+            setCreating(false);
+          });
+      }
+    }
+  }, [payments, assetsList]);
+
   const handleApprove = async () => {
     const r = await confirmTx(approveTransaction.safeTxHash);
     if (r) {
@@ -89,7 +214,7 @@ const QueueTransactionItem = ({
     const r = await executeTx(
       workspace.ID,
       approveTransaction.safeTxHash,
-      payments
+      payments || []
     );
     if (r) {
       afterExecute();
@@ -123,7 +248,7 @@ const QueueTransactionItem = ({
     const r = await executeTx(
       workspace.ID,
       rejectTransaction.safeTxHash,
-      payments,
+      payments || [],
       true
     );
     if (r) {
@@ -152,7 +277,7 @@ const QueueTransactionItem = ({
   }, [approveTransaction, rejectTransaction]);
 
   useEffect(() => {
-    if (payments.length && assetsList.length) {
+    if (payments?.length && assetsList.length) {
       let _value = BigNumber(0);
       payments.forEach((item) => {
         const token = assetsList.find(
@@ -265,7 +390,7 @@ const QueueTransactionItem = ({
                       {getShortAddress(workspace?.vault_wallet)}
                     </TableCell>
                     <TableCell>
-                      {getShortAddress(queueItem.recipient)}
+                      {getShortAddress(queueItem.counterparty)}
                     </TableCell>
                     <TableCell>
                       {queueItem.amount} {queueItem.currency_name}
@@ -273,7 +398,9 @@ const QueueTransactionItem = ({
                     <TableCell>
                       <CategoryCell>{queueItem.category_name}</CategoryCell>
                     </TableCell>
-                    <TableCell>{queueItem.CreatedAt.slice(0, 10)}</TableCell>
+                    <TableCell>
+                      {formatTime(queueItem.approve_ts, "-", false)}
+                    </TableCell>
                     <TableCell>
                       <Button
                         variant="outlined"

@@ -33,6 +33,8 @@ import {
   RequestSubmit,
 } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
+
 import ReactSelect from "../../../components/ReactSelect";
 import data from "../../../data/tableData";
 import usePaymentsStore from "../../../store/usePayments";
@@ -64,7 +66,7 @@ const BookkeepingTransferDetails = ({
 }: PaymentRequestDetailsProps) => {
   const { id } = useParams();
 
-  const { workspace } = useWorkspace();
+  const { workspace, userWorkspaces } = useWorkspace();
   const chainData = CHAINS.find(
     (chain) => chain.chainId === workspace?.chain_id
   );
@@ -223,7 +225,7 @@ const BookkeepingTransferDetails = ({
     const initialPropertyTextValue: { [name: string]: any } = {};
     const initialText: { [name: string]: any } = {};
 
-    parseCategoryProperties.forEach((property: any) => {
+    parseCategoryProperties?.forEach((property: any) => {
       if (property.type === "single-select") {
         initialSelectSingleValue[property.name] = {
           name: property.name,
@@ -274,7 +276,13 @@ const BookkeepingTransferDetails = ({
 
   return (
     // <Header>
-    <WorkspaceItemDetailsLayout title="Transaction Detail" setOpen={setOpen}>
+    <WorkspaceItemDetailsLayout
+      title="Transaction Detail"
+      setOpen={setOpen}
+      workspaceName={workspace.name}
+      workspaceAvatar={workspace.avatar}
+      address={workspace.vault_wallet}
+    >
       <RequestDetails>
         <TransferTable>
           <TableContainer
@@ -304,7 +312,7 @@ const BookkeepingTransferDetails = ({
                   >
                     <SafeSection>
                       <div>{getShortAddress(workspace.vault_wallet)}</div>
-                      <Logo>
+                      <Logo $dir={bookkeepingDetails.direction}>
                         <img src={transferArrow} alt="" />
                       </Logo>
                     </SafeSection>
@@ -317,7 +325,7 @@ const BookkeepingTransferDetails = ({
                       paddingLeft: "12px",
                     }}
                   >
-                    {getShortAddress(bookkeepingDetails.recipient)}
+                    {getShortAddress(bookkeepingDetails.counterparty)}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -418,7 +426,7 @@ const BookkeepingTransferDetails = ({
                           {/* {paymentRequestDetails.category_name} */}
                           {selectedCategory?.name}
                         </MenuItem>
-                        {workspaceCategoryProperties.map((category) => (
+                        {workspaceCategoryProperties?.map((category) => (
                           <MenuItem
                             key={category.ID}
                             value={category.name}
@@ -501,11 +509,17 @@ export const SafeSection = styled.div`
   align-items: center;
   /* height: 100%; */
 `;
-export const Logo = styled.div`
+
+const LeftDirStyle = css`
+  transform: rotate(180deg);
+`;
+
+export const Logo = styled.div<{ $dir?: string }>`
   /* flex: 0 0 30%; */
   /* height: 44px; */
   img {
     /* width: 20px; */
     /* height: 100%; */
+    ${({ $dir }) => $dir === "i" && LeftDirStyle}
   }
 `;

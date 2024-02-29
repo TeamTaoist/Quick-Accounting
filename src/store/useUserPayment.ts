@@ -1,36 +1,63 @@
 import { create } from "zustand";
 import { useLoading } from "./useLoading";
 import axiosClient from "../utils/axios";
+import { toast } from "react-toastify";
 
 interface UserPaymentRequest {
   // userPayment: IPaymentRequest[];
-  userPayment: {
+  userPaymentRequest: {
     page: number;
     size: number;
     total: number;
     rows: IPaymentRequest[];
   };
-  getUserPayment: (pageNumber: number) => Promise<void>;
+  myPayment: {
+    page: number;
+    size: number;
+    total: number;
+    rows: IPaymentRequest[];
+  };
+  getUserPaymentRequest: (pageNumber: number) => Promise<void>;
+  getMyPayment: (pageNumber: number) => Promise<void>;
 }
 
 export const useUserPayment = create<UserPaymentRequest>((set) => {
   const { setLoading } = useLoading.getState();
   return {
-    userPayment: {
+    userPaymentRequest: {
       page: 0,
       size: 0,
       total: 0,
       rows: [],
     },
-    getUserPayment: async (pageNumber) => {
+    myPayment: {
+      page: 0,
+      size: 0,
+      total: 0,
+      rows: [],
+    },
+    getUserPaymentRequest: async (pageNumber) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
-          `/user/my_payment_requests?page=${pageNumber}`
+          `/user/my_payment_requests?page=${pageNumber}&sort_field=submit_ts&sort_order=desc`
         );
-        set({ userPayment: data.data });
-      } catch (error) {
-        console.log(error);
+        set({ userPaymentRequest: data.data });
+      } catch (error: any) {
+        toast.error(error?.data?.msg || error?.status || error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    getMyPayment: async (pageNumber) => {
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.get(
+          `/user/my_payments?page=${pageNumber}&sort_field=submit_ts&sort_order=desc`
+        );
+        set({ myPayment: data.data });
+      } catch (error: any) {
+        toast.error(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
       }

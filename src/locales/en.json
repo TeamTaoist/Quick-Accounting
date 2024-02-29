@@ -73,6 +73,6 @@
   },
   "settings": {
     "MultiSigner": "Multi-signer",
-    "SafeAddress": "Workspace address"
+    "SafeAddress": "Safe address"
   }
 }

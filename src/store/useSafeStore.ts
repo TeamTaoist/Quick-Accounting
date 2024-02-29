@@ -15,8 +15,12 @@ import {
   TransactionListItemType,
   TransactionInfoType,
   ConflictType,
+  getTransactionDetails,
+  TransactionDetails,
 } from "@safe-global/safe-gateway-typescript-sdk";
 import axiosClient from "../utils/axios";
+import { formatUnits, zeroAddress } from "viem";
+import CHAINS from "../utils/chain";
 
 interface ISafeStore {
   safe?: Safe;
@@ -49,6 +53,10 @@ interface ISafeStore {
     isReject?: boolean
   ) => Promise<boolean | undefined>;
   getConfirmedOwners: (safeTxHash: string) => Promise<string[]>;
+  getTransactionDetail: (
+    chainId: number,
+    txId: string
+  ) => Promise<TransactionDetails>;
 }
 
 export const createEthersAdapter = (signer: any) => {
@@ -124,7 +132,48 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
               if (!currentNonce) {
                 currentNonce = item.transaction.executionInfo?.nonce;
               }
+              const isMultiSend =
+                item.transaction.txInfo.type === TransactionInfoType.CUSTOM &&
+                item.transaction.txInfo.methodName === "multiSend";
+              let txInfo: TxInfoType | undefined;
+              if (
+                !isMultiSend &&
+                item.transaction.txInfo.type === TransactionInfoType.TRANSFER
+              ) {
+                if (item.transaction.txInfo.transferInfo.type === "ERC20") {
+                  txInfo = {
+                    recipient: item.transaction.txInfo.recipient.value,
+                    currency_contract_address:
+                      item.transaction.txInfo.transferInfo.tokenAddress,
+                    currency_name:
+                      item.transaction.txInfo.transferInfo.tokenSymbol ||
+                      item.transaction.txInfo.transferInfo.tokenName ||
+                      "unknown",
+                    amount: formatUnits(
+                      BigInt(item.transaction.txInfo.transferInfo.value),
+                      item.transaction.txInfo.transferInfo.decimals || 18
+                    ),
+                    decimals:
+                      item.transaction.txInfo.transferInfo.decimals || 18,
+                  };
+                } else if (item.transaction.txInfo.transferInfo.type === "NATIVE_COIN") {
+                  const ntoken = CHAINS.find(
+                    (c) => c.chainId === chainId
+                  )?.nativeToken;
+                  txInfo = {
+                    recipient: item.transaction.txInfo.recipient.value,
+                    currency_contract_address: zeroAddress,
+                    currency_name: ntoken?.symbol!,
+                    amount: formatUnits(
+                      BigInt(item.transaction.txInfo.transferInfo.value),
+                      ntoken?.decimals || 18
+                    ),
+                    decimals: ntoken?.decimals || 18,
+                  };
+                }
+              }
               const tx = {
+                id: item.transaction.id,
                 nonce: item.transaction.executionInfo?.nonce,
                 confirmationsRequired:
                   item.transaction.executionInfo?.confirmationsRequired,
@@ -139,6 +188,8 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
                   item.transaction.executionInfo?.missingSigners?.map(
                     (item) => item.value
                   ) || [],
+                isMultiSend,
+                transferInfo: isMultiSend ? undefined : txInfo,
               };
               if (
                 item.transaction.executionInfo.nonce === currentConflict.nonce
@@ -205,7 +256,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
 
         const txParams = requests.map((item) =>
           createTokenTransferParams(
-            item.recipient,
+            item.counterparty,
             item.amount,
             item.decimals,
             item.currency_contract_address
@@ -376,6 +427,9 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
         console.error("getConfirmedOwners failed", error);
       }
       return [];
+    },
+    getTransactionDetail: async (chainId: number, txId: string) => {
+      return getTransactionDetails(String(chainId), txId);
     },
   };
 });

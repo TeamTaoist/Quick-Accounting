@@ -58,7 +58,7 @@ export const RejectSection = styled.div`
   margin-top: 90px;
 `;
 export const BookkeepingRejectSection = styled.div`
-  margin-top: 40px;
+  /* margin-top: 8px; */
 `;
 export const TableSection = styled.div`
   height: 100%;
