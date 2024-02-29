@@ -23,15 +23,15 @@ import usePaymentsStore from "../../../store/usePayments";
 import { formatNumber } from "../../../utils/number";
 import Pagination from "../../Pagination";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { getPaymentUpdateTime } from "../../../utils/payment";
+import { getShortAddress } from "../../../utils";
 
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
   selectedValue?: string;
   isInQueue?: boolean;
 }
-const recipientFormate = (n: string) => {
-  return `${n.slice(0, 6)}...${n.slice(-4)}`;
-};
+
 const RejectPaymentRequestTable = ({
   searchTerm,
   selectedValue,
@@ -136,7 +136,7 @@ const RejectPaymentRequestTable = ({
               {filterData?.map((payment) => (
                 <TableRow key={payment.ID}>
                   <TableCell>
-                    {recipientFormate(payment.counterparty)}
+                    {getShortAddress(payment.counterparty)}
                   </TableCell>
                   <TableCell>
                     {formatNumber(Number(payment.amount))}{" "}
@@ -151,7 +151,7 @@ const RejectPaymentRequestTable = ({
                       {"Rejected"}
                     </Status>
                   </TableCell>
-                  <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
+                  <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
                   <TableCell>
                     <Button
                       variant="outlined"

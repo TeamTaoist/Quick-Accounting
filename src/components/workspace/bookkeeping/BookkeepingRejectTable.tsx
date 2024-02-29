@@ -41,6 +41,7 @@ import {
 import searchIcon from "../../../assets/workspace/search-icon.svg";
 import filterIcon from "../../../assets/workspace/filtering.svg";
 import { useTranslation } from "react-i18next";
+import { getPaymentUpdateTime } from "../../../utils/payment";
 
 interface RejectTableProps {
   workspaceId: number;
@@ -285,7 +286,7 @@ const BookkeepingRejectTable = ({
                           </CategoryCell>
                         </TableCell>
                         <TableCell>
-                          {bookkeeping.CreatedAt.slice(0, 10)}
+                          {getPaymentUpdateTime(bookkeeping)}
                         </TableCell>
                         <TableCell>
                           <Button

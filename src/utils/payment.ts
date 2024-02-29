@@ -43,7 +43,7 @@ export const getPropertyIconByType = (type: string) => {
 export const getPaymentUpdateTime = (payment: IPaymentRequest): string => {
   switch (payment.status as PAYMENT_REQUEST_STATUS) {
     case PAYMENT_REQUEST_STATUS.Submitted:
-      return formatTime(payment.submit_ts, "-", false);
+      return formatTime(payment.submit_ts || payment.CreatedAt, "-", false);
     case PAYMENT_REQUEST_STATUS.Rejected:
       return formatTime(payment.reject_ts, "-", false);
     case PAYMENT_REQUEST_STATUS.Pending:

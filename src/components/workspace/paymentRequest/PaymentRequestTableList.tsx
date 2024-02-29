@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 import { formatNumber } from "../../../utils/number";
 import { CategoryCell } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import { formatDate } from "../../../utils/time";
+import { getPaymentUpdateTime } from "../../../utils/payment";
 
 interface PaymentRequestTableListProps {
   items: IPaymentRequest[];
@@ -143,7 +144,7 @@ const PaymentRequestTableList = ({
                   <CategoryCell>{payment.category_name}</CategoryCell>
                 )}
               </TableCell>
-              <TableCell>{formatDate(payment.CreatedAt)}</TableCell>
+              <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
               <TableCell>
                 <Button
                   variant="outlined"
@@ -202,7 +203,7 @@ const PaymentRequestTableList = ({
                     >
                       <CategoryCell>{payments.category_name}</CategoryCell>
                     </TableCell>
-                    <TableCell>{formatDate(payments.CreatedAt)}</TableCell>
+                    <TableCell>{getPaymentUpdateTime(payments)}</TableCell>
                     <TableCell sx={{ visibility: "hidden" }}>
                       <Button
                         variant="outlined"
