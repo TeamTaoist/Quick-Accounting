@@ -173,11 +173,37 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
 
     // update workspace name
     updateWorkspaceName: async (workspaceId, workspaceName) => {
+      const { workspace } = get();
       try {
         const { data } = await axiosClient.put(`/workspace/${workspaceId}`, {
           name: workspaceName,
         });
         if (data.msg === "success" && data.code === 200) {
+          if (workspaceName !== workspace.name) {
+            set((state) => {
+              // update workspace state
+              const updatedWorkspace = {
+                ...state.workspace,
+                name: workspaceName,
+              };
+              // update userWorkspaces state
+              const updatedUserWorkspaces = {
+                ...state.userWorkspaces,
+                data: {
+                  ...state.userWorkspaces.data,
+                  rows: state.userWorkspaces.data.rows.map((workspace) =>
+                    workspace.ID === Number(workspaceId)
+                      ? { ...workspace, name: workspaceName }
+                      : workspace
+                  ),
+                },
+              };
+              return {
+                workspace: updatedWorkspace,
+                userWorkspaces: updatedUserWorkspaces,
+              };
+            });
+          }
           return true;
         }
       } catch (error: any) {

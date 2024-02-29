@@ -56,12 +56,12 @@ const Settings = () => {
       if (id) {
         updateWorkspaceName(id, workspaceName).then((res) => {
           if (res) {
-            isSettingLoading(!settingLoading);
+            // isSettingLoading(!settingLoading);
             setIsSuccess(true);
             setIsUpdating(false);
             setTimeout(() => {
               setIsSuccess(false);
-            }, 1000);
+            }, 3000);
           }
         });
       }
