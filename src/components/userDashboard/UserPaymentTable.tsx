@@ -11,7 +11,7 @@ import {
 import { formatNumber } from "../../utils/number";
 import { Status } from "../workspace/paymentRequest/RejectPaymentRequestTable";
 import statusIcon from "../../assets/workspace/status-icon.svg";
-import { getPaymentStatus } from "../../utils/payment";
+import { getPaymentStatus, getPaymentUpdateTime } from "../../utils/payment";
 
 interface UserPaymentTableProps {
   filterData: IPaymentRequest[];
@@ -107,7 +107,7 @@ const UserPaymentTable = ({
                   {getPaymentStatus(payment.status)}
                 </Status>
               </TableCell>
-              <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
+              <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
               <TableCell>
                 <Button
                   variant="outlined"

@@ -48,6 +48,15 @@ interface PropertyValues {
   type?: string;
   values?: string;
 }
+export class UpdateEvent extends Event {
+  id: number;
+  data: IPaymentRequest;
+  constructor(type: string, data: { id: number; data: IPaymentRequest }) {
+    super(type);
+    this.id = data.id;
+    this.data = data.data;
+  }
+}
 const PaymentRequestDetails = ({
   setOpen,
   pageName,
@@ -258,6 +267,19 @@ const PaymentRequestDetails = ({
     );
     if (pageName === "payment-request") {
       getPaymentRequestList(paymentRequestDetails.workspace_id, false);
+    } else if (pageName === "queue") {
+      const category_properties = JSON.stringify(
+        updatedPaymentBody.category_properties
+      );
+      const event = new UpdateEvent("updatePaymentRequest", {
+        id: paymentRequestDetails?.ID,
+        data: {
+          ...paymentRequestDetails,
+          ...updatedPaymentBody,
+          category_properties,
+        },
+      });
+      document.dispatchEvent(event);
     }
   };
   const [selectedWorkspaceName, setSelectedWorkspaceName] =

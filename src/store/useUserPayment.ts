@@ -40,7 +40,7 @@ export const useUserPayment = create<UserPaymentRequest>((set) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
-          `/user/my_payment_requests?page=${pageNumber}&sort_field=submit_ts`
+          `/user/my_payment_requests?page=${pageNumber}&sort_field=submit_ts&sort_order=desc`
         );
         set({ userPaymentRequest: data.data });
       } catch (error: any) {
@@ -53,7 +53,7 @@ export const useUserPayment = create<UserPaymentRequest>((set) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
-          `/user/my_payments?page=${pageNumber}&sort_field=submit_ts`
+          `/user/my_payments?page=${pageNumber}&sort_field=submit_ts&sort_order=desc`
         );
         set({ myPayment: data.data });
       } catch (error: any) {

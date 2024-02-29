@@ -225,7 +225,7 @@ const BookkeepingTransferDetails = ({
     const initialPropertyTextValue: { [name: string]: any } = {};
     const initialText: { [name: string]: any } = {};
 
-    parseCategoryProperties.forEach((property: any) => {
+    parseCategoryProperties?.forEach((property: any) => {
       if (property.type === "single-select") {
         initialSelectSingleValue[property.name] = {
           name: property.name,
@@ -439,7 +439,7 @@ const BookkeepingTransferDetails = ({
                           {/* {paymentRequestDetails.category_name} */}
                           {selectedCategory?.name}
                         </MenuItem>
-                        {workspaceCategoryProperties.map((category) => (
+                        {workspaceCategoryProperties?.map((category) => (
                           <MenuItem
                             key={category.ID}
                             value={category.name}

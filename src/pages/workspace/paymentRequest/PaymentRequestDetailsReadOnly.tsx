@@ -199,7 +199,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
   }, [paymentRequestDetails]);
 
   const isTransfer = ![
-    PAYMENT_REQUEST_STATUS.Draft,
+    // PAYMENT_REQUEST_STATUS.Draft,
     PAYMENT_REQUEST_STATUS.Submitted,
     PAYMENT_REQUEST_STATUS.Rejected,
     PAYMENT_REQUEST_STATUS.Pending,
