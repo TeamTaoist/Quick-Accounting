@@ -74,7 +74,8 @@ export const Request = styled.div`
   background: #fff;
 `;
 export const RequestHeader = styled.div`
-  height: 110px;
+  max-height: 110px;
+  min-height: 90px;
   background: var(--bg-secondary);
   padding: 10px 26px;
   position: relative;
