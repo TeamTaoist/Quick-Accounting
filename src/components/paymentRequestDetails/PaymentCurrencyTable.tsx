@@ -8,6 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import usePaymentsStore from "../../store/usePayments";
+import { getShortAddress } from "../../utils";
 
 const PaymentCurrencyTable = () => {
   const { paymentRequestDetails } = usePaymentsStore();
@@ -51,7 +52,7 @@ const PaymentCurrencyTable = () => {
                   "& fieldset": { border: "none" },
                 }}
                 size="small"
-                value={paymentRequestDetails?.counterparty}
+                value={getShortAddress(paymentRequestDetails?.counterparty)}
                 fullWidth
                 // id="fullWidth"
                 placeholder="Enter wallet address"
