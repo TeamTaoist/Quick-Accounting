@@ -124,7 +124,6 @@ const QueueTransactionItem = ({
           (r) => {
             if (r) {
               const data = r.txData?.dataDecoded;
-              const addressInfoIndex = r.txData?.addressInfoIndex;
               const rows: TxInfoType[] = [];
               console.error(`======= ${approveTransaction.nonce} =======`);
               if (data) {
@@ -178,7 +177,7 @@ const QueueTransactionItem = ({
                   approveTransaction.nonce,
                   rows,
                   approveTransaction.safeTxHash,
-                  Math.ceil(approveTransaction.timestamp / 1000)
+                  approveTransaction.timestamp
                 ).finally(() => {
                   setCreating(false);
                 });
@@ -193,7 +192,7 @@ const QueueTransactionItem = ({
             approveTransaction.nonce,
             [{ ...approveTransaction.transferInfo, category_properties: "[]" }],
             approveTransaction.safeTxHash,
-            Math.ceil(approveTransaction.timestamp / 1000)
+            approveTransaction.timestamp
           ).finally(() => {
             setCreating(false);
           });
