@@ -399,7 +399,11 @@ const QueueTransactionItem = ({
                       <CategoryCell>{queueItem.category_name}</CategoryCell>
                     </TableCell>
                     <TableCell>
-                      {formatTime(queueItem.approve_ts, "-", false)}
+                      {formatTime(
+                        queueItem.approve_ts || approveTransaction.timestamp,
+                        "-",
+                        false
+                      )}
                     </TableCell>
                     <TableCell>
                       <Button
