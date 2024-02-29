@@ -46,7 +46,7 @@ interface RejectTableProps {
   workspaceId: number;
   paymentRequest: boolean;
   handleBackBtn: () => void;
-  handleBookkeepingDetails: (bookkeeping: IBookkeeping) => void;
+  handleBookkeepingDetails: (bookkeeping: IPaymentRequest) => void;
 }
 const BookkeepingRejectTable = ({
   workspaceId,

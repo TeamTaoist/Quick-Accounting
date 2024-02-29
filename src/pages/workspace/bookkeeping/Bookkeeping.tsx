@@ -99,7 +99,7 @@ const Bookkeeping = () => {
   const [selected, setSelected] = useState<number[]>([]);
   console.log(selected);
 
-  const handleBookkeepingDetails = (bookkeeping: IBookkeeping) => {
+  const handleBookkeepingDetails = (bookkeeping: IPaymentRequest) => {
     setCurrentBookkeepingDetail(bookkeeping);
     setOpenModal(true);
   };
