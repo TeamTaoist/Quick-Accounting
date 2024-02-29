@@ -43,14 +43,14 @@ export const getPropertyIconByType = (type: string) => {
 export const getPaymentUpdateTime = (payment: IPaymentRequest): string => {
   switch (payment.status as PAYMENT_REQUEST_STATUS) {
     case PAYMENT_REQUEST_STATUS.Submitted:
-      return formatTime(payment.submit_ts * 1000);
+      return formatTime(payment.submit_ts, "-", false);
     case PAYMENT_REQUEST_STATUS.Rejected:
-      return formatTime(payment.reject_ts * 1000);
+      return formatTime(payment.reject_ts, "-", false);
     case PAYMENT_REQUEST_STATUS.Pending:
-      return formatTime(payment.approve_ts * 1000);
+      return formatTime(payment.approve_ts, "-", false);
     case PAYMENT_REQUEST_STATUS.Failed:
-      return formatTime(payment.tx_timestamp);
+      return formatTime(payment.execute_ts, "-", false);
     case PAYMENT_REQUEST_STATUS.Executed:
-      return formatTime(payment.execute_ts * 1000);
+      return formatTime(payment.execute_ts, "-", false);
   }
 };

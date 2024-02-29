@@ -400,7 +400,7 @@ const QueueTransactionItem = ({
                       <CategoryCell>{queueItem.category_name}</CategoryCell>
                     </TableCell>
                     <TableCell>
-                      {formatTime(queueItem.approve_ts * 1000)}
+                      {formatTime(queueItem.approve_ts, "-", false)}
                     </TableCell>
                     <TableCell>
                       <Button

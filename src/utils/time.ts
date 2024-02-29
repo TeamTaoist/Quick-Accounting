@@ -5,11 +5,16 @@ export const getUTC = () => {
   return `UTC+${offset / 60}`;
 };
 
-export const formatTime = (time: number | string, formatter?: "-" | ".") => {
+export const formatTime = (
+  time: number | string,
+  formatter?: "-" | ".",
+  withSeconds = true
+) => {
   if (!time) return "";
   const f = formatter || "-";
-
-  return dayjs(time).format(`YYYY${f}MM${f}DD HH:mm:ss`);
+  return dayjs(time).format(
+    `YYYY${f}MM${f}DD HH:mm${withSeconds ? ":ss" : ""}`
+  );
 };
 
 export const formatDate = (time: number | string, formatter?: "-" | ".") => {
