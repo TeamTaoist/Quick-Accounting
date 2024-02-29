@@ -127,8 +127,6 @@ export const Details = styled.div`
   }
 `;
 export const PaymentTable = styled.div`
-  height: 100vh;
-  overflow-y: scroll;
   flex: 1;
 `;
 export const PaymentPagination = styled.div`
