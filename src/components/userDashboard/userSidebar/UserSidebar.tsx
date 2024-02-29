@@ -40,13 +40,13 @@ const UserSidebar = () => {
         <SidebarLinkList className="">
           <SidebarLink
             icon={file}
-            name="My payment request"
+            name="My payment requests"
             to={`/user/payment-request`}
             hideSidebar={hideSidebar}
           />
           <SidebarLink
             icon={myPayment}
-            name="My payment"
+            name="My payments"
             to={`/user/my-payments`}
             hideSidebar={hideSidebar}
           />
