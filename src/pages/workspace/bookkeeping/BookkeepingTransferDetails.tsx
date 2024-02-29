@@ -281,10 +281,13 @@ const BookkeepingTransferDetails = ({
   const selectedWorkspace = userWorkspaces.data.rows.find(
     (workspace) => workspace.ID === bookkeepingDetails.workspace_id
   );
+  const [selectedWorkspaceSafeAddress, setSelectedWorkspaceSafeAddress] =
+    useState<string>("");
   useEffect(() => {
     if (selectedWorkspace) {
       setSelectedWorkspaceName(selectedWorkspace?.name);
       setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
+      setSelectedWorkspaceSafeAddress(selectedWorkspace.vault_wallet);
     }
   }, []);
   return (

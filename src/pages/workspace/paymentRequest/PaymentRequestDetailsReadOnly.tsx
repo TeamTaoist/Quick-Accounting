@@ -211,11 +211,13 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
     useState<string>("");
   const [selectedWorkspaceAvatar, setSelectedWorkspaceAvatar] =
     useState<string>("");
+  const [selectedWorkspaceSafeAddress, setSelectedWorkspaceSafeAddress] =
+    useState<string>("");
   useEffect(() => {
     if (paymentRequestDetails.workspace_name) {
       setSelectedWorkspaceName(paymentRequestDetails.workspace_name);
       setSelectedWorkspaceAvatar(paymentRequestDetails.workspace_avatar);
-      console.log("first");
+      setSelectedWorkspaceSafeAddress(paymentRequestDetails.vault_wallet);
     } else {
       const selectedWorkspace = userWorkspaces?.data.rows.find(
         (workspace) => workspace.ID === paymentRequestDetails.workspace_id
@@ -223,13 +225,10 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
       if (selectedWorkspace) {
         setSelectedWorkspaceName(selectedWorkspace?.name);
         setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
+        setSelectedWorkspaceSafeAddress(selectedWorkspace.vault_wallet);
       }
-      console.log("second");
     }
   }, []);
-
-  console.log(selectedWorkspaceName);
-
   return (
     <>
       <WorkspaceItemDetailsLayout
@@ -238,7 +237,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
         // workspaceInfo={selectedWorkspace}
         workspaceName={selectedWorkspaceName}
         workspaceAvatar={selectedWorkspaceAvatar}
-        address={paymentRequestDetails.counterparty}
+        address={selectedWorkspaceSafeAddress}
       >
         <RequestDetails>
           <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>

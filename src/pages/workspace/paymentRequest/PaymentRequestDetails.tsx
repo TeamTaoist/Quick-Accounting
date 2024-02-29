@@ -286,6 +286,8 @@ const PaymentRequestDetails = ({
     useState<string>("");
   const [selectedWorkspaceAvatar, setSelectedWorkspaceAvatar] =
     useState<string>("");
+  const [selectedWorkspaceSafeAddress, setSelectedWorkspaceSafeAddress] =
+    useState<string>("");
   const selectedWorkspace = userWorkspaces.data.rows.find(
     (workspace) => workspace.ID === paymentRequestDetails.workspace_id
   );
@@ -293,6 +295,7 @@ const PaymentRequestDetails = ({
     if (selectedWorkspace) {
       setSelectedWorkspaceName(selectedWorkspace?.name);
       setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
+      setSelectedWorkspaceSafeAddress(selectedWorkspace.vault_wallet);
     }
   }, []);
 
@@ -303,7 +306,7 @@ const PaymentRequestDetails = ({
         setOpen={setOpen}
         workspaceName={selectedWorkspaceName}
         workspaceAvatar={selectedWorkspaceAvatar}
-        address={paymentRequestDetails.counterparty}
+        address={selectedWorkspaceSafeAddress}
       >
         <RequestDetails>
           <PaymentCurrencyTable />

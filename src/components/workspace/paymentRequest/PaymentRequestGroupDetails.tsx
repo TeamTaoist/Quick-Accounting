@@ -251,10 +251,13 @@ const PaymentRequestGroupDetails = ({
   const selectedWorkspace = userWorkspaces.data.rows.find(
     (workspace) => workspace.ID === groupDetails?.[0]?.workspace_id
   );
+  const [selectedWorkspaceSafeAddress, setSelectedWorkspaceSafeAddress] =
+    useState<string>("");
   useEffect(() => {
     if (selectedWorkspace) {
       setSelectedWorkspaceName(selectedWorkspace?.name);
       setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
+      setSelectedWorkspaceSafeAddress(selectedWorkspace.vault_wallet);
     }
   }, []);
   return (
@@ -264,7 +267,7 @@ const PaymentRequestGroupDetails = ({
         setOpen={setOpen}
         workspaceName={selectedWorkspaceName}
         workspaceAvatar={selectedWorkspaceAvatar}
-        address={groupDetails?.[0]?.counterparty}
+        address={selectedWorkspaceSafeAddress}
       >
         <RequestDetails>
           {sharePaymentRequestForm.map((payment: any, index: number) => (
