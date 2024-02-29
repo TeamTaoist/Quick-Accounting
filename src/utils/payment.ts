@@ -47,7 +47,7 @@ export const getPaymentUpdateTime = (payment: IPaymentRequest): string => {
     case PAYMENT_REQUEST_STATUS.Rejected:
       return formatTime(payment.reject_ts || payment.UpdatedAt, "-", false);
     case PAYMENT_REQUEST_STATUS.Pending:
-      return formatTime(payment.approve_ts || payment.UpdatedAt, "-", false);
+      return formatTime(payment.approve_ts, "-", false);
     case PAYMENT_REQUEST_STATUS.Failed:
       return formatTime(payment.execute_ts || payment.tx_timestamp, "-", false);
     case PAYMENT_REQUEST_STATUS.Executed:
