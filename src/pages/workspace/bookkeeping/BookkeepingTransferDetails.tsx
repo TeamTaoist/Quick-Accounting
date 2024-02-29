@@ -274,30 +274,14 @@ const BookkeepingTransferDetails = ({
     getBookkeepingList(bookkeepingDetails.workspace_id, false);
   };
 
-  const [selectedWorkspaceName, setSelectedWorkspaceName] =
-    useState<string>("");
-  const [selectedWorkspaceAvatar, setSelectedWorkspaceAvatar] =
-    useState<string>("");
-  const selectedWorkspace = userWorkspaces.data.rows.find(
-    (workspace) => workspace.ID === bookkeepingDetails.workspace_id
-  );
-  const [selectedWorkspaceSafeAddress, setSelectedWorkspaceSafeAddress] =
-    useState<string>("");
-  useEffect(() => {
-    if (selectedWorkspace) {
-      setSelectedWorkspaceName(selectedWorkspace?.name);
-      setSelectedWorkspaceAvatar(selectedWorkspace?.avatar);
-      setSelectedWorkspaceSafeAddress(selectedWorkspace.vault_wallet);
-    }
-  }, []);
   return (
     // <Header>
     <WorkspaceItemDetailsLayout
       title="Transaction Detail"
       setOpen={setOpen}
-      workspaceName={selectedWorkspaceName}
-      workspaceAvatar={selectedWorkspaceAvatar}
-      address={bookkeepingDetails.counterparty}
+      workspaceName={workspace.name}
+      workspaceAvatar={workspace.avatar}
+      address={workspace.vault_wallet}
     >
       <RequestDetails>
         <TransferTable>
