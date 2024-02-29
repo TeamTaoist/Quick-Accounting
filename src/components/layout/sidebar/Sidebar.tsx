@@ -64,7 +64,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
                   <img
                     className="chain-logo"
                     src={getChainLogo(workspace.chain_id)}
-                    alt="a"
+                    alt=""
                   />
                 </div>
               ))}
