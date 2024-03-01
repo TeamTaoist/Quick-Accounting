@@ -36,11 +36,18 @@ interface UserWorkspaces {
     rows: Workspace[];
   };
 }
-// interface WorkspaceDetails {
-//   code: number;
-//   msg: string;
-//   data: Workspace;
-// }
+interface AssetsHideList {
+  assert_contract_address: string;
+  createdAt: string;
+  UpdatedAt: string;
+  deletedAt: {
+    time: string;
+    valid: boolean;
+  };
+  ID: number;
+  workspace_id: string;
+  safe_wallet: string;
+}
 interface UseWorkspace {
   workspace: Workspace;
   userWorkspaces: UserWorkspaces;
@@ -60,7 +67,9 @@ interface UseWorkspace {
     fiatConversion: string;
   }[];
   updateWorkspace: (data: any) => void;
-  hideAsset: (contractAddress: string) => Promise<void>;
+  hideAssets: (contractAddress: string) => Promise<void>;
+  getHideAssets: () => Promise<void>;
+  assetsHideList: AssetsHideList[];
 }
 
 export const useWorkspace = create<UseWorkspace>((set, get) => {
@@ -227,7 +236,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
       }
     },
     // hide assets
-    hideAsset: async (contractAddress) => {
+    hideAssets: async (contractAddress) => {
       const { workspace } = get();
       try {
         setLoading(true);
@@ -242,6 +251,37 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         if (data.msg === "success" && data.code === 200) {
           toast.success("Hide assets successfully");
         }
+      } catch (error: any) {
+        toast.error(error?.response?.data?.msg || error?.status || error);
+      } finally {
+        setLoading(false);
+        // navigate("/assets");
+      }
+    },
+    // hide assets
+    assetsHideList: [],
+    getHideAssets: async () => {
+      const { workspace, assetsList } = get();
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.get(
+          `/workspace_assert/${workspace.ID}/hided_asserts`
+        );
+        const updateAssets = assetsList.map((asset) => {
+          const isHidden = data.data.find(
+            (hideAsset: AssetsHideList) =>
+              hideAsset.assert_contract_address === asset.tokenInfo.address
+          );
+          if (isHidden) {
+            return { ...asset, hidden: true };
+          } else {
+            return { ...asset, hidden: false };
+          }
+        });
+        // set({ assetsHideList: data.data });
+        console.log(updateAssets);
+
+        set({ assetsHideList: data.data, assetsList: updateAssets });
       } catch (error: any) {
         toast.error(error?.response?.data?.msg || error?.status || error);
       } finally {

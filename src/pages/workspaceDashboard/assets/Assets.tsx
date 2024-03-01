@@ -45,8 +45,15 @@ const Assets = () => {
     setSearchTerm(event.target.value);
   };
   console.log(searchTerm);
-  const { workspace, totalAssetsValue, assetsList, getAssets, hideAsset } =
-    useWorkspace();
+  const {
+    workspace,
+    totalAssetsValue,
+    assetsList,
+    getAssets,
+    hideAssets,
+    getHideAssets,
+    assetsHideList,
+  } = useWorkspace();
 
   const chainData = CHAINS.find((c) => c.chainId === workspace?.chain_id);
 
@@ -101,12 +108,20 @@ const Assets = () => {
       color: "white",
     },
   }));
+
+  const [unHideList, setUnHideList] = useState([]);
+
   // const [checked, setChecked] = useState(false);
   const handleAsset = async (event: any, contractAddress: string) => {
     // setChecked(event.target.checked);
-    await hideAsset(contractAddress);
+    await hideAssets(contractAddress);
     console.log(contractAddress);
   };
+  useEffect(() => {
+    getHideAssets();
+  }, []);
+  console.log("assetsList", assetsList);
+
   return (
     <AssetSection>
       <AssetHeader>
