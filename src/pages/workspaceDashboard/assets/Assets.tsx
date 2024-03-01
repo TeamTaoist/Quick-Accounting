@@ -45,7 +45,8 @@ const Assets = () => {
     setSearchTerm(event.target.value);
   };
   console.log(searchTerm);
-  const { workspace, totalAssetsValue, assetsList, getAssets } = useWorkspace();
+  const { workspace, totalAssetsValue, assetsList, getAssets, hideAsset } =
+    useWorkspace();
 
   const chainData = CHAINS.find((c) => c.chainId === workspace?.chain_id);
 
@@ -100,10 +101,11 @@ const Assets = () => {
       color: "white",
     },
   }));
-  const [checked, setChecked] = useState(false);
-  const handleAsset = (event: any) => {
+  // const [checked, setChecked] = useState(false);
+  const handleAsset = async (event: any, contractAddress: string) => {
     // setChecked(event.target.checked);
-    console.log("click");
+    await hideAsset(contractAddress);
+    console.log(contractAddress);
   };
   return (
     <AssetSection>
@@ -208,8 +210,8 @@ const Assets = () => {
                     <RowCell>
                       <Android12Switch
                         defaultChecked
-                        // checked={checked}
-                        // onChange={handleAsset}
+                        // checked={}
+                        onChange={(e) => handleAsset(e, data.address)}
                       />
                     </RowCell>
                   </TableCell>

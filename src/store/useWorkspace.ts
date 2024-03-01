@@ -60,6 +60,7 @@ interface UseWorkspace {
     fiatConversion: string;
   }[];
   updateWorkspace: (data: any) => void;
+  hideAsset: (contractAddress: string) => Promise<void>;
 }
 
 export const useWorkspace = create<UseWorkspace>((set, get) => {
@@ -226,5 +227,27 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
       }
     },
     // hide assets
+    hideAsset: async (contractAddress) => {
+      const { workspace } = get();
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.post(
+          `/workspace_assert/${workspace.ID}/hide_assert`,
+          {
+            assert_contract_address: contractAddress,
+          }
+        );
+        // set({ workspace: data.data });
+
+        if (data.msg === "success" && data.code === 200) {
+          toast.success("Hide assets successfully");
+        }
+      } catch (error: any) {
+        toast.error(error?.response?.data?.msg || error?.status || error);
+      } finally {
+        setLoading(false);
+        // navigate("/assets");
+      }
+    },
   };
 });
