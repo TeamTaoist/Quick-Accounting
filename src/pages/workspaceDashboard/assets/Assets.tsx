@@ -7,7 +7,7 @@ import {
   RowCell,
   RowLink,
 } from "./assets.style";
-import { InputAdornment, TextField } from "@mui/material";
+import { InputAdornment, Switch, SwitchProps, TextField } from "@mui/material";
 import searchIcon from "../../../assets/workspace/search-icon.svg";
 import linkIcon from "../../../assets/workspace/link-icon.svg";
 import {
@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 import { formatBalance } from "../../../utils/number";
 import { useWorkspace } from "../../../store/useWorkspace";
 import CHAINS from "../../../utils/chain";
+import styled from "@emotion/styled";
 
 type AssetType = {
   name: string;
@@ -72,7 +73,38 @@ const Assets = () => {
         data.name.toLowerCase().includes(searchTerm.toLowerCase())
       ) || [];
 
-  //table
+  //switch style
+  const Android12Switch = styled(Switch)(() => ({
+    padding: 8,
+    "& .MuiSwitch-track": {
+      borderRadius: 22 / 2,
+    },
+    "& .MuiSwitch-thumb": {
+      boxShadow: "none",
+      width: 16,
+      height: 16,
+      margin: 2,
+    },
+    "& .css-1yjjitx-MuiSwitch-track": {
+      background: "white",
+      border: "3px solid gray",
+    },
+    "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track":
+      {
+        background: "#757575",
+      },
+    "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase": {
+      color: "gray",
+    },
+    "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked": {
+      color: "white",
+    },
+  }));
+  const [checked, setChecked] = useState(false);
+  const handleAsset = (event: any) => {
+    // setChecked(event.target.checked);
+    console.log("click");
+  };
   return (
     <AssetSection>
       <AssetHeader>
@@ -97,7 +129,7 @@ const Assets = () => {
       <AssetTable>
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 500, minWidth: 630 }}
+          sx={{ maxHeight: 500, minWidth: 700 }}
         >
           <Table stickyHeader>
             <TableHead>
@@ -125,6 +157,14 @@ const Assets = () => {
                   }}
                 >
                   Balance
+                </TableCell>
+                <TableCell
+                  sx={{
+                    // textAlign: "center",
+                    background: "var(--bg-primary)",
+                  }}
+                >
+                  Hide the asset
                 </TableCell>
                 <TableCell
                   sx={{
@@ -162,6 +202,15 @@ const Assets = () => {
                         {data.balanceDisplay} {data.symbol}
                       </h6>
                       <p>${data.balanceUSD}</p>
+                    </RowCell>
+                  </TableCell>
+                  <TableCell>
+                    <RowCell>
+                      <Android12Switch
+                        defaultChecked
+                        // checked={checked}
+                        // onChange={handleAsset}
+                      />
                     </RowCell>
                   </TableCell>
                   <TableCell>

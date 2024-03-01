@@ -225,5 +225,6 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         set({ totalAssetsValue: totalValue, assetsList: data.items });
       }
     },
+    // hide assets
   };
 });
