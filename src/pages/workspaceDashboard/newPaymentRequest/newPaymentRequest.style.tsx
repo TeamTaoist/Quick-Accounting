@@ -19,11 +19,15 @@ export const CreateRequest = styled.table`
 `;
 export const Request = styled.div`
   margin-top: 92px;
-  width: 757px;
+  width: 750px;
+  /* min-width: 750px; */
   border: 1px solid var(--border-table);
   padding-bottom: 20px;
   border-radius: 10px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 export const RequestHeader = styled.div`
   display: flex;
@@ -42,15 +46,17 @@ export const RequestHeader = styled.div`
   }
 `;
 export const TableSection = styled.table`
-  /* padding-inline: 40px; */
+  /* padding-inline: 10px; */
+  margin: 10px;
+  /* max-width: 500px; */
 `;
 
 export const DeleteIcon = styled.div`
-  /* display: grid;
-  justify-content: center; */
-  margin-left: 40px;
+  display: grid;
+  justify-content: center;
+  /* margin-left: 40px; */
   img {
-    width: 40px;
+    width: 20px;
   }
 `;
 export const AddPayment = styled.button`
@@ -61,9 +67,10 @@ export const AddPayment = styled.button`
   font-size: 18px;
   font-weight: 400;
   padding: 10px 0;
-  width: 100%;
+  width: 96%;
   border-radius: 4px;
   margin-top: 21px;
+  margin-inline: 2%;
   cursor: pointer;
   color: var(--text-primary);
   display: flex;
@@ -78,11 +85,14 @@ export const AddPayment = styled.button`
 
 export const NoteInformation = styled.div`
   padding-top: 30px;
-  padding-inline: 40px;
+  /* padding-inline: 40px; */
+  /* padding-bottom: 14px; */
   h3 {
     font-size: 18px;
     font-weight: 400;
-    padding-bottom: 8px;
+    padding: 10px 0;
+    padding-left: 16px;
+    background: var(--bg-primary);
   }
   .note {
     padding-bottom: 8px;
@@ -96,7 +106,9 @@ export const NoteInfo = styled.div`
   gap: 6px;
 `;
 export const Btn = styled.div`
-  padding-inline: 40px;
+  /* padding-inline: 40px; */
+  width: 680px;
+  margin: 0 auto;
 `;
 export const RequestSubmit = styled.button`
   background: var(--bg-primary);

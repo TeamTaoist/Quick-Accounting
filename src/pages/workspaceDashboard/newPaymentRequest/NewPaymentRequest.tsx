@@ -326,31 +326,54 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
           <TableSection>
             <TableContainer
               sx={{
-                paddingInline: "46px",
-                paddingTop: "30px",
-                // boxShadow: "none",
                 boxShadow: "none",
+                border: "1px solid var(--border-table)",
+                borderRadius: "10px",
+                width: 680,
+                margin: "26px auto",
               }}
             >
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
+              <Table sx={{ width: "100%" }} aria-label="simple table">
+                <TableHead style={{ backgroundColor: "var(--bg-secondary)" }}>
                   <TableRow>
                     <TableCell
                       sx={{
                         width: 200,
-                        border: 0,
-                        paddingInline: 0,
+                        borderRight: "1px solid var(--border-table)",
+                        fontWeight: 500,
+                        fontSize: "16px",
                       }}
                     >
                       Recipient
                     </TableCell>
-                    <TableCell sx={{ width: 150, border: 0, paddingInline: 0 }}>
+                    <TableCell
+                      sx={{
+                        width: 150,
+                        borderRight: "1px solid var(--border-table)",
+                        fontWeight: 500,
+                        fontSize: "16px",
+                      }}
+                    >
                       Amount
                     </TableCell>
-                    <TableCell sx={{ width: 200, border: 0, paddingInline: 0 }}>
+                    <TableCell
+                      sx={{
+                        width: 200,
+                        border: 0,
+                        fontWeight: 500,
+                        fontSize: "16px",
+                      }}
+                    >
                       Currency
                     </TableCell>
-                    <TableCell sx={{ width: 50, border: 0 }}></TableCell>
+                    <TableCell
+                      sx={{
+                        width: 50,
+                        border: 0,
+                        fontWeight: 500,
+                        fontSize: "16px",
+                      }}
+                    ></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -360,13 +383,13 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                       key={index}
                       sx={{
                         height: "30px",
-                        // borderRadius: "10px",
                       }}
                     >
                       <TableCell
                         sx={{
                           border: "1px solid var(--border-table)",
                           padding: 0,
+                          borderLeft: 0,
                         }}
                       >
                         <TextField
@@ -395,7 +418,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           borderRadius: "5px",
                           padding: 0,
                           paddingLeft: "10px",
-                          // minHeight: "40px",
                         }}
                       >
                         <TextField
@@ -495,24 +517,29 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                 <img src={add} alt="" />
                 <span>Add</span>
               </AddPayment>
-            </TableContainer>
-            {/* note info */}
-            <NoteInformation>
-              <h3>Note Information</h3>
+              {/* </TableContainer> */}
+              {/* note info */}
+              <NoteInformation>
+                <h3>Note Information</h3>
 
-              <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                {/* <TableContainer> */}
+                <Table sx={{ width: "100%" }} aria-label="simple table">
                   <TableBody>
                     <TableRow
                       sx={{
                         td: {
-                          border: "1px solid var(--border-table)",
                           padding: 0,
                           paddingInline: "16px",
                         },
                       }}
                     >
-                      <TableCell sx={{ height: 1, width: 200 }}>
+                      <TableCell
+                        sx={{
+                          height: 1,
+                          width: 200,
+                          borderRight: "1px solid var(--border-table)",
+                        }}
+                      >
                         <NoteInfo>
                           <Image src={categoryIcon} alt="" /> Category
                         </NoteInfo>
@@ -573,13 +600,18 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           <TableRow
                             sx={{
                               td: {
-                                border: "1px solid var(--border-table)",
                                 padding: 0,
                                 paddingInline: "16px",
                               },
                             }}
                           >
-                            <TableCell sx={{ height: 1, width: 200 }}>
+                            <TableCell
+                              sx={{
+                                height: 1,
+                                width: 200,
+                                borderRight: "1px solid var(--border-table)",
+                              }}
+                            >
                               <NoteInfo>
                                 <Image src={selectIcon} alt="" />{" "}
                                 {property.name}
@@ -606,12 +638,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                     value: v,
                                     label: v,
                                   }))}
-                                // options={[
-                                //   {
-                                //     value: property.values,
-                                //     label: property.values,
-                                //   },
-                                // ]}
                                 isMulti={false}
                                 // defaultValues={[options[1]]}
                               />
@@ -622,9 +648,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               values: property.values,
                             })} */}
                           </TableRow>
-                          // {
-                          //   propertyObjects
-                          // }
                         )}
                       </>
                     ))}
@@ -634,13 +657,18 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           <TableRow
                             sx={{
                               td: {
-                                border: "1px solid var(--border-table)",
                                 padding: 0,
                                 paddingInline: "16px",
                               },
                             }}
                           >
-                            <TableCell sx={{ height: 1, width: 200 }}>
+                            <TableCell
+                              sx={{
+                                height: 1,
+                                width: 200,
+                                borderRight: "1px solid var(--border-table)",
+                              }}
+                            >
                               <NoteInfo>
                                 <Image src={multiSelect} alt="" />{" "}
                                 {property.name}
@@ -677,58 +705,23 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                     {/* single select */}
                     {selectedCategory?.properties?.map((property) => (
                       <>
-                        {/* {property.type === "Text" && (
-                          <TableRow
-                            sx={{
-                              td: {
-                                border: "1px solid var(--border-table)",
-                                padding: 0,
-                                paddingInline: "16px",
-                              },
-                            }}
-                          >
-                            <TableCell sx={{ height: 1, width: 200 }}>
-                              <NoteInfo>
-                                <Image src={optionsIcon} alt="" />{" "}
-                                {property.name}
-                              </NoteInfo>
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                sx={{
-                                  "& fieldset": { border: "none" },
-                                }}
-                                size="small"
-                                fullWidth
-                                value={propertyContent}
-                                // id="fullWidth"
-                                placeholder="Enter content"
-                                onChange={(e) =>
-                                  handlePropertyText(
-                                    e,
-                                    property.name,
-                                    property.type
-                                  )
-                                }
-                                InputProps={{
-                                  style: { padding: 0 },
-                                }}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        )} */}
                         {property.type === "Text" && (
                           <TableRow
-                            key={property.name} // Add a unique key for each property
+                            key={property.name}
                             sx={{
                               td: {
-                                border: "1px solid var(--border-table)",
                                 padding: 0,
                                 paddingInline: "16px",
                               },
                             }}
                           >
-                            <TableCell sx={{ height: 1, width: 200 }}>
+                            <TableCell
+                              sx={{
+                                height: 1,
+                                width: 200,
+                                borderRight: "1px solid var(--border-table)",
+                              }}
+                            >
                               <NoteInfo>
                                 <Image src={optionsIcon} alt="" />{" "}
                                 {property.name}
@@ -761,8 +754,9 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                     ))}
                   </TableBody>
                 </Table>
-              </TableContainer>
-            </NoteInformation>
+                {/* </TableContainer> */}
+              </NoteInformation>
+            </TableContainer>
             <Btn>
               <RequestSubmit onClick={handlePaymentRequestSubmit}>
                 Submit
