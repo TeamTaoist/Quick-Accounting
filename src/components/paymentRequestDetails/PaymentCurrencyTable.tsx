@@ -19,7 +19,8 @@ const PaymentCurrencyTable = () => {
         <TableRow>
           <TableCell
             sx={{
-              width: 200,
+              // width: 200,
+              width: "30.2%",
               border: 0,
               borderRight: "1px solid var(--border-table)",
               fontWeight: 500,

@@ -338,7 +338,7 @@ const PaymentRequestDetails = ({
                     <TableCell
                       sx={{
                         height: 1,
-                        width: 200,
+                        width: 208,
                         borderRight: "1px solid var(--border-table)",
                       }}
                     >
@@ -455,7 +455,7 @@ const PaymentStatus = styled.div`
   }
 `;
 export const SubmissionTime = styled.div`
-  padding: 14px 0;
+  padding-top: 14px;
   p {
     font-size: 18px;
     padding-bottom: 6px;
@@ -476,7 +476,7 @@ export const StatusBtn = styled.button`
   background: #7c7777;
   border: none;
   outline: none;
-  padding: 8px 10px;
+  padding: 8px 14px;
   font-size: 16px;
   border-radius: 7px;
   color: #ffffff;

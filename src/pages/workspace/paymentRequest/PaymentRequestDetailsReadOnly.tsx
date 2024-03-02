@@ -32,6 +32,8 @@ import { getShortAddress } from "../../../utils";
 import { formatTimestamp } from "../../../utils/time";
 import { getChainExplorer } from "../../../utils/chain";
 import { useWorkspace } from "../../../store/useWorkspace";
+import PaymentCurrencyTable from "../../../components/paymentRequestDetails/PaymentCurrencyTable";
+import { Status, StatusBtn, SubmissionTime } from "./PaymentRequestDetails";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -49,25 +51,38 @@ const NotTransferTop = ({
 }) => {
   return (
     <>
-      <TableHead>
+      {/* <TableHead sx={{ backgroundColor: "var(--bg-secondary)" }}>
         <TableRow>
           <TableCell
             sx={{
-              width: 200,
+              width: "30.2%",
               border: 0,
-              paddingInline: 0,
-              paddingBottom: 1,
+              borderRight: "1px solid var(--border-table)",
+              fontWeight: 500,
+              fontSize: "16px",
             }}
           >
             Recipient
           </TableCell>
           <TableCell
-            sx={{ width: 150, border: 0, paddingInline: 0, paddingBottom: 1 }}
+            sx={{
+              width: "23%",
+              border: 0,
+              borderRight: "1px solid var(--border-table)",
+              fontWeight: 500,
+              fontSize: "16px",
+            }}
           >
             Amount
           </TableCell>
           <TableCell
-            sx={{ width: 200, border: 0, paddingInline: 0, paddingBottom: 1 }}
+            sx={{
+              width: "37%",
+              border: 0,
+              borderRight: "1px solid var(--border-table)",
+              fontWeight: 500,
+              fontSize: "16px",
+            }}
           >
             Currency
           </TableCell>
@@ -109,8 +124,8 @@ const NotTransferTop = ({
             {paymentRequestDetails?.currency_name}
           </TableCell>
         </TableRow>
-        {/* ))} */}
-      </TableBody>
+      </TableBody> */}
+      <PaymentCurrencyTable />
     </>
   );
 };
@@ -240,57 +255,69 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
         address={selectedWorkspaceSafeAddress}
       >
         <RequestDetails>
-          <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableContainer
+            sx={{
+              boxShadow: "none",
+              border: "1px solid var(--border-table)",
+              borderRadius: "10px",
+            }}
+          >
+            <Table aria-label="simple table">
               {isTransfer ? (
                 <TransferTop data={paymentRequestDetails} />
               ) : (
                 <NotTransferTop data={paymentRequestDetails} />
               )}
             </Table>
-          </TableContainer>
-          {isTransfer && (
-            <>
-              <TransactionHash>
-                <h3>Transaction hash</h3>
-                <div>
-                  <p>{paymentRequestDetails.tx_hash}</p>
-                  <a
-                    href={`${getChainExplorer(
-                      paymentRequestDetails.workspace_chain_id
-                    )}/tx/${paymentRequestDetails.tx_hash}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <img src={linkIcon} alt="" />
-                  </a>
-                </div>
-              </TransactionHash>
-              <TransactionHash>
-                <h3>Transaction date</h3>
-                <div>
-                  <p>{formatTimestamp(paymentRequestDetails.tx_timestamp)}</p>
-                </div>
-              </TransactionHash>
-            </>
-          )}
-          {/* note info */}
-          <NoteInformation>
-            <div className="note">Note Information</div>
+            {/* </TableContainer> */}
+            {isTransfer && (
+              <>
+                <TransactionHash>
+                  <h3>Transaction hash</h3>
+                  <div>
+                    <p>{paymentRequestDetails.tx_hash}</p>
+                    <a
+                      href={`${getChainExplorer(
+                        paymentRequestDetails.workspace_chain_id
+                      )}/tx/${paymentRequestDetails.tx_hash}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <img src={linkIcon} alt="" />
+                    </a>
+                  </div>
+                </TransactionHash>
+                <TransactionHash>
+                  <h3>Transaction date</h3>
+                  <div>
+                    <p>{formatTimestamp(paymentRequestDetails.tx_timestamp)}</p>
+                  </div>
+                </TransactionHash>
+              </>
+            )}
+            {/* note info */}
+            <NoteInformation>
+              {/* <div className="note">Note Information</div> */}
+              <h3>Note Information</h3>
 
-            <TableContainer sx={{ borderRadius: "7px" }}>
+              {/* <TableContainer sx={{ borderRadius: "7px" }}> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
                   <TableRow
                     sx={{
                       td: {
-                        border: "1px solid var(--border-table)",
                         padding: 1,
                         paddingInline: 1,
                       },
                     }}
                   >
-                    <TableCell sx={{ height: 1, width: 200 }}>
+                    <TableCell
+                      sx={{
+                        height: 1,
+                        width: 208,
+                        borderRight: "1px solid var(--border-table)",
+                      }}
+                    >
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
@@ -305,7 +332,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                         td: {
                           border: "1px solid var(--border-table)",
                           padding: 1,
-                          paddingInline: 1,
                         },
                       }}
                     >
@@ -331,12 +357,28 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                   ))}
                 </TableBody>
               </Table>
-            </TableContainer>
-            <PaymentStatus>
+              {/* </TableContainer> */}
+              {/* <PaymentStatus>
               <img src={statusIcon} alt="" />
               <p>Status: {getPaymentStatus(paymentRequestDetails?.status)}</p>
-            </PaymentStatus>
-          </NoteInformation>
+            </PaymentStatus> */}
+            </NoteInformation>
+          </TableContainer>
+          {/* submission details */}
+          <SubmissionTime>
+            <p>Submission time</p>
+            <div>{formatTimestamp(paymentRequestDetails.submit_ts)}</div>
+          </SubmissionTime>
+          <RejectTime>
+            <p>Rejection time</p>
+            <div>{formatTimestamp(paymentRequestDetails.reject_ts)}</div>
+          </RejectTime>
+          <Status>
+            <p>Status</p>
+            <StatusBtn>
+              {getPaymentStatus(paymentRequestDetails.status)}
+            </StatusBtn>
+          </Status>
         </RequestDetails>
       </WorkspaceItemDetailsLayout>
     </>
@@ -346,7 +388,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
 export default PaymentRequestDetails;
 
 const RequestDetails = styled.div`
-  padding-bottom: 50px;
+  margin: 30px;
 `;
 const PaymentStatus = styled.div`
   display: flex;
@@ -413,5 +455,17 @@ const LeftDirStyle = css`
 const Logo = styled.div<{ $dir?: string }>`
   img {
     ${({ $dir }) => $dir === "i" && LeftDirStyle}
+  }
+`;
+const RejectTime = styled.div`
+  padding: 14px 0;
+  p {
+    font-size: 18px;
+    padding-bottom: 6px;
+  }
+  div {
+    border: 1px solid var(--border-table);
+    padding: 10px 7px;
+    border-radius: 8px;
   }
 `;
