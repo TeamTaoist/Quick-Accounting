@@ -458,7 +458,7 @@ const Logo = styled.div<{ $dir?: string }>`
   }
 `;
 const RejectTime = styled.div`
-  padding: 14px 0;
+  padding-top: 14px;
   p {
     font-size: 18px;
     padding-bottom: 6px;

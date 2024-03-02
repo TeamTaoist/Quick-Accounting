@@ -467,6 +467,7 @@ export const SubmissionTime = styled.div`
   }
 `;
 export const Status = styled.div`
+  padding-top: 14px;
   p {
     font-size: 18px;
     padding-bottom: 6px;
