@@ -40,7 +40,12 @@ const PaymentCurrencyTable = () => {
             Amount
           </TableCell>
           <TableCell
-            sx={{ width: 200, border: 0, fontWeight: 500, fontSize: "16px" }}
+            sx={{
+              width: 200,
+              border: 0,
+              fontWeight: 500,
+              fontSize: "16px",
+            }}
           >
             Currency
           </TableCell>
@@ -101,6 +106,7 @@ const PaymentCurrencyTable = () => {
           <TableCell
             sx={{
               border: "1px solid var(--border-table)",
+              borderRight: 0,
               padding: 0,
             }}
           >

@@ -34,6 +34,8 @@ import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import PaymentCurrencyTable from "../../../components/paymentRequestDetails/PaymentCurrencyTable";
 import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { getPaymentStatus } from "../../../utils/payment";
+import { formatTimestamp } from "../../../utils/time";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -314,8 +316,8 @@ const PaymentRequestDetails = ({
               boxShadow: "none",
               border: "1px solid var(--border-table)",
               borderRadius: "10px",
-              width: 680,
-              margin: "26px auto",
+              // width: 680,
+              // margin: "26px auto",
             }}
           >
             <PaymentCurrencyTable />
@@ -411,14 +413,25 @@ const PaymentRequestDetails = ({
               </Table>
               {/* </TableContainer> */}
               {/* rejected status */}
-              {paymentRequestDetails?.status === 2 && (
+              {/* {paymentRequestDetails?.status === 2 && (
                 <PaymentStatus>
                   <img src={statusIcon} alt="" />
                   <p>Status: Rejected</p>
                 </PaymentStatus>
-              )}
+              )} */}
             </NoteInformation>
           </TableContainer>
+          {/* submission time */}
+          <SubmissionTime>
+            <p>Submission time</p>
+            <div>{formatTimestamp(paymentRequestDetails.submit_ts)}</div>
+          </SubmissionTime>
+          <Status>
+            <p>Status</p>
+            <StatusBtn>
+              {getPaymentStatus(paymentRequestDetails.status)}
+            </StatusBtn>
+          </Status>
         </RequestDetails>
       </WorkspaceItemDetailsLayout>
     </>
@@ -428,7 +441,8 @@ const PaymentRequestDetails = ({
 export default PaymentRequestDetails;
 
 const RequestDetails = styled.div`
-  padding-bottom: 50px;
+  /* padding-bottom: 50px; */
+  margin: 30px;
 `;
 const PaymentStatus = styled.div`
   display: flex;
@@ -441,4 +455,31 @@ const PaymentStatus = styled.div`
   p {
     font-size: 20px;
   }
+`;
+const SubmissionTime = styled.div`
+  padding: 14px 0;
+  p {
+    font-size: 18px;
+    padding-bottom: 6px;
+  }
+  div {
+    border: 1px solid var(--border-table);
+    padding: 10px 7px;
+    border-radius: 8px;
+  }
+`;
+const Status = styled.div`
+  p {
+    font-size: 18px;
+    padding-bottom: 6px;
+  }
+`;
+const StatusBtn = styled.button`
+  background: #7c7777;
+  border: none;
+  outline: none;
+  padding: 8px 10px;
+  font-size: 16px;
+  border-radius: 7px;
+  color: #ffffff;
 `;
