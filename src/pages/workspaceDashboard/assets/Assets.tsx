@@ -35,6 +35,7 @@ type AssetType = {
   balanceUSD: string;
   address: string;
   link: string;
+  hidden?: boolean;
 };
 
 const Assets = () => {
@@ -53,12 +54,22 @@ const Assets = () => {
     hideAssets,
     getHideAssets,
     assetsHideList,
+    unHideAssets,
   } = useWorkspace();
 
   const chainData = CHAINS.find((c) => c.chainId === workspace?.chain_id);
 
+  // useEffect(() => {
+  //   workspace?.vault_wallet && getAssets();
+  //   workspace?.vault_wallet && getHideAssets();
+  // }, [workspace?.vault_wallet]);
+
   useEffect(() => {
-    workspace?.vault_wallet && getAssets();
+    const fetchAssetsList = async () => {
+      workspace?.vault_wallet && (await getAssets());
+      workspace?.vault_wallet && (await getHideAssets());
+    };
+    fetchAssetsList();
   }, [workspace?.vault_wallet]);
 
   const filterList: AssetType[] =
@@ -72,6 +83,7 @@ const Assets = () => {
         balanceDisplay: formatBalance(item.balance, item.tokenInfo.decimals),
         balanceUSD: Number(item.fiatBalance).format(),
         address: item.tokenInfo.address,
+        hidden: item.hidden,
         link:
           item.tokenInfo.type === "NATIVE_TOKEN"
             ? ""
@@ -82,7 +94,7 @@ const Assets = () => {
       ) || [];
 
   //switch style
-  const Android12Switch = styled(Switch)(() => ({
+  const AssetsSwitch = styled(Switch)(() => ({
     padding: 8,
     "& .MuiSwitch-track": {
       borderRadius: 22 / 2,
@@ -109,17 +121,20 @@ const Assets = () => {
     },
   }));
 
-  const [unHideList, setUnHideList] = useState([]);
-
   // const [checked, setChecked] = useState(false);
-  const handleAsset = async (event: any, contractAddress: string) => {
+  const handleAsset = async (event: any, data: AssetType) => {
     // setChecked(event.target.checked);
-    await hideAssets(contractAddress);
-    console.log(contractAddress);
+    if (data.hidden) {
+      await unHideAssets(data.address);
+      await getHideAssets();
+      console.log("un hide");
+    } else {
+      await hideAssets(data.address);
+      await getHideAssets();
+      console.log("hide");
+    }
   };
-  useEffect(() => {
-    getHideAssets();
-  }, []);
+
   console.log("assetsList", assetsList);
 
   return (
@@ -223,14 +238,14 @@ const Assets = () => {
                   </TableCell>
                   <TableCell>
                     <RowCell>
-                      <Android12Switch
+                      <AssetsSwitch
                         defaultChecked
-                        // checked={}
-                        onChange={(e) => handleAsset(e, data.address)}
+                        checked={data.hidden}
+                        onChange={(e) => handleAsset(e, data)}
                       />
                     </RowCell>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ paddingRight: "30px" }}>
                     {data.link && (
                       <RowLink>
                         <a href={data.link} target="_blank" rel="noreferrer">

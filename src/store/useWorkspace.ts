@@ -65,11 +65,13 @@ interface UseWorkspace {
     balance: string;
     fiatBalance: string;
     fiatConversion: string;
+    hidden?: boolean;
   }[];
   updateWorkspace: (data: any) => void;
   hideAssets: (contractAddress: string) => Promise<void>;
   getHideAssets: () => Promise<void>;
   assetsHideList: AssetsHideList[];
+  unHideAssets: (contractAddress: string) => Promise<void>;
 }
 
 export const useWorkspace = create<UseWorkspace>((set, get) => {
@@ -258,7 +260,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         // navigate("/assets");
       }
     },
-    // hide assets
+    // get hide assets
     assetsHideList: [],
     getHideAssets: async () => {
       const { workspace, assetsList } = get();
@@ -267,6 +269,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         const { data } = await axiosClient.get(
           `/workspace_assert/${workspace.ID}/hided_asserts`
         );
+        // set({ assetsHideList: data.data });
         const updateAssets = assetsList.map((asset) => {
           const isHidden = data.data.find(
             (hideAsset: AssetsHideList) =>
@@ -282,6 +285,27 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         console.log(updateAssets);
 
         set({ assetsHideList: data.data, assetsList: updateAssets });
+      } catch (error: any) {
+        toast.error(error?.response?.data?.msg || error?.status || error);
+      } finally {
+        setLoading(false);
+        // navigate("/assets");
+      }
+    },
+    // hide assets
+    unHideAssets: async (contractAddress) => {
+      const { workspace } = get();
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.post(
+          `/workspace_assert/${workspace.ID}/unhide_assert`,
+          {
+            assert_contract_address: contractAddress,
+          }
+        );
+        if (data.msg === "success" && data.code === 200) {
+          toast.success("Un-hide assets successfully");
+        }
       } catch (error: any) {
         toast.error(error?.response?.data?.msg || error?.status || error);
       } finally {
