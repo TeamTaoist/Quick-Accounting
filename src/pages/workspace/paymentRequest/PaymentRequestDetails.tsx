@@ -316,8 +316,6 @@ const PaymentRequestDetails = ({
               boxShadow: "none",
               border: "1px solid var(--border-table)",
               borderRadius: "10px",
-              // width: 680,
-              // margin: "26px auto",
             }}
           >
             <PaymentCurrencyTable />
@@ -456,7 +454,7 @@ const PaymentStatus = styled.div`
     font-size: 20px;
   }
 `;
-const SubmissionTime = styled.div`
+export const SubmissionTime = styled.div`
   padding: 14px 0;
   p {
     font-size: 18px;
@@ -468,13 +466,13 @@ const SubmissionTime = styled.div`
     border-radius: 8px;
   }
 `;
-const Status = styled.div`
+export const Status = styled.div`
   p {
     font-size: 18px;
     padding-bottom: 6px;
   }
 `;
-const StatusBtn = styled.button`
+export const StatusBtn = styled.button`
   background: #7c7777;
   border: none;
   outline: none;

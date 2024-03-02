@@ -35,11 +35,18 @@ import {
 import ReactSelect from "../../ReactSelect";
 import WorkspaceItemDetailsLayout from "../../layout/WorkspaceItemDetailsLayout";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
-import { ReactSelectOption } from "../../../pages/workspace/paymentRequest/PaymentRequestDetails";
+import {
+  ReactSelectOption,
+  Status,
+  StatusBtn,
+  SubmissionTime,
+} from "../../../pages/workspace/paymentRequest/PaymentRequestDetails";
 import GroupTextType from "../../paymentRequestGroupDetails/GroupTextType";
 import GroupMultiSelectType from "../../paymentRequestGroupDetails/GroupMultiSelectType";
 import GroupSingleSelectType from "../../paymentRequestGroupDetails/GroupSingleSelectType";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { formatTimestamp } from "../../../utils/time";
+import { getPaymentStatus } from "../../../utils/payment";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -273,27 +280,47 @@ const PaymentRequestGroupDetails = ({
           {sharePaymentRequestForm.map((payment: any, index: number) => (
             <React.Fragment key={payment.ID}>
               <TableContainer
-                sx={{ paddingInline: "40px", paddingTop: "30px" }}
+                // sx={{ paddingInline: "40px", paddingTop: "30px" }}
+                sx={{
+                  boxShadow: "none",
+                  border: "1px solid var(--border-table)",
+                  borderRadius: "10px",
+                  margin: "20px 0",
+                }}
               >
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
+                  <TableHead sx={{ backgroundColor: "var(--bg-secondary)" }}>
                     <TableRow>
                       <TableCell
                         sx={{
-                          width: "30%",
+                          width: "30.2%",
                           border: 0,
-                          paddingInline: 0,
+                          borderRight: "1px solid var(--border-table)",
+                          fontWeight: 500,
+                          fontSize: "16px",
                         }}
                       >
                         Recipient
                       </TableCell>
                       <TableCell
-                        sx={{ width: "23%", border: 0, paddingInline: 0 }}
+                        sx={{
+                          width: "23%",
+                          border: 0,
+                          borderRight: "1px solid var(--border-table)",
+                          fontWeight: 500,
+                          fontSize: "16px",
+                        }}
                       >
                         Amount
                       </TableCell>
                       <TableCell
-                        sx={{ width: "37%", border: 0, paddingInline: 0 }}
+                        sx={{
+                          width: "37%",
+                          border: 0,
+                          borderRight: "1px solid var(--border-table)",
+                          fontWeight: 500,
+                          fontSize: "16px",
+                        }}
                       >
                         Currency
                       </TableCell>
@@ -312,6 +339,7 @@ const PaymentRequestGroupDetails = ({
                         sx={{
                           border: "1px solid var(--border-table)",
                           padding: 0,
+                          borderLeft: 0,
                         }}
                       >
                         <TextField
@@ -359,6 +387,7 @@ const PaymentRequestGroupDetails = ({
                         sx={{
                           border: "1px solid var(--border-table)",
                           padding: 0,
+                          borderRight: 0,
                           // minHeight: "40px",
                         }}
                       >
@@ -374,7 +403,7 @@ const PaymentRequestGroupDetails = ({
                               <img
                                 src={arrowBottom}
                                 alt="Custom Arrow Icon"
-                                style={{ marginRight: "50px" }}
+                                style={{ marginRight: "36px" }}
                               />
                             </InputAdornment>
                           )}
@@ -403,23 +432,29 @@ const PaymentRequestGroupDetails = ({
                   </TableBody>
                   {/* ))} */}
                 </Table>
-              </TableContainer>
-              {/* note info */}
-              <NoteInformation>
-                {/* {paymentRequestGroupDetails.map((payment) => ( */}
-                <TableContainer>
+                {/* </TableContainer> */}
+                {/* note info */}
+                <NoteInformation>
+                  {/* {paymentRequestGroupDetails.map((payment) => ( */}
+                  {/* <TableContainer> */}
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableBody>
                       <TableRow
                         sx={{
                           td: {
-                            border: "1px solid var(--border-table)",
+                            // border: "1px solid var(--border-table)",
                             padding: 0,
                             paddingInline: 1,
                           },
                         }}
                       >
-                        <TableCell sx={{ height: 1, width: "33.5%" }}>
+                        <TableCell
+                          sx={{
+                            height: 1,
+                            width: "33.5%",
+                            borderRight: "1px solid var(--border-table)",
+                          }}
+                        >
                           <NoteInfo>
                             <Image src={categoryIcon} alt="" /> Category
                           </NoteInfo>
@@ -579,18 +614,23 @@ const PaymentRequestGroupDetails = ({
                       )}
                     </TableBody>
                   </Table>
-                </TableContainer>
-                {/* ))} */}
-              </NoteInformation>
+                  {/* </TableContainer> */}
+                  {/* ))} */}
+                </NoteInformation>
+              </TableContainer>
             </React.Fragment>
           ))}
+          <SubmissionTime>
+            <p>Submission time</p>
+            <div>{formatTimestamp(groupDetails?.[0]?.submit_ts || 0)}</div>
+          </SubmissionTime>
+          <Status>
+            <p>Status</p>
+            <StatusBtn>
+              {getPaymentStatus(groupDetails?.[0]?.status || 0)}
+            </StatusBtn>
+          </Status>
         </RequestDetails>
-        {/* {paymentRequestDetails.status === 1 && (
-              <PaymentStatus>
-                <img src={statusIcon} alt="" />
-                <p>Status: Rejected</p>
-              </PaymentStatus>
-            )} */}
       </WorkspaceItemDetailsLayout>
     </>
   );
@@ -599,17 +639,5 @@ const PaymentRequestGroupDetails = ({
 export default PaymentRequestGroupDetails;
 
 const RequestDetails = styled.div`
-  padding-bottom: 50px;
-`;
-const PaymentStatus = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 20px;
-  img {
-    width: 20px;
-  }
-  p {
-    font-size: 20px;
-  }
+  margin: 30px;
 `;
