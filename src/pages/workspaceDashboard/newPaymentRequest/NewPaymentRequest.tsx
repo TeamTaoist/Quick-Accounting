@@ -174,16 +174,17 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     getWorkspaceCategoryProperties(workspaceId);
   }, [getWorkspaceCategoryProperties, workspaceId]);
 
-  // safe balance from assets
-  const { workspace } = useWorkspace();
+  // get assets list
+  const { workspace, assetsList, getAssets, getHideAssets } = useWorkspace();
 
-  const [data, error, loading] = useAsync<SafeBalanceResponse>(
-    () => {
-      return getBalances(String(workspace?.chain_id), workspace?.vault_wallet);
-    },
-    [workspace],
-    false
-  );
+  useEffect(() => {
+    const fetchAssetsList = async () => {
+      workspace?.vault_wallet && (await getAssets());
+      workspace?.vault_wallet && (await getHideAssets());
+    };
+    fetchAssetsList();
+  }, [workspace?.vault_wallet]);
+  console.log(assetsList);
 
   // property text content
 
@@ -237,7 +238,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
       ),
     ],
     rows: rows.map((row) => {
-      const token = data?.items.find(
+      const token = assetsList?.find(
         (item) => item.tokenInfo.address === row.currency
       );
       return token
@@ -277,7 +278,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
       }
       try {
         const amountBigInt = parseUnits(item.amount, item.decimals);
-        const selectToken = data?.items.find(
+        const selectToken = assetsList?.find(
           (s) => s.tokenInfo.address === item.currency_contract_address
         );
         if (BigInt(selectToken?.balance || 0) < amountBigInt) {
@@ -449,9 +450,11 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             "& fieldset": { border: "none" },
                           }}
                         >
-                          {data?.items.map((item) => (
+                          {assetsList?.map((item, i) => (
                             <MenuItem
+                              key={i}
                               value={item.tokenInfo.address}
+                              disabled={item.hidden}
                               sx={{
                                 "&:hover": {
                                   backgroundColor: "var(--hover-bg)",
