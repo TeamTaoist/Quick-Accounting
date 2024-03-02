@@ -329,8 +329,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                 boxShadow: "none",
                 border: "1px solid var(--border-table)",
                 borderRadius: "10px",
-                width: 680,
-                margin: "26px auto",
+                // maxWidth: 680,
+                // margin: "26px auto",
               }}
             >
               <Table sx={{ width: "100%" }} aria-label="simple table">
@@ -519,7 +519,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
               </AddPayment>
               {/* </TableContainer> */}
               {/* note info */}
-              <NoteInformation>
+              <NoteInformation style={{ marginTop: "30px" }}>
                 <h3>Note Information</h3>
 
                 {/* <TableContainer> */}

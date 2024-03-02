@@ -47,7 +47,7 @@ export const RequestHeader = styled.div`
 `;
 export const TableSection = styled.table`
   /* padding-inline: 10px; */
-  margin: 10px;
+  margin: 20px;
   /* max-width: 500px; */
 `;
 
@@ -84,7 +84,7 @@ export const AddPayment = styled.button`
 `;
 
 export const NoteInformation = styled.div`
-  padding-top: 30px;
+  /* padding-top: 30px; */
   /* padding-inline: 40px; */
   /* padding-bottom: 14px; */
   h3 {
@@ -107,8 +107,8 @@ export const NoteInfo = styled.div`
 `;
 export const Btn = styled.div`
   /* padding-inline: 40px; */
-  width: 680px;
-  margin: 0 auto;
+  /* width: 680px;
+  margin: 0 auto; */
 `;
 export const RequestSubmit = styled.button`
   background: var(--bg-primary);

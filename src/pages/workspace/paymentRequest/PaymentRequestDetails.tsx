@@ -309,24 +309,39 @@ const PaymentRequestDetails = ({
         address={selectedWorkspaceSafeAddress}
       >
         <RequestDetails>
-          <PaymentCurrencyTable />
-          {/* note info */}
-          <NoteInformation>
-            <h3>Note Information</h3>
+          <TableContainer
+            sx={{
+              boxShadow: "none",
+              border: "1px solid var(--border-table)",
+              borderRadius: "10px",
+              width: 680,
+              margin: "26px auto",
+            }}
+          >
+            <PaymentCurrencyTable />
+            {/* note info */}
+            <NoteInformation>
+              <h3>Note Information</h3>
 
-            <TableContainer>
+              {/* <TableContainer> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
                   <TableRow
                     sx={{
                       td: {
-                        border: "1px solid var(--border-table)",
+                        // border: "1px solid var(--border-table)",
                         padding: 0,
                         paddingInline: 1,
                       },
                     }}
                   >
-                    <TableCell sx={{ height: 1, width: 200 }}>
+                    <TableCell
+                      sx={{
+                        height: 1,
+                        width: 200,
+                        borderRight: "1px solid var(--border-table)",
+                      }}
+                    >
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
@@ -394,15 +409,16 @@ const PaymentRequestDetails = ({
                   )}
                 </TableBody>
               </Table>
-            </TableContainer>
-            {/* rejected status */}
-            {paymentRequestDetails?.status === 2 && (
-              <PaymentStatus>
-                <img src={statusIcon} alt="" />
-                <p>Status: Rejected</p>
-              </PaymentStatus>
-            )}
-          </NoteInformation>
+              {/* </TableContainer> */}
+              {/* rejected status */}
+              {paymentRequestDetails?.status === 2 && (
+                <PaymentStatus>
+                  <img src={statusIcon} alt="" />
+                  <p>Status: Rejected</p>
+                </PaymentStatus>
+              )}
+            </NoteInformation>
+          </TableContainer>
         </RequestDetails>
       </WorkspaceItemDetailsLayout>
     </>
