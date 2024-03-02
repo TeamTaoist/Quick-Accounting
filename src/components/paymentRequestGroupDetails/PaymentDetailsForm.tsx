@@ -180,6 +180,7 @@ const PaymentDetailsForm = ({
                   <MenuItem
                     key={i}
                     value={asset.tokenInfo.address}
+                    disabled={asset.hidden}
                     sx={{
                       "&:hover": {
                         backgroundColor: "var(--hover-bg)",

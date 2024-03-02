@@ -39,7 +39,8 @@ const ShareWorkspacePaymentRequest = () => {
   const navigate = useNavigate();
 
   const { isLoading, setLoading } = useLoading();
-  const { workspace, assetsList, getAssets, updateWorkspace } = useWorkspace();
+  const { workspace, assetsList, getAssets, updateWorkspace, getHideAssets } =
+    useWorkspace();
   const {
     createSharePaymentRequest,
     getPaymentRequestShareCodeData,
@@ -195,8 +196,12 @@ const ShareWorkspacePaymentRequest = () => {
   };
   // get asset list
   useEffect(() => {
-    workspace?.vault_wallet && getAssets();
-  }, [workspace?.vault_wallet, getAssets]);
+    const fetchAssetsList = async () => {
+      workspace?.vault_wallet && (await getAssets());
+      workspace?.vault_wallet && (await getHideAssets());
+    };
+    fetchAssetsList();
+  }, [workspace?.vault_wallet]);
 
   // modal
   const [openModal, setOpenModal] = useState(false);
