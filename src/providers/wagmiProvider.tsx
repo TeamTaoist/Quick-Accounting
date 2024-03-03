@@ -3,7 +3,7 @@ import { mainnet, sepolia, polygon } from "wagmi/chains";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const config = createConfig({
+export const config = createConfig({
   chains: [mainnet, sepolia, polygon],
   transports: {
     [mainnet.id]: http(),
