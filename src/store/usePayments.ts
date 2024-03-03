@@ -350,6 +350,8 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
               : payment
           );
           set({ paymentRequestList: updatedList });
+          console.log("paymentRequestList", paymentRequestList);
+
           return true;
         }
       } catch (error: any) {

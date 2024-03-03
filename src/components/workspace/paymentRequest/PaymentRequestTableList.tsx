@@ -63,7 +63,7 @@ const PaymentRequestTableList = ({
     }
   };
   return (
-    <React.Fragment key={index}>
+    <React.Fragment key={paymentId}>
       {items.length > 1 ? (
         <TableRow
           onClick={() => handleRowToggle(Number(id))}
