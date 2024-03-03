@@ -472,28 +472,30 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             "& fieldset": { border: "none" },
                           }}
                         >
-                          {assetsList?.map((item, i) => (
-                            <MenuItem
-                              key={i}
-                              value={item.tokenInfo.address}
-                              disabled={item.hidden}
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                                "&.Mui-selected": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                              }}
-                            >
-                              {item.tokenInfo.symbol}(
-                              {formatBalance(
-                                item.balance,
-                                item.tokenInfo.decimals
-                              )}
+                          {assetsList?.map(
+                            (item, i) =>
+                              !item.hidden && (
+                                <MenuItem
+                                  key={i}
+                                  value={item.tokenInfo.address}
+                                  sx={{
+                                    "&:hover": {
+                                      backgroundColor: "var(--hover-bg)",
+                                    },
+                                    "&.Mui-selected": {
+                                      backgroundColor: "var(--hover-bg)",
+                                    },
+                                  }}
+                                >
+                                  {item.tokenInfo.symbol}(
+                                  {formatBalance(
+                                    item.balance,
+                                    item.tokenInfo.decimals
+                                  )}
+                                  )
+                                </MenuItem>
                               )
-                            </MenuItem>
-                          ))}
+                          )}
 
                           {/* <MenuItem value="Option2">Twenty</MenuItem> */}
                         </Select>
