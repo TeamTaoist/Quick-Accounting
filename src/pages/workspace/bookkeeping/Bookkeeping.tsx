@@ -39,6 +39,8 @@ import ReactPaginate from "react-paginate";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import BookkeepingTable from "../../../components/workspace/bookkeeping/BookkeepingTable";
 import Pagination from "../../../components/Pagination";
+import { useDomainStore } from "../../../store/useDomain";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 const Bookkeeping = () => {
   const { id } = useParams();
@@ -54,6 +56,8 @@ const Bookkeeping = () => {
     bookkeepingHiddenList,
   } = useBookkeeping();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
+  const { queryENS } = useDomainStore();
+  const { workspace } = useWorkspace();
 
   const [paymentRequest, setPaymentRequest] = useState(true);
 
@@ -171,6 +175,13 @@ const Bookkeeping = () => {
   const uniqueCategoryNames = Array.from(
     new Set(bookkeepingList.map((payment) => payment.category_name))
   );
+
+  useEffect(() => {
+    const wallets = bookkeepingList.map((p) => p.counterparty);
+    if (wallets.length && workspace.chain_id) {
+      queryENS(wallets, workspace.chain_id);
+    }
+  }, [bookkeepingList, workspace.chain_id, queryENS]);
 
   return (
     <PaymentRequestContainer>
