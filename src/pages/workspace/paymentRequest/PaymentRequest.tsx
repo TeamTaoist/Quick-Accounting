@@ -52,6 +52,8 @@ import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import PaymentRequestTableList from "../../../components/workspace/paymentRequest/PaymentRequestTableList";
 import Pagination from "../../../components/Pagination";
 import RejectPaymentRequestTable from "../../../components/workspace/paymentRequest/RejectPaymentRequestTable";
+import { useWorkspace } from "../../../store/useWorkspace";
+import { useDomainStore } from "../../../store/useDomain";
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -67,6 +69,9 @@ const PaymentRequest = () => {
     exportPaymentList,
     setCurrentPaymentRequestDetail,
   } = usePaymentsStore();
+  const { workspace } = useWorkspace();
+  const { queryENS } = useDomainStore();
+  
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
   // table logic
 
@@ -153,6 +158,14 @@ const PaymentRequest = () => {
   useEffect(() => {
     getWorkspaceCategoryProperties(Number(id), true);
   }, []);
+
+  useEffect(() => {
+    const wallets = paymentRequestList.map((p) => p.counterparty);
+    if (wallets.length && workspace.chain_id) {
+      queryENS(wallets, workspace.chain_id);
+    }
+  }, [paymentRequestList, workspace.chain_id, queryENS]);
+
   // payment_request_id
 
   const groupedData = filterData.reduce((acc, item) => {

@@ -25,6 +25,7 @@ import Pagination from "../../Pagination";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { getPaymentUpdateTime } from "../../../utils/payment";
 import { getShortAddress } from "../../../utils";
+import { useDomainStore } from "../../../store/useDomain";
 
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
@@ -50,6 +51,7 @@ const RejectPaymentRequestTable = ({
     paymentRequestDetails,
   } = usePaymentsStore();
   const { workspace, userWorkspaces } = useWorkspace();
+  const { queryENS, formatAddressToDomain } = useDomainStore();
 
   const [paymentId, setPaymentId] = useState<number | null>(null);
   const handleOpenModal = (payment: IPaymentRequest) => {
@@ -94,6 +96,13 @@ const RejectPaymentRequestTable = ({
   //   (workspace) => workspace.ID === paymentRequestDetails.workspace_id
   // );
 
+  useEffect(() => {
+    const wallets = list.map((p) => p.counterparty);
+    if (wallets.length && workspace.chain_id) {
+      queryENS(wallets, workspace.chain_id);
+    }
+  }, [list, workspace]);
+
   return (
     <div>
       <CustomModal
@@ -136,7 +145,10 @@ const RejectPaymentRequestTable = ({
               {filterData?.map((payment) => (
                 <TableRow key={payment.ID}>
                   <TableCell>
-                    {getShortAddress(payment.counterparty)}
+                    {formatAddressToDomain(
+                      payment.counterparty,
+                      workspace.chain_id
+                    )}
                   </TableCell>
                   <TableCell>
                     {formatNumber(Number(payment.amount))}{" "}
