@@ -30,9 +30,14 @@ interface UseBookkeeping {
     paymentRequestIds: string
   ) => Promise<void>;
   setCurrentBookkeepingDetail: (bookkeeping: IPaymentRequest) => void;
+  updateBookkeepingCategory: (
+    workspaceId: string | undefined,
+    paymentId: string,
+    updatedPaymentBody: any
+  ) => Promise<boolean | undefined>;
 }
 
-export const useBookkeeping = create<UseBookkeeping>((set) => {
+export const useBookkeeping = create<UseBookkeeping>((set, get) => {
   const { setLoading } = useLoading.getState();
   return {
     bookkeepingList: [],
@@ -142,6 +147,40 @@ export const useBookkeeping = create<UseBookkeeping>((set) => {
     },
     setCurrentBookkeepingDetail: (bookkeeping: IPaymentRequest) => {
       set({ bookkeepingDetails: bookkeeping });
+    },
+    updateBookkeepingCategory: async (
+      workspaceId,
+      paymentId,
+      updatedPaymentBody
+    ) => {
+      const { bookkeepingList } = get();
+      try {
+        const { data } = await axiosClient.put(
+          `/payment_request/${workspaceId}/${paymentId}`,
+          updatedPaymentBody
+        );
+        if (data.msg === "success" && data.code === 200) {
+          const category_properties = JSON.stringify(
+            updatedPaymentBody.category_properties
+          );
+          const updatedList = bookkeepingList.map((payment) =>
+            payment.ID === Number(paymentId)
+              ? {
+                  ...payment,
+                  category_properties: category_properties,
+                }
+              : payment
+          );
+          set({ bookkeepingList: updatedList });
+
+          return true;
+        }
+      } catch (error: any) {
+        toast.error(error?.data.msg || error?.status || error);
+        console.error(error);
+      } finally {
+        // setLoading(false);
+      }
     },
   };
 });
