@@ -55,7 +55,6 @@ import { formatBalance } from "../../../utils/number";
 import { toast } from "react-toastify";
 import { isAddress } from "viem";
 import { parseUnits } from "ethers";
-import UpdateLoading from "../../../components/UpdateLoading";
 
 interface SubmitRowData {
   recipient: string;
@@ -526,7 +525,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
               <NoteInformation style={{ marginTop: "30px" }}>
                 <NoteHeader>
                   <h3>Note Information</h3>
-                  <UpdateLoading isUpdating={false} isSuccess={true} />
                 </NoteHeader>
 
                 {/* <TableContainer> */}
