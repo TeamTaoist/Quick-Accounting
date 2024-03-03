@@ -44,11 +44,12 @@ export const useDomainStore = create<IDomainStore>((set, get) => ({
         _to_be_queried.push(w.toLocaleLowerCase());
       }
     });
-    if (_to_be_queried.length === 0) return;
-    sns.names(_to_be_queried).then((res) => {
+    const _to_be_queried_unique = Array.from(new Set(_to_be_queried));
+    if (_to_be_queried_unique.length === 0) return;
+    sns.names(_to_be_queried_unique).then((res) => {
       const _new_sns_map = new Map(snsAddressToNameMap);
       res.forEach((d, idx) => {
-        _new_sns_map.set(_to_be_queried[idx], d);
+        _new_sns_map.set(_to_be_queried_unique[idx], d);
       });
       set({ snsAddressToNameMap: _new_sns_map });
     });
@@ -60,24 +61,23 @@ export const useDomainStore = create<IDomainStore>((set, get) => ({
     // @ts-ignore
     const ensAddressToNameMap = get()[k];
     const _to_be_queried = new Array<string>();
-    const _to_be_queried_requests = new Array<Promise<string | null>>();
     wallets.forEach((w) => {
       const v = ensAddressToNameMap.get(w);
       if (typeof v !== "string") {
         _to_be_queried.push(w.toLocaleLowerCase());
-        _to_be_queried_requests.push(
-          getEnsName(config, {
-            address: w.toLocaleLowerCase() as `0x${string}`,
-          })
-        );
       }
     });
-    if (_to_be_queried.length === 0) return;
+    const _to_be_queried_unique = Array.from(new Set(_to_be_queried));
+    const _to_be_queried_requests = _to_be_queried_unique.map((w) =>
+      getEnsName(config, {
+        address: w.toLocaleLowerCase() as `0x${string}`,
+      })
+    );
+    if (_to_be_queried_unique.length === 0) return;
     Promise.all(_to_be_queried_requests).then((res) => {
-      console.log("=======", res);
       const _new_ens_map = new Map(ensAddressToNameMap);
       res.forEach((d, idx) => {
-        _new_ens_map.set(_to_be_queried[idx], d);
+        _new_ens_map.set(_to_be_queried_unique[idx], d);
       });
       set({ [k]: _new_ens_map });
     });
