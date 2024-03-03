@@ -28,6 +28,7 @@ import { useLoading } from "../../../store/useLoading";
 import {
   DeleteIcon,
   Image,
+  NoteHeader,
   NoteInfo,
   NoteInformation,
   RequestSubmit,
@@ -435,7 +436,9 @@ const PaymentRequestGroupDetails = ({
                 {/* </TableContainer> */}
                 {/* note info */}
                 <NoteInformation>
-                  <h3>Note Information</h3>
+                  <NoteHeader>
+                    <h3>Note Information</h3>
+                  </NoteHeader>
                   {/* {paymentRequestGroupDetails.map((payment) => ( */}
                   {/* <TableContainer> */}
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">

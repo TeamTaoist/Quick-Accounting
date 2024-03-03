@@ -23,6 +23,7 @@ import optionsIcon from "../../../assets/workspace/option.svg";
 import statusIcon from "../../../assets/workspace/status.svg";
 import {
   Image,
+  NoteHeader,
   NoteInfo,
   NoteInformation,
 } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
@@ -321,8 +322,9 @@ const PaymentRequestDetails = ({
             <PaymentCurrencyTable />
             {/* note info */}
             <NoteInformation>
-              <h3>Note Information</h3>
-
+              <NoteHeader>
+                <h3>Note Information</h3>
+              </NoteHeader>
               {/* <TableContainer> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>

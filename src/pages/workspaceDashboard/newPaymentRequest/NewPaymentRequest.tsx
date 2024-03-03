@@ -11,6 +11,7 @@ import {
   RequestHeader,
   RequestSubmit,
   TableSection,
+  NoteHeader,
   // Table,
 } from "./newPaymentRequest.style";
 import cancel from "../../../assets/auth/cancel.svg";
@@ -54,6 +55,7 @@ import { formatBalance } from "../../../utils/number";
 import { toast } from "react-toastify";
 import { isAddress } from "viem";
 import { parseUnits } from "ethers";
+import UpdateLoading from "../../../components/UpdateLoading";
 
 interface SubmitRowData {
   recipient: string;
@@ -522,7 +524,10 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
               {/* </TableContainer> */}
               {/* note info */}
               <NoteInformation style={{ marginTop: "30px" }}>
-                <h3>Note Information</h3>
+                <NoteHeader>
+                  <h3>Note Information</h3>
+                  <UpdateLoading isUpdating={false} isSuccess={true} />
+                </NoteHeader>
 
                 {/* <TableContainer> */}
                 <Table sx={{ width: "100%" }} aria-label="simple table">
