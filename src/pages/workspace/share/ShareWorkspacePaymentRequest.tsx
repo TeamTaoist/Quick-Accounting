@@ -118,6 +118,8 @@ const ShareWorkspacePaymentRequest = () => {
             ? value.value
             : propertyType === "Text"
             ? value
+            : propertyType === "date-picker"
+            ? value
             : value.map((v: ReactSelectOption) => v.value).join(";");
 
         existingCategoryProperty.values = values;
