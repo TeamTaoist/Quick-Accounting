@@ -10,18 +10,25 @@ import { useAuthStore } from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { SidebarLinkList } from "../../workspace/workspaceSidebar/WorkspaceSidebar.style";
 import SidebarLink from "../../workspace/SidebarLink";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDomainStore } from "../../../store/useDomain";
 
 const UserSidebar = () => {
   const { t } = useTranslation();
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   const navigate = useNavigate();
   const { logout } = useAuthStore();
   const handleLogout = () => {
     logout(navigate);
   };
   const [hideSidebar, setHideSidebar] = useState(false);
-  const id = 1;
+  const { queryENS, formatAddressToDomain } = useDomainStore();
+
+  useEffect(() => {
+    if (address && chainId) {
+      queryENS([address], chainId);
+    }
+  }, [address, chainId]);
   return (
     <>
       <div className="user-sidebar">
@@ -30,7 +37,11 @@ const UserSidebar = () => {
         <div className="user-address">
           <div className="address">
             <img src={addressCard} alt="" />
-            <p>{getShortAddress(address || "")}</p>
+            <p>
+              {address &&
+                chainId &&
+                formatAddressToDomain(address, chainId, false)}
+            </p>
           </div>
           <button onClick={handleLogout} className="disconnect">
             {t("user.Disconnect")}

@@ -97,7 +97,7 @@ const UserPaymentTable = ({
                 <div>
                   <p>
                     {formatAddressToDomain(
-                      payment.vault_wallet,
+                      payment.counterparty,
                       payment.workspace_chain_id,
                       payment.name_service === "sns"
                     )}

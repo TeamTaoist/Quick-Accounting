@@ -51,7 +51,7 @@ const RejectPaymentRequestTable = ({
     paymentRequestDetails,
   } = usePaymentsStore();
   const { workspace, userWorkspaces } = useWorkspace();
-  const { queryENS, formatAddressToDomain } = useDomainStore();
+  const { queryNameService, formatAddressToDomain } = useDomainStore();
 
   const [paymentId, setPaymentId] = useState<number | null>(null);
   const handleOpenModal = (payment: IPaymentRequest) => {
@@ -97,11 +97,14 @@ const RejectPaymentRequestTable = ({
   // );
 
   useEffect(() => {
-    const wallets = list.map((p) => p.counterparty);
-    if (wallets.length && workspace.chain_id) {
-      queryENS(wallets, workspace.chain_id);
+    if (list.length && workspace.chain_id) {
+      queryNameService(
+        list,
+        workspace.name_service === "sns",
+        workspace.chain_id
+      );
     }
-  }, [list, workspace]);
+  }, [list, workspace, queryNameService]);
 
   return (
     <div>

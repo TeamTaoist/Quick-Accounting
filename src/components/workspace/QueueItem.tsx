@@ -32,6 +32,7 @@ import { toast } from "react-toastify";
 import { formatEther, formatUnits, zeroAddress } from "viem";
 import CHAINS from "../../utils/chain";
 import { UpdateEvent } from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
+import { useDomainStore } from "../../store/useDomain";
 
 export const isArrayParameter = (parameter: string): boolean =>
   /(\[\d*?])+$/.test(parameter);
@@ -74,6 +75,7 @@ const QueueTransactionItem = ({
   } = usePaymentsStore();
   const payments = paymentRquestMap.get(approveTransaction.safeTxHash);
   const { address } = useAccount();
+  const { formatAddressToDomain } = useDomainStore();
 
   const [filterConfirmSigners, setConfirmedList] = useState<string[]>([]);
   const [filterRejectSigners, setRejectedList] = useState<string[]>([]);
@@ -390,7 +392,11 @@ const QueueTransactionItem = ({
                       {getShortAddress(workspace?.vault_wallet)}
                     </TableCell>
                     <TableCell>
-                      {getShortAddress(queueItem.counterparty)}
+                      {formatAddressToDomain(
+                        queueItem.counterparty,
+                        workspace.chain_id,
+                        workspace.name_service === "sns"
+                      )}
                     </TableCell>
                     <TableCell>
                       {queueItem.amount} {queueItem.currency_name}

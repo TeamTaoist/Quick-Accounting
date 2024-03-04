@@ -23,8 +23,16 @@ interface IDomainStore {
 
   querySNS: (wallets: string[]) => void;
   queryENS: (wallets: string[], chainId: number) => void;
-  queryNameService: (payments: IPaymentRequest[]) => void;
-  formatAddressToDomain: (wallet: string, chainId: number, isSNS?: boolean) => string;
+  queryNameService: (
+    payments: IPaymentRequest[],
+    isSNS?: boolean,
+    chainId?: number
+  ) => void;
+  formatAddressToDomain: (
+    wallet: string,
+    chainId: number,
+    isSNS?: boolean
+  ) => string;
 }
 
 export const useDomainStore = create<IDomainStore>((set, get) => ({
@@ -63,7 +71,7 @@ export const useDomainStore = create<IDomainStore>((set, get) => ({
     const ensAddressToNameMap = get()[k];
     const _to_be_queried = new Array<string>();
     wallets.forEach((w) => {
-      const v = ensAddressToNameMap.get(w);
+      const v = ensAddressToNameMap.get(w.toLocaleLowerCase());
       if (typeof v !== "string") {
         _to_be_queried.push(w.toLocaleLowerCase());
       }
@@ -78,12 +86,29 @@ export const useDomainStore = create<IDomainStore>((set, get) => ({
     Promise.all(_to_be_queried_requests).then((res) => {
       const _new_ens_map = new Map(ensAddressToNameMap);
       res.forEach((d, idx) => {
-        _new_ens_map.set(_to_be_queried_unique[idx], d);
+        _new_ens_map.set(_to_be_queried_unique[idx], d || "");
       });
       set({ [k]: _new_ens_map });
     });
   },
-  queryNameService: (payments: IPaymentRequest[]) => {
+  queryNameService: (
+    payments: IPaymentRequest[],
+    isSNS?: boolean,
+    chainId?: number
+  ) => {
+    if (isSNS !== undefined) {
+      const wallets = payments.map((p) => p.counterparty);
+      if (!wallets.length) {
+        return;
+      }
+      const { querySNS, queryENS } = get();
+      if (isSNS) {
+        querySNS(wallets);
+      } else if (chainId) {
+        queryENS(wallets, chainId);
+      }
+      return;
+    }
     // sns
     const sns_wallets = payments
       ?.filter((p) => p.name_service === "sns")

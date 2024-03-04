@@ -34,6 +34,7 @@ import { getChainExplorer } from "../../../utils/chain";
 import { useWorkspace } from "../../../store/useWorkspace";
 import PaymentCurrencyTable from "../../../components/paymentRequestDetails/PaymentCurrencyTable";
 import { Status, StatusBtn, SubmissionTime } from "./PaymentRequestDetails";
+import { useDomainStore } from "../../../store/useDomain";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -148,6 +149,7 @@ const TransferTop = ({
 }: {
   data: IPaymentRequest;
 }) => {
+  const { formatAddressToDomain } = useDomainStore();
   return (
     <>
       <TableHead sx={{ paddingBottom: 8 }}>
@@ -187,7 +189,13 @@ const TransferTop = ({
               </Logo>
             </SafeSection>
           </TableCell>
-          <Cell>{getShortAddress(paymentRequestDetails?.counterparty)}</Cell>
+          <Cell>
+            {formatAddressToDomain(
+              paymentRequestDetails?.counterparty,
+              paymentRequestDetails?.workspace_chain_id,
+              paymentRequestDetails?.name_service === "sns"
+            )}
+          </Cell>
           <Cell>{paymentRequestDetails.amount}</Cell>
           <Cell>{paymentRequestDetails?.currency_name}</Cell>
         </TableRow>
