@@ -52,6 +52,8 @@ import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import PaymentRequestTableList from "../../../components/workspace/paymentRequest/PaymentRequestTableList";
 import Pagination from "../../../components/Pagination";
 import RejectPaymentRequestTable from "../../../components/workspace/paymentRequest/RejectPaymentRequestTable";
+import { useWorkspace } from "../../../store/useWorkspace";
+import { useDomainStore } from "../../../store/useDomain";
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -67,6 +69,9 @@ const PaymentRequest = () => {
     exportPaymentList,
     setCurrentPaymentRequestDetail,
   } = usePaymentsStore();
+  const { workspace } = useWorkspace();
+  const { queryNameService } = useDomainStore();
+
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
   // table logic
   console.log(paymentRequestList);
@@ -154,6 +159,17 @@ const PaymentRequest = () => {
   useEffect(() => {
     getWorkspaceCategoryProperties(Number(id), true);
   }, []);
+
+  useEffect(() => {
+    if (paymentRequestList.length && workspace.chain_id) {
+      queryNameService(
+        paymentRequestList,
+        workspace.name_service === "sns",
+        workspace.chain_id
+      );
+    }
+  }, [paymentRequestList, workspace.chain_id, queryNameService]);
+
   // payment_request_id
 
   const groupedData = filterData.reduce((acc, item) => {

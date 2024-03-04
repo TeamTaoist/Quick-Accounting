@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // table
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,6 +15,8 @@ import { formatNumber } from "../../../utils/number";
 import { CategoryCell } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import { formatDate } from "../../../utils/time";
 import { getPaymentUpdateTime } from "../../../utils/payment";
+import { useDomainStore } from "../../../store/useDomain";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 interface PaymentRequestTableListProps {
   items: IPaymentRequest[];
@@ -25,10 +27,6 @@ interface PaymentRequestTableListProps {
   handleOpenModal: (payment: IPaymentRequest) => void;
   paymentId: string;
 }
-
-const recipientFormate = (n: string) => {
-  return `${n.slice(0, 6)}...${n.slice(-4)}`;
-};
 
 const PaymentRequestTableList = ({
   items,
@@ -41,6 +39,8 @@ const PaymentRequestTableList = ({
 }: PaymentRequestTableListProps) => {
   const { id } = useParams();
   const [openRows, setOpenRows] = useState<number[]>([]);
+  const { formatAddressToDomain } = useDomainStore();
+  const { workspace } = useWorkspace();
 
   const handleRowToggle = (categoryId: number) => {
     setOpenRows((prevOpenRows) =>
@@ -136,7 +136,10 @@ const PaymentRequestTableList = ({
                     handleCheckboxClick(event, payment.payment_request_id)
                   }
                 />
-                {recipientFormate(payment.counterparty)}
+                {formatAddressToDomain(
+                  payment.counterparty,
+                  workspace.chain_id
+                )}
               </TableCell>
               <TableCell>
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
@@ -189,7 +192,10 @@ const PaymentRequestTableList = ({
                         width: "29%",
                       }}
                     >
-                      {recipientFormate(payments.counterparty)}
+                      {formatAddressToDomain(
+                        payments.counterparty,
+                        workspace.chain_id
+                      )}
                     </TableCell>
                     <TableCell
                       sx={{

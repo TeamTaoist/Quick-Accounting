@@ -9,9 +9,14 @@ import {
 } from "@mui/material";
 import usePaymentsStore from "../../store/usePayments";
 import { getShortAddress } from "../../utils";
+import { useDomainStore } from "../../store/useDomain";
+import { useWorkspace } from "../../store/useWorkspace";
 
 const PaymentCurrencyTable = () => {
   const { paymentRequestDetails } = usePaymentsStore();
+  const { formatAddressToDomain } = useDomainStore();
+  const { workspace } = useWorkspace();
+
   return (
     // <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -71,7 +76,11 @@ const PaymentCurrencyTable = () => {
                 "& fieldset": { border: "none" },
               }}
               size="small"
-              value={getShortAddress(paymentRequestDetails?.counterparty)}
+              value={formatAddressToDomain(
+                paymentRequestDetails?.counterparty,
+                workspace.chain_id,
+                workspace.name_service === "sns"
+              )}
               fullWidth
               // id="fullWidth"
               placeholder="Enter wallet address"

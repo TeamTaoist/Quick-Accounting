@@ -54,6 +54,7 @@ import {
   SubmissionTime,
 } from "../paymentRequest/PaymentRequestDetails";
 import { getPaymentStatus } from "../../../utils/payment";
+import { useDomainStore } from "../../../store/useDomain";
 import UpdateLoading from "../../../components/UpdateLoading";
 
 interface PaymentRequestDetailsProps {
@@ -73,6 +74,8 @@ const BookkeepingTransferDetails = ({
   setOpen,
 }: PaymentRequestDetailsProps) => {
   const { id } = useParams();
+
+  const { formatAddressToDomain } = useDomainStore();
 
   const { workspace, userWorkspaces } = useWorkspace();
   const chainData = CHAINS.find(
@@ -348,7 +351,11 @@ const BookkeepingTransferDetails = ({
                       paddingLeft: "12px",
                     }}
                   >
-                    {getShortAddress(bookkeepingDetails.counterparty)}
+                    {formatAddressToDomain(
+                      bookkeepingDetails.counterparty,
+                      workspace.chain_id,
+                      workspace.name_service === "sns"
+                    )}
                   </TableCell>
                   <TableCell
                     sx={{

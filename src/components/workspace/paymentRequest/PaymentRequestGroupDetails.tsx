@@ -48,6 +48,7 @@ import GroupSingleSelectType from "../../paymentRequestGroupDetails/GroupSingleS
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatTimestamp } from "../../../utils/time";
 import { getPaymentStatus } from "../../../utils/payment";
+import { useDomainStore } from "../../../store/useDomain";
 import UpdateLoading from "../../UpdateLoading";
 
 interface PaymentRequestDetailsProps {
@@ -80,7 +81,8 @@ const PaymentRequestGroupDetails = ({
   const { getPaymentRequestList, updatePaymentRequestCategory } =
     usePaymentsStore();
   const { isLoading } = useLoading();
-  const { userWorkspaces } = useWorkspace();
+  const { userWorkspaces, workspace } = useWorkspace();
+  const { formatAddressToDomain } = useDomainStore();
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
@@ -363,7 +365,11 @@ const PaymentRequestGroupDetails = ({
                           }}
                           // disabled={paymentRequestDetails.status === 1}
                           size="small"
-                          value={payment.recipient}
+                          value={formatAddressToDomain(
+                            payment.recipient,
+                            workspace.chain_id,
+                            workspace.name_service === "sns"
+                          )}
                           fullWidth
                           // id="fullWidth"
                           placeholder="Enter wallet address"

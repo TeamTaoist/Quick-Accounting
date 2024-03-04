@@ -10,11 +10,15 @@ import usePaymentsStore from "../../../store/usePayments";
 import { formatNumber } from "../../../utils/number";
 import UserPaymentTable from "../../../components/userDashboard/UserPaymentTable";
 import Pagination from "../../../components/Pagination";
+import { useWorkspace } from "../../../store/useWorkspace";
+import { useDomainStore } from "../../../store/useDomain";
 
 const UserPaymentRequest = () => {
   const { id } = useParams();
   const { userPaymentRequest, getUserPaymentRequest } = useUserPayment();
   const { setCurrentPaymentRequestDetail } = usePaymentsStore();
+  const { workspace } = useWorkspace();
+  const { queryNameService } = useDomainStore();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -51,6 +55,12 @@ const UserPaymentRequest = () => {
   useEffect(() => {
     getUserPaymentRequest(pageNumbers);
   }, [getUserPaymentRequest, pageNumbers]);
+
+  useEffect(() => {
+    if (userPaymentRequest.rows.length && workspace.chain_id) {
+      queryNameService(userPaymentRequest.rows);
+    }
+  }, [userPaymentRequest, workspace.chain_id]);
 
   return (
     <UserPaymentContainer>
