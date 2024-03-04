@@ -1,11 +1,15 @@
 import { create } from "zustand";
 import { getAddress } from "viem";
 import sns from "@seedao/sns-js";
-import { getEnsName } from "@wagmi/core";
+import {
+  getEnsName,
+  getEnsAddress,
+  type GetEnsAddressReturnType,
+} from "@wagmi/core";
 
 import { config } from "../providers/wagmiProvider";
 import { getShortAddress } from "../utils";
-import { useWorkspace } from "./useWorkspace";
+import { normalize } from "viem/ens";
 
 const ENS_SPPORTED_CHAINS = [1, 5, 11155111];
 
@@ -33,6 +37,8 @@ interface IDomainStore {
     chainId: number,
     isSNS?: boolean
   ) => string;
+  parseSNS: (names: string[]) => Promise<string[]>;
+  parseENS: (names: string[]) => Promise<GetEnsAddressReturnType[]>;
 }
 
 export const useDomainStore = create<IDomainStore>((set, get) => ({
@@ -157,5 +163,14 @@ export const useDomainStore = create<IDomainStore>((set, get) => ({
       );
     }
     return "";
+  },
+  parseSNS: async (names: string[]) => {
+    return sns.resolves(names);
+  },
+  parseENS: (names: string[]) => {
+    const reqs = names.map((name) =>
+      getEnsAddress(config, { name: normalize(name) })
+    );
+    return Promise.all(reqs);
   },
 }));
