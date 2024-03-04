@@ -50,6 +50,7 @@ import { formatTimestamp } from "../../../utils/time";
 import { getPaymentStatus } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
 import UpdateLoading from "../../UpdateLoading";
+import GroupDatePickerType from "../../paymentRequestGroupDetails/GroupDatePickerType";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -646,7 +647,7 @@ const PaymentRequestGroupDetails = ({
                         (properties: ICategoryProperties, i: number) => (
                           <React.Fragment key={i}>
                             {properties.type === "date-picker" && (
-                              <GroupTextType
+                              <GroupDatePickerType
                                 properties={properties}
                                 handleUpdatePaymentRequest={
                                   handleUpdatePaymentRequest

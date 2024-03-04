@@ -1,7 +1,7 @@
 import { TableCell, TableRow, TextField } from "@mui/material";
 import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
-import optionsIcon from "../../assets/workspace/option.svg";
+import multiSelect from "../../assets/workspace/multi-select.svg";
 import { paymentRequestBody } from "../workspace/paymentRequest/PaymentRequestGroupDetails";
 
 interface GroupTextTypeProps {
@@ -21,7 +21,7 @@ interface GroupTextTypeProps {
   defaultPropertyValue: any;
 }
 
-const GroupTextType = ({
+const GroupDatePickerType = ({
   properties,
   handleUpdatePaymentRequest,
   payment,
@@ -48,7 +48,7 @@ const GroupTextType = ({
           }}
         >
           <NoteInfo>
-            <Image src={optionsIcon} alt="" /> {properties.name}
+            <Image src={multiSelect} alt="" /> {properties.name}
           </NoteInfo>
         </TableCell>
         <TableCell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
@@ -58,9 +58,11 @@ const GroupTextType = ({
             }}
             size="small"
             fullWidth
+            type="date"
             value={
               sharePaymentRequestForm[index].category_properties.find(
-                (p: any) => p.type === "Text" && p.name === properties.name
+                (p: any) =>
+                  p.type === "date-picker" && p.name === properties.name
               )?.values || ""
             }
             // id="fullWidth"
@@ -86,4 +88,4 @@ const GroupTextType = ({
   return null;
 };
 
-export default GroupTextType;
+export default GroupDatePickerType;

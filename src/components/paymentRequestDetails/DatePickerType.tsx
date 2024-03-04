@@ -1,28 +1,30 @@
 import { TableCell, TableRow, TextField } from "@mui/material";
 import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
-import optionsIcon from "../../assets/workspace/option.svg";
+import multiSelect from "../../assets/workspace/multi-select.svg";
 import { CategoryProperties } from "../../store/useCategoryProperty";
 
 interface TextTypeProps {
   property: any;
   handleUpdateCategory: () => void;
-  proPertyTextValue: {
+  datePicker: {
     [name: string]: any;
   };
-  handlePropertyText: (e: any, name: string, type: string) => void;
+  handleDatePickerProperty: (e: any, name: string, type: string) => void;
   status: number;
   defaultPropertyValue: CategoryProperties;
 }
 
-const TextType = ({
+const DatePickerType = ({
   property,
   handleUpdateCategory,
-  proPertyTextValue,
-  handlePropertyText,
+  datePicker,
+  handleDatePickerProperty,
   status,
   defaultPropertyValue,
 }: TextTypeProps) => {
+  console.log("d", datePicker);
+
   if (!!defaultPropertyValue || !property.archived) {
     return (
       <TableRow
@@ -41,7 +43,7 @@ const TextType = ({
           }}
         >
           <NoteInfo>
-            <Image src={optionsIcon} alt="" /> {property.name}
+            <Image src={multiSelect} alt="" /> {property.name}
           </NoteInfo>
         </TableCell>
 
@@ -53,12 +55,13 @@ const TextType = ({
             }}
             size="small"
             fullWidth
-            // value={propertyContent}
-            value={proPertyTextValue[property.name]?.values || ""}
+            type="date"
+            value={datePicker[property.name]?.values || ""}
+            // value={property.values || ""}
             // id="fullWidth"
             placeholder="Enter content"
             onChange={(e) =>
-              handlePropertyText(e, property.name, property.type)
+              handleDatePickerProperty(e, property.name, property.type)
             }
             InputProps={{
               style: { padding: 0 },
@@ -71,4 +74,4 @@ const TextType = ({
   return null;
 };
 
-export default TextType;
+export default DatePickerType;

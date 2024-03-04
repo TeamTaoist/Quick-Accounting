@@ -303,7 +303,7 @@ const GroupPaymentCategoryProperties = ({
                     >
                       <TableCell sx={{ height: 1, width: 252 }}>
                         <NoteInfo>
-                          <Image src={optionsIcon} alt="" /> {property.name}
+                          <Image src={multiSelect} alt="" /> {property.name}
                         </NoteInfo>
                       </TableCell>
                       {/* add multi select */}

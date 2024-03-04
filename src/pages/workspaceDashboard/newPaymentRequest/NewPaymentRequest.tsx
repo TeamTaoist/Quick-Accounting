@@ -200,6 +200,18 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
       setTextPropertyValues({});
     }
   };
+  const [datePicker, setDatePicker] = useState<{
+    [key: string]: string;
+  }>({});
+  console.log(datePicker);
+
+  const handleDatePickerProperty = (e: any, name: string) => {
+    const value = e.target.value;
+    setDatePicker({ ...datePicker, [name]: value });
+    if (e.target.value === "") {
+      setDatePicker({});
+    }
+  };
   const handleSelectedCategory = (id: number) => {
     setSelectedCategoryID(id);
     setPropertyValues({});
@@ -237,6 +249,14 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
             values: textPropertyValues[key],
           } as ICategoryProperties)
       ),
+      ...Object.keys(datePicker).map(
+        (key) =>
+          ({
+            name: key,
+            type: "date-picker",
+            values: datePicker[key],
+          } as ICategoryProperties)
+      ),
     ],
     rows: rows.map((row) => {
       const token = assetsList?.find(
@@ -259,6 +279,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
           };
     }),
   };
+  console.log("body", paymentRequestBody);
 
   const checkAllFields = () => {
     if (!paymentRequestBody.rows.length) {
@@ -778,7 +799,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               }}
                             >
                               <NoteInfo>
-                                <Image src={optionsIcon} alt="" />{" "}
+                                <Image src={multiSelect} alt="" />{" "}
                                 {property.name}
                               </NoteInfo>
                             </TableCell>
@@ -789,15 +810,11 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 }}
                                 size="small"
                                 fullWidth
-                                value={textPropertyValues[property.name] || ""}
+                                value={datePicker[property.name] || ""}
                                 placeholder="yyyy-mm-dd"
                                 type="date"
                                 onChange={(e) =>
-                                  handlePropertyText(
-                                    e,
-                                    property.name,
-                                    property.type
-                                  )
+                                  handleDatePickerProperty(e, property.name)
                                 }
                                 InputProps={{
                                   style: { padding: 0 },

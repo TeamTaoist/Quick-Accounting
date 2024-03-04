@@ -154,6 +154,19 @@ const BookkeepingTransferDetails = ({
       },
     });
   };
+  // date picker
+  const [datePicker, setDatePicker] = useState<{
+    [key: string]: string;
+  }>({});
+  console.log(datePicker);
+
+  const handleDatePickerProperty = (e: any, name: string) => {
+    const value = e.target.value;
+    setDatePicker({ ...datePicker, [name]: value });
+    if (e.target.value === "") {
+      setDatePicker({});
+    }
+  };
 
   const [age, setAge] = useState("Category");
 
@@ -484,6 +497,8 @@ const BookkeepingTransferDetails = ({
                         proPertyTextValue={proPertyTextValue}
                         handlePropertyText={handlePropertyText}
                         status={bookkeepingDetails.status}
+                        datePicker={datePicker}
+                        handleDatePickerProperty={handleDatePickerProperty}
                       />
                     </>
                   )}

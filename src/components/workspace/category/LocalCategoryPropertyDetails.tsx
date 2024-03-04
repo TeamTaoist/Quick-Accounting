@@ -125,7 +125,7 @@ const LocalCategoryPropertyDetails = ({
             </MenuItem>
           </Select>
           {/* property value */}
-          {property.type !== "Text" && (
+          {property.type !== "Text" && property.type !== "date-picker" && (
             <>
               {propertyValues.map((value, valueIndex) => (
                 <PropertyOptionsValue>
@@ -133,7 +133,7 @@ const LocalCategoryPropertyDetails = ({
                   <PropertyInputValue
                     key={valueIndex}
                     placeholder=""
-                    type={property.type === "date-picker" ? "date" : "text"}
+                    // type={property.type === "date-picker" ? "date" : "text"}
                     value={value}
                     onChange={(e) =>
                       handlePropertyValueChang(

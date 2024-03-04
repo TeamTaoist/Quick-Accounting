@@ -180,6 +180,8 @@ const Category = () => {
       [categoryId]: [...properties, newProperty],
     });
   };
+  console.log("categoryProperties", categoryProperties);
+
   const handlePropertyNameChange = (
     categoryId: number,
     index: number,
