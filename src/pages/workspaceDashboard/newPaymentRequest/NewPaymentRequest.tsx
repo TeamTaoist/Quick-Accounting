@@ -707,7 +707,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                       </>
                     ))}
 
-                    {/* single select */}
+                    {/* text */}
                     {selectedCategory?.properties?.map((property) => (
                       <>
                         {property.type === "Text" && (
@@ -741,6 +741,57 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 fullWidth
                                 value={textPropertyValues[property.name] || ""}
                                 placeholder="Enter content"
+                                onChange={(e) =>
+                                  handlePropertyText(
+                                    e,
+                                    property.name,
+                                    property.type
+                                  )
+                                }
+                                InputProps={{
+                                  style: { padding: 0 },
+                                }}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </>
+                    ))}
+                    {/* date picker */}
+                    {selectedCategory?.properties?.map((property) => (
+                      <>
+                        {property.type === "date-picker" && (
+                          <TableRow
+                            key={property.name}
+                            sx={{
+                              td: {
+                                padding: 0,
+                                paddingInline: "16px",
+                              },
+                            }}
+                          >
+                            <TableCell
+                              sx={{
+                                height: 1,
+                                width: 200,
+                                borderRight: "1px solid var(--border-table)",
+                              }}
+                            >
+                              <NoteInfo>
+                                <Image src={optionsIcon} alt="" />{" "}
+                                {property.name}
+                              </NoteInfo>
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                sx={{
+                                  "& fieldset": { border: "none" },
+                                }}
+                                size="small"
+                                fullWidth
+                                value={textPropertyValues[property.name] || ""}
+                                placeholder="yyyy-mm-dd"
+                                type="date"
                                 onChange={(e) =>
                                   handlePropertyText(
                                     e,
