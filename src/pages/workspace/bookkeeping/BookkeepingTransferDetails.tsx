@@ -156,16 +156,18 @@ const BookkeepingTransferDetails = ({
   };
   // date picker
   const [datePicker, setDatePicker] = useState<{
-    [key: string]: string;
+    [name: string]: any;
   }>({});
-  console.log(datePicker);
 
   const handleDatePickerProperty = (e: any, name: string) => {
     const value = e.target.value;
-    setDatePicker({ ...datePicker, [name]: value });
-    if (e.target.value === "") {
-      setDatePicker({});
-    }
+    setDatePicker({
+      ...datePicker,
+      [name]: {
+        ...datePicker[name],
+        values: value,
+      },
+    });
   };
 
   const [age, setAge] = useState("Category");
@@ -204,6 +206,7 @@ const BookkeepingTransferDetails = ({
     setPropertyMultiValues({});
     setPropertyTextValue({});
     setPropertyContent("");
+    setDatePicker({});
   };
   // form data
   const updatedPaymentBody = {
@@ -234,6 +237,14 @@ const BookkeepingTransferDetails = ({
             values: proPertyTextValue[key].values,
           } as ICategoryProperties)
       ),
+      ...Object.keys(datePicker).map(
+        (key) =>
+          ({
+            name: key,
+            type: "date-picker",
+            values: datePicker[key].values,
+          } as ICategoryProperties)
+      ),
     ],
   };
   let parseCategoryProperties: any;
@@ -248,7 +259,7 @@ const BookkeepingTransferDetails = ({
     const initialSelectSingleValue: { [name: string]: any } = {};
     const initialSelectedValues: { [name: string]: any } = {};
     const initialPropertyTextValue: { [name: string]: any } = {};
-    const initialText: { [name: string]: any } = {};
+    const initialPropertyDateValue: { [name: string]: any } = {};
 
     parseCategoryProperties?.forEach((property: any) => {
       if (property.type === "single-select") {
@@ -270,14 +281,19 @@ const BookkeepingTransferDetails = ({
           type: property.type,
           values: property.values,
         };
-        // initialText[property.name] = property.values;
+      } else if (property.type === "date-picker") {
+        initialPropertyDateValue[property.name] = {
+          name: property.name,
+          type: property.type,
+          values: property.values,
+        };
       }
     });
 
-    // setPropertyTextValue(initialPropertyTextValue);
     setPropertyMultiValues(initialSelectedValues);
     setPropertyValues(initialSelectSingleValue);
     setPropertyTextValue(initialPropertyTextValue);
+    setDatePicker(initialPropertyDateValue);
   }, []);
 
   useEffect(() => {

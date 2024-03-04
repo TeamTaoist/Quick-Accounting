@@ -194,6 +194,7 @@ const PaymentRequestDetails = ({
     setPropertyTextValue({});
     setPropertyContent("");
     parseCategoryProperties = {};
+    setDatePicker({});
   };
   // form data
   const updatedPaymentBody = {
@@ -242,7 +243,6 @@ const PaymentRequestDetails = ({
       parseCategoryProperties = JSON.parse(categoryProperties);
     }
   }
-  console.log("p.p", parseCategoryProperties);
 
   // new
   useEffect(() => {
