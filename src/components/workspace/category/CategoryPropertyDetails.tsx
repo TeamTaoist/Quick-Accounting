@@ -124,9 +124,15 @@ const CategoryPropertyDetails = ({
                 Multi-select
               </DropdownOption>
             </MenuItem>
+            <MenuItem value="date-picker">
+              <DropdownOption>
+                <img src={multiSelect} alt="" />
+                Datepicker
+              </DropdownOption>
+            </MenuItem>
           </Select>
           {/* property value */}
-          {propertyType !== "Text" && (
+          {property.type !== "Text" && (
             <>
               {propertyValue.map((value, valueIndex) => (
                 <PropertyOptionsValue>
@@ -134,6 +140,7 @@ const CategoryPropertyDetails = ({
                   <PropertyInputValue
                     key={valueIndex}
                     placeholder=""
+                    type={property.type === "date-picker" ? "date" : "text"}
                     value={value}
                     onChange={(e) =>
                       handlePropertyValue(valueIndex, e.target.value)

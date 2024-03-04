@@ -117,6 +117,12 @@ const LocalCategoryPropertyDetails = ({
                 Multi-select
               </DropdownOption>
             </MenuItem>
+            <MenuItem value="date-picker">
+              <DropdownOption>
+                <img src={multiSelect} alt="" />
+                Datepicker
+              </DropdownOption>
+            </MenuItem>
           </Select>
           {/* property value */}
           {property.type !== "Text" && (
@@ -127,6 +133,7 @@ const LocalCategoryPropertyDetails = ({
                   <PropertyInputValue
                     key={valueIndex}
                     placeholder=""
+                    type={property.type === "date-picker" ? "date" : "text"}
                     value={value}
                     onChange={(e) =>
                       handlePropertyValueChang(
