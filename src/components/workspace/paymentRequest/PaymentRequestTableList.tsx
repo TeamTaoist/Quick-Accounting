@@ -62,6 +62,8 @@ const PaymentRequestTableList = ({
       setSelected(selected.filter((id) => id !== categoryId));
     }
   };
+  console.log("items", items);
+
   return (
     <React.Fragment key={paymentId}>
       {items.length > 1 ? (

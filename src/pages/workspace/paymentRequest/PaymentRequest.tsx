@@ -69,6 +69,7 @@ const PaymentRequest = () => {
   } = usePaymentsStore();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
   // table logic
+  console.log(paymentRequestList);
 
   const [newPaymentsVisible, setNewPaymentsVisible] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
