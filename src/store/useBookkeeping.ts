@@ -167,6 +167,8 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
             payment.ID === Number(paymentId)
               ? {
                   ...payment,
+                  category_id: updatedPaymentBody.category_id,
+                  category_name: updatedPaymentBody.category_name,
                   category_properties: category_properties,
                 }
               : payment

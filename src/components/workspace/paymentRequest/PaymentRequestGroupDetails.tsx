@@ -140,12 +140,14 @@ const PaymentRequestGroupDetails = ({
             ? value.value
             : propertyType === "Text"
             ? value
+            : propertyType === "date-picker"
+            ? value
             : value.map((v: ReactSelectOption) => v.value).join(";");
 
         existingCategoryProperty.values = values;
       } else {
         const newCategoryProperty =
-          propertyType === "Text"
+          propertyType === "Text" || propertyType === "date-picker"
             ? {
                 name: propertyName,
                 type: propertyType,
@@ -626,6 +628,35 @@ const PaymentRequestGroupDetails = ({
                                   ].category_properties.filter(
                                     (p: any) =>
                                       p.type === "Text" &&
+                                      p.name === properties.name
+                                  )[0]
+                                }
+                              />
+                            )}
+                          </React.Fragment>
+                        )
+                      )}
+                      {selectedCategories[index]?.properties?.map(
+                        (properties: ICategoryProperties, i: number) => (
+                          <React.Fragment key={i}>
+                            {properties.type === "date-picker" && (
+                              <GroupTextType
+                                properties={properties}
+                                handleUpdatePaymentRequest={
+                                  handleUpdatePaymentRequest
+                                }
+                                sharePaymentRequestForm={
+                                  sharePaymentRequestForm
+                                }
+                                payment={payment}
+                                index={index}
+                                handleFormChange={handleFormChange}
+                                defaultPropertyValue={
+                                  sharePaymentRequestForm[
+                                    index
+                                  ].category_properties.filter(
+                                    (p: any) =>
+                                      p.type === "date-picker" &&
                                       p.name === properties.name
                                   )[0]
                                 }

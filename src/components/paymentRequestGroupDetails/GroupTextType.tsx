@@ -58,10 +58,12 @@ const GroupTextType = ({
             }}
             size="small"
             fullWidth
-            // value={property.values}
+            type={properties.type === "date-picker" ? "date" : "text"}
             value={
               sharePaymentRequestForm[index].category_properties.find(
-                (p: any) => p.type === "Text" && p.name === properties.name
+                (p: any) =>
+                  (p.type === "Text" || p.type === "date-picker") &&
+                  p.name === properties.name
               )?.values || ""
             }
             // id="fullWidth"
