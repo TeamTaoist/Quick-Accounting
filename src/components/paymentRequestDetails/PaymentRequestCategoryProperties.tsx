@@ -100,6 +100,25 @@ const PaymentRequestCategoryProperties = ({
           )}
         </>
       ))}
+      {selectedCategory.properties?.map((property: any) => (
+        <>
+          {property.type === "date-picker" && (
+            <TextType
+              property={property}
+              handleUpdateCategory={handleUpdateCategory}
+              proPertyTextValue={proPertyTextValue}
+              handlePropertyText={handlePropertyText}
+              status={status}
+              defaultPropertyValue={
+                parseCategoryProperties?.filter(
+                  (p: any) =>
+                    (p.type === "date-picker" && p.name) === property.name
+                )[0]
+              }
+            />
+          )}
+        </>
+      ))}
     </>
   );
 };

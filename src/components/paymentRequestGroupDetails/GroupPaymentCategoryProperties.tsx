@@ -291,6 +291,58 @@ const GroupPaymentCategoryProperties = ({
                       </TableCell>
                     </TableRow>
                   )}
+                  {property.type === "date-picker" && (
+                    <TableRow
+                      sx={{
+                        td: {
+                          border: "1px solid var(--border-table)",
+                          padding: 0,
+                          paddingInline: "16px",
+                        },
+                      }}
+                    >
+                      <TableCell sx={{ height: 1, width: 252 }}>
+                        <NoteInfo>
+                          <Image src={optionsIcon} alt="" /> {property.name}
+                        </NoteInfo>
+                      </TableCell>
+                      {/* add multi select */}
+                      <TableCell>
+                        <TextField
+                          sx={{
+                            "& fieldset": { border: "none" },
+                          }}
+                          size="small"
+                          autoComplete="off"
+                          fullWidth
+                          type="date"
+                          value={
+                            sharePaymentRequestForm[
+                              index
+                            ].category_properties.find(
+                              (p) =>
+                                p.name === property.name &&
+                                p.type === "date-picker"
+                            )?.values || ""
+                          }
+                          placeholder="Enter content"
+                          onChange={(e) =>
+                            handleFormChange(
+                              index,
+                              "categoryProperties",
+                              e.target.value,
+                              property.name,
+                              property.type
+                            )
+                          }
+                          InputProps={{
+                            style: { padding: 0 },
+                            readOnly: isEditable,
+                          }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </React.Fragment>
               )
             )}

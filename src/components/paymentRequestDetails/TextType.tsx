@@ -57,6 +57,8 @@ const TextType = ({
             value={proPertyTextValue[property.name]?.values || ""}
             // id="fullWidth"
             placeholder="Enter content"
+            type={property.type === "date-picker" ? "date" : "text"}
+            // type="date"
             onChange={(e) =>
               handlePropertyText(e, property.name, property.type)
             }

@@ -123,7 +123,7 @@ const ShareWorkspacePaymentRequest = () => {
         existingCategoryProperty.values = values;
       } else {
         const newCategoryProperty =
-          propertyType === "Text"
+          propertyType === "Text" || propertyType === "date-picker"
             ? {
                 name: propertyName,
                 type: propertyType,
