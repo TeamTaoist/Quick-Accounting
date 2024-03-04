@@ -23,7 +23,8 @@ interface IDomainStore {
 
   querySNS: (wallets: string[]) => void;
   queryENS: (wallets: string[], chainId: number) => void;
-  formatAddressToDomain: (wallet: string, chainId: number) => string;
+  queryNameService: (payments: IPaymentRequest[]) => void;
+  formatAddressToDomain: (wallet: string, chainId: number, isSNS?: boolean) => string;
 }
 
 export const useDomainStore = create<IDomainStore>((set, get) => ({
@@ -82,13 +83,38 @@ export const useDomainStore = create<IDomainStore>((set, get) => ({
       set({ [k]: _new_ens_map });
     });
   },
-  formatAddressToDomain: (wallet: string, chainId: number) => {
+  queryNameService: (payments: IPaymentRequest[]) => {
+    // sns
+    const sns_wallets = payments
+      ?.filter((p) => p.name_service === "sns")
+      .map((p) => p.counterparty);
+    const { querySNS } = get();
+    if (sns_wallets?.length) {
+      querySNS(sns_wallets);
+    }
+    // ens
+    const ens_list = payments?.filter((p) => p.name_service !== "sns");
+    if (ens_list?.length) {
+      const chain_id_map = new Map<number, string[]>();
+      ens_list.forEach((p) => {
+        const chain_id = p.workspace_chain_id;
+        const _wallets = chain_id_map.get(chain_id) || [];
+        _wallets.push(p.counterparty);
+        chain_id_map.set(chain_id, _wallets);
+      });
+      if (chain_id_map.size) {
+        const { queryENS } = get();
+        chain_id_map.forEach((wallets, chain_id) => {
+          queryENS(wallets, chain_id);
+        });
+      }
+    }
+  },
+  formatAddressToDomain: (wallet: string, chainId: number, isSNS?: boolean) => {
     if (!wallet) {
       return "";
     }
-    // TODO: check current workspace is sepolia or not
-    const isSeeDAO = false;
-    if (isSeeDAO) {
+    if (isSNS) {
       const { snsAddressToNameMap } = get();
       return (
         snsAddressToNameMap.get(wallet.toLocaleLowerCase()) ||
