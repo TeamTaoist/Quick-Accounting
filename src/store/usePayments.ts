@@ -54,7 +54,7 @@ interface IPaymentsStore {
     workspaceId: string | undefined,
     paymentId: string,
     updatedPaymentBody: any
-  ) => Promise<void>;
+  ) => Promise<boolean | undefined>;
   exportPaymentList: (
     workspaceId: string | undefined,
     paymentRequestIds: string
@@ -331,14 +331,28 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       paymentId,
       updatedPaymentBody
     ) => {
-      // setLoading(true);
+      const { paymentRequestList } = get();
       try {
         const { data } = await axiosClient.put(
           `/payment_request/${workspaceId}/${paymentId}`,
           updatedPaymentBody
         );
         if (data.msg === "success" && data.code === 200) {
-          toast.success("Updated successfully");
+          const category_properties = JSON.stringify(
+            updatedPaymentBody.category_properties
+          );
+          const updatedList = paymentRequestList.map((payment) =>
+            payment.ID === Number(paymentId)
+              ? {
+                  ...payment,
+                  category_properties: category_properties,
+                }
+              : payment
+          );
+          set({ paymentRequestList: updatedList });
+          console.log("paymentRequestList", paymentRequestList);
+
+          return true;
         }
       } catch (error: any) {
         toast.error(error?.data.msg || error?.status || error);
@@ -373,11 +387,11 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         setLoading(false);
       }
     },
-    updatePaymentRquestMap: (safe_tx_hash, data) => { 
+    updatePaymentRquestMap: (safe_tx_hash, data) => {
       const { paymentRquestMap } = get();
       paymentRquestMap.set(safe_tx_hash, data);
       set({ paymentRquestMap: new Map(paymentRquestMap) });
-    }
+    },
   };
 });
 

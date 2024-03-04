@@ -18,6 +18,7 @@ import linkIcon from "../../../assets/workspace/link-icon.svg";
 
 import {
   Image,
+  NoteHeader,
   NoteInfo,
   NoteInformation,
 } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
@@ -306,7 +307,10 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
             {/* note info */}
             <NoteInformation>
               {/* <div className="note">Note Information</div> */}
-              <h3>Note Information</h3>
+              {/* <h3>Note Information</h3> */}
+              <NoteHeader>
+                <h3>Note Information</h3>
+              </NoteHeader>
 
               {/* <TableContainer sx={{ borderRadius: "7px" }}> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -316,6 +320,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       td: {
                         padding: 1,
                         paddingInline: 1,
+                        paddingLeft: "12px",
                       },
                     }}
                   >
@@ -340,6 +345,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                         td: {
                           border: "1px solid var(--border-table)",
                           padding: 1,
+                          paddingLeft: "12px",
                         },
                       }}
                     >

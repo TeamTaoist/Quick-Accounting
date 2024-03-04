@@ -87,12 +87,15 @@ export const NoteInformation = styled.div`
   /* padding-top: 30px; */
   /* padding-inline: 40px; */
   /* padding-bottom: 14px; */
+`;
+export const NoteHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background: var(--bg-primary);
   h3 {
     font-size: 18px;
     font-weight: 400;
-    padding: 10px 0;
-    padding-left: 16px;
-    background: var(--bg-primary);
   }
   .note {
     padding-bottom: 8px;

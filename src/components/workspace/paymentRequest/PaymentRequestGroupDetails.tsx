@@ -28,6 +28,7 @@ import { useLoading } from "../../../store/useLoading";
 import {
   DeleteIcon,
   Image,
+  NoteHeader,
   NoteInfo,
   NoteInformation,
   RequestSubmit,
@@ -48,6 +49,7 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import { formatTimestamp } from "../../../utils/time";
 import { getPaymentStatus } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
+import UpdateLoading from "../../UpdateLoading";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -115,9 +117,6 @@ const PaymentRequestGroupDetails = ({
     },
   ]);
 
-  console.log("form data", sharePaymentRequestForm);
-  console.log("group details", groupDetails);
-
   // handle form value
   const handleFormChange = (
     index: number,
@@ -173,8 +172,6 @@ const PaymentRequestGroupDetails = ({
 
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<any>([]);
-  console.log("selectedCategoryIDs", selectedCategoryIDs);
-  console.log("selectedCategories", selectedCategories);
 
   const handleCategoryDropdown = (
     categoryId: number,
@@ -235,23 +232,39 @@ const PaymentRequestGroupDetails = ({
   useEffect(() => {
     setDefaultValue(sharePaymentRequestForm);
   }, []);
-  console.log("default value", defaultValue);
+
+  // updating loading state
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [updatingPaymentId, setUpdatingPaymentId] = useState<number | null>(
+    null
+  );
 
   const handleUpdatePaymentRequest = async (paymentId: number) => {
+    setUpdatingPaymentId(paymentId);
+    setIsUpdating(true);
     const selectedPayment = sharePaymentRequestForm.find(
       (f) => f.id === paymentId
     );
     const paymentRequestBody = {
       category_id: selectedPayment?.category_id,
       category_name: selectedPayment?.category_name,
-      category_Properties: selectedPayment?.category_properties,
+      category_properties: selectedPayment?.category_properties,
     };
     await updatePaymentRequestCategory(
       id,
       paymentId.toString(),
       paymentRequestBody
-    );
-    getPaymentRequestList(Number(id), false);
+    ).then((res) => {
+      if (res) {
+        setIsUpdating(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+          setUpdatingPaymentId(null);
+        }, 3000);
+      }
+    });
   };
   const [selectedWorkspaceName, setSelectedWorkspaceName] =
     useState<string>("");
@@ -280,7 +293,7 @@ const PaymentRequestGroupDetails = ({
       >
         <RequestDetails>
           {sharePaymentRequestForm.map((payment: any, index: number) => (
-            <React.Fragment key={payment.ID}>
+            <React.Fragment key={payment.id}>
               <TableContainer
                 // sx={{ paddingInline: "40px", paddingTop: "30px" }}
                 sx={{
@@ -441,7 +454,15 @@ const PaymentRequestGroupDetails = ({
                 {/* </TableContainer> */}
                 {/* note info */}
                 <NoteInformation>
-                  <h3>Note Information</h3>
+                  <NoteHeader>
+                    <h3>Note Information</h3>
+                    {updatingPaymentId === payment.id && (
+                      <UpdateLoading
+                        isUpdating={isUpdating}
+                        isSuccess={isSuccess}
+                      />
+                    )}
+                  </NoteHeader>
                   {/* {paymentRequestGroupDetails.map((payment) => ( */}
                   {/* <TableContainer> */}
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">

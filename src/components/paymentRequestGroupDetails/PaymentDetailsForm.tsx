@@ -176,24 +176,28 @@ const PaymentDetailsForm = ({
                   readOnly: isEditable,
                 }}
               >
-                {assetsList.map((asset, i: number) => (
-                  <MenuItem
-                    key={i}
-                    value={asset.tokenInfo.address}
-                    disabled={asset.hidden}
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "var(--hover-bg)",
-                      },
-                      "&.Mui-selected": {
-                        backgroundColor: "var(--hover-bg)",
-                      },
-                    }}
-                  >
-                    {asset.tokenInfo.symbol}(
-                    {formatBalance(asset.balance, asset.tokenInfo.decimals)})
-                  </MenuItem>
-                ))}
+                {assetsList.map(
+                  (asset, i) =>
+                    !asset.hidden && (
+                      <MenuItem
+                        key={i}
+                        value={asset.tokenInfo.address}
+                        disabled={asset.hidden}
+                        sx={{
+                          "&:hover": {
+                            backgroundColor: "var(--hover-bg)",
+                          },
+                          "&.Mui-selected": {
+                            backgroundColor: "var(--hover-bg)",
+                          },
+                        }}
+                      >
+                        {asset.tokenInfo.symbol}(
+                        {formatBalance(asset.balance, asset.tokenInfo.decimals)}
+                        )
+                      </MenuItem>
+                    )
+                )}
               </Select>
             </TableCell>
           </TableRow>

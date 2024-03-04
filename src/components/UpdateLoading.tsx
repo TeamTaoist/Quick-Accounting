@@ -8,8 +8,6 @@ interface UpdateLoadingProps {
 }
 
 const UpdateLoading = ({ isUpdating, isSuccess }: UpdateLoadingProps) => {
-  console.log(isUpdating);
-
   return (
     <UpdateLoadingToast>
       {isUpdating && (

@@ -28,6 +28,7 @@ import transferArrow from "../../../assets/workspace/transfer-arrow.svg";
 import {
   DeleteIcon,
   Image,
+  NoteHeader,
   NoteInfo,
   NoteInformation,
   RequestSubmit,
@@ -54,6 +55,7 @@ import {
 } from "../paymentRequest/PaymentRequestDetails";
 import { getPaymentStatus } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
+import UpdateLoading from "../../../components/UpdateLoading";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -81,7 +83,8 @@ const BookkeepingTransferDetails = ({
   );
 
   const { updatePaymentRequestCategory } = usePaymentsStore();
-  const { bookkeepingDetails, getBookkeepingList } = useBookkeeping();
+  const { bookkeepingDetails, getBookkeepingList, updateBookkeepingCategory } =
+    useBookkeeping();
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
 
@@ -274,13 +277,25 @@ const BookkeepingTransferDetails = ({
     }
   }, []);
 
+  // updating loading state
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
   const handleUpdateCategory = async () => {
-    await updatePaymentRequestCategory(
+    setIsUpdating(true);
+    await updateBookkeepingCategory(
       id,
       bookkeepingDetails.ID.toString(),
       updatedPaymentBody
-    );
-    getBookkeepingList(bookkeepingDetails.workspace_id, false);
+    ).then((res) => {
+      if (res) {
+        setIsUpdating(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 3000);
+      }
+    });
   };
 
   return (
@@ -389,7 +404,10 @@ const BookkeepingTransferDetails = ({
             </TransactionHash>
             {/* note info */}
             <NoteInformation>
-              <h3>Note Information</h3>
+              <NoteHeader>
+                <h3>Note Information</h3>
+                <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} />
+              </NoteHeader>
 
               {/* <TableContainer> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">

@@ -11,6 +11,7 @@ import {
   RequestHeader,
   RequestSubmit,
   TableSection,
+  NoteHeader,
   // Table,
 } from "./newPaymentRequest.style";
 import cancel from "../../../assets/auth/cancel.svg";
@@ -472,28 +473,30 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             "& fieldset": { border: "none" },
                           }}
                         >
-                          {assetsList?.map((item, i) => (
-                            <MenuItem
-                              key={i}
-                              value={item.tokenInfo.address}
-                              disabled={item.hidden}
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                                "&.Mui-selected": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                              }}
-                            >
-                              {item.tokenInfo.symbol}(
-                              {formatBalance(
-                                item.balance,
-                                item.tokenInfo.decimals
-                              )}
+                          {assetsList?.map(
+                            (item, i) =>
+                              !item.hidden && (
+                                <MenuItem
+                                  key={i}
+                                  value={item.tokenInfo.address}
+                                  sx={{
+                                    "&:hover": {
+                                      backgroundColor: "var(--hover-bg)",
+                                    },
+                                    "&.Mui-selected": {
+                                      backgroundColor: "var(--hover-bg)",
+                                    },
+                                  }}
+                                >
+                                  {item.tokenInfo.symbol}(
+                                  {formatBalance(
+                                    item.balance,
+                                    item.tokenInfo.decimals
+                                  )}
+                                  )
+                                </MenuItem>
                               )
-                            </MenuItem>
-                          ))}
+                          )}
 
                           {/* <MenuItem value="Option2">Twenty</MenuItem> */}
                         </Select>
@@ -520,7 +523,9 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
               {/* </TableContainer> */}
               {/* note info */}
               <NoteInformation style={{ marginTop: "30px" }}>
-                <h3>Note Information</h3>
+                <NoteHeader>
+                  <h3>Note Information</h3>
+                </NoteHeader>
 
                 {/* <TableContainer> */}
                 <Table sx={{ width: "100%" }} aria-label="simple table">

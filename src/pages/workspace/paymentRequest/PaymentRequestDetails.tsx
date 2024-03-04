@@ -23,6 +23,7 @@ import optionsIcon from "../../../assets/workspace/option.svg";
 import statusIcon from "../../../assets/workspace/status.svg";
 import {
   Image,
+  NoteHeader,
   NoteInfo,
   NoteInformation,
 } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
@@ -36,6 +37,7 @@ import PaymentRequestCategoryProperties from "../../../components/paymentRequest
 import { useWorkspace } from "../../../store/useWorkspace";
 import { getPaymentStatus } from "../../../utils/payment";
 import { formatTimestamp } from "../../../utils/time";
+import UpdateLoading from "../../../components/UpdateLoading";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -261,15 +263,29 @@ const PaymentRequestDetails = ({
     }
   }, []);
 
+  // updating loading state
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
   const handleUpdateCategory = async () => {
+    setIsUpdating(true);
     await updatePaymentRequestCategory(
       id,
       paymentRequestDetails?.ID.toString(),
       updatedPaymentBody
-    );
-    if (pageName === "payment-request") {
-      getPaymentRequestList(paymentRequestDetails.workspace_id, false);
-    } else if (pageName === "queue") {
+    ).then((res) => {
+      if (res) {
+        setIsUpdating(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 3000);
+      }
+    });
+    // if (pageName === "payment-request") {
+    //   // getPaymentRequestList(paymentRequestDetails.workspace_id, false);
+    // }
+    if (pageName === "queue") {
       const category_properties = JSON.stringify(
         updatedPaymentBody.category_properties
       );
@@ -321,8 +337,10 @@ const PaymentRequestDetails = ({
             <PaymentCurrencyTable />
             {/* note info */}
             <NoteInformation>
-              <h3>Note Information</h3>
-
+              <NoteHeader>
+                <h3>Note Information</h3>
+                <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} />
+              </NoteHeader>
               {/* <TableContainer> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
@@ -462,7 +480,7 @@ export const SubmissionTime = styled.div`
   }
   div {
     border: 1px solid var(--border-table);
-    padding: 10px 7px;
+    padding: 10px 10px;
     border-radius: 8px;
   }
 `;
