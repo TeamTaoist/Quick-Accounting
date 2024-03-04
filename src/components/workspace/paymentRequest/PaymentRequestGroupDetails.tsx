@@ -352,7 +352,8 @@ const PaymentRequestGroupDetails = ({
                           size="small"
                           value={formatAddressToDomain(
                             payment.recipient,
-                            workspace.chain_id
+                            workspace.chain_id,
+                            workspace.name_service === "sns"
                           )}
                           fullWidth
                           // id="fullWidth"

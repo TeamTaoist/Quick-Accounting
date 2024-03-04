@@ -70,8 +70,8 @@ const PaymentRequest = () => {
     setCurrentPaymentRequestDetail,
   } = usePaymentsStore();
   const { workspace } = useWorkspace();
-  const { queryENS } = useDomainStore();
-  
+  const { querySNS, queryENS } = useDomainStore();
+
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
   // table logic
 
@@ -162,9 +162,13 @@ const PaymentRequest = () => {
   useEffect(() => {
     const wallets = paymentRequestList.map((p) => p.counterparty);
     if (wallets.length && workspace.chain_id) {
-      queryENS(wallets, workspace.chain_id);
+      if (workspace.name_service === "sns") {
+        querySNS(wallets);
+      } else {
+        queryENS(wallets, workspace.chain_id);
+      }
     }
-  }, [paymentRequestList, workspace.chain_id, queryENS]);
+  }, [paymentRequestList, workspace.chain_id, queryENS, querySNS]);
 
   // payment_request_id
 

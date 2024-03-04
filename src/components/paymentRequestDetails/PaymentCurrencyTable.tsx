@@ -78,7 +78,8 @@ const PaymentCurrencyTable = () => {
               size="small"
               value={formatAddressToDomain(
                 paymentRequestDetails?.counterparty,
-                workspace.chain_id
+                workspace.chain_id,
+                workspace.name_service === "sns"
               )}
               fullWidth
               // id="fullWidth"

@@ -336,7 +336,11 @@ const BookkeepingTransferDetails = ({
                       paddingLeft: "12px",
                     }}
                   >
-                    {formatAddressToDomain(bookkeepingDetails.counterparty, workspace.chain_id)}
+                    {formatAddressToDomain(
+                      bookkeepingDetails.counterparty,
+                      workspace.chain_id,
+                      workspace.name_service === "sns"
+                    )}
                   </TableCell>
                   <TableCell
                     sx={{

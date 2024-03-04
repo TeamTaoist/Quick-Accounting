@@ -56,7 +56,7 @@ const Bookkeeping = () => {
     bookkeepingHiddenList,
   } = useBookkeeping();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
-  const { queryENS } = useDomainStore();
+  const { queryENS, querySNS } = useDomainStore();
   const { workspace } = useWorkspace();
 
   const [paymentRequest, setPaymentRequest] = useState(true);
@@ -179,7 +179,11 @@ const Bookkeeping = () => {
   useEffect(() => {
     const wallets = bookkeepingList.map((p) => p.counterparty);
     if (wallets.length && workspace.chain_id) {
-      queryENS(wallets, workspace.chain_id);
+     if (workspace.name_service === "sns") {
+       querySNS(wallets);
+     } else {
+       queryENS(wallets, workspace.chain_id);
+     }
     }
   }, [bookkeepingList, workspace.chain_id, queryENS]);
 

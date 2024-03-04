@@ -25,6 +25,7 @@ export interface Workspace {
   vault_wallet: string;
   chain_id: number;
   creator: string;
+  name_service?: string;
 }
 interface UserWorkspaces {
   code: number;

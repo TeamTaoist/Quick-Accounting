@@ -129,7 +129,8 @@ const BookkeepingTable = ({
                 <TableCell>
                   {formatAddressToDomain(
                     bookkeeping.counterparty,
-                    workspace.chain_id
+                    workspace.chain_id,
+                    workspace.name_service === "sns"
                   )}
                 </TableCell>
                 <TableCell>
