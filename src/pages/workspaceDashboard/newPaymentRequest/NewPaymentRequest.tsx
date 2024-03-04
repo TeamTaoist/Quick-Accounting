@@ -53,8 +53,10 @@ import {
 import usePaymentsStore from "../../../store/usePayments";
 import { formatBalance } from "../../../utils/number";
 import { toast } from "react-toastify";
-import { isAddress } from "viem";
+import { isAddress, zeroAddress } from "viem";
 import { parseUnits } from "ethers";
+import { useDomainStore } from "../../../store/useDomain";
+import { useLoading } from "../../../store/useLoading";
 
 interface SubmitRowData {
   recipient: string;
@@ -75,8 +77,10 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { pathname } = useLocation();
+  const { setLoading } = useLoading();
 
   const { createPaymentRequest, getPaymentRequestList } = usePaymentsStore();
+  const { parseENS, parseSNS } = useDomainStore();
 
   const [category, setCategory] = useState("");
 
@@ -260,17 +264,15 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     }),
   };
 
-  const checkAllFields = () => {
+  const checkAllFields = async () => {
     if (!paymentRequestBody.rows.length) {
       return;
     }
+    const sns_check_list: string[] = [];
+    const ens_check_list: string[] = [];
     for (const item of paymentRequestBody.rows) {
       if (!item.recipient || !item.amount || !item.currency_contract_address) {
         toast.error("Please fill all fields");
-        return;
-      }
-      if (!isAddress(item.recipient)) {
-        toast.error(`Invalid address: ${item.recipient}`);
         return;
       }
       if (Number(item.amount) <= 0) {
@@ -292,17 +294,66 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
         toast.error(`Invalid decimal amount: ${item.amount}`);
         return;
       }
+      if (item.recipient.endsWith(".seedao")) {
+        sns_check_list.push(item.recipient);
+      } else if (item.recipient.endsWith(".eth")) {
+        ens_check_list.push(item.recipient);
+      } else if (!isAddress(item.recipient)) {
+        toast.error(`Invalid address: ${item.recipient}`);
+        return;
+      }
     }
-    return true;
+    const name_address_map = new Map<string, string>();
+    if (sns_check_list.length) {
+      const res = await parseSNS(Array.from(new Set(sns_check_list)));
+      console.log("parse sns", res);
+      for (let i = 0; i < sns_check_list.length; i++) {
+        if (res[i] === zeroAddress) {
+          toast.error(`Invalid SNS: ${sns_check_list[i]}`);
+          return;
+        }
+        name_address_map.set(sns_check_list[i], res[i]);
+      }
+    }
+
+    if (ens_check_list.length) {
+      const res = await parseENS(Array.from(new Set(ens_check_list)));
+      console.log("parse ens", res);
+      for (let i = 0; i < ens_check_list.length; i++) {
+        if (!res[i]) {
+          toast.error(`Invalid ENS: ${ens_check_list[i]}`);
+          return;
+        }
+        name_address_map.set(ens_check_list[i], res[i]!);
+      }
+    }
+    return name_address_map;
   };
 
   // submit
-  const handlePaymentRequestSubmit = () => {
+  const handlePaymentRequestSubmit = async () => {
     // check all of fields
-    if (!checkAllFields()) {
+    setLoading(true);
+    const name_address_map = await checkAllFields();
+    setLoading(false);
+
+    if (!name_address_map) {
       return;
     }
-    createPaymentRequest(Number(id), paymentRequestBody, navigate).then((r) => {
+
+    createPaymentRequest(
+      Number(id),
+      {
+        ...paymentRequestBody,
+        rows: paymentRequestBody.rows.map((row) => {
+          return {
+            ...row,
+            recipient: name_address_map.get(row.recipient) || row.recipient,
+          };
+        }),
+      },
+      navigate
+    ).then((r) => {
       if (r) {
         onClose();
         const target_path = `/workspace/${id}/payment-request`;
@@ -434,7 +485,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             style: { padding: 0 },
                           }}
                           name={`service-${index}`}
-                          type="text"
+                          type="number"
                           id={`service-${index}`}
                           value={row.amount}
                           onChange={(e) =>
