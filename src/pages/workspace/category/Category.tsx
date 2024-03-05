@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import add from "../../../assets/workspace/add.svg";
 import archive from "../../../assets/workspace/archive.svg";
+import edit from "../../../assets/workspace/edit.svg";
 import property1 from "../../../assets/workspace/property1.svg";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -23,6 +24,7 @@ import {
   CreateOptionButton,
   Details,
   Header,
+  HeaderOptions,
   Option,
   OptionCreateButtons,
   Options,
@@ -30,9 +32,13 @@ import {
   PropertyCreateButtons,
   PropertyOptions,
   PropertyTitle,
+  UpdateBtn,
 } from "./category.style";
 import { useCategory } from "../../../store/useCategory";
-import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import {
+  useCategoryProperty,
+  CategoryProperties as ICategory,
+} from "../../../store/useCategoryProperty";
 import CategoryPropertyDetails from "../../../components/workspace/category/CategoryPropertyDetails";
 import LocalCategoryPropertyDetails from "../../../components/workspace/category/LocalCategoryPropertyDetails";
 import CategoryArchivedList from "../../../components/workspace/category/CategoryArchivedList";
@@ -41,7 +47,9 @@ import CategoryPropertyArchivedList from "../../../components/workspace/category
 export interface CategoryProperty {
   name: string;
   type: string;
-  value: "";
+  values: string;
+  ID: number;
+  category_id: number;
 }
 export interface CategoryPropertiesState {
   [categoryId: number]: CategoryProperty[];
@@ -67,6 +75,9 @@ const Category = () => {
     archiveWorkspaceCategoryProperties,
     getCategoryPropertyByCategoryId,
   } = useCategoryProperty();
+
+  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
+  // const [categoryList, setCategoryList] = useState<any>([]);
 
   const [selectedValue, setSelectedValue] = useState("Text");
   // category archive list
@@ -117,7 +128,7 @@ const Category = () => {
   //get workspace category details
   const handleCategory = (workspaceCategoryId: number) => {
     // getWorkspaceCategoryDetails(workspaceCategoryId);
-    setCategoryNameEditable(false);
+    // setCategoryNameEditable(false);
   };
   // update category name
   const handleCategoryName = (
@@ -127,7 +138,7 @@ const Category = () => {
   ) => {
     e.stopPropagation();
     setEditableCategoryId(categoryId);
-    setCategoryNameEditable(true);
+    // setCategoryNameEditable(true);
     setCategoryName(categoryName);
   };
   const handleUpdateCategoryName = async (
@@ -135,9 +146,9 @@ const Category = () => {
     workspaceId: number,
     categoryId: number
   ) => {
-    await updateCategoryName(workspaceId, categoryId, categoryName);
-    setCategoryLoading(!categoryLoading);
-    setCategoryNameEditable(false);
+    // await updateCategoryName(workspaceId, categoryId, categoryName);
+    // setCategoryLoading(!categoryLoading);
+    // setCategoryNameEditable(false);
   };
   console.log("update", categoryName);
 
@@ -170,29 +181,70 @@ const Category = () => {
     useState<CategoryPropertiesState>({});
   const handleAddProperty = (categoryId: number) => {
     const properties = categoryProperties[categoryId] || [];
+    const randomID = Math.floor(Math.random() * (1 - 100)) + 1;
     const newProperty: CategoryProperty = {
       name: "New Property",
       type: "Text",
-      value: "",
+      values: "",
+      ID: randomID,
+      category_id: categoryId,
     };
     setCategoryProperties({
       ...categoryProperties,
       [categoryId]: [...properties, newProperty],
     });
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        return {
+          ...category,
+          properties: [...(category.properties || []), newProperty],
+        };
+      }
+      return category;
+    });
+    setCategoryList(updatedList as ICategory[]);
   };
   console.log("categoryProperties", categoryProperties);
 
+  //TODO: modify category
+  const modifyCategoryProperty = (
+    categoryId: number,
+    propertyId: number,
+    updatedProperties: Partial<CategoryProperty>
+  ) => {
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        // Update the properties of the specific category
+        const updatedPropertiesList = category.properties?.map((property) => {
+          if (property.ID === propertyId) {
+            // Update the specific property with new values
+            return {
+              ...property,
+              ...updatedProperties,
+            };
+          }
+          return property;
+        });
+
+        // Return the updated category with modified properties
+        return {
+          ...category,
+          properties: updatedPropertiesList,
+        };
+      }
+      return category;
+    });
+
+    // Update the category list state with the modified list
+    setCategoryList(updatedList as ICategory[]);
+  };
+
   const handlePropertyNameChange = (
     categoryId: number,
-    index: number,
+    propertyId: number,
     newName: string
   ) => {
-    const updatedProperties = [...categoryProperties[categoryId]];
-    updatedProperties[index].name = newName;
-    setCategoryProperties({
-      ...categoryProperties,
-      [categoryId]: updatedProperties,
-    });
+    modifyCategoryProperty(categoryId, propertyId, { name: newName });
   };
 
   // properties types values
@@ -201,31 +253,76 @@ const Category = () => {
   const handleAddButtonClick = (categoryId: number, index: number) => {
     setPropertyValues([...propertyValues, ""]);
   };
-  const handleDeleteProperty = (index: number) => {
-    const updatedProperty = propertyValues.filter((_, i) => i !== index);
-    setPropertyValues(updatedProperty);
+
+  const handleDeleteProperty = (
+    categoryId: number,
+    propertyId: number,
+    index: number
+  ) => {
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        const updatedProperties = category.properties?.map((property) => {
+          if (property.ID === propertyId) {
+            const propertyValues = property.values
+              ? property.values.split(";")
+              : [];
+            propertyValues.splice(index, 1);
+            return {
+              ...property,
+              values: propertyValues.join(";"),
+            };
+          }
+          return property;
+        });
+        return {
+          ...category,
+          properties: updatedProperties,
+        };
+      }
+      return category;
+    });
+
+    setCategoryList(updatedList as ICategory[]);
   };
+
   const handlePropertyValueChang = (
     categoryId: number,
-    index: number,
-    newValue: string
+    propertyId: number,
+    newValue: string,
+    index: number
   ) => {
-    const updatedValues = [...propertyValues];
-    updatedValues[index] = newValue;
-    setPropertyValues(updatedValues);
+    // Update the property value at the specified index
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        const updatedProperties = category.properties?.map((property) => {
+          if (property.ID === propertyId) {
+            const propertyValues = (property.values || "").split(";");
+            propertyValues[index] = newValue;
+            return {
+              ...property,
+              values: propertyValues.join(";"),
+            };
+          }
+          return property;
+        });
+        return {
+          ...category,
+          properties: updatedProperties,
+        };
+      }
+      return category;
+    });
+
+    // Update the category list state with the modified list
+    setCategoryList(updatedList as ICategory[]);
   };
 
   const handlePropertyTypeChange = (
     categoryId: number,
-    index: number,
-    newType: string
+    propertyId: number,
+    newValue: string
   ) => {
-    const updatedProperties = [...categoryProperties[categoryId]];
-    updatedProperties[index].type = newType;
-    setCategoryProperties({
-      ...categoryProperties,
-      [categoryId]: updatedProperties,
-    });
+    modifyCategoryProperty(categoryId, propertyId, { type: newValue });
   };
 
   const [showProperty, setShowProperty] = useState<number | null>();
@@ -270,19 +367,17 @@ const Category = () => {
   const [propertyType, setPropertyType] = useState<string>("");
   const [propertyValue, setPropertyValue] = useState<string[]>([]);
   // const [updatedValues, setUpdatedValues] = useState<string[]>([]);
-  const handleSelectedProperty = (property: ICategoryProperties) => {
-    setShowProperty(property.ID);
-    // setSelectedProperty(property);
-    setPropertyName(property.name);
-    setPropertyType(property.type);
-    const valuesArray = property.values.split(";");
-    const filteredValuesArray = valuesArray.filter(
-      (value) => value.trim() !== ""
-    );
-    setPropertyValue(filteredValuesArray);
+  const handleSelectedProperty = (
+    property: ICategoryProperties,
+    index: number
+  ) => {
+    if (property.ID) {
+      setShowProperty(property.ID);
+    } else {
+      setShowProperty(index);
+    }
   };
 
-  // console.log("property values", updatedValues);
   const handleSetPropertyType = (e: any) => {
     if (e.target.value === "Text") {
       setPropertyValue([]);
@@ -295,8 +390,34 @@ const Category = () => {
     setPropertyValue(updatedValues);
   };
   // add value
-  const handleUpdateAddButtonClick = () => {
-    setPropertyValue((prevValues) => [...prevValues, ""]);
+  const handleUpdateAddButtonClick = (
+    categoryId: number,
+    propertyId: number
+  ) => {
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        const updatedProperties = category.properties?.map((property) => {
+          if (property.ID === propertyId) {
+            const propertyValues = property.values
+              ? property.values.split(";")
+              : [];
+            propertyValues.push("");
+            return {
+              ...property,
+              values: propertyValues.join(";"),
+            };
+          }
+          return property;
+        });
+        return {
+          ...category,
+          properties: updatedProperties,
+        };
+      }
+      return category;
+    });
+
+    setCategoryList(updatedList as ICategory[]);
   };
 
   const updatedPropertyBody = {
@@ -310,17 +431,17 @@ const Category = () => {
     categoryId: number,
     propertyId: number
   ) => {
-    updateWorkspaceCategoryProperties(
-      workspaceId,
-      categoryId,
-      propertyId,
-      updatedPropertyBody
-    ).then((res) => {
-      if (res) {
-        // setPropertyValue([]);
-        setCategoryLoading(!categoryLoading);
-      }
-    });
+    // updateWorkspaceCategoryProperties(
+    //   workspaceId,
+    //   categoryId,
+    //   propertyId,
+    //   updatedPropertyBody
+    // ).then((res) => {
+    //   if (res) {
+    //     // setPropertyValue([]);
+    //     setCategoryLoading(!categoryLoading);
+    //   }
+    // });
   };
   const handleUpdateDeleteProperty = async (
     index: number,
@@ -335,16 +456,16 @@ const Category = () => {
       type: propertyType,
       values: updatedProperty.join(";"),
     };
-    await updateWorkspaceCategoryProperties(
-      workspaceId,
-      categoryId,
-      propertyID,
-      propertyBody
-    ).then((res) => {
-      if (res) {
-        setCategoryLoading(!categoryLoading);
-      }
-    });
+    // await updateWorkspaceCategoryProperties(
+    //   workspaceId,
+    //   categoryId,
+    //   propertyID,
+    //   propertyBody
+    // ).then((res) => {
+    //   if (res) {
+    //     setCategoryLoading(!categoryLoading);
+    //   }
+    // });
   };
   // archive property
   const handleArchiveCategoryProperty = async (
@@ -360,6 +481,46 @@ const Category = () => {
       }
     });
   };
+
+  // edit category
+  const [isEditable, setIsEditable] = useState(false);
+  const handleEditCategory = (e: any, categoryId: number) => {
+    e.stopPropagation();
+    setIsEditable(!isEditable);
+    setEditableCategoryId(categoryId);
+    setCategoryNameEditable(true);
+  };
+
+  useEffect(() => {
+    if (workspaceCategoryProperties && workspaceCategoryProperties.length > 0) {
+      const updatedList = workspaceCategoryProperties?.map((category) => {
+        return {
+          ID: category.ID,
+          CreatedAt: category.CreatedAt,
+          UpdatedAt: category.UpdatedAt,
+          DeletedAt: category.DeletedAt,
+          workspace_id: category.workspace_id,
+          name: category.name,
+          archived: category.archived,
+          properties:
+            category.properties?.map((property) => ({
+              ID: property.ID,
+              CreatedAt: property.CreatedAt,
+              UpdatedAt: property.UpdatedAt,
+              DeletedAt: property.DeletedAt,
+              workspace_id: property.workspace_id,
+              category_id: property.category_id,
+              name: property.name,
+              type: property.type,
+              values: property.values,
+            })) || [],
+        };
+      });
+      setCategoryList(updatedList as ICategory[]);
+      // setCategoryList(workspaceCategoryProperties);
+    }
+  }, [workspaceCategoryProperties]);
+  console.log("category list", categoryList);
 
   return (
     <CreateCategory>
@@ -405,12 +566,12 @@ const Category = () => {
               </CreateBtn>
             </CreateOptionButton>
             {/* category option */}
-            {workspaceCategoryProperties?.map((category, index) => (
+            {categoryList?.map((category, index) => (
               <CategoryOption key={category.ID}>
                 <Accordion>
                   <AccordionSummary
                     onClick={() => handleCategory(category.ID)}
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={!isEditable ? <ExpandMoreIcon /> : ""}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     sx={{ backgroundColor: "var(--hover-bg)" }}
@@ -421,8 +582,7 @@ const Category = () => {
                           handleCategoryName(e, category.ID, category.name)
                         }
                       >
-                        {editableCategoryId === category.ID &&
-                        categoryNameEditable ? (
+                        {editableCategoryId === category.ID && isEditable ? (
                           <input
                             type="text"
                             value={categoryName}
@@ -440,28 +600,43 @@ const Category = () => {
                         ) : (
                           <Typography
                             sx={{
-                              borderRadius: "7px",
                               padding: 1,
-                              paddingInline: "16px",
-                              backgroundColor: "var(--bg-primary)",
+                              fontSize: "20px",
+                              fontWeight: "500",
                             }}
                           >
                             {category.name}
                           </Typography>
                         )}
                       </div>
-
-                      <img
-                        onClick={(e) =>
-                          handelArchiveCategory(
-                            e,
-                            category.workspace_id,
-                            category.ID
-                          )
-                        }
-                        src={archive}
-                        alt=""
-                      />
+                      {editableCategoryId === category.ID && isEditable ? (
+                        <UpdateBtn
+                          onClick={(e) => handleEditCategory(e, category.ID)}
+                        >
+                          Update
+                        </UpdateBtn>
+                      ) : (
+                        <HeaderOptions>
+                          <div
+                            onClick={(e) => handleEditCategory(e, category.ID)}
+                          >
+                            <img src={edit} alt="" />
+                            <p>Edit</p>
+                          </div>
+                          <div
+                            onClick={(e) =>
+                              handelArchiveCategory(
+                                e,
+                                category.workspace_id,
+                                category.ID
+                              )
+                            }
+                          >
+                            <img src={archive} alt="" />
+                            <p>Archive</p>
+                          </div>
+                        </HeaderOptions>
+                      )}
                     </Header>
                   </AccordionSummary>
                   <AccordionDetails sx={{ p: 0, maxHeight: "500px" }}>
@@ -470,11 +645,12 @@ const Category = () => {
                       <Options>
                         <PropertyOptions>
                           <h4>ADD PROPERTIES</h4>
-                          {/* TODO: update */}
                           {category.properties?.map((property, index) => (
                             <div
                               key={index}
-                              onClick={() => handleSelectedProperty(property)}
+                              onClick={() =>
+                                handleSelectedProperty(property, index)
+                              }
                             >
                               <Option>
                                 <PropertyTitle>
@@ -491,7 +667,7 @@ const Category = () => {
                               </Option>
                             </div>
                           ))}
-                          {categoryProperties[category.ID] &&
+                          {/* {categoryProperties[category.ID] &&
                             categoryProperties[category.ID].map(
                               (property, index) => (
                                 <Option onClick={() => setShowProperty(index)}>
@@ -501,7 +677,7 @@ const Category = () => {
                                   </PropertyTitle>
                                 </Option>
                               )
-                            )}
+                            )} */}
                         </PropertyOptions>
                         {/* property input section */}
                         <Details>
@@ -527,10 +703,20 @@ const Category = () => {
                                 handleUpdateAddButtonClick={
                                   handleUpdateAddButtonClick
                                 }
+                                handlePropertyNameChange={
+                                  handlePropertyNameChange
+                                }
+                                handlePropertyTypeChange={
+                                  handlePropertyTypeChange
+                                }
+                                handlePropertyValueChang={
+                                  handlePropertyValueChang
+                                }
+                                handleDeleteProperty={handleDeleteProperty}
                               />
                             ))}
                             {/*  */}
-                            {categoryProperties[category.ID] &&
+                            {/* {categoryProperties[category.ID] &&
                               categoryProperties[category.ID].map(
                                 (property, index) => (
                                   <LocalCategoryPropertyDetails
@@ -552,29 +738,32 @@ const Category = () => {
                                     handleAddButtonClick={handleAddButtonClick}
                                   />
                                 )
-                              )}
+                              )} */}
                           </>
                         </Details>
                       </Options>
                       {/* property button section */}
                       <PropertyBtns>
                         <OptionCreateButtons>
-                          <button
-                            onClick={() => handleAddProperty(category.ID)}
-                          >
-                            <img src={add} alt="" />
-                            <span>Create property</span>
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleCategoryPropertyArchivedList(category.ID)
-                            }
-                          >
-                            <img src={archive} alt="" />
-                            <span>View archive</span>
-                          </button>
+                          {editableCategoryId === category.ID && isEditable ? (
+                            <button
+                              onClick={() => handleAddProperty(category.ID)}
+                            >
+                              <img src={add} alt="" />
+                              <span>Add property</span>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                handleCategoryPropertyArchivedList(category.ID)
+                              }
+                            >
+                              <img src={archive} alt="" />
+                              <span>View archive</span>
+                            </button>
+                          )}
                         </OptionCreateButtons>
-                        <PropertyCreateButtons>
+                        {/* <PropertyCreateButtons>
                           <CreateCategoryBtn
                             onClick={() =>
                               handleCreateProperty(category.ID, index)
@@ -589,7 +778,7 @@ const Category = () => {
                           >
                             Cancel
                           </CancelBtn>
-                        </PropertyCreateButtons>
+                        </PropertyCreateButtons> */}
                       </PropertyBtns>
                     </CategoryProperties>
                     {/* category property end */}

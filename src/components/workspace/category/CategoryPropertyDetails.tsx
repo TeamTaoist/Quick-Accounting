@@ -34,7 +34,29 @@ interface CategoryPropertyDetailsProps {
     categoryId: number,
     propertyID: number
   ) => void;
-  handleUpdateAddButtonClick: () => void;
+  // handleUpdateAddButtonClick: () => void;
+  handleUpdateAddButtonClick: (categoryId: number, propertyId: number) => void;
+  handlePropertyNameChange: (
+    categoryId: number,
+    propertyId: number,
+    newName: string
+  ) => void;
+  handlePropertyTypeChange: (
+    categoryId: number,
+    propertyId: number,
+    newName: string
+  ) => void;
+  handlePropertyValueChang: (
+    categoryId: number,
+    propertyId: number,
+    newName: string,
+    index: number
+  ) => void;
+  handleDeleteProperty: (
+    categoryId: number,
+    propertyId: number,
+    index: number
+  ) => void;
 }
 
 const CategoryPropertyDetails = ({
@@ -50,17 +72,29 @@ const CategoryPropertyDetails = ({
   handlePropertyValue,
   handleUpdateDeleteProperty,
   handleUpdateAddButtonClick,
+  handlePropertyNameChange,
+  handlePropertyTypeChange,
+  handlePropertyValueChang,
+  handleDeleteProperty,
 }: CategoryPropertyDetailsProps) => {
+  const propertyValues = property.values?.split(";");
   return (
     <div>
-      {showProperty === property.ID && (
+      {(showProperty === property.ID || showProperty === index) && (
         <DetailsInput>
           <h3>Property name</h3>
           <PropertyInput
             placeholder="Property name"
-            // value={property.name}
-            value={propertyName}
-            onChange={(e) => setPropertyName(e.target.value)}
+            value={property.name}
+            // value={propertyName}
+            // onChange={(e) => setPropertyName(e.target.value)}
+            onChange={(e) =>
+              handlePropertyNameChange(
+                property.category_id,
+                property.ID,
+                e.target.value
+              )
+            }
             onBlur={() =>
               handleUpdatedCategoryProperty(
                 property.workspace_id,
@@ -73,9 +107,16 @@ const CategoryPropertyDetails = ({
           <Select
             labelId={`property-type-label-${index}`}
             id={`property-type-${index}`}
-            // value={property.type}
-            value={propertyType}
-            onChange={(e) => handleSetPropertyType(e)}
+            value={property.type}
+            // value={propertyType}
+            // onChange={(e) => handleSetPropertyType(e)}
+            onChange={(e) =>
+              handlePropertyTypeChange(
+                property.category_id,
+                property.ID,
+                e.target.value
+              )
+            }
             onBlur={() =>
               handleUpdatedCategoryProperty(
                 property.workspace_id,
@@ -132,18 +173,25 @@ const CategoryPropertyDetails = ({
             </MenuItem>
           </Select>
           {/* property value */}
-          {property.type !== "Text" && (
+          {property.type !== "Text" && property.type !== "date-picker" && (
             <>
-              {propertyValue.map((value, valueIndex) => (
+              {propertyValues.map((value, valueIndex) => (
                 <PropertyOptionsValue>
                   <img src={propertyAdd} alt="" />
                   <PropertyInputValue
                     key={valueIndex}
                     placeholder=""
-                    type={property.type === "date-picker" ? "date" : "text"}
                     value={value}
+                    // onChange={(e) =>
+                    //   handlePropertyValue(valueIndex, e.target.value)
+                    // }
                     onChange={(e) =>
-                      handlePropertyValue(valueIndex, e.target.value)
+                      handlePropertyValueChang(
+                        property.category_id,
+                        property.ID,
+                        e.target.value,
+                        valueIndex
+                      )
                     }
                     onBlur={() =>
                       handleUpdatedCategoryProperty(
@@ -154,12 +202,19 @@ const CategoryPropertyDetails = ({
                     }
                   />
                   <img
+                    // onClick={() =>
+                    //   handleUpdateDeleteProperty(
+                    //     valueIndex,
+                    //     property.workspace_id,
+                    //     property.category_id,
+                    //     property.ID
+                    //   )
+                    // }
                     onClick={() =>
-                      handleUpdateDeleteProperty(
-                        valueIndex,
-                        property.workspace_id,
+                      handleDeleteProperty(
                         property.category_id,
-                        property.ID
+                        property.ID,
+                        valueIndex
                       )
                     }
                     src={propertyDelete}
@@ -167,7 +222,14 @@ const CategoryPropertyDetails = ({
                   />
                 </PropertyOptionsValue>
               ))}
-              <PropertyOptionsValueBtn onClick={handleUpdateAddButtonClick}>
+              {/* <PropertyOptionsValueBtn onClick={handleUpdateAddButtonClick}>
+                + Add option
+              </PropertyOptionsValueBtn> */}
+              <PropertyOptionsValueBtn
+                onClick={() =>
+                  handleUpdateAddButtonClick(property.category_id, property.ID)
+                }
+              >
                 + Add option
               </PropertyOptionsValueBtn>
             </>
