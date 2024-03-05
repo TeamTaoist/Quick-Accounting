@@ -20,6 +20,7 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber, getShortDisplay } from "../../../utils/number";
 import { getShortAddress } from "../../../utils";
 import BigNumber from "bignumber.js";
+import { useDomainStore } from "../../../store/useDomain";
 
 interface SignPaymentRequestProps {
   setOpen: (open: boolean) => void;
@@ -36,6 +37,8 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
   const paymentRequestIds = selectedItem.join(",");
   const [totalValue, setTotalValue] = useState("0.00");
 
+  const { formatAddressToDomain } = useDomainStore();
+
   // get selected payments for sign to chain
   const signItems = paymentRequestList.filter((payment) =>
     selectedItem.includes(payment.payment_request_id)
@@ -50,8 +53,10 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
   useEffect(() => {
     if (signItems.length && assetsList.length) {
       let _value = BigNumber(0);
-      signItems.forEach(item => {
-        const token = assetsList.find(a => a.tokenInfo.address === item.currency_contract_address);
+      signItems.forEach((item) => {
+        const token = assetsList.find(
+          (a) => a.tokenInfo.address === item.currency_contract_address
+        );
         if (token) {
           _value = _value.plus(
             BigNumber(token.fiatConversion).multipliedBy(BigNumber(item.amount))
@@ -102,7 +107,13 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
             <TableBody>
               {signItems.map((payment) => (
                 <TableRow key={payment.ID}>
-                  <TableCell>{getShortAddress(payment.counterparty)}</TableCell>
+                  <TableCell>
+                    {formatAddressToDomain(
+                      payment.counterparty,
+                      workspace.chain_id,
+                      workspace.name_service === "sns"
+                    )}
+                  </TableCell>
                   <TableCell>
                     {formatNumber(Number(payment.amount))}{" "}
                     {payment.currency_name}
