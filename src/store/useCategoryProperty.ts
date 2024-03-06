@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { useLoading } from "./useLoading";
 import axiosClient from "../utils/axios";
 import { toast } from "react-toastify";
+import { CategoryPropertyBody } from "../pages/workspace/category/Category";
 export interface CategoryProperties {
   ID: number;
   CreatedAt: string;
@@ -52,7 +53,9 @@ interface UseCategoryProperty {
     workspaceId: number,
     includeArchived?: boolean
   ) => void;
-  createWorkspaceCategoryProperties: (propertyValues: any) => Promise<void>;
+  createWorkspaceCategoryProperties: (
+    propertyValues: CategoryPropertyBody
+  ) => Promise<void>;
   updateWorkspaceCategoryProperties: (
     workspaceId: number | undefined,
     workspaceCategoryId: number | undefined,

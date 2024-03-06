@@ -16,25 +16,24 @@ import { InputAdornment, MenuItem, Select } from "@mui/material";
 interface CategoryPropertyDetailsProps {
   showProperty: number | null | undefined;
   property: ICategoryProperties;
-  propertyName: string;
-  setPropertyName: (e: any) => void;
+  // propertyName: string;
+  // setPropertyName: (e: any) => void;
   handleUpdatedCategoryProperty: (
     workspaceId: number,
     categoryId: number,
     propertyId: number
   ) => void;
   index: number;
-  propertyType: string;
-  handleSetPropertyType: (e: any) => void;
-  propertyValue: string[];
-  handlePropertyValue: (index: number, newValue: string) => void;
-  handleUpdateDeleteProperty: (
-    index: number,
-    workspaceId: number,
-    categoryId: number,
-    propertyID: number
-  ) => void;
-  // handleUpdateAddButtonClick: () => void;
+  // propertyType: string;
+  // handleSetPropertyType: (e: any) => void;
+  // propertyValue: string[];
+  // handlePropertyValue: (index: number, newValue: string) => void;
+  // handleUpdateDeleteProperty: (
+  //   index: number,
+  //   workspaceId: number,
+  //   categoryId: number,
+  //   propertyID: number
+  // ) => void;
   handleUpdateAddButtonClick: (categoryId: number, propertyId: number) => void;
   handlePropertyNameChange: (
     categoryId: number,
@@ -62,15 +61,15 @@ interface CategoryPropertyDetailsProps {
 const CategoryPropertyDetails = ({
   showProperty,
   property,
-  propertyName,
-  setPropertyName,
+  // propertyName,
+  // setPropertyName,
   handleUpdatedCategoryProperty,
   index,
-  propertyType,
-  handleSetPropertyType,
-  propertyValue,
-  handlePropertyValue,
-  handleUpdateDeleteProperty,
+  // propertyType,
+  // handleSetPropertyType,
+  // propertyValue,
+  // handlePropertyValue,
+  // handleUpdateDeleteProperty,
   handleUpdateAddButtonClick,
   handlePropertyNameChange,
   handlePropertyTypeChange,
@@ -86,8 +85,6 @@ const CategoryPropertyDetails = ({
           <PropertyInput
             placeholder="Property name"
             value={property.name}
-            // value={propertyName}
-            // onChange={(e) => setPropertyName(e.target.value)}
             onChange={(e) =>
               handlePropertyNameChange(
                 property.category_id,
@@ -108,8 +105,6 @@ const CategoryPropertyDetails = ({
             labelId={`property-type-label-${index}`}
             id={`property-type-${index}`}
             value={property.type}
-            // value={propertyType}
-            // onChange={(e) => handleSetPropertyType(e)}
             onChange={(e) =>
               handlePropertyTypeChange(
                 property.category_id,
@@ -182,9 +177,6 @@ const CategoryPropertyDetails = ({
                     key={valueIndex}
                     placeholder=""
                     value={value}
-                    // onChange={(e) =>
-                    //   handlePropertyValue(valueIndex, e.target.value)
-                    // }
                     onChange={(e) =>
                       handlePropertyValueChang(
                         property.category_id,
@@ -222,9 +214,6 @@ const CategoryPropertyDetails = ({
                   />
                 </PropertyOptionsValue>
               ))}
-              {/* <PropertyOptionsValueBtn onClick={handleUpdateAddButtonClick}>
-                + Add option
-              </PropertyOptionsValueBtn> */}
               <PropertyOptionsValueBtn
                 onClick={() =>
                   handleUpdateAddButtonClick(property.category_id, property.ID)
