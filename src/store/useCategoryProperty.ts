@@ -62,6 +62,11 @@ interface UseCategoryProperty {
     workspaceCategoryPropertyId: number | undefined,
     updatedPropertyBody: UpdatedPropertyBody
   ) => Promise<boolean | undefined>;
+  editCategoryNameAndProperties: (
+    workspaceId: number | undefined,
+    workspaceCategoryId: number | undefined,
+    updatedPropertyBody: UpdatedPropertyBody
+  ) => Promise<boolean | undefined>;
   archiveWorkspaceCategoryProperties: (
     workspaceId: number | undefined,
     workspaceCategoryId: number | undefined,
@@ -147,6 +152,27 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
         setLoading(true);
         const { data } = await axiosClient.put(
           `/workspace_category_property/${workspaceId}/${workspaceCategoryId}/update/${workspaceCategoryPropertyId}`,
+          updatedPropertyBody
+        );
+        set({ categoryProperty: data });
+        toast.success("Property updated successfully");
+        return true;
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    // update category name & properties
+    editCategoryNameAndProperties: async (
+      workspaceId,
+      workspaceCategoryId,
+      updatedPropertyBody
+    ) => {
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.put(
+          `/workspace_category_property/${workspaceId}/${workspaceCategoryId}/edit`,
           updatedPropertyBody
         );
         set({ categoryProperty: data });

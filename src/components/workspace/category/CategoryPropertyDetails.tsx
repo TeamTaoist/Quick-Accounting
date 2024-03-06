@@ -16,24 +16,7 @@ import { InputAdornment, MenuItem, Select } from "@mui/material";
 interface CategoryPropertyDetailsProps {
   showProperty: number | null | undefined;
   property: ICategoryProperties;
-  // propertyName: string;
-  // setPropertyName: (e: any) => void;
-  handleUpdatedCategoryProperty: (
-    workspaceId: number,
-    categoryId: number,
-    propertyId: number
-  ) => void;
   index: number;
-  // propertyType: string;
-  // handleSetPropertyType: (e: any) => void;
-  // propertyValue: string[];
-  // handlePropertyValue: (index: number, newValue: string) => void;
-  // handleUpdateDeleteProperty: (
-  //   index: number,
-  //   workspaceId: number,
-  //   categoryId: number,
-  //   propertyID: number
-  // ) => void;
   handleUpdateAddButtonClick: (categoryId: number, propertyId: number) => void;
   handlePropertyNameChange: (
     categoryId: number,
@@ -61,15 +44,7 @@ interface CategoryPropertyDetailsProps {
 const CategoryPropertyDetails = ({
   showProperty,
   property,
-  // propertyName,
-  // setPropertyName,
-  handleUpdatedCategoryProperty,
   index,
-  // propertyType,
-  // handleSetPropertyType,
-  // propertyValue,
-  // handlePropertyValue,
-  // handleUpdateDeleteProperty,
   handleUpdateAddButtonClick,
   handlePropertyNameChange,
   handlePropertyTypeChange,
@@ -92,13 +67,13 @@ const CategoryPropertyDetails = ({
                 e.target.value
               )
             }
-            onBlur={() =>
-              handleUpdatedCategoryProperty(
-                property.workspace_id,
-                property.category_id,
-                property.ID
-              )
-            }
+            // onBlur={() =>
+            //   handleUpdatedCategoryProperty(
+            //     property.workspace_id,
+            //     property.category_id,
+            //     property.ID
+            //   )
+            // }
           />
           <h3>Property Type</h3>
           <Select
@@ -112,13 +87,13 @@ const CategoryPropertyDetails = ({
                 e.target.value
               )
             }
-            onBlur={() =>
-              handleUpdatedCategoryProperty(
-                property.workspace_id,
-                property.category_id,
-                property.ID
-              )
-            }
+            // onBlur={() =>
+            //   handleUpdatedCategoryProperty(
+            //     property.workspace_id,
+            //     property.category_id,
+            //     property.ID
+            //   )
+            // }
             size="small"
             IconComponent={() => (
               <InputAdornment position="start">
@@ -183,13 +158,6 @@ const CategoryPropertyDetails = ({
                         property.ID,
                         e.target.value,
                         valueIndex
-                      )
-                    }
-                    onBlur={() =>
-                      handleUpdatedCategoryProperty(
-                        property.workspace_id,
-                        property.category_id,
-                        property.ID
                       )
                     }
                   />

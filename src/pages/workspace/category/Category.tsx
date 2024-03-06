@@ -74,6 +74,7 @@ const Category = () => {
     updateWorkspaceCategoryProperties,
     archiveWorkspaceCategoryProperties,
     getCategoryPropertyByCategoryId,
+    editCategoryNameAndProperties,
   } = useCategoryProperty();
 
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
@@ -124,20 +125,23 @@ const Category = () => {
   const [categoryName, setCategoryName] = useState<string | undefined>();
 
   //get workspace category details
-  const handleCategory = (workspaceCategoryId: number) => {
-    // getWorkspaceCategoryDetails(workspaceCategoryId);
-    // setCategoryNameEditable(false);
-  };
+  // const handleCategory = (workspaceCategoryId: number) => {
+  //   // getWorkspaceCategoryDetails(workspaceCategoryId);
+  //   // setCategoryNameEditable(false);
+  // };
   // update category name
-  const handleCategoryName = (
-    e: any,
-    categoryId: number,
-    categoryName: string
-  ) => {
+  const handleCategoryName = (e: any, categoryId: number) => {
     e.stopPropagation();
-    // setEditableCategoryId(categoryId);
-    // setCategoryNameEditable(true);
-    setCategoryName(categoryName);
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        return {
+          ...category,
+          name: e.target.value,
+        };
+      }
+      return category;
+    });
+    setCategoryList(updatedList as ICategory[]);
   };
   const handleUpdateCategoryName = async (
     // e: React.ChangeEvent<HTMLInputElement>,
@@ -353,11 +357,7 @@ const Category = () => {
     setCategoryList(updatedList as ICategory[]);
   };
   // create new property
-  const handleCreateProperty = async (
-    categoryId: number
-    // propertyIndex: number
-  ) => {
-    // const randomID = Math.floor(Math.random() * (1 - 100)) + 1;
+  const handleCreateProperty = async (categoryId: number) => {
     const newProperty: CategoryPropertyBody = {
       category_id: categoryId,
       name: "New Property",
@@ -376,28 +376,31 @@ const Category = () => {
     //   setCategoryLoading(!categoryLoading);
     // }
   };
-  const updatedPropertyBody = {
-    // name: propertyName,
-    // type: propertyType,
-    // values: propertyValue.join(";"),
-  };
-  console.log(updatedPropertyBody);
+  // console.log(updatedPropertyBody);
   const handleUpdatedCategoryProperty = (
-    workspaceId: number,
-    categoryId: number,
-    propertyId: number
+    // workspaceId: number,
+    categoryId: number
+    // propertyId: number
   ) => {
-    // updateWorkspaceCategoryProperties(
-    //   workspaceId,
-    //   categoryId,
-    //   propertyId,
-    //   updatedPropertyBody
-    // ).then((res) => {
-    //   if (res) {
-    //     // setPropertyValue([]);
-    //     setCategoryLoading(!categoryLoading);
-    //   }
-    // });
+    const updatedCategory = categoryList.find(
+      (category) => category.ID === categoryId
+    );
+    console.log("u", updatedCategory);
+
+    const updatedPropertyBody: any = {
+      category_name: updatedCategory?.name,
+      properties: updatedCategory?.properties,
+    };
+    editCategoryNameAndProperties(
+      workspaceId,
+      categoryId,
+      updatedPropertyBody
+    ).then((res) => {
+      if (res) {
+        // setPropertyValue([]);
+        setCategoryLoading(!categoryLoading);
+      }
+    });
   };
   const handleUpdateDeleteProperty = async (
     index: number,
@@ -527,7 +530,7 @@ const Category = () => {
               <CategoryOption key={category.ID}>
                 <Accordion>
                   <AccordionSummary
-                    onClick={() => handleCategory(category.ID)}
+                    // onClick={() => handleCategory(category.ID)}
                     // expandIcon={!isEditable ? <ExpandMoreIcon /> : ""}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
@@ -535,25 +538,26 @@ const Category = () => {
                   >
                     <Header>
                       <div
-                        onClick={(e) =>
-                          handleCategoryName(e, category.ID, category.name)
-                        }
+                      // onClick={(e) =>
+                      //   handleCategoryName(e, category.ID)
+                      // }
                       >
                         {/* {editableCategoryId === category.ID ? ( */}
                         {editableCategoryId.includes(category.ID) ? (
                           <input
                             type="text"
-                            value={categoryName}
+                            value={category.name}
                             // value={categoryName ?? category.name}
                             placeholder="Category Name"
                             onClick={(e) => e.stopPropagation()}
                             // onChange={(e) => setCategoryName(e.target.value)}
-                            onBlur={() =>
-                              handleUpdateCategoryName(
-                                category.workspace_id,
-                                category.ID
-                              )
-                            }
+                            onChange={(e) => handleCategoryName(e, category.ID)}
+                            // onBlur={() =>
+                            //   handleUpdateCategoryName(
+                            //     category.workspace_id,
+                            //     category.ID
+                            //   )
+                            // }
                           />
                         ) : (
                           <Typography
@@ -570,7 +574,10 @@ const Category = () => {
                       {/* {editableCategoryId === category.ID ? ( */}
                       {editableCategoryId.includes(category.ID) ? (
                         <UpdateBtn
-                          onClick={(e) => handleEditCategory(e, category.ID)}
+                          // onClick={(e) => handleEditCategory(e, category.ID)}
+                          onClick={() =>
+                            handleUpdatedCategoryProperty(category.ID)
+                          }
                         >
                           Update
                         </UpdateBtn>
@@ -649,9 +656,9 @@ const Category = () => {
                                 // setPropertyName={setPropertyName}
                                 property={property}
                                 index={index}
-                                handleUpdatedCategoryProperty={
-                                  handleUpdatedCategoryProperty
-                                }
+                                // handleUpdatedCategoryProperty={
+                                //   handleUpdatedCategoryProperty
+                                // }
                                 // propertyType={propertyType}
                                 // handleSetPropertyType={handleSetPropertyType}
                                 // propertyValue={propertyValue}
