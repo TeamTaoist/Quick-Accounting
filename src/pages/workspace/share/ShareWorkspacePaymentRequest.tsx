@@ -25,7 +25,7 @@ import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
 import { ReactSelectOption } from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import { formatBalance } from "../../../utils/number";
 import { toast } from "react-toastify";
-import { isAddress } from "viem";
+import { isAddress, zeroAddress } from "viem";
 import { parseUnits } from "ethers";
 import ConfirmModal from "../../../components/confirmModal";
 import PaymentDetailsForm from "../../../components/paymentRequestGroupDetails/PaymentDetailsForm";
@@ -33,6 +33,7 @@ import GroupPaymentCategoryProperties from "../../../components/paymentRequestGr
 import LoginContent from "../../auth/login/LoginContent";
 import useLogin from "../../../hooks/useLogin";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { useDomainStore } from "../../../store/useDomain";
 
 const ShareWorkspacePaymentRequest = () => {
   const { shareId } = useParams();
@@ -47,11 +48,16 @@ const ShareWorkspacePaymentRequest = () => {
     saveSharePaymentRequest,
     shareData,
   } = useSharePaymentRequest();
-  const [confirmVisible, setConfirmVisible] = useState(false);
+  // const [confirmVisible, setConfirmVisible] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
   const [loginVisible, setLoginVisible] = useState(false);
   const signAndLogin = useLogin();
   const { user } = useAuthStore();
+  const { parseENS, parseSNS, queryENS, querySNS, formatAddressToDomain } =
+    useDomainStore();
+  const [nameAddressMap, setNameAddressMap] = useState<Map<string, string>>(
+    new Map()
+  );
 
   // dynamic payment request form
   const [sharePaymentRequestForm, setSharePaymentRequestForm] = useState<
@@ -84,8 +90,6 @@ const ShareWorkspacePaymentRequest = () => {
       },
     ]);
   };
-  console.log("sharePaymentRequestForm", sharePaymentRequestForm);
-
   const handleFormChange = (
     index: number,
     field: string,
@@ -173,7 +177,6 @@ const ShareWorkspacePaymentRequest = () => {
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<any>([]);
 
-  console.log("selected category", selectedCategoryIDs);
   const handleCategoryDropdown = (
     categoryId: number,
     categoryName: string,
@@ -208,17 +211,50 @@ const ShareWorkspacePaymentRequest = () => {
   // modal
   const [openModal, setOpenModal] = useState(false);
 
-  const checkAllFields = () => {
+  const checkRecipient = async () => {
+    const sns_check_list: string[] = [];
+    const ens_check_list: string[] = [];
+    for (const item of sharePaymentRequestForm) {
+      if (item.recipient.endsWith(".seedao")) {
+        sns_check_list.push(item.recipient);
+      } else if (item.recipient.endsWith(".eth")) {
+        ens_check_list.push(item.recipient);
+      }
+    }
+    const name_address_map = new Map<string, string>();
+    if (sns_check_list.length) {
+      const res = await parseSNS(Array.from(new Set(sns_check_list)));
+      for (let i = 0; i < sns_check_list.length; i++) {
+        if (res[i] === zeroAddress) {
+          toast.error(`Invalid SNS: ${sns_check_list[i]}`);
+          return;
+        }
+        name_address_map.set(sns_check_list[i], res[i]);
+      }
+    }
+
+    if (ens_check_list.length) {
+      const res = await parseENS(Array.from(new Set(ens_check_list)));
+      for (let i = 0; i < ens_check_list.length; i++) {
+        if (!res[i]) {
+          toast.error(`Invalid ENS: ${ens_check_list[i]}`);
+          return;
+        }
+        name_address_map.set(ens_check_list[i], res[i]!);
+      }
+    }
+    return name_address_map;
+  };
+
+  const checkAllFields = async () => {
     if (!sharePaymentRequestForm.length) {
       return;
     }
+    const sns_check_list: string[] = [];
+    const ens_check_list: string[] = [];
     for (const item of sharePaymentRequestForm) {
       if (!item.recipient || !item.amount || !item.currency_contract_address) {
         toast.error("Please fill all fields");
-        return;
-      }
-      if (!isAddress(item.recipient)) {
-        toast.error(`Invalid address: ${item.recipient}`);
         return;
       }
       if (Number(item.amount) <= 0) {
@@ -240,31 +276,71 @@ const ShareWorkspacePaymentRequest = () => {
         toast.error(`Invalid decimal amount: ${item.amount}`);
         return;
       }
-    }
-    return true;
-  };
-
-  const handleConfirmSubmit = () => {
-    createSharePaymentRequest(shareId, { rows: sharePaymentRequestForm }).then(
-      (res) => {
-        if (res) {
-          setConfirmVisible(false);
-          getPaymentRequestShareCodeData(shareId);
-        }
+      if (item.recipient.endsWith(".seedao")) {
+        sns_check_list.push(item.recipient);
+      } else if (item.recipient.endsWith(".eth")) {
+        ens_check_list.push(item.recipient);
+      } else if (!isAddress(item.recipient)) {
+        toast.error(`Invalid address: ${item.recipient}`);
+        return;
       }
-    );
+    }
+    const name_address_map = new Map<string, string>();
+    if (sns_check_list.length) {
+      const res = await parseSNS(Array.from(new Set(sns_check_list)));
+      for (let i = 0; i < sns_check_list.length; i++) {
+        if (res[i] === zeroAddress) {
+          toast.error(`Invalid SNS: ${sns_check_list[i]}`);
+          return;
+        }
+        name_address_map.set(sns_check_list[i], res[i]);
+      }
+    }
+
+    if (ens_check_list.length) {
+      const res = await parseENS(Array.from(new Set(ens_check_list)));
+      for (let i = 0; i < ens_check_list.length; i++) {
+        if (!res[i]) {
+          toast.error(`Invalid ENS: ${ens_check_list[i]}`);
+          return;
+        }
+        name_address_map.set(ens_check_list[i], res[i]!);
+      }
+    }
+    return name_address_map;
   };
 
-  const handleLoginCallback = () => {
+  const handleConfirmSubmit = (_nameAddressMap: Map<string, string>) => {
+    createSharePaymentRequest(shareId, {
+      rows: sharePaymentRequestForm.map((r) => ({
+        ...r,
+        recipient: _nameAddressMap.get(r.recipient) || r.recipient,
+      })),
+      sharePaymentRequestForm,
+    }).then((res) => {
+      if (res) {
+        // setConfirmVisible(false);
+        getPaymentRequestShareCodeData(shareId);
+      }
+    });
+  };
+
+  const handleLoginCallback = (_nameAddressMap: Map<string, string>) => {
     setLoginVisible(false);
-    handleConfirmSubmit();
+    handleConfirmSubmit(_nameAddressMap);
   };
 
   // create payment request
   const handleSubmitPaymentRequest = async () => {
-    if (!checkAllFields()) {
+    // check all of fields
+    setLoading(true);
+    const name_address_map = await checkAllFields();
+    setLoading(false);
+    if (!name_address_map) {
       return;
     }
+    setNameAddressMap(name_address_map);
+
     // setConfirmVisible(true);
     if (!user?.token) {
       setLoginVisible(true);
@@ -272,7 +348,7 @@ const ShareWorkspacePaymentRequest = () => {
     }
     try {
       setLoading(true);
-      await signAndLogin(handleLoginCallback);
+      await signAndLogin(() => handleLoginCallback(name_address_map));
     } catch (error) {
       toast.error(`login failed: ${error}`);
     } finally {
@@ -280,17 +356,42 @@ const ShareWorkspacePaymentRequest = () => {
     }
   };
   const handleSavePaymentRequest = async () => {
-    await saveSharePaymentRequest(shareId, { rows: sharePaymentRequestForm });
+    setLoading(true);
+    const _nameAddressMap = await checkRecipient();
+    setLoading(false);
+    if (!_nameAddressMap) {
+      return;
+    }
+    await saveSharePaymentRequest(shareId, {
+      rows: sharePaymentRequestForm.map((r) => ({
+        ...r,
+        recipient: _nameAddressMap.get(r.recipient) || r.recipient,
+      })),
+    });
   };
 
   useEffect(() => {
     if (shareData && shareData.payment_request_items !== null) {
+      const wallets: string[] = shareData?.payment_request_items?.map(
+        (p) => p.counterparty
+      );
+      if (wallets.length) {
+        workspace.name_service === "sns"
+          ? querySNS(wallets)
+          : queryENS(wallets, workspace.chain_id);
+      }
+
       const updatedForm = shareData?.payment_request_items?.map(
         (paymentDetail) => {
           return {
             amount: paymentDetail.amount,
             currency_name: paymentDetail.currency_name,
-            recipient: paymentDetail.counterparty,
+            recipient:
+              formatAddressToDomain(
+                paymentDetail.counterparty,
+                workspace.chain_id,
+                workspace.name_service === "sns"
+              ) || paymentDetail.counterparty,
             decimals: paymentDetail.decimals,
             category_id: paymentDetail.category_id,
             category_name: paymentDetail.category_name,
@@ -317,7 +418,7 @@ const ShareWorkspacePaymentRequest = () => {
       );
       setSelectedCategories(updatedSelectedCategories);
     }
-  }, [shareData]);
+  }, [shareData, workspace, formatAddressToDomain]);
   const isEditable =
     shareData?.payment_request_items?.[0]?.status !== 0 &&
     shareData?.payment_request_items !== null;
@@ -382,20 +483,20 @@ const ShareWorkspacePaymentRequest = () => {
             )}
             {/* </>
             )} */}
-            {confirmVisible && (
+            {/* {confirmVisible && (
               <ConfirmModal
                 msg="Confirm to submit?"
                 onConfirm={handleConfirmSubmit}
                 onClose={() => setConfirmVisible(false)}
               />
-            )}
+            )} */}
           </SharePaymentForm>
         </SharePaymentContainer>
         {loginVisible && (
           <LoginModal>
             <LoginContent
               handleClose={() => setLoginVisible(false)}
-              loginCallback={handleLoginCallback}
+              loginCallback={() => handleLoginCallback(nameAddressMap)}
             />
           </LoginModal>
         )}
