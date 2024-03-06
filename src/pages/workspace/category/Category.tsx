@@ -78,8 +78,6 @@ const Category = () => {
   } = useCategoryProperty();
 
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
-
-  const [selectedValue, setSelectedValue] = useState("Text");
   // category archive list
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -120,15 +118,6 @@ const Category = () => {
     setCategoryLoading(!categoryLoading);
   };
 
-  const [categoryNameEditable, setCategoryNameEditable] =
-    useState<boolean>(false);
-  const [categoryName, setCategoryName] = useState<string | undefined>();
-
-  //get workspace category details
-  // const handleCategory = (workspaceCategoryId: number) => {
-  //   // getWorkspaceCategoryDetails(workspaceCategoryId);
-  //   // setCategoryNameEditable(false);
-  // };
   // update category name
   const handleCategoryName = (e: any, categoryId: number) => {
     e.stopPropagation();
@@ -143,16 +132,6 @@ const Category = () => {
     });
     setCategoryList(updatedList as ICategory[]);
   };
-  const handleUpdateCategoryName = async (
-    // e: React.ChangeEvent<HTMLInputElement>,
-    workspaceId: number,
-    categoryId: number
-  ) => {
-    // await updateCategoryName(workspaceId, categoryId, categoryName);
-    // setCategoryLoading(!categoryLoading);
-    // setCategoryNameEditable(false);
-  };
-  console.log("update", categoryName);
 
   // update archive workspace category
   const handelArchiveCategory = async (
@@ -179,35 +158,28 @@ const Category = () => {
     openModal,
   ]);
   // add property
-  const [categoryProperties, setCategoryProperties] =
-    useState<CategoryPropertiesState>({});
-  const handleAddProperty = (categoryId: number) => {
-    // const properties = categoryProperties[categoryId] || [];
-    const randomID = Math.floor(Math.random() * (1 - 100)) + 1;
-    const newProperty: CategoryPropertyBody = {
-      name: "New Property",
-      type: "Text",
-      values: "",
-      ID: randomID,
-      category_id: categoryId,
-      workspace_id: Number(id),
-    };
-    // setCategoryProperties({
-    //   ...categoryProperties,
-    //   [categoryId]: [...properties, newProperty],
-    // });
-    const updatedList = categoryList.map((category) => {
-      if (category.ID === categoryId) {
-        return {
-          ...category,
-          properties: [...(category.properties || []), newProperty],
-        };
-      }
-      return category;
-    });
-    setCategoryList(updatedList as ICategory[]);
-  };
-  console.log("categoryProperties", categoryProperties);
+  // const handleAddProperty = (categoryId: number) => {
+  //   const randomID = Math.floor(Math.random() * (1 - 100)) + 1;
+  //   const newProperty: CategoryPropertyBody = {
+  //     name: "New Property",
+  //     type: "Text",
+  //     values: "",
+  //     ID: randomID,
+  //     category_id: categoryId,
+  //     workspace_id: Number(id),
+  //   };
+  //   const updatedList = categoryList.map((category) => {
+  //     if (category.ID === categoryId) {
+  //       return {
+  //         ...category,
+  //         properties: [...(category.properties || []), newProperty],
+  //       };
+  //     }
+  //     return category;
+  //   });
+  //   setCategoryList(updatedList as ICategory[]);
+  // };
+  // console.log("categoryProperties", categoryProperties);
 
   //TODO: modify category
   const modifyCategoryProperty = (
@@ -368,64 +340,8 @@ const Category = () => {
     };
     await createWorkspaceCategoryProperties(newProperty);
     setCategoryLoading(!categoryLoading);
-    // if (categoryProperty.code === 200 && categoryProperty.msg === "success") {
-    //   setShowProperty(null);
-    //   // setCategoryProperties({});
-    //   setPropertyValues([]);
-    //   setCategoryProperties({});
-    //   setCategoryLoading(!categoryLoading);
-    // }
   };
   // console.log(updatedPropertyBody);
-  const handleUpdatedCategoryProperty = (
-    // workspaceId: number,
-    categoryId: number
-    // propertyId: number
-  ) => {
-    const updatedCategory = categoryList.find(
-      (category) => category.ID === categoryId
-    );
-    console.log("u", updatedCategory);
-
-    const updatedPropertyBody: any = {
-      category_name: updatedCategory?.name,
-      properties: updatedCategory?.properties,
-    };
-    editCategoryNameAndProperties(
-      workspaceId,
-      categoryId,
-      updatedPropertyBody
-    ).then((res) => {
-      if (res) {
-        // setPropertyValue([]);
-        setCategoryLoading(!categoryLoading);
-      }
-    });
-  };
-  const handleUpdateDeleteProperty = async (
-    index: number,
-    workspaceId: number,
-    categoryId: number,
-    propertyID: number
-  ) => {
-    // const updatedProperty = propertyValue.filter((_, i) => i !== index);
-    // setPropertyValue(updatedProperty);
-    // const propertyBody = {
-    //   name: propertyName,
-    //   type: propertyType,
-    //   values: updatedProperty.join(";"),
-    // };
-    // await updateWorkspaceCategoryProperties(
-    //   workspaceId,
-    //   categoryId,
-    //   propertyID,
-    //   propertyBody
-    // ).then((res) => {
-    //   if (res) {
-    //     setCategoryLoading(!categoryLoading);
-    //   }
-    // });
-  };
   // archive property
   const handleArchiveCategoryProperty = async (
     property: ICategoryProperties
@@ -445,10 +361,37 @@ const Category = () => {
   const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
   const handleEditCategory = (e: any, categoryId: number) => {
     e.stopPropagation();
-    const updatedIds = editableCategoryId.includes(categoryId)
-      ? editableCategoryId.filter((id) => id !== categoryId)
-      : [...editableCategoryId, categoryId];
-    setEditableCategoryId(updatedIds);
+    const isSelected = editableCategoryId.includes(categoryId);
+
+    if (isSelected) {
+      const updatedIds = editableCategoryId.filter((id) => id !== categoryId);
+      setEditableCategoryId(updatedIds);
+    } else {
+      setEditableCategoryId([...editableCategoryId, categoryId]);
+    }
+  };
+
+  // update category name & properties
+  const handleUpdatedCategoryProperty = (categoryId: number) => {
+    const updatedCategory = categoryList.find(
+      (category) => category.ID === categoryId
+    );
+    const selectedCategory = editableCategoryId.filter((f) => f !== categoryId);
+
+    const updatedPropertyBody: any = {
+      category_name: updatedCategory?.name,
+      properties: updatedCategory?.properties,
+    };
+    editCategoryNameAndProperties(
+      workspaceId,
+      categoryId,
+      updatedPropertyBody
+    ).then((res) => {
+      if (res) {
+        setCategoryLoading(!categoryLoading);
+        setEditableCategoryId(selectedCategory);
+      }
+    });
   };
 
   useEffect(() => {
@@ -480,7 +423,6 @@ const Category = () => {
       // setCategoryList(workspaceCategoryProperties);
     }
   }, [workspaceCategoryProperties]);
-  console.log("category list", categoryList);
 
   return (
     <CreateCategory>
@@ -652,20 +594,8 @@ const Category = () => {
                             {category.properties?.map((property, index) => (
                               <CategoryPropertyDetails
                                 showProperty={showProperty}
-                                // propertyName={propertyName}
-                                // setPropertyName={setPropertyName}
                                 property={property}
                                 index={index}
-                                // handleUpdatedCategoryProperty={
-                                //   handleUpdatedCategoryProperty
-                                // }
-                                // propertyType={propertyType}
-                                // handleSetPropertyType={handleSetPropertyType}
-                                // propertyValue={propertyValue}
-                                // handlePropertyValue={handlePropertyValue}
-                                // handleUpdateDeleteProperty={
-                                //   handleUpdateDeleteProperty
-                                // }
                                 handleUpdateAddButtonClick={
                                   handleUpdateAddButtonClick
                                 }
