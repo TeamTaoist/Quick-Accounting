@@ -239,7 +239,6 @@ const Assets = () => {
                   <TableCell>
                     <RowCell>
                       <AssetsSwitch
-                        defaultChecked
                         checked={data.hidden}
                         onChange={(e) => handleAsset(e, data)}
                       />
