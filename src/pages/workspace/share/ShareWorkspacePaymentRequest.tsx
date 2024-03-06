@@ -53,8 +53,13 @@ const ShareWorkspacePaymentRequest = () => {
   const [loginVisible, setLoginVisible] = useState(false);
   const signAndLogin = useLogin();
   const { user } = useAuthStore();
-  const { parseENS, parseSNS, queryENS, querySNS, formatAddressToDomain } =
-    useDomainStore();
+  const {
+    parseENS,
+    parseSNS,
+    formatAddressToDomain,
+    queryENSForcelly,
+    querySNSForcelly,
+  } = useDomainStore();
   const [nameAddressMap, setNameAddressMap] = useState<Map<string, string>>(
     new Map()
   );
@@ -234,7 +239,10 @@ const ShareWorkspacePaymentRequest = () => {
     }
 
     if (ens_check_list.length) {
-      const res = await parseENS(Array.from(new Set(ens_check_list)));
+      const res = await parseENS(
+        Array.from(new Set(ens_check_list)),
+        workspace.chain_id
+      );
       for (let i = 0; i < ens_check_list.length; i++) {
         if (!res[i]) {
           toast.error(`Invalid ENS: ${ens_check_list[i]}`);
@@ -298,7 +306,10 @@ const ShareWorkspacePaymentRequest = () => {
     }
 
     if (ens_check_list.length) {
-      const res = await parseENS(Array.from(new Set(ens_check_list)));
+      const res = await parseENS(
+        Array.from(new Set(ens_check_list)),
+        workspace.chain_id
+      );
       for (let i = 0; i < ens_check_list.length; i++) {
         if (!res[i]) {
           toast.error(`Invalid ENS: ${ens_check_list[i]}`);
@@ -370,28 +381,29 @@ const ShareWorkspacePaymentRequest = () => {
     });
   };
 
-  useEffect(() => {
+  const parseShareData = async () => {
     if (shareData && shareData.payment_request_items !== null) {
       const wallets: string[] = shareData?.payment_request_items?.map(
         (p) => p.counterparty
       );
-      if (wallets.length) {
+      const address_to_name =
         workspace.name_service === "sns"
-          ? querySNS(wallets)
-          : queryENS(wallets, workspace.chain_id);
-      }
+          ? await querySNSForcelly(wallets)
+          : await queryENSForcelly(wallets, workspace.chain_id);
 
       const updatedForm = shareData?.payment_request_items?.map(
         (paymentDetail) => {
+          const m = formatAddressToDomain(
+            paymentDetail.counterparty,
+            workspace.chain_id,
+            workspace.name_service === "sns"
+          );
           return {
             amount: paymentDetail.amount,
             currency_name: paymentDetail.currency_name,
             recipient:
-              formatAddressToDomain(
-                paymentDetail.counterparty,
-                workspace.chain_id,
-                workspace.name_service === "sns"
-              ) || paymentDetail.counterparty,
+              address_to_name.get(paymentDetail.counterparty) ||
+              paymentDetail.counterparty,
             decimals: paymentDetail.decimals,
             category_id: paymentDetail.category_id,
             category_name: paymentDetail.category_name,
@@ -418,6 +430,10 @@ const ShareWorkspacePaymentRequest = () => {
       );
       setSelectedCategories(updatedSelectedCategories);
     }
+  };
+
+  useEffect(() => {
+    parseShareData();
   }, [shareData, workspace, formatAddressToDomain]);
   const isEditable =
     shareData?.payment_request_items?.[0]?.status !== 0 &&

@@ -338,7 +338,10 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     }
 
     if (ens_check_list.length) {
-      const res = await parseENS(Array.from(new Set(ens_check_list)));
+      const res = await parseENS(
+        Array.from(new Set(ens_check_list)),
+        workspace.chain_id
+      );
       console.log("parse ens", res);
       for (let i = 0; i < ens_check_list.length; i++) {
         if (!res[i]) {

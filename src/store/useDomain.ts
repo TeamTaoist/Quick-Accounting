@@ -7,11 +7,25 @@ import {
   type GetEnsAddressReturnType,
 } from "@wagmi/core";
 
+import { createPublicClient, http } from "viem";
+import { mainnet, sepolia } from "viem/chains";
+
 import { config } from "../providers/wagmiProvider";
 import { getShortAddress } from "../utils";
 import { normalize } from "viem/ens";
 
 const ENS_SPPORTED_CHAINS = [1, 5, 11155111];
+
+const publicClientMap = {
+  [mainnet.id]: createPublicClient({
+    chain: mainnet,
+    transport: http(),
+  }),
+  [sepolia.id]: createPublicClient({
+    chain: sepolia,
+    transport: http(),
+  }),
+};
 
 interface IDomainStore {
   // address to name
@@ -38,7 +52,15 @@ interface IDomainStore {
     isSNS?: boolean
   ) => string;
   parseSNS: (names: string[]) => Promise<string[]>;
-  parseENS: (names: string[]) => Promise<GetEnsAddressReturnType[]>;
+  parseENS: (
+    names: string[],
+    chainId: number
+  ) => Promise<GetEnsAddressReturnType[]>;
+  querySNSForcelly: (wallets: string[]) => Promise<Map<string, string>>;
+  queryENSForcelly: (
+    wallets: string[],
+    chainId: number
+  ) => Promise<Map<string, string>>;
 }
 
 export const useDomainStore = create<IDomainStore>((set, get) => ({
@@ -164,12 +186,57 @@ export const useDomainStore = create<IDomainStore>((set, get) => ({
     }
     return "";
   },
+  querySNSForcelly: async (wallets: string[]) => {
+    const _to_be_queried_unique = Array.from(new Set(wallets));
+    const address_to_name = new Map<string, string>();
+    try {
+      const result = await sns.names(_to_be_queried_unique);
+      result.forEach((r, i) =>
+        address_to_name.set(
+          _to_be_queried_unique[i],
+          r || _to_be_queried_unique[i]
+        )
+      );
+    } catch (error) {
+      console.error("querySNSForcelly failed", error);
+    }
+    return address_to_name;
+  },
+  queryENSForcelly: async (wallets: string[], chainId: number) => {
+    const address_to_name = new Map<string, string>();
+    const isSupportedChain = ENS_SPPORTED_CHAINS.includes(chainId);
+    if (!isSupportedChain) {
+      return address_to_name;
+    };
+    const _to_be_queried_unique = Array.from(new Set(wallets));
+    // @ts-ignore
+    const publicClient = publicClientMap[chainId];
+    const _to_be_queried_requests = _to_be_queried_unique.map((w) =>
+      publicClient.getEnsName({
+        address: w.toLocaleLowerCase() as `0x${string}`,
+      })
+    );
+    try {
+      const result = await Promise.all(_to_be_queried_requests);
+      result.forEach((r: string, i: number) =>
+        address_to_name.set(
+          _to_be_queried_unique[i],
+          r || _to_be_queried_unique[i]
+        )
+      );
+    } catch (error) {
+      console.error("queryENSForcelly failed", error);
+    }
+    return address_to_name;
+  },
   parseSNS: async (names: string[]) => {
     return sns.resolves(names);
   },
-  parseENS: (names: string[]) => {
+  parseENS: (names: string[], chainId: number) => {
+    // @ts-ignore
+    const publicClient = publicClientMap[chainId];
     const reqs = names.map((name) =>
-      getEnsAddress(config, { name: normalize(name) })
+      publicClient.getEnsAddress({ name: normalize(name) })
     );
     return Promise.all(reqs);
   },
