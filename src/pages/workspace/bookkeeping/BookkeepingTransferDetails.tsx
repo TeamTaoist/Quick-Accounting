@@ -410,27 +410,6 @@ const BookkeepingTransferDetails = ({
             </Table>
             {/* </TableContainer>
         </TransferTable> */}
-            {/* Transaction hash */}
-            <TransactionHash>
-              <h3>Transaction hash</h3>
-              <div>
-                <p>{bookkeepingDetails.tx_hash}</p>
-                <a
-                  href={`${chainData?.explore}/tx/${bookkeepingDetails.tx_hash}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img src={linkIcon} alt="" />
-                </a>
-              </div>
-            </TransactionHash>
-            <TransactionHash>
-              <h3>Transaction date</h3>
-              <div>
-                {/* <p>Oct-15-2023 01:04:34 PM +UTC</p> */}
-                <p>{formatTimestamp(bookkeepingDetails.tx_timestamp)}</p>
-              </div>
-            </TransactionHash>
             {/* note info */}
             <NoteInformation>
               <NoteHeader>
@@ -529,6 +508,23 @@ const BookkeepingTransferDetails = ({
             <p>Submission time</p>
             <div>{formatTimestamp(bookkeepingDetails.submit_ts)}</div>
           </SubmissionTime>
+          <SubmissionTime>
+            <p>Execution time</p>
+            <div>{formatTimestamp(bookkeepingDetails.execute_ts)}</div>
+          </SubmissionTime>
+          <TransactionHash>
+            <p>Transaction hash</p>
+            <div>
+              <span>{bookkeepingDetails.tx_hash}</span>
+              <a
+                href={`${chainData?.explore}/tx/${bookkeepingDetails.tx_hash}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img src={linkIcon} alt="" />
+              </a>
+            </div>
+          </TransactionHash>
           <Status>
             <p>Status</p>
             <StatusBtn>{getPaymentStatus(bookkeepingDetails.status)}</StatusBtn>
@@ -551,22 +547,9 @@ const TransferTable = styled.div`
   margin-inline: 40px;
   margin-top: 20px;
 `;
-const TransactionHash = styled.div`
-  /* margin-inline: 40px; */
-  margin: 20px 0;
-  img {
-    cursor: pointer;
-  }
-  h3 {
-    font-size: 18px;
-    padding-bottom: 8px;
-    font-weight: 400;
-    padding: 0 10px;
-  }
+const TransactionHash = styled(SubmissionTime)`
   div {
-    border-top: 1px solid var(--border-table);
-    border-bottom: 1px solid var(--border-table);
-    padding: 10px 14px;
+    color: #888;
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -92,7 +92,7 @@ export const NoteHeader = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 10px 15px;
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   h3 {
     font-size: 18px;
     font-weight: 400;
