@@ -73,7 +73,6 @@ const HeaderBox = styled.div`
   text-align: center;
   position: relative;
   font-size: 16px;
-  font-family: Poppins-SemiBold, Poppins;
   font-weight: 600;
   /* color: var(--bs-body-color_active); */
   margin-bottom: 24px;

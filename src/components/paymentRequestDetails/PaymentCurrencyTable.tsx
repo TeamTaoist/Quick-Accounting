@@ -11,6 +11,7 @@ import usePaymentsStore from "../../store/usePayments";
 import { useDomainStore } from "../../store/useDomain";
 import { useWorkspace } from "../../store/useWorkspace";
 import { useLocation } from "react-router-dom";
+import styled from "@emotion/styled";
 
 const PaymentCurrencyTable = () => {
   const { paymentRequestDetails } = usePaymentsStore();
@@ -24,34 +25,28 @@ const PaymentCurrencyTable = () => {
       <TableHead sx={{ backgroundColor: "var(--bg-secondary)" }}>
         <TableRow>
           <TableCell
-            sx={{
-              // width: 200,
-              width: "30.2%",
-              border: 0,
-              borderRight: "1px solid var(--border-table)",
-              fontWeight: 500,
-              fontSize: "16px",
+            style={{
+              padding: "10px 15px",
+              fontFamily: "PingFangHK",
+              fontSize: "18px",
             }}
           >
             Recipient
           </TableCell>
           <TableCell
-            sx={{
-              width: 150,
-              border: 0,
-              borderRight: "1px solid var(--border-table)",
-              fontWeight: 500,
-              fontSize: "16px",
+            style={{
+              padding: "10px 15px",
+              fontFamily: "PingFangHK",
+              fontSize: "18px",
             }}
           >
             Amount
           </TableCell>
           <TableCell
-            sx={{
-              width: 200,
-              border: 0,
-              fontWeight: 500,
-              fontSize: "16px",
+            style={{
+              padding: "10px 15px",
+              fontFamily: "PingFangHK",
+              fontSize: "18px",
             }}
           >
             Currency

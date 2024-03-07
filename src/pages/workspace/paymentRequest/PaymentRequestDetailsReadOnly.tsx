@@ -146,12 +146,6 @@ const Cell = ({ children }: { children: React.ReactNode }) => (
   </TableCell>
 );
 
-const HeaderCell = styled(TableCell)`
-  padding-block: 10px;
-  width: 200px;
-  font-size: 18px;
-`;
-
 const TransferTop = ({
   data: paymentRequestDetails,
 }: {
@@ -165,10 +159,42 @@ const TransferTop = ({
     <>
       <TableHead sx={{ background: "var(--bg-secondary)" }}>
         <TableRow>
-          <HeaderCell>Safe</HeaderCell>
-          <HeaderCell>Counterparty</HeaderCell>
-          <HeaderCell>Amount</HeaderCell>
-          <HeaderCell>Currency</HeaderCell>
+          <TableCell
+            style={{
+              padding: "10px 15px",
+              fontFamily: "PingFangHK",
+              fontSize: "18px",
+            }}
+          >
+            Safe
+          </TableCell>
+          <TableCell
+            style={{
+              padding: "10px 15px",
+              fontFamily: "PingFangHK",
+              fontSize: "18px",
+            }}
+          >
+            Counterparty
+          </TableCell>
+          <TableCell
+            style={{
+              padding: "10px 15px",
+              fontFamily: "PingFangHK",
+              fontSize: "18px",
+            }}
+          >
+            Amount
+          </TableCell>
+          <TableCell
+            style={{
+              padding: "10px 15px",
+              fontFamily: "PingFangHK",
+              fontSize: "18px",
+            }}
+          >
+            Currency
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

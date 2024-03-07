@@ -351,10 +351,42 @@ const BookkeepingTransferDetails = ({
             <Table>
               <TableHead sx={{ backgroundColor: "var(--bg-secondary)" }}>
                 <TableRow>
-                  <TableCell>Safe</TableCell>
-                  <TableCell>Counterparty</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Currency</TableCell>
+                  <TableCell
+                    style={{
+                      padding: "10px 15px",
+                      fontFamily: "PingFangHK",
+                      fontSize: "18px",
+                    }}
+                  >
+                    Safe
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "10px 15px",
+                      fontFamily: "PingFangHK",
+                      fontSize: "18px",
+                    }}
+                  >
+                    Counterparty
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "10px 15px",
+                      fontFamily: "PingFangHK",
+                      fontSize: "18px",
+                    }}
+                  >
+                    Amount
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "10px 15px",
+                      fontFamily: "PingFangHK",
+                      fontSize: "18px",
+                    }}
+                  >
+                    Currency
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
