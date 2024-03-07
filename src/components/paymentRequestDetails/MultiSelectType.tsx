@@ -63,7 +63,7 @@ const MultiSelectType = ({
               label: v,
             }))}
             defaultValues={parseCategoryProperties
-              .filter(
+              ?.filter(
                 (p: any) =>
                   p.type === "multi-select" && p.name === property.name
               )

@@ -241,7 +241,7 @@ const Bookkeeping = () => {
               </MenuItem>
               {uniqueCategoryNames.map(
                 (categoryName) =>
-                  categoryName.trim() !== "" && (
+                  categoryName?.trim() !== "" && (
                     <MenuItem value={categoryName} key={categoryName}>
                       {categoryName}
                     </MenuItem>
