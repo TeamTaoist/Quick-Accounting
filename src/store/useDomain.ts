@@ -56,8 +56,8 @@ interface IDomainStore {
     names: string[],
     chainId: number
   ) => Promise<GetEnsAddressReturnType[]>;
-  querySNSForcelly: (wallets: string[]) => Promise<Map<string, string>>;
-  queryENSForcelly: (
+  querySNSForcibly: (wallets: string[]) => Promise<Map<string, string>>;
+  queryENSForcibly: (
     wallets: string[],
     chainId: number
   ) => Promise<Map<string, string>>;
@@ -186,7 +186,7 @@ export const useDomainStore = create<IDomainStore>((set, get) => ({
     }
     return "";
   },
-  querySNSForcelly: async (wallets: string[]) => {
+  querySNSForcibly: async (wallets: string[]) => {
     const _to_be_queried_unique = Array.from(new Set(wallets));
     const address_to_name = new Map<string, string>();
     try {
@@ -198,11 +198,11 @@ export const useDomainStore = create<IDomainStore>((set, get) => ({
         )
       );
     } catch (error) {
-      console.error("querySNSForcelly failed", error);
+      console.error("querySNSForcibly failed", error);
     }
     return address_to_name;
   },
-  queryENSForcelly: async (wallets: string[], chainId: number) => {
+  queryENSForcibly: async (wallets: string[], chainId: number) => {
     const address_to_name = new Map<string, string>();
     const isSupportedChain = ENS_SPPORTED_CHAINS.includes(chainId);
     if (!isSupportedChain) {
@@ -225,7 +225,7 @@ export const useDomainStore = create<IDomainStore>((set, get) => ({
         )
       );
     } catch (error) {
-      console.error("queryENSForcelly failed", error);
+      console.error("queryENSForcibly failed", error);
     }
     return address_to_name;
   },

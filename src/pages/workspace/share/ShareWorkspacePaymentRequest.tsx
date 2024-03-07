@@ -57,8 +57,8 @@ const ShareWorkspacePaymentRequest = () => {
     parseENS,
     parseSNS,
     formatAddressToDomain,
-    queryENSForcelly,
-    querySNSForcelly,
+    queryENSForcibly,
+    querySNSForcibly,
   } = useDomainStore();
   const [nameAddressMap, setNameAddressMap] = useState<Map<string, string>>(
     new Map()
@@ -388,8 +388,8 @@ const ShareWorkspacePaymentRequest = () => {
       );
       const address_to_name =
         workspace.name_service === "sns"
-          ? await querySNSForcelly(wallets)
-          : await queryENSForcelly(wallets, workspace.chain_id);
+          ? await querySNSForcibly(wallets)
+          : await queryENSForcibly(wallets, workspace.chain_id);
 
       const updatedForm = shareData?.payment_request_items?.map(
         (paymentDetail) => {
