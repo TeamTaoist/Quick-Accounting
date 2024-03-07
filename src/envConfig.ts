@@ -1,4 +1,4 @@
-const version = "alpha 0.2.0";
+const version = "alpha 0.3.0";
 const DEV_CONFIG = {
   version,
   endpoint: "https://dev-qa-api.taoist.dev",
