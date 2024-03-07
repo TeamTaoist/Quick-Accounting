@@ -160,27 +160,27 @@ const Category = () => {
     openModal,
   ]);
   // add property
-  // const handleAddProperty = (categoryId: number) => {
-  //   const randomID = Math.floor(Math.random() * (1 - 100)) + 1;
-  //   const newProperty: CategoryPropertyBody = {
-  //     name: "New Property",
-  //     type: "Text",
-  //     values: "",
-  //     ID: randomID,
-  //     category_id: categoryId,
-  //     workspace_id: Number(id),
-  //   };
-  //   const updatedList = categoryList.map((category) => {
-  //     if (category.ID === categoryId) {
-  //       return {
-  //         ...category,
-  //         properties: [...(category.properties || []), newProperty],
-  //       };
-  //     }
-  //     return category;
-  //   });
-  //   setCategoryList(updatedList as ICategory[]);
-  // };
+  const handleAddProperty = (categoryId: number) => {
+    const randomID = Math.floor(Math.random() * (1 - 100)) + 1;
+    const newProperty: CategoryPropertyBody = {
+      category_id: categoryId,
+      name: "New Property",
+      type: "Text",
+      values: "",
+      workspace_id: Number(id),
+      ID: randomID,
+    };
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        return {
+          ...category,
+          properties: [...(category.properties || []), newProperty],
+        };
+      }
+      return category;
+    });
+    setCategoryList(updatedList as ICategory[]);
+  };
   // console.log("categoryProperties", categoryProperties);
 
   //TODO: modify category
@@ -331,18 +331,18 @@ const Category = () => {
     setCategoryList(updatedList as ICategory[]);
   };
   // create new property
-  const handleCreateProperty = async (categoryId: number) => {
-    const newProperty: CategoryPropertyBody = {
-      category_id: categoryId,
-      name: "New Property",
-      type: "Text",
-      values: "",
-      workspace_id: Number(id),
-      // ID: randomID,
-    };
-    await createWorkspaceCategoryProperties(newProperty);
-    setCategoryLoading(!categoryLoading);
-  };
+  // const handleCreateProperty = async (categoryId: number) => {
+  //   const newProperty: CategoryPropertyBody = {
+  //     category_id: categoryId,
+  //     name: "New Property",
+  //     type: "Text",
+  //     values: "",
+  //     workspace_id: Number(id),
+  //     // ID: randomID,
+  //   };
+  //   await createWorkspaceCategoryProperties(newProperty);
+  //   setCategoryLoading(!categoryLoading);
+  // };
   // console.log(updatedPropertyBody);
   // archive property
   const handleArchiveCategoryProperty = async (
@@ -362,7 +362,7 @@ const Category = () => {
   // edit category
   const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
   const handleEditCategory = (e: any, categoryId: number) => {
-    e.stopPropagation();
+    // e.stopPropagation();
     const isSelected = editableCategoryId.includes(categoryId);
 
     if (isSelected) {
@@ -633,7 +633,7 @@ const Category = () => {
                         <OptionCreateButtons>
                           {editableCategoryId.includes(category.ID) ? (
                             <button
-                              onClick={() => handleCreateProperty(category.ID)}
+                              onClick={() => handleAddProperty(category.ID)}
                             >
                               <img src={add} alt="" />
                               <span>Add property</span>
