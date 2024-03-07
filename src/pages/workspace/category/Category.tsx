@@ -33,6 +33,7 @@ import {
   PropertyOptions,
   PropertyTitle,
   UpdateBtn,
+  UpdateLoadingBtn,
 } from "./category.style";
 import { useCategory } from "../../../store/useCategory";
 import {
@@ -42,6 +43,7 @@ import {
 import CategoryPropertyDetails from "../../../components/workspace/category/CategoryPropertyDetails";
 import CategoryArchivedList from "../../../components/workspace/category/CategoryArchivedList";
 import CategoryPropertyArchivedList from "../../../components/workspace/category/CategoryPropertyArchivedList";
+import { CircularProgress } from "@mui/material";
 
 export interface CategoryPropertyBody {
   name: string;
@@ -372,7 +374,10 @@ const Category = () => {
   };
 
   // update category name & properties
-  const handleUpdatedCategoryProperty = (categoryId: number) => {
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const handleUpdatedCategoryProperty = (categoryId: number, e: any) => {
+    setUpdateLoading(true);
+    e.stopPropagation();
     const updatedCategory = categoryList.find(
       (category) => category.ID === categoryId
     );
@@ -390,6 +395,7 @@ const Category = () => {
       if (res) {
         setCategoryLoading(!categoryLoading);
         setEditableCategoryId(selectedCategory);
+        setUpdateLoading(false);
       }
     });
   };
@@ -515,14 +521,26 @@ const Category = () => {
                       </div>
                       {/* {editableCategoryId === category.ID ? ( */}
                       {editableCategoryId.includes(category.ID) ? (
-                        <UpdateBtn
-                          // onClick={(e) => handleEditCategory(e, category.ID)}
-                          onClick={() =>
-                            handleUpdatedCategoryProperty(category.ID)
-                          }
-                        >
-                          Update
-                        </UpdateBtn>
+                        <>
+                          {updateLoading ? (
+                            <UpdateLoadingBtn>
+                              <CircularProgress
+                                size="15px"
+                                sx={{ color: "gray" }}
+                              />
+                              <p>Updating</p>
+                            </UpdateLoadingBtn>
+                          ) : (
+                            <UpdateBtn
+                              // onClick={(e) => handleEditCategory(e, category.ID)}
+                              onClick={(e) =>
+                                handleUpdatedCategoryProperty(category.ID, e)
+                              }
+                            >
+                              Update
+                            </UpdateBtn>
+                          )}
+                        </>
                       ) : (
                         <HeaderOptions>
                           <div
@@ -531,6 +549,7 @@ const Category = () => {
                             <img src={edit} alt="" />
                             <p>Edit</p>
                           </div>
+
                           <div
                             onClick={(e) =>
                               handelArchiveCategory(
@@ -565,27 +584,18 @@ const Category = () => {
                                   <img src={property1} alt="" />
                                   <p>{property.name}</p>
                                 </PropertyTitle>
-                                <img
-                                  onClick={() =>
-                                    handleArchiveCategoryProperty(property)
-                                  }
-                                  src={archive}
-                                  alt=""
-                                />
+                                {editableCategoryId.includes(category.ID) && (
+                                  <img
+                                    onClick={() =>
+                                      handleArchiveCategoryProperty(property)
+                                    }
+                                    src={archive}
+                                    alt=""
+                                  />
+                                )}
                               </Option>
                             </div>
                           ))}
-                          {/* {categoryProperties[category.ID] &&
-                            categoryProperties[category.ID].map(
-                              (property, index) => (
-                                <Option onClick={() => setShowProperty(index)}>
-                                  <PropertyTitle>
-                                    <img src={property1} alt="" />
-                                    <p>{property.name}</p>
-                                  </PropertyTitle>
-                                </Option>
-                              )
-                            )} */}
                         </PropertyOptions>
                         {/* property input section */}
                         <Details>
@@ -609,6 +619,9 @@ const Category = () => {
                                   handlePropertyValueChang
                                 }
                                 handleDeleteProperty={handleDeleteProperty}
+                                isEditable={
+                                  !editableCategoryId.includes(category.ID)
+                                }
                               />
                             ))}
                             {/*  */}

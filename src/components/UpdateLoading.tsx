@@ -34,7 +34,7 @@ const UpdateLoadingToast = styled.form`
     margin-left: 7px;
   }
 `;
-const PendingLoading = styled.form`
+export const PendingLoading = styled.form`
   display: flex;
   align-items: center;
 `;

@@ -91,6 +91,16 @@ export const UpdateBtn = styled.button`
   font-size: 18px;
   margin-right: 10px;
 `;
+export const UpdateLoadingBtn = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg-primary);
+  padding: 8px 18px;
+  border-radius: 7px;
+  font-size: 18px;
+  margin-right: 10px;
+`;
 export const CategoryProperties = styled.div`
   display: flex;
   flex-direction: column;
@@ -151,11 +161,14 @@ export const OptionCreateButtons = styled.div`
   width: 50%;
   button {
     display: flex;
-    background: transparent;
+    background: var(--bg-primary);
     gap: 7px;
-    padding: 28px 40px;
+    padding: 8px 20px;
+    margin: 20px;
+    margin-bottom: 20px;
     border: none;
     outline: none;
+    border-radius: 10px;
     cursor: pointer;
     img {
       width: 16px;

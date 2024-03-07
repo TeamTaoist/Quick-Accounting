@@ -39,6 +39,7 @@ interface CategoryPropertyDetailsProps {
     propertyId: number,
     index: number
   ) => void;
+  isEditable: boolean;
 }
 
 const CategoryPropertyDetails = ({
@@ -50,6 +51,7 @@ const CategoryPropertyDetails = ({
   handlePropertyTypeChange,
   handlePropertyValueChang,
   handleDeleteProperty,
+  isEditable,
 }: CategoryPropertyDetailsProps) => {
   const propertyValues = property.values?.split(";");
   return (
@@ -60,6 +62,7 @@ const CategoryPropertyDetails = ({
           <PropertyInput
             placeholder="Property name"
             value={property.name}
+            disabled={isEditable}
             onChange={(e) =>
               handlePropertyNameChange(
                 property.category_id,
@@ -67,19 +70,13 @@ const CategoryPropertyDetails = ({
                 e.target.value
               )
             }
-            // onBlur={() =>
-            //   handleUpdatedCategoryProperty(
-            //     property.workspace_id,
-            //     property.category_id,
-            //     property.ID
-            //   )
-            // }
           />
           <h3>Property Type</h3>
           <Select
             labelId={`property-type-label-${index}`}
             id={`property-type-${index}`}
             value={property.type}
+            disabled={isEditable}
             onChange={(e) =>
               handlePropertyTypeChange(
                 property.category_id,

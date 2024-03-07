@@ -170,7 +170,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
       updatedPropertyBody
     ) => {
       try {
-        setLoading(true);
+        // setLoading(true);
         const { data } = await axiosClient.put(
           `/workspace_category_property/${workspaceId}/${workspaceCategoryId}/edit`,
           updatedPropertyBody
@@ -181,7 +181,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
       } catch (error: any) {
         console.log(error);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     },
     // archive property
