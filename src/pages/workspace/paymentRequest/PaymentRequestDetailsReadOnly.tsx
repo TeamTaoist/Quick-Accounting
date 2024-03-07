@@ -278,32 +278,6 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                 <NotTransferTop data={paymentRequestDetails} />
               )}
             </Table>
-            {/* </TableContainer> */}
-            {isTransfer && (
-              <>
-                <TransactionHash>
-                  <h3>Transaction hash</h3>
-                  <div>
-                    <p>{paymentRequestDetails.tx_hash}</p>
-                    <a
-                      href={`${getChainExplorer(
-                        paymentRequestDetails.workspace_chain_id
-                      )}/tx/${paymentRequestDetails.tx_hash}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <img src={linkIcon} alt="" />
-                    </a>
-                  </div>
-                </TransactionHash>
-                <TransactionHash>
-                  <h3>Transaction date</h3>
-                  <div>
-                    <p>{formatTimestamp(paymentRequestDetails.tx_timestamp)}</p>
-                  </div>
-                </TransactionHash>
-              </>
-            )}
             {/* note info */}
             <NoteInformation>
               {/* <div className="note">Note Information</div> */}
@@ -383,10 +357,36 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
             <p>Submission time</p>
             <div>{formatTimestamp(paymentRequestDetails.submit_ts)}</div>
           </SubmissionTime>
-          <RejectTime>
-            <p>Rejection time</p>
-            <div>{formatTimestamp(paymentRequestDetails.reject_ts)}</div>
-          </RejectTime>
+          {!!paymentRequestDetails.reject_ts && (
+            <RejectTime>
+              <p>Rejection time</p>
+              <div>{formatTimestamp(paymentRequestDetails.reject_ts)}</div>
+            </RejectTime>
+          )}
+          {!!paymentRequestDetails.execute_ts && (
+            <RejectTime>
+              <p>Execution time</p>
+              <div>{formatTimestamp(paymentRequestDetails.execute_ts)}</div>
+            </RejectTime>
+          )}
+          {!!paymentRequestDetails.tx_hash && (
+            <TransactionHash>
+              <p>Transaction hash</p>
+              <div>
+                <span>{paymentRequestDetails.tx_hash}</span>
+                <a
+                  href={`${getChainExplorer(
+                    paymentRequestDetails.workspace_chain_id
+                  )}/tx/${paymentRequestDetails.tx_hash}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img src={linkIcon} alt="" />
+                </a>
+              </div>
+            </TransactionHash>
+          )}
+
           <Status>
             <p>Status</p>
             <StatusBtn>
@@ -435,20 +435,9 @@ export const SafeSection = styled.div`
   /* height: 100%; */
 `;
 
-const TransactionHash = styled.div`
-  margin-inline: 40px;
-  margin-top: 30px;
-  img {
-    cursor: pointer;
-  }
-  h3 {
-    font-size: 18px;
-    padding-bottom: 8px;
-    font-weight: 400;
-  }
+const TransactionHash = styled(SubmissionTime)`
   div {
-    border: 1px solid var(--border-table);
-    padding: 10px 14px;
+    color: #888;
     display: flex;
     justify-content: space-between;
     align-items: center;
