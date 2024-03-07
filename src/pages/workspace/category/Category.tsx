@@ -348,6 +348,7 @@ const Category = () => {
   };
 
   // edit category
+  // const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
   const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
   const handleEditCategory = (e: any, categoryId: number) => {
     e.stopPropagation();
@@ -360,6 +361,8 @@ const Category = () => {
       setEditableCategoryId([...editableCategoryId, categoryId]);
     }
   };
+
+  const handleCategoryCollapse = (categoryId: number) => {};
 
   // update category name & properties
   const [updateLoading, setUpdateLoading] = useState(false);
@@ -469,7 +472,7 @@ const Category = () => {
               <CategoryOption key={category.ID}>
                 <Accordion>
                   <AccordionSummary
-                    // onClick={() => handleCategory(category.ID)}
+                    onClick={() => handleCategoryCollapse(category.ID)}
                     expandIcon={
                       !editableCategoryId.includes(category.ID) ? (
                         <ExpandMoreIcon />
@@ -571,16 +574,15 @@ const Category = () => {
                                   <img src={property1} alt="" />
                                   <p>{property.name}</p>
                                 </PropertyTitle>
-                                {editableCategoryId.includes(category.ID) &&
-                                  !property.archived && (
-                                    <img
-                                      onClick={() =>
-                                        handleArchiveCategoryProperty(property)
-                                      }
-                                      src={archive}
-                                      alt=""
-                                    />
-                                  )}
+                                {!editableCategoryId.includes(category.ID) && (
+                                  <img
+                                    onClick={() =>
+                                      handleArchiveCategoryProperty(property)
+                                    }
+                                    src={archive}
+                                    alt=""
+                                  />
+                                )}
                               </Option>
                             </div>
                           ))}
