@@ -22,6 +22,7 @@ export interface CategoryProperties {
       name: string;
       type: string;
       values: string;
+      archived?: boolean;
     }
   ];
 }
@@ -38,6 +39,7 @@ interface CategoryProperty {
     name: string;
     type: string;
     values: string;
+    archived: boolean;
   };
 }
 interface UpdatedPropertyBody {
@@ -101,6 +103,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
         name: "",
         type: "",
         values: "",
+        archived: false,
       },
     },
     archivedCategoryProperty: [],

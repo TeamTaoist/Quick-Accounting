@@ -52,6 +52,7 @@ export interface CategoryPropertyBody {
   ID?: number;
   category_id: number;
   workspace_id: number;
+  archived: boolean | null;
 }
 export interface CategoryPropertiesState {
   [categoryId: number]: CategoryPropertyBody[];
@@ -169,6 +170,7 @@ const Category = () => {
       values: "",
       workspace_id: Number(id),
       ID: randomID,
+      archived: true,
     };
     const updatedList = categoryList.map((category) => {
       if (category.ID === categoryId) {
@@ -330,20 +332,6 @@ const Category = () => {
 
     setCategoryList(updatedList as ICategory[]);
   };
-  // create new property
-  // const handleCreateProperty = async (categoryId: number) => {
-  //   const newProperty: CategoryPropertyBody = {
-  //     category_id: categoryId,
-  //     name: "New Property",
-  //     type: "Text",
-  //     values: "",
-  //     workspace_id: Number(id),
-  //     // ID: randomID,
-  //   };
-  //   await createWorkspaceCategoryProperties(newProperty);
-  //   setCategoryLoading(!categoryLoading);
-  // };
-  // console.log(updatedPropertyBody);
   // archive property
   const handleArchiveCategoryProperty = async (
     property: ICategoryProperties
@@ -362,7 +350,7 @@ const Category = () => {
   // edit category
   const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
   const handleEditCategory = (e: any, categoryId: number) => {
-    // e.stopPropagation();
+    e.stopPropagation();
     const isSelected = editableCategoryId.includes(categoryId);
 
     if (isSelected) {
@@ -400,6 +388,8 @@ const Category = () => {
     });
   };
 
+  console.log(categoryList);
+
   useEffect(() => {
     if (workspaceCategoryProperties && workspaceCategoryProperties.length > 0) {
       const updatedList = workspaceCategoryProperties?.map((category) => {
@@ -422,6 +412,7 @@ const Category = () => {
               name: property.name,
               type: property.type,
               values: property.values,
+              archived: property.archived,
             })) || [],
         };
       });
@@ -479,17 +470,19 @@ const Category = () => {
                 <Accordion>
                   <AccordionSummary
                     // onClick={() => handleCategory(category.ID)}
-                    // expandIcon={!isEditable ? <ExpandMoreIcon /> : ""}
+                    expandIcon={
+                      !editableCategoryId.includes(category.ID) ? (
+                        <ExpandMoreIcon />
+                      ) : (
+                        ""
+                      )
+                    }
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     sx={{ backgroundColor: "var(--hover-bg)" }}
                   >
                     <Header>
-                      <div
-                      // onClick={(e) =>
-                      //   handleCategoryName(e, category.ID)
-                      // }
-                      >
+                      <div>
                         {/* {editableCategoryId === category.ID ? ( */}
                         {editableCategoryId.includes(category.ID) ? (
                           <input
@@ -500,12 +493,6 @@ const Category = () => {
                             onClick={(e) => e.stopPropagation()}
                             // onChange={(e) => setCategoryName(e.target.value)}
                             onChange={(e) => handleCategoryName(e, category.ID)}
-                            // onBlur={() =>
-                            //   handleUpdateCategoryName(
-                            //     category.workspace_id,
-                            //     category.ID
-                            //   )
-                            // }
                           />
                         ) : (
                           <Typography
@@ -584,15 +571,16 @@ const Category = () => {
                                   <img src={property1} alt="" />
                                   <p>{property.name}</p>
                                 </PropertyTitle>
-                                {editableCategoryId.includes(category.ID) && (
-                                  <img
-                                    onClick={() =>
-                                      handleArchiveCategoryProperty(property)
-                                    }
-                                    src={archive}
-                                    alt=""
-                                  />
-                                )}
+                                {editableCategoryId.includes(category.ID) &&
+                                  !property.archived && (
+                                    <img
+                                      onClick={() =>
+                                        handleArchiveCategoryProperty(property)
+                                      }
+                                      src={archive}
+                                      alt=""
+                                    />
+                                  )}
                               </Option>
                             </div>
                           ))}

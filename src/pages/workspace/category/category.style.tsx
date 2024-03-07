@@ -90,6 +90,7 @@ export const UpdateBtn = styled.button`
   border-radius: 7px;
   font-size: 18px;
   margin-right: 10px;
+  cursor: pointer;
 `;
 export const UpdateLoadingBtn = styled.div`
   display: flex;
