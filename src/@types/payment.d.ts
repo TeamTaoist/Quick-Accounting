@@ -29,6 +29,7 @@ declare interface IPaymentRequest {
   vault_wallet: string;
   workspace_avatar: string;
   applicant: string;
+  name_service?: string;
 }
 
 declare interface ICategoryProperties {

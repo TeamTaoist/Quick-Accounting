@@ -8,8 +8,6 @@ interface UpdateLoadingProps {
 }
 
 const UpdateLoading = ({ isUpdating, isSuccess }: UpdateLoadingProps) => {
-  console.log(isUpdating);
-
   return (
     <UpdateLoadingToast>
       {isUpdating && (
@@ -36,7 +34,7 @@ const UpdateLoadingToast = styled.form`
     margin-left: 7px;
   }
 `;
-const PendingLoading = styled.form`
+export const PendingLoading = styled.form`
   display: flex;
   align-items: center;
 `;

@@ -3,10 +3,8 @@ import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPa
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import { paymentRequestBody } from "../workspace/paymentRequest/PaymentRequestGroupDetails";
-import ReactSelect from "../ReactSelect";
-import { ReactSelectOption } from "../../pages/workspace/bookkeeping/BookkeepingTransferDetails";
 
-interface GroupMultiSelectTypeProps {
+interface GroupTextTypeProps {
   properties: any;
   handleUpdatePaymentRequest: (paymentId: number) => void;
   sharePaymentRequestForm: paymentRequestBody[];
@@ -21,10 +19,9 @@ interface GroupMultiSelectTypeProps {
     categoryId?: number
   ) => void;
   defaultPropertyValue: any;
-  selectedValues: any[];
 }
 
-const GroupMultiSelectType = ({
+const GroupDatePickerType = ({
   properties,
   handleUpdatePaymentRequest,
   payment,
@@ -32,8 +29,7 @@ const GroupMultiSelectType = ({
   index,
   handleFormChange,
   defaultPropertyValue,
-  selectedValues,
-}: GroupMultiSelectTypeProps) => {
+}: GroupTextTypeProps) => {
   if (!!defaultPropertyValue || !properties.archived) {
     return (
       <TableRow
@@ -56,35 +52,34 @@ const GroupMultiSelectType = ({
           </NoteInfo>
         </TableCell>
         <TableCell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
-          <ReactSelect
-            value={selectedValues}
-            // isDisabled={isEditable}
-            // onChange={handleSelectChange}
-            onChange={(selectedOption: ReactSelectOption) =>
+          <TextField
+            sx={{
+              "& fieldset": { border: "none" },
+            }}
+            size="small"
+            fullWidth
+            type="date"
+            value={
+              sharePaymentRequestForm[index].category_properties.find(
+                (p: any) =>
+                  p.type === "date-picker" && p.name === properties.name
+              )?.values || ""
+            }
+            // id="fullWidth"
+            placeholder="Enter content"
+            onChange={(e) =>
               handleFormChange(
                 index,
                 "categoryProperties",
-                selectedOption,
+                e.target.value,
                 properties.name,
                 properties.type
               )
             }
-            options={properties.values.split(";").map((v: any) => ({
-              value: v,
-              label: v,
-            }))}
-            defaultValues={sharePaymentRequestForm[index].category_properties
-              .filter(
-                (p: any) =>
-                  p.type === "multi-select" && p.name === properties.name
-              )
-              .map((p: any) =>
-                p.values.split(";").map((v: string) => ({
-                  value: v,
-                  label: v,
-                }))
-              )
-              .flat()}
+            InputProps={{
+              style: { padding: 0 },
+              // readOnly: isEditable,
+            }}
           />
         </TableCell>
       </TableRow>
@@ -93,4 +88,4 @@ const GroupMultiSelectType = ({
   return null;
 };
 
-export default GroupMultiSelectType;
+export default GroupDatePickerType;

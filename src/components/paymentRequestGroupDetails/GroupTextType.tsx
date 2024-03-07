@@ -35,13 +35,18 @@ const GroupTextType = ({
       <TableRow
         sx={{
           td: {
-            border: "1px solid var(--border-table)",
             padding: 1,
             paddingInline: 1,
           },
         }}
       >
-        <TableCell sx={{ height: 1, width: 200 }}>
+        <TableCell
+          sx={{
+            height: 1,
+            width: 200,
+            borderRight: "1px solid var(--border-table)",
+          }}
+        >
           <NoteInfo>
             <Image src={optionsIcon} alt="" /> {properties.name}
           </NoteInfo>
@@ -53,7 +58,6 @@ const GroupTextType = ({
             }}
             size="small"
             fullWidth
-            // value={property.values}
             value={
               sharePaymentRequestForm[index].category_properties.find(
                 (p: any) => p.type === "Text" && p.name === properties.name

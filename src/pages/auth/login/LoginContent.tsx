@@ -11,6 +11,7 @@ import { createSiweMessage } from "../../../utils";
 import { useAuthStore } from "../../../store/useAuthStore";
 import metamask from "../../../assets/auth/metamask.svg";
 import cancelIcon from "../../../assets/auth/cancel.svg";
+import { toast } from "react-toastify";
 
 interface IProps {
   handleClose: () => void;
@@ -68,11 +69,10 @@ export default function LoginContent({ handleClose, loginCallback }: IProps) {
 
   const onClickConnect = async () => {
     const connector = connectors[0];
-    // TODO check if metamask is installed
-    // if (!connector.setup) {
-    //   alert("Please install MetaMask");
-    //   return;
-    // }
+    if (!connector) {
+      toast.error("Please install MetaMask");
+      return;
+    }
     try {
       // connect
       await connectAsync({ connector });

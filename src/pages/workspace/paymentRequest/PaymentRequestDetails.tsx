@@ -23,6 +23,7 @@ import optionsIcon from "../../../assets/workspace/option.svg";
 import statusIcon from "../../../assets/workspace/status.svg";
 import {
   Image,
+  NoteHeader,
   NoteInfo,
   NoteInformation,
 } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
@@ -34,6 +35,9 @@ import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import PaymentCurrencyTable from "../../../components/paymentRequestDetails/PaymentCurrencyTable";
 import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { getPaymentStatus } from "../../../utils/payment";
+import { formatTimestamp } from "../../../utils/time";
+import UpdateLoading from "../../../components/UpdateLoading";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -139,7 +143,21 @@ const PaymentRequestDetails = ({
       },
     });
   };
+  // date picker
+  const [datePicker, setDatePicker] = useState<{
+    [name: string]: any;
+  }>({});
 
+  const handleDatePickerProperty = (e: any, name: string) => {
+    const value = e.target.value;
+    setDatePicker({
+      ...datePicker,
+      [name]: {
+        ...datePicker[name],
+        values: value,
+      },
+    });
+  };
   const [age, setAge] = useState("Category");
 
   const handleCategoryChange = (event: SelectChangeEvent) => {
@@ -176,6 +194,7 @@ const PaymentRequestDetails = ({
     setPropertyTextValue({});
     setPropertyContent("");
     parseCategoryProperties = {};
+    setDatePicker({});
   };
   // form data
   const updatedPaymentBody = {
@@ -206,6 +225,14 @@ const PaymentRequestDetails = ({
             values: proPertyTextValue[key].values,
           } as ICategoryProperties)
       ),
+      ...Object.keys(datePicker).map(
+        (key) =>
+          ({
+            name: key,
+            type: "date-picker",
+            values: datePicker[key].values,
+          } as ICategoryProperties)
+      ),
     ],
   };
 
@@ -216,11 +243,13 @@ const PaymentRequestDetails = ({
       parseCategoryProperties = JSON.parse(categoryProperties);
     }
   }
+
   // new
   useEffect(() => {
     const initialSelectSingleValue: { [name: string]: any } = {};
     const initialSelectedValues: { [name: string]: any } = {};
     const initialPropertyTextValue: { [name: string]: any } = {};
+    const initialPropertyDateValue: { [name: string]: any } = {};
 
     parseCategoryProperties?.forEach((property: any) => {
       if (property.type === "single-select") {
@@ -241,12 +270,19 @@ const PaymentRequestDetails = ({
           type: property.type,
           values: property.values,
         };
+      } else if (property.type === "date-picker") {
+        initialPropertyDateValue[property.name] = {
+          name: property.name,
+          type: property.type,
+          values: property.values,
+        };
       }
     });
 
     setPropertyMultiValues(initialSelectedValues);
     setPropertyValues(initialSelectSingleValue);
     setPropertyTextValue(initialPropertyTextValue);
+    setDatePicker(initialPropertyDateValue);
   }, []);
 
   useEffect(() => {
@@ -259,15 +295,29 @@ const PaymentRequestDetails = ({
     }
   }, []);
 
+  // updating loading state
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
   const handleUpdateCategory = async () => {
+    setIsUpdating(true);
     await updatePaymentRequestCategory(
       id,
       paymentRequestDetails?.ID.toString(),
       updatedPaymentBody
-    );
-    if (pageName === "payment-request") {
-      getPaymentRequestList(paymentRequestDetails.workspace_id, false);
-    } else if (pageName === "queue") {
+    ).then((res) => {
+      if (res) {
+        setIsUpdating(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 3000);
+      }
+    });
+    // if (pageName === "payment-request") {
+    //   // getPaymentRequestList(paymentRequestDetails.workspace_id, false);
+    // }
+    if (pageName === "queue") {
       const category_properties = JSON.stringify(
         updatedPaymentBody.category_properties
       );
@@ -309,24 +359,39 @@ const PaymentRequestDetails = ({
         address={selectedWorkspaceSafeAddress}
       >
         <RequestDetails>
-          <PaymentCurrencyTable />
-          {/* note info */}
-          <NoteInformation>
-            <h3>Note Information</h3>
-
-            <TableContainer>
+          <TableContainer
+            sx={{
+              boxShadow: "none",
+              border: "1px solid var(--border-table)",
+              borderRadius: "10px",
+            }}
+          >
+            <PaymentCurrencyTable />
+            {/* note info */}
+            <NoteInformation>
+              <NoteHeader>
+                <h3>Note Information</h3>
+                <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} />
+              </NoteHeader>
+              {/* <TableContainer> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
                   <TableRow
                     sx={{
                       td: {
-                        border: "1px solid var(--border-table)",
+                        // border: "1px solid var(--border-table)",
                         padding: 0,
                         paddingInline: 1,
                       },
                     }}
                   >
-                    <TableCell sx={{ height: 1, width: 200 }}>
+                    <TableCell
+                      sx={{
+                        height: 1,
+                        width: 208,
+                        borderRight: "1px solid var(--border-table)",
+                      }}
+                    >
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
@@ -389,20 +454,34 @@ const PaymentRequestDetails = ({
                         proPertyTextValue={proPertyTextValue}
                         handlePropertyText={handlePropertyText}
                         status={paymentRequestDetails.status}
+                        datePicker={datePicker}
+                        handleDatePickerProperty={handleDatePickerProperty}
                       />
                     </>
                   )}
                 </TableBody>
               </Table>
-            </TableContainer>
-            {/* rejected status */}
-            {paymentRequestDetails?.status === 2 && (
-              <PaymentStatus>
-                <img src={statusIcon} alt="" />
-                <p>Status: Rejected</p>
-              </PaymentStatus>
-            )}
-          </NoteInformation>
+              {/* </TableContainer> */}
+              {/* rejected status */}
+              {/* {paymentRequestDetails?.status === 2 && (
+                <PaymentStatus>
+                  <img src={statusIcon} alt="" />
+                  <p>Status: Rejected</p>
+                </PaymentStatus>
+              )} */}
+            </NoteInformation>
+          </TableContainer>
+          {/* submission time */}
+          <SubmissionTime>
+            <p>Submission time</p>
+            <div>{formatTimestamp(paymentRequestDetails.submit_ts)}</div>
+          </SubmissionTime>
+          <Status>
+            <p>Status</p>
+            <StatusBtn>
+              {getPaymentStatus(paymentRequestDetails.status)}
+            </StatusBtn>
+          </Status>
         </RequestDetails>
       </WorkspaceItemDetailsLayout>
     </>
@@ -412,7 +491,8 @@ const PaymentRequestDetails = ({
 export default PaymentRequestDetails;
 
 const RequestDetails = styled.div`
-  padding-bottom: 50px;
+  /* padding-bottom: 50px; */
+  margin: 30px;
 `;
 const PaymentStatus = styled.div`
   display: flex;
@@ -425,4 +505,32 @@ const PaymentStatus = styled.div`
   p {
     font-size: 20px;
   }
+`;
+export const SubmissionTime = styled.div`
+  padding-top: 14px;
+  p {
+    font-size: 18px;
+    padding-bottom: 6px;
+  }
+  div {
+    border: 1px solid var(--border-table);
+    padding: 10px 10px;
+    border-radius: 8px;
+  }
+`;
+export const Status = styled.div`
+  padding-top: 14px;
+  p {
+    font-size: 18px;
+    padding-bottom: 6px;
+  }
+`;
+export const StatusBtn = styled.button`
+  background: #7c7777;
+  border: none;
+  outline: none;
+  padding: 8px 14px;
+  font-size: 16px;
+  border-radius: 7px;
+  color: #ffffff;
 `;

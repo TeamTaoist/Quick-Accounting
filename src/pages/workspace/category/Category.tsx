@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import add from "../../../assets/workspace/add.svg";
 import archive from "../../../assets/workspace/archive.svg";
+import edit from "../../../assets/workspace/edit.svg";
 import property1 from "../../../assets/workspace/property1.svg";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -23,6 +24,7 @@ import {
   CreateOptionButton,
   Details,
   Header,
+  HeaderOptions,
   Option,
   OptionCreateButtons,
   Options,
@@ -30,21 +32,30 @@ import {
   PropertyCreateButtons,
   PropertyOptions,
   PropertyTitle,
+  UpdateBtn,
+  UpdateLoadingBtn,
 } from "./category.style";
 import { useCategory } from "../../../store/useCategory";
-import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import {
+  useCategoryProperty,
+  CategoryProperties as ICategory,
+} from "../../../store/useCategoryProperty";
 import CategoryPropertyDetails from "../../../components/workspace/category/CategoryPropertyDetails";
-import LocalCategoryPropertyDetails from "../../../components/workspace/category/LocalCategoryPropertyDetails";
 import CategoryArchivedList from "../../../components/workspace/category/CategoryArchivedList";
 import CategoryPropertyArchivedList from "../../../components/workspace/category/CategoryPropertyArchivedList";
+import { CircularProgress } from "@mui/material";
 
-export interface CategoryProperty {
+export interface CategoryPropertyBody {
   name: string;
   type: string;
-  value: "";
+  values: string;
+  ID?: number;
+  category_id: number;
+  workspace_id: number;
+  archived: boolean | null;
 }
 export interface CategoryPropertiesState {
-  [categoryId: number]: CategoryProperty[];
+  [categoryId: number]: CategoryPropertyBody[];
 }
 
 const Category = () => {
@@ -66,9 +77,10 @@ const Category = () => {
     updateWorkspaceCategoryProperties,
     archiveWorkspaceCategoryProperties,
     getCategoryPropertyByCategoryId,
+    editCategoryNameAndProperties,
   } = useCategoryProperty();
 
-  const [selectedValue, setSelectedValue] = useState("Text");
+  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   // category archive list
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -109,37 +121,20 @@ const Category = () => {
     setCategoryLoading(!categoryLoading);
   };
 
-  const [editableCategoryId, setEditableCategoryId] = useState<number>();
-  const [categoryNameEditable, setCategoryNameEditable] =
-    useState<boolean>(false);
-  const [categoryName, setCategoryName] = useState<string | undefined>();
-
-  //get workspace category details
-  const handleCategory = (workspaceCategoryId: number) => {
-    // getWorkspaceCategoryDetails(workspaceCategoryId);
-    setCategoryNameEditable(false);
-  };
   // update category name
-  const handleCategoryName = (
-    e: any,
-    categoryId: number,
-    categoryName: string
-  ) => {
+  const handleCategoryName = (e: any, categoryId: number) => {
     e.stopPropagation();
-    setEditableCategoryId(categoryId);
-    setCategoryNameEditable(true);
-    setCategoryName(categoryName);
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        return {
+          ...category,
+          name: e.target.value,
+        };
+      }
+      return category;
+    });
+    setCategoryList(updatedList as ICategory[]);
   };
-  const handleUpdateCategoryName = async (
-    // e: React.ChangeEvent<HTMLInputElement>,
-    workspaceId: number,
-    categoryId: number
-  ) => {
-    await updateCategoryName(workspaceId, categoryId, categoryName);
-    setCategoryLoading(!categoryLoading);
-    setCategoryNameEditable(false);
-  };
-  console.log("update", categoryName);
 
   // update archive workspace category
   const handelArchiveCategory = async (
@@ -166,183 +161,176 @@ const Category = () => {
     openModal,
   ]);
   // add property
-  const [categoryProperties, setCategoryProperties] =
-    useState<CategoryPropertiesState>({});
   const handleAddProperty = (categoryId: number) => {
-    const properties = categoryProperties[categoryId] || [];
-    const newProperty: CategoryProperty = {
+    const randomID = Math.floor(Math.random() * (1 - 100)) + 1;
+    const newProperty: CategoryPropertyBody = {
+      category_id: categoryId,
       name: "New Property",
       type: "Text",
-      value: "",
+      values: "",
+      workspace_id: Number(id),
+      ID: randomID,
+      archived: true,
     };
-    setCategoryProperties({
-      ...categoryProperties,
-      [categoryId]: [...properties, newProperty],
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        return {
+          ...category,
+          properties: [...(category.properties || []), newProperty],
+        };
+      }
+      return category;
     });
+    setCategoryList(updatedList as ICategory[]);
   };
+  // console.log("categoryProperties", categoryProperties);
+
+  //TODO: modify category
+  const modifyCategoryProperty = (
+    categoryId: number,
+    propertyId: number,
+    updatedProperties: Partial<CategoryPropertyBody>
+  ) => {
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        const updatedPropertiesList = category.properties?.map((property) => {
+          if (property.ID === propertyId) {
+            return {
+              ...property,
+              ...updatedProperties,
+            };
+          }
+          return property;
+        });
+        return {
+          ...category,
+          properties: updatedPropertiesList,
+        };
+      }
+      return category;
+    });
+
+    setCategoryList(updatedList as ICategory[]);
+  };
+
   const handlePropertyNameChange = (
     categoryId: number,
-    index: number,
+    propertyId: number,
     newName: string
   ) => {
-    const updatedProperties = [...categoryProperties[categoryId]];
-    updatedProperties[index].name = newName;
-    setCategoryProperties({
-      ...categoryProperties,
-      [categoryId]: updatedProperties,
+    modifyCategoryProperty(categoryId, propertyId, { name: newName });
+  };
+
+  const handleDeleteProperty = (
+    categoryId: number,
+    propertyId: number,
+    index: number
+  ) => {
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        const updatedProperties = category.properties?.map((property) => {
+          if (property.ID === propertyId) {
+            const propertyValues = property.values
+              ? property.values.split(";")
+              : [];
+            propertyValues.splice(index, 1);
+            return {
+              ...property,
+              values: propertyValues.join(";"),
+            };
+          }
+          return property;
+        });
+        return {
+          ...category,
+          properties: updatedProperties,
+        };
+      }
+      return category;
     });
+
+    setCategoryList(updatedList as ICategory[]);
   };
 
-  // properties types values
-  const [propertyValues, setPropertyValues] = useState<string[]>([]);
-
-  const handleAddButtonClick = (categoryId: number, index: number) => {
-    setPropertyValues([...propertyValues, ""]);
-  };
-  const handleDeleteProperty = (index: number) => {
-    const updatedProperty = propertyValues.filter((_, i) => i !== index);
-    setPropertyValues(updatedProperty);
-  };
   const handlePropertyValueChang = (
     categoryId: number,
-    index: number,
-    newValue: string
+    propertyId: number,
+    newValue: string,
+    index: number
   ) => {
-    const updatedValues = [...propertyValues];
-    updatedValues[index] = newValue;
-    setPropertyValues(updatedValues);
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        const updatedProperties = category.properties?.map((property) => {
+          if (property.ID === propertyId) {
+            const propertyValues = (property.values || "").split(";");
+            propertyValues[index] = newValue;
+            return {
+              ...property,
+              values: propertyValues.join(";"),
+            };
+          }
+          return property;
+        });
+        return {
+          ...category,
+          properties: updatedProperties,
+        };
+      }
+      return category;
+    });
+
+    setCategoryList(updatedList as ICategory[]);
   };
 
   const handlePropertyTypeChange = (
     categoryId: number,
-    index: number,
-    newType: string
+    propertyId: number,
+    newValue: string
   ) => {
-    const updatedProperties = [...categoryProperties[categoryId]];
-    updatedProperties[index].type = newType;
-    setCategoryProperties({
-      ...categoryProperties,
-      [categoryId]: updatedProperties,
-    });
+    modifyCategoryProperty(categoryId, propertyId, { type: newValue });
   };
 
   const [showProperty, setShowProperty] = useState<number | null>();
 
-  const handleCreateProperty = async (
-    categoryId: number,
-    propertyIndex: number
+  const handleSelectedProperty = (
+    property: ICategoryProperties,
+    index: number
   ) => {
-    const propertyFormValues = categoryProperties[categoryId][showProperty!];
-    const propertyValue = {
-      category_id: categoryId,
-      name: propertyFormValues?.name,
-      type: propertyFormValues?.type,
-      values: propertyValues.join(";"),
-      workspace_id: Number(id),
-    };
-    await createWorkspaceCategoryProperties(propertyValue);
-    if (categoryProperty.code === 200 && categoryProperty.msg === "success") {
-      setShowProperty(null);
-      // setCategoryProperties({});
-      setPropertyValues([]);
-      setCategoryProperties({});
-      setCategoryLoading(!categoryLoading);
+    if (property.ID) {
+      setShowProperty(property.ID);
+    } else {
+      setShowProperty(index);
     }
-  };
-  const handlePropertyCancelBtn = (
-    categoryId: number,
-    propertyIndex: number
-  ) => {
-    const properties = categoryProperties[categoryId] || [];
-    const updatedProperties = properties.filter(
-      (_, index) => index !== propertyIndex
-    );
-
-    setCategoryProperties({
-      ...categoryProperties,
-      [categoryId]: updatedProperties,
-    });
-  };
-  // update category properties
-  const [propertyName, setPropertyName] = useState<string>("");
-  const [propertyType, setPropertyType] = useState<string>("");
-  const [propertyValue, setPropertyValue] = useState<string[]>([]);
-  // const [updatedValues, setUpdatedValues] = useState<string[]>([]);
-  const handleSelectedProperty = (property: ICategoryProperties) => {
-    setShowProperty(property.ID);
-    // setSelectedProperty(property);
-    setPropertyName(property.name);
-    setPropertyType(property.type);
-    const valuesArray = property.values.split(";");
-    const filteredValuesArray = valuesArray.filter(
-      (value) => value.trim() !== ""
-    );
-    setPropertyValue(filteredValuesArray);
-  };
-
-  // console.log("property values", updatedValues);
-  const handleSetPropertyType = (e: any) => {
-    if (e.target.value === "Text") {
-      setPropertyValue([]);
-    }
-    setPropertyType(e.target.value);
-  };
-  const handlePropertyValue = (index: number, newValue: string) => {
-    const updatedValues = [...propertyValue];
-    updatedValues[index] = newValue;
-    setPropertyValue(updatedValues);
   };
   // add value
-  const handleUpdateAddButtonClick = () => {
-    setPropertyValue((prevValues) => [...prevValues, ""]);
-  };
-
-  const updatedPropertyBody = {
-    name: propertyName,
-    type: propertyType,
-    values: propertyValue.join(";"),
-  };
-  console.log(updatedPropertyBody);
-  const handleUpdatedCategoryProperty = (
-    workspaceId: number,
+  const handleUpdateAddButtonClick = (
     categoryId: number,
     propertyId: number
   ) => {
-    updateWorkspaceCategoryProperties(
-      workspaceId,
-      categoryId,
-      propertyId,
-      updatedPropertyBody
-    ).then((res) => {
-      if (res) {
-        // setPropertyValue([]);
-        setCategoryLoading(!categoryLoading);
+    const updatedList = categoryList.map((category) => {
+      if (category.ID === categoryId) {
+        const updatedProperties = category.properties?.map((property) => {
+          if (property.ID === propertyId) {
+            const propertyValues = property.values
+              ? property.values.split(";")
+              : [];
+            propertyValues.push("");
+            return {
+              ...property,
+              values: propertyValues.join(";"),
+            };
+          }
+          return property;
+        });
+        return {
+          ...category,
+          properties: updatedProperties,
+        };
       }
+      return category;
     });
-  };
-  const handleUpdateDeleteProperty = async (
-    index: number,
-    workspaceId: number,
-    categoryId: number,
-    propertyID: number
-  ) => {
-    const updatedProperty = propertyValue.filter((_, i) => i !== index);
-    setPropertyValue(updatedProperty);
-    const propertyBody = {
-      name: propertyName,
-      type: propertyType,
-      values: updatedProperty.join(";"),
-    };
-    await updateWorkspaceCategoryProperties(
-      workspaceId,
-      categoryId,
-      propertyID,
-      propertyBody
-    ).then((res) => {
-      if (res) {
-        setCategoryLoading(!categoryLoading);
-      }
-    });
+
+    setCategoryList(updatedList as ICategory[]);
   };
   // archive property
   const handleArchiveCategoryProperty = async (
@@ -358,6 +346,83 @@ const Category = () => {
       }
     });
   };
+
+  // edit category
+  // const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
+  const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
+  const handleEditCategory = (e: any, categoryId: number) => {
+    e.stopPropagation();
+    const isSelected = editableCategoryId.includes(categoryId);
+
+    if (isSelected) {
+      const updatedIds = editableCategoryId.filter((id) => id !== categoryId);
+      setEditableCategoryId(updatedIds);
+    } else {
+      setEditableCategoryId([...editableCategoryId, categoryId]);
+    }
+  };
+
+  const handleCategoryCollapse = (categoryId: number) => {};
+
+  // update category name & properties
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const handleUpdatedCategoryProperty = (categoryId: number, e: any) => {
+    setUpdateLoading(true);
+    e.stopPropagation();
+    const updatedCategory = categoryList.find(
+      (category) => category.ID === categoryId
+    );
+    const selectedCategory = editableCategoryId.filter((f) => f !== categoryId);
+
+    const updatedPropertyBody: any = {
+      category_name: updatedCategory?.name,
+      properties: updatedCategory?.properties,
+    };
+    editCategoryNameAndProperties(
+      workspaceId,
+      categoryId,
+      updatedPropertyBody
+    ).then((res) => {
+      if (res) {
+        setCategoryLoading(!categoryLoading);
+        setEditableCategoryId(selectedCategory);
+        setUpdateLoading(false);
+      }
+    });
+  };
+
+  console.log(categoryList);
+
+  useEffect(() => {
+    if (workspaceCategoryProperties && workspaceCategoryProperties.length > 0) {
+      const updatedList = workspaceCategoryProperties?.map((category) => {
+        return {
+          ID: category.ID,
+          CreatedAt: category.CreatedAt,
+          UpdatedAt: category.UpdatedAt,
+          DeletedAt: category.DeletedAt,
+          workspace_id: category.workspace_id,
+          name: category.name,
+          archived: category.archived,
+          properties:
+            category.properties?.map((property) => ({
+              ID: property.ID,
+              CreatedAt: property.CreatedAt,
+              UpdatedAt: property.UpdatedAt,
+              DeletedAt: property.DeletedAt,
+              workspace_id: property.workspace_id,
+              category_id: property.category_id,
+              name: property.name,
+              type: property.type,
+              values: property.values,
+              archived: property.archived,
+            })) || [],
+        };
+      });
+      setCategoryList(updatedList as ICategory[]);
+      // setCategoryList(workspaceCategoryProperties);
+    }
+  }, [workspaceCategoryProperties]);
 
   return (
     <CreateCategory>
@@ -403,63 +468,92 @@ const Category = () => {
               </CreateBtn>
             </CreateOptionButton>
             {/* category option */}
-            {workspaceCategoryProperties?.map((category, index) => (
+            {categoryList?.map((category, index) => (
               <CategoryOption key={category.ID}>
                 <Accordion>
                   <AccordionSummary
-                    onClick={() => handleCategory(category.ID)}
-                    expandIcon={<ExpandMoreIcon />}
+                    onClick={() => handleCategoryCollapse(category.ID)}
+                    expandIcon={
+                      !editableCategoryId.includes(category.ID) ? (
+                        <ExpandMoreIcon />
+                      ) : (
+                        ""
+                      )
+                    }
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     sx={{ backgroundColor: "var(--hover-bg)" }}
                   >
                     <Header>
-                      <div
-                        onClick={(e) =>
-                          handleCategoryName(e, category.ID, category.name)
-                        }
-                      >
-                        {editableCategoryId === category.ID &&
-                        categoryNameEditable ? (
+                      <div>
+                        {/* {editableCategoryId === category.ID ? ( */}
+                        {editableCategoryId.includes(category.ID) ? (
                           <input
                             type="text"
-                            value={categoryName}
+                            value={category.name}
                             // value={categoryName ?? category.name}
                             placeholder="Category Name"
                             onClick={(e) => e.stopPropagation()}
-                            onChange={(e) => setCategoryName(e.target.value)}
-                            onBlur={() =>
-                              handleUpdateCategoryName(
-                                category.workspace_id,
-                                category.ID
-                              )
-                            }
+                            // onChange={(e) => setCategoryName(e.target.value)}
+                            onChange={(e) => handleCategoryName(e, category.ID)}
                           />
                         ) : (
                           <Typography
                             sx={{
-                              borderRadius: "7px",
                               padding: 1,
-                              paddingInline: "16px",
-                              backgroundColor: "var(--bg-primary)",
+                              fontSize: "20px",
+                              fontWeight: "500",
                             }}
                           >
                             {category.name}
                           </Typography>
                         )}
                       </div>
+                      {/* {editableCategoryId === category.ID ? ( */}
+                      {editableCategoryId.includes(category.ID) ? (
+                        <>
+                          {updateLoading ? (
+                            <UpdateLoadingBtn>
+                              <CircularProgress
+                                size="15px"
+                                sx={{ color: "gray" }}
+                              />
+                              <p>Updating</p>
+                            </UpdateLoadingBtn>
+                          ) : (
+                            <UpdateBtn
+                              // onClick={(e) => handleEditCategory(e, category.ID)}
+                              onClick={(e) =>
+                                handleUpdatedCategoryProperty(category.ID, e)
+                              }
+                            >
+                              Update
+                            </UpdateBtn>
+                          )}
+                        </>
+                      ) : (
+                        <HeaderOptions>
+                          <div
+                            onClick={(e) => handleEditCategory(e, category.ID)}
+                          >
+                            <img src={edit} alt="" />
+                            <p>Edit</p>
+                          </div>
 
-                      <img
-                        onClick={(e) =>
-                          handelArchiveCategory(
-                            e,
-                            category.workspace_id,
-                            category.ID
-                          )
-                        }
-                        src={archive}
-                        alt=""
-                      />
+                          <div
+                            onClick={(e) =>
+                              handelArchiveCategory(
+                                e,
+                                category.workspace_id,
+                                category.ID
+                              )
+                            }
+                          >
+                            <img src={archive} alt="" />
+                            <p>Archive</p>
+                          </div>
+                        </HeaderOptions>
+                      )}
                     </Header>
                   </AccordionSummary>
                   <AccordionDetails sx={{ p: 0, maxHeight: "500px" }}>
@@ -468,38 +562,30 @@ const Category = () => {
                       <Options>
                         <PropertyOptions>
                           <h4>ADD PROPERTIES</h4>
-                          {/* TODO: update */}
                           {category.properties?.map((property, index) => (
                             <div
                               key={index}
-                              onClick={() => handleSelectedProperty(property)}
+                              onClick={() =>
+                                handleSelectedProperty(property, index)
+                              }
                             >
                               <Option>
                                 <PropertyTitle>
                                   <img src={property1} alt="" />
                                   <p>{property.name}</p>
                                 </PropertyTitle>
-                                <img
-                                  onClick={() =>
-                                    handleArchiveCategoryProperty(property)
-                                  }
-                                  src={archive}
-                                  alt=""
-                                />
+                                {!editableCategoryId.includes(category.ID) && (
+                                  <img
+                                    onClick={() =>
+                                      handleArchiveCategoryProperty(property)
+                                    }
+                                    src={archive}
+                                    alt=""
+                                  />
+                                )}
                               </Option>
                             </div>
                           ))}
-                          {categoryProperties[category.ID] &&
-                            categoryProperties[category.ID].map(
-                              (property, index) => (
-                                <Option onClick={() => setShowProperty(index)}>
-                                  <PropertyTitle>
-                                    <img src={property1} alt="" />
-                                    <p>{property.name}</p>
-                                  </PropertyTitle>
-                                </Option>
-                              )
-                            )}
                         </PropertyOptions>
                         {/* property input section */}
                         <Details>
@@ -508,86 +594,51 @@ const Category = () => {
                             {category.properties?.map((property, index) => (
                               <CategoryPropertyDetails
                                 showProperty={showProperty}
-                                propertyName={propertyName}
-                                setPropertyName={setPropertyName}
                                 property={property}
                                 index={index}
-                                handleUpdatedCategoryProperty={
-                                  handleUpdatedCategoryProperty
-                                }
-                                propertyType={propertyType}
-                                handleSetPropertyType={handleSetPropertyType}
-                                propertyValue={propertyValue}
-                                handlePropertyValue={handlePropertyValue}
-                                handleUpdateDeleteProperty={
-                                  handleUpdateDeleteProperty
-                                }
                                 handleUpdateAddButtonClick={
                                   handleUpdateAddButtonClick
+                                }
+                                handlePropertyNameChange={
+                                  handlePropertyNameChange
+                                }
+                                handlePropertyTypeChange={
+                                  handlePropertyTypeChange
+                                }
+                                handlePropertyValueChang={
+                                  handlePropertyValueChang
+                                }
+                                handleDeleteProperty={handleDeleteProperty}
+                                isEditable={
+                                  !editableCategoryId.includes(category.ID)
                                 }
                               />
                             ))}
                             {/*  */}
-                            {categoryProperties[category.ID] &&
-                              categoryProperties[category.ID].map(
-                                (property, index) => (
-                                  <LocalCategoryPropertyDetails
-                                    showProperty={showProperty}
-                                    property={property}
-                                    index={index}
-                                    handlePropertyNameChange={
-                                      handlePropertyNameChange
-                                    }
-                                    category={category}
-                                    handlePropertyTypeChange={
-                                      handlePropertyTypeChange
-                                    }
-                                    propertyValues={propertyValues}
-                                    handlePropertyValueChang={
-                                      handlePropertyValueChang
-                                    }
-                                    handleDeleteProperty={handleDeleteProperty}
-                                    handleAddButtonClick={handleAddButtonClick}
-                                  />
-                                )
-                              )}
                           </>
                         </Details>
                       </Options>
                       {/* property button section */}
                       <PropertyBtns>
                         <OptionCreateButtons>
-                          <button
-                            onClick={() => handleAddProperty(category.ID)}
-                          >
-                            <img src={add} alt="" />
-                            <span>Create property</span>
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleCategoryPropertyArchivedList(category.ID)
-                            }
-                          >
-                            <img src={archive} alt="" />
-                            <span>View archive</span>
-                          </button>
+                          {editableCategoryId.includes(category.ID) ? (
+                            <button
+                              onClick={() => handleAddProperty(category.ID)}
+                            >
+                              <img src={add} alt="" />
+                              <span>Add property</span>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                handleCategoryPropertyArchivedList(category.ID)
+                              }
+                            >
+                              <img src={archive} alt="" />
+                              <span>View archive</span>
+                            </button>
+                          )}
                         </OptionCreateButtons>
-                        <PropertyCreateButtons>
-                          <CreateCategoryBtn
-                            onClick={() =>
-                              handleCreateProperty(category.ID, index)
-                            }
-                          >
-                            Create
-                          </CreateCategoryBtn>
-                          <CancelBtn
-                            onClick={() =>
-                              handlePropertyCancelBtn(category.ID, index)
-                            }
-                          >
-                            Cancel
-                          </CancelBtn>
-                        </PropertyCreateButtons>
                       </PropertyBtns>
                     </CategoryProperties>
                     {/* category property end */}

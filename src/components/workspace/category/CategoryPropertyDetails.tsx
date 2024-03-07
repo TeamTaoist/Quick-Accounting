@@ -16,56 +16,58 @@ import { InputAdornment, MenuItem, Select } from "@mui/material";
 interface CategoryPropertyDetailsProps {
   showProperty: number | null | undefined;
   property: ICategoryProperties;
-  propertyName: string;
-  setPropertyName: (e: any) => void;
-  handleUpdatedCategoryProperty: (
-    workspaceId: number,
-    categoryId: number,
-    propertyId: number
-  ) => void;
   index: number;
-  propertyType: string;
-  handleSetPropertyType: (e: any) => void;
-  propertyValue: string[];
-  handlePropertyValue: (index: number, newValue: string) => void;
-  handleUpdateDeleteProperty: (
-    index: number,
-    workspaceId: number,
+  handleUpdateAddButtonClick: (categoryId: number, propertyId: number) => void;
+  handlePropertyNameChange: (
     categoryId: number,
-    propertyID: number
+    propertyId: number,
+    newName: string
   ) => void;
-  handleUpdateAddButtonClick: () => void;
+  handlePropertyTypeChange: (
+    categoryId: number,
+    propertyId: number,
+    newName: string
+  ) => void;
+  handlePropertyValueChang: (
+    categoryId: number,
+    propertyId: number,
+    newName: string,
+    index: number
+  ) => void;
+  handleDeleteProperty: (
+    categoryId: number,
+    propertyId: number,
+    index: number
+  ) => void;
+  isEditable: boolean;
 }
 
 const CategoryPropertyDetails = ({
   showProperty,
   property,
-  propertyName,
-  setPropertyName,
-  handleUpdatedCategoryProperty,
   index,
-  propertyType,
-  handleSetPropertyType,
-  propertyValue,
-  handlePropertyValue,
-  handleUpdateDeleteProperty,
   handleUpdateAddButtonClick,
+  handlePropertyNameChange,
+  handlePropertyTypeChange,
+  handlePropertyValueChang,
+  handleDeleteProperty,
+  isEditable,
 }: CategoryPropertyDetailsProps) => {
+  const propertyValues = property.values?.split(";");
   return (
     <div>
-      {showProperty === property.ID && (
+      {(showProperty === property.ID || showProperty === index) && (
         <DetailsInput>
           <h3>Property name</h3>
           <PropertyInput
             placeholder="Property name"
-            // value={property.name}
-            value={propertyName}
-            onChange={(e) => setPropertyName(e.target.value)}
-            onBlur={() =>
-              handleUpdatedCategoryProperty(
-                property.workspace_id,
+            value={property.name}
+            disabled={isEditable}
+            onChange={(e) =>
+              handlePropertyNameChange(
                 property.category_id,
-                property.ID
+                property.ID,
+                e.target.value
               )
             }
           />
@@ -73,16 +75,22 @@ const CategoryPropertyDetails = ({
           <Select
             labelId={`property-type-label-${index}`}
             id={`property-type-${index}`}
-            // value={property.type}
-            value={propertyType}
-            onChange={(e) => handleSetPropertyType(e)}
-            onBlur={() =>
-              handleUpdatedCategoryProperty(
-                property.workspace_id,
+            value={property.type}
+            disabled={isEditable}
+            onChange={(e) =>
+              handlePropertyTypeChange(
                 property.category_id,
-                property.ID
+                property.ID,
+                e.target.value
               )
             }
+            // onBlur={() =>
+            //   handleUpdatedCategoryProperty(
+            //     property.workspace_id,
+            //     property.category_id,
+            //     property.ID
+            //   )
+            // }
             size="small"
             IconComponent={() => (
               <InputAdornment position="start">
@@ -124,11 +132,17 @@ const CategoryPropertyDetails = ({
                 Multi-select
               </DropdownOption>
             </MenuItem>
+            <MenuItem value="date-picker">
+              <DropdownOption>
+                <img src={multiSelect} alt="" />
+                Datepicker
+              </DropdownOption>
+            </MenuItem>
           </Select>
           {/* property value */}
-          {propertyType !== "Text" && (
+          {property.type !== "Text" && property.type !== "date-picker" && (
             <>
-              {propertyValue.map((value, valueIndex) => (
+              {propertyValues.map((value, valueIndex) => (
                 <PropertyOptionsValue>
                   <img src={propertyAdd} alt="" />
                   <PropertyInputValue
@@ -136,23 +150,28 @@ const CategoryPropertyDetails = ({
                     placeholder=""
                     value={value}
                     onChange={(e) =>
-                      handlePropertyValue(valueIndex, e.target.value)
-                    }
-                    onBlur={() =>
-                      handleUpdatedCategoryProperty(
-                        property.workspace_id,
+                      handlePropertyValueChang(
                         property.category_id,
-                        property.ID
+                        property.ID,
+                        e.target.value,
+                        valueIndex
                       )
                     }
                   />
                   <img
+                    // onClick={() =>
+                    //   handleUpdateDeleteProperty(
+                    //     valueIndex,
+                    //     property.workspace_id,
+                    //     property.category_id,
+                    //     property.ID
+                    //   )
+                    // }
                     onClick={() =>
-                      handleUpdateDeleteProperty(
-                        valueIndex,
-                        property.workspace_id,
+                      handleDeleteProperty(
                         property.category_id,
-                        property.ID
+                        property.ID,
+                        valueIndex
                       )
                     }
                     src={propertyDelete}
@@ -160,7 +179,11 @@ const CategoryPropertyDetails = ({
                   />
                 </PropertyOptionsValue>
               ))}
-              <PropertyOptionsValueBtn onClick={handleUpdateAddButtonClick}>
+              <PropertyOptionsValueBtn
+                onClick={() =>
+                  handleUpdateAddButtonClick(property.category_id, property.ID)
+                }
+              >
                 + Add option
               </PropertyOptionsValueBtn>
             </>

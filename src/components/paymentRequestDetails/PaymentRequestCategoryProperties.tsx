@@ -3,6 +3,7 @@ import SingleSelectType from "./SingleSelectType";
 import MultiSelectType from "./MultiSelectType";
 import TextType from "./TextType";
 import { ReactSelectOption } from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
+import DatePickerType from "./DatePickerType";
 
 interface PaymentRequestCategoryPropertiesProps {
   selectedCategory: any;
@@ -24,6 +25,10 @@ interface PaymentRequestCategoryPropertiesProps {
     [name: string]: any;
   };
   handlePropertyText: (e: any, name: string, type: string) => void;
+  datePicker: {
+    [name: string]: any;
+  };
+  handleDatePickerProperty: (e: any, name: string) => void;
   status: number;
 }
 
@@ -38,12 +43,14 @@ const PaymentRequestCategoryProperties = ({
   proPertyTextValue,
   handlePropertyText,
   status,
+  datePicker,
+  handleDatePickerProperty,
 }: PaymentRequestCategoryPropertiesProps) => {
   console.log(parseCategoryProperties);
   return (
     <>
-      {selectedCategory?.properties?.map((property: any) => (
-        <React.Fragment key={property.ID}>
+      {selectedCategory?.properties?.map((property: any, i: number) => (
+        <React.Fragment key={i}>
           {property.type === "single-select" && (
             <SingleSelectType
               property={property}
@@ -94,6 +101,25 @@ const PaymentRequestCategoryProperties = ({
               defaultPropertyValue={
                 parseCategoryProperties?.filter(
                   (p: any) => (p.type === "Text" && p.name) === property.name
+                )[0]
+              }
+            />
+          )}
+        </>
+      ))}
+      {selectedCategory.properties?.map((property: any) => (
+        <>
+          {property.type === "date-picker" && (
+            <DatePickerType
+              property={property}
+              handleUpdateCategory={handleUpdateCategory}
+              datePicker={datePicker}
+              handleDatePickerProperty={handleDatePickerProperty}
+              status={status}
+              defaultPropertyValue={
+                parseCategoryProperties?.filter(
+                  (p: any) =>
+                    (p.type === "date-picker" && p.name) === property.name
                 )[0]
               }
             />

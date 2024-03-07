@@ -28,6 +28,7 @@ import { useLoading } from "../../../store/useLoading";
 import {
   DeleteIcon,
   Image,
+  NoteHeader,
   NoteInfo,
   NoteInformation,
   RequestSubmit,
@@ -35,11 +36,21 @@ import {
 import ReactSelect from "../../ReactSelect";
 import WorkspaceItemDetailsLayout from "../../layout/WorkspaceItemDetailsLayout";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
-import { ReactSelectOption } from "../../../pages/workspace/paymentRequest/PaymentRequestDetails";
+import {
+  ReactSelectOption,
+  Status,
+  StatusBtn,
+  SubmissionTime,
+} from "../../../pages/workspace/paymentRequest/PaymentRequestDetails";
 import GroupTextType from "../../paymentRequestGroupDetails/GroupTextType";
 import GroupMultiSelectType from "../../paymentRequestGroupDetails/GroupMultiSelectType";
 import GroupSingleSelectType from "../../paymentRequestGroupDetails/GroupSingleSelectType";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { formatTimestamp } from "../../../utils/time";
+import { getPaymentStatus } from "../../../utils/payment";
+import { useDomainStore } from "../../../store/useDomain";
+import UpdateLoading from "../../UpdateLoading";
+import GroupDatePickerType from "../../paymentRequestGroupDetails/GroupDatePickerType";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -71,7 +82,8 @@ const PaymentRequestGroupDetails = ({
   const { getPaymentRequestList, updatePaymentRequestCategory } =
     usePaymentsStore();
   const { isLoading } = useLoading();
-  const { userWorkspaces } = useWorkspace();
+  const { userWorkspaces, workspace } = useWorkspace();
+  const { formatAddressToDomain } = useDomainStore();
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
@@ -106,9 +118,6 @@ const PaymentRequestGroupDetails = ({
     },
   ]);
 
-  console.log("form data", sharePaymentRequestForm);
-  console.log("group details", groupDetails);
-
   // handle form value
   const handleFormChange = (
     index: number,
@@ -134,12 +143,14 @@ const PaymentRequestGroupDetails = ({
             ? value.value
             : propertyType === "Text"
             ? value
+            : propertyType === "date-picker"
+            ? value
             : value.map((v: ReactSelectOption) => v.value).join(";");
 
         existingCategoryProperty.values = values;
       } else {
         const newCategoryProperty =
-          propertyType === "Text"
+          propertyType === "Text" || propertyType === "date-picker"
             ? {
                 name: propertyName,
                 type: propertyType,
@@ -164,8 +175,6 @@ const PaymentRequestGroupDetails = ({
 
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<any>([]);
-  console.log("selectedCategoryIDs", selectedCategoryIDs);
-  console.log("selectedCategories", selectedCategories);
 
   const handleCategoryDropdown = (
     categoryId: number,
@@ -226,23 +235,39 @@ const PaymentRequestGroupDetails = ({
   useEffect(() => {
     setDefaultValue(sharePaymentRequestForm);
   }, []);
-  console.log("default value", defaultValue);
+
+  // updating loading state
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [updatingPaymentId, setUpdatingPaymentId] = useState<number | null>(
+    null
+  );
 
   const handleUpdatePaymentRequest = async (paymentId: number) => {
+    setUpdatingPaymentId(paymentId);
+    setIsUpdating(true);
     const selectedPayment = sharePaymentRequestForm.find(
       (f) => f.id === paymentId
     );
     const paymentRequestBody = {
       category_id: selectedPayment?.category_id,
       category_name: selectedPayment?.category_name,
-      category_Properties: selectedPayment?.category_properties,
+      category_properties: selectedPayment?.category_properties,
     };
     await updatePaymentRequestCategory(
       id,
       paymentId.toString(),
       paymentRequestBody
-    );
-    getPaymentRequestList(Number(id), false);
+    ).then((res) => {
+      if (res) {
+        setIsUpdating(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+          setUpdatingPaymentId(null);
+        }, 3000);
+      }
+    });
   };
   const [selectedWorkspaceName, setSelectedWorkspaceName] =
     useState<string>("");
@@ -271,29 +296,49 @@ const PaymentRequestGroupDetails = ({
       >
         <RequestDetails>
           {sharePaymentRequestForm.map((payment: any, index: number) => (
-            <React.Fragment key={payment.ID}>
+            <React.Fragment key={payment.id}>
               <TableContainer
-                sx={{ paddingInline: "40px", paddingTop: "30px" }}
+                // sx={{ paddingInline: "40px", paddingTop: "30px" }}
+                sx={{
+                  boxShadow: "none",
+                  border: "1px solid var(--border-table)",
+                  borderRadius: "10px",
+                  margin: "20px 0",
+                }}
               >
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
+                  <TableHead sx={{ backgroundColor: "var(--bg-secondary)" }}>
                     <TableRow>
                       <TableCell
                         sx={{
-                          width: "30%",
+                          width: "30.2%",
                           border: 0,
-                          paddingInline: 0,
+                          borderRight: "1px solid var(--border-table)",
+                          fontWeight: 500,
+                          fontSize: "16px",
                         }}
                       >
                         Recipient
                       </TableCell>
                       <TableCell
-                        sx={{ width: "23%", border: 0, paddingInline: 0 }}
+                        sx={{
+                          width: "23%",
+                          border: 0,
+                          borderRight: "1px solid var(--border-table)",
+                          fontWeight: 500,
+                          fontSize: "16px",
+                        }}
                       >
                         Amount
                       </TableCell>
                       <TableCell
-                        sx={{ width: "37%", border: 0, paddingInline: 0 }}
+                        sx={{
+                          width: "37%",
+                          border: 0,
+                          borderRight: "1px solid var(--border-table)",
+                          fontWeight: 500,
+                          fontSize: "16px",
+                        }}
                       >
                         Currency
                       </TableCell>
@@ -312,6 +357,7 @@ const PaymentRequestGroupDetails = ({
                         sx={{
                           border: "1px solid var(--border-table)",
                           padding: 0,
+                          borderLeft: 0,
                         }}
                       >
                         <TextField
@@ -320,7 +366,11 @@ const PaymentRequestGroupDetails = ({
                           }}
                           // disabled={paymentRequestDetails.status === 1}
                           size="small"
-                          value={payment.recipient}
+                          value={formatAddressToDomain(
+                            payment.recipient,
+                            workspace.chain_id,
+                            workspace.name_service === "sns"
+                          )}
                           fullWidth
                           // id="fullWidth"
                           placeholder="Enter wallet address"
@@ -359,6 +409,7 @@ const PaymentRequestGroupDetails = ({
                         sx={{
                           border: "1px solid var(--border-table)",
                           padding: 0,
+                          borderRight: 0,
                           // minHeight: "40px",
                         }}
                       >
@@ -374,7 +425,7 @@ const PaymentRequestGroupDetails = ({
                               <img
                                 src={arrowBottom}
                                 alt="Custom Arrow Icon"
-                                style={{ marginRight: "50px" }}
+                                style={{ marginRight: "36px" }}
                               />
                             </InputAdornment>
                           )}
@@ -403,23 +454,38 @@ const PaymentRequestGroupDetails = ({
                   </TableBody>
                   {/* ))} */}
                 </Table>
-              </TableContainer>
-              {/* note info */}
-              <NoteInformation>
-                {/* {paymentRequestGroupDetails.map((payment) => ( */}
-                <TableContainer>
+                {/* </TableContainer> */}
+                {/* note info */}
+                <NoteInformation>
+                  <NoteHeader>
+                    <h3>Note Information</h3>
+                    {updatingPaymentId === payment.id && (
+                      <UpdateLoading
+                        isUpdating={isUpdating}
+                        isSuccess={isSuccess}
+                      />
+                    )}
+                  </NoteHeader>
+                  {/* {paymentRequestGroupDetails.map((payment) => ( */}
+                  {/* <TableContainer> */}
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableBody>
                       <TableRow
                         sx={{
                           td: {
-                            border: "1px solid var(--border-table)",
+                            // border: "1px solid var(--border-table)",
                             padding: 0,
                             paddingInline: 1,
                           },
                         }}
                       >
-                        <TableCell sx={{ height: 1, width: "33.5%" }}>
+                        <TableCell
+                          sx={{
+                            height: 1,
+                            width: "33.5%",
+                            borderRight: "1px solid var(--border-table)",
+                          }}
+                        >
                           <NoteInfo>
                             <Image src={categoryIcon} alt="" /> Category
                           </NoteInfo>
@@ -577,20 +643,54 @@ const PaymentRequestGroupDetails = ({
                           </React.Fragment>
                         )
                       )}
+                      {selectedCategories[index]?.properties?.map(
+                        (properties: ICategoryProperties, i: number) => (
+                          <React.Fragment key={i}>
+                            {properties.type === "date-picker" && (
+                              <GroupDatePickerType
+                                properties={properties}
+                                handleUpdatePaymentRequest={
+                                  handleUpdatePaymentRequest
+                                }
+                                sharePaymentRequestForm={
+                                  sharePaymentRequestForm
+                                }
+                                payment={payment}
+                                index={index}
+                                handleFormChange={handleFormChange}
+                                defaultPropertyValue={
+                                  sharePaymentRequestForm[
+                                    index
+                                  ].category_properties.filter(
+                                    (p: any) =>
+                                      p.type === "date-picker" &&
+                                      p.name === properties.name
+                                  )[0]
+                                }
+                              />
+                            )}
+                          </React.Fragment>
+                        )
+                      )}
                     </TableBody>
                   </Table>
-                </TableContainer>
-                {/* ))} */}
-              </NoteInformation>
+                  {/* </TableContainer> */}
+                  {/* ))} */}
+                </NoteInformation>
+              </TableContainer>
             </React.Fragment>
           ))}
+          <SubmissionTime>
+            <p>Submission time</p>
+            <div>{formatTimestamp(groupDetails?.[0]?.submit_ts || 0)}</div>
+          </SubmissionTime>
+          <Status>
+            <p>Status</p>
+            <StatusBtn>
+              {getPaymentStatus(groupDetails?.[0]?.status || 0)}
+            </StatusBtn>
+          </Status>
         </RequestDetails>
-        {/* {paymentRequestDetails.status === 1 && (
-              <PaymentStatus>
-                <img src={statusIcon} alt="" />
-                <p>Status: Rejected</p>
-              </PaymentStatus>
-            )} */}
       </WorkspaceItemDetailsLayout>
     </>
   );
@@ -599,17 +699,5 @@ const PaymentRequestGroupDetails = ({
 export default PaymentRequestGroupDetails;
 
 const RequestDetails = styled.div`
-  padding-bottom: 50px;
-`;
-const PaymentStatus = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 20px;
-  img {
-    width: 20px;
-  }
-  p {
-    font-size: 20px;
-  }
+  margin: 30px;
 `;

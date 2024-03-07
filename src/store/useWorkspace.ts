@@ -25,6 +25,7 @@ export interface Workspace {
   vault_wallet: string;
   chain_id: number;
   creator: string;
+  name_service?: string;
 }
 interface UserWorkspaces {
   code: number;
@@ -36,11 +37,18 @@ interface UserWorkspaces {
     rows: Workspace[];
   };
 }
-// interface WorkspaceDetails {
-//   code: number;
-//   msg: string;
-//   data: Workspace;
-// }
+interface AssetsHideList {
+  assert_contract_address: string;
+  createdAt: string;
+  UpdatedAt: string;
+  deletedAt: {
+    time: string;
+    valid: boolean;
+  };
+  ID: number;
+  workspace_id: string;
+  safe_wallet: string;
+}
 interface UseWorkspace {
   workspace: Workspace;
   userWorkspaces: UserWorkspaces;
@@ -58,8 +66,13 @@ interface UseWorkspace {
     balance: string;
     fiatBalance: string;
     fiatConversion: string;
+    hidden?: boolean;
   }[];
   updateWorkspace: (data: any) => void;
+  hideAssets: (contractAddress: string) => Promise<void>;
+  getHideAssets: () => Promise<void>;
+  assetsHideList: AssetsHideList[];
+  unHideAssets: (contractAddress: string) => Promise<void>;
 }
 
 export const useWorkspace = create<UseWorkspace>((set, get) => {
@@ -223,6 +236,82 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         );
         const totalValue = getShortDisplay(data?.fiatTotal || 0) as string;
         set({ totalAssetsValue: totalValue, assetsList: data.items });
+      }
+    },
+    // hide assets
+    hideAssets: async (contractAddress) => {
+      const { workspace } = get();
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.post(
+          `/workspace_assert/${workspace.ID}/hide_assert`,
+          {
+            assert_contract_address: contractAddress,
+          }
+        );
+        // set({ workspace: data.data });
+
+        if (data.msg === "success" && data.code === 200) {
+          toast.success("Hide assets successfully");
+        }
+      } catch (error: any) {
+        toast.error(error?.response?.data?.msg || error?.status || error);
+      } finally {
+        setLoading(false);
+        // navigate("/assets");
+      }
+    },
+    // get hide assets
+    assetsHideList: [],
+    getHideAssets: async () => {
+      const { workspace, assetsList } = get();
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.get(
+          `/workspace_assert/${workspace.ID}/hided_asserts`
+        );
+        // set({ assetsHideList: data.data });
+        const updateAssets = assetsList.map((asset) => {
+          const isHidden = data.data.find(
+            (hideAsset: AssetsHideList) =>
+              hideAsset.assert_contract_address === asset.tokenInfo.address
+          );
+          if (isHidden) {
+            return { ...asset, hidden: true };
+          } else {
+            return { ...asset, hidden: false };
+          }
+        });
+        // set({ assetsHideList: data.data });
+        console.log(updateAssets);
+
+        set({ assetsHideList: data.data, assetsList: updateAssets });
+      } catch (error: any) {
+        toast.error(error?.response?.data?.msg || error?.status || error);
+      } finally {
+        setLoading(false);
+        // navigate("/assets");
+      }
+    },
+    // hide assets
+    unHideAssets: async (contractAddress) => {
+      const { workspace } = get();
+      try {
+        setLoading(true);
+        const { data } = await axiosClient.post(
+          `/workspace_assert/${workspace.ID}/unhide_assert`,
+          {
+            assert_contract_address: contractAddress,
+          }
+        );
+        if (data.msg === "success" && data.code === 200) {
+          toast.success("Un-hide assets successfully");
+        }
+      } catch (error: any) {
+        toast.error(error?.response?.data?.msg || error?.status || error);
+      } finally {
+        setLoading(false);
+        // navigate("/assets");
       }
     },
   };

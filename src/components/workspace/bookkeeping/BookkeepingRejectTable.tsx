@@ -42,6 +42,7 @@ import searchIcon from "../../../assets/workspace/search-icon.svg";
 import filterIcon from "../../../assets/workspace/filtering.svg";
 import { useTranslation } from "react-i18next";
 import { getPaymentUpdateTime } from "../../../utils/payment";
+import { useDomainStore } from "../../../store/useDomain";
 
 interface RejectTableProps {
   workspaceId: number;
@@ -59,6 +60,7 @@ const BookkeepingRejectTable = ({
   const { bookkeepingHiddenList, unHideBookkeepingList, getBookkeepingList } =
     useBookkeeping();
   const { workspace } = useWorkspace();
+  const { formatAddressToDomain } = useDomainStore();
 
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
@@ -274,7 +276,11 @@ const BookkeepingRejectTable = ({
                           </SafeSection>
                         </TableCell>
                         <TableCell>
-                          {getShortAddress(bookkeeping.counterparty)}
+                          {formatAddressToDomain(
+                            bookkeeping.counterparty,
+                            workspace.chain_id,
+                            workspace.name_service === "sns"
+                          )}
                         </TableCell>
                         <TableCell>
                           {formatNumber(Number(bookkeeping.amount))}{" "}

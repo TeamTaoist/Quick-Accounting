@@ -11,6 +11,7 @@ import {
   RequestHeader,
   RequestSubmit,
   TableSection,
+  NoteHeader,
   // Table,
 } from "./newPaymentRequest.style";
 import cancel from "../../../assets/auth/cancel.svg";
@@ -52,8 +53,10 @@ import {
 import usePaymentsStore from "../../../store/usePayments";
 import { formatBalance } from "../../../utils/number";
 import { toast } from "react-toastify";
-import { isAddress } from "viem";
+import { isAddress, zeroAddress } from "viem";
 import { parseUnits } from "ethers";
+import { useDomainStore } from "../../../store/useDomain";
+import { useLoading } from "../../../store/useLoading";
 
 interface SubmitRowData {
   recipient: string;
@@ -74,8 +77,10 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { pathname } = useLocation();
+  const { setLoading } = useLoading();
 
   const { createPaymentRequest, getPaymentRequestList } = usePaymentsStore();
+  const { parseENS, parseSNS } = useDomainStore();
 
   const [category, setCategory] = useState("");
 
@@ -174,16 +179,17 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     getWorkspaceCategoryProperties(workspaceId);
   }, [getWorkspaceCategoryProperties, workspaceId]);
 
-  // safe balance from assets
-  const { workspace } = useWorkspace();
+  // get assets list
+  const { workspace, assetsList, getAssets, getHideAssets } = useWorkspace();
 
-  const [data, error, loading] = useAsync<SafeBalanceResponse>(
-    () => {
-      return getBalances(String(workspace?.chain_id), workspace?.vault_wallet);
-    },
-    [workspace],
-    false
-  );
+  useEffect(() => {
+    const fetchAssetsList = async () => {
+      workspace?.vault_wallet && (await getAssets());
+      workspace?.vault_wallet && (await getHideAssets());
+    };
+    fetchAssetsList();
+  }, [workspace?.vault_wallet]);
+  console.log(assetsList);
 
   // property text content
 
@@ -196,6 +202,18 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
     setTextPropertyValues({ ...textPropertyValues, [name]: value });
     if (e.target.value === "") {
       setTextPropertyValues({});
+    }
+  };
+  const [datePicker, setDatePicker] = useState<{
+    [key: string]: string;
+  }>({});
+  console.log(datePicker);
+
+  const handleDatePickerProperty = (e: any, name: string) => {
+    const value = e.target.value;
+    setDatePicker({ ...datePicker, [name]: value });
+    if (e.target.value === "") {
+      setDatePicker({});
     }
   };
   const handleSelectedCategory = (id: number) => {
@@ -235,9 +253,17 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
             values: textPropertyValues[key],
           } as ICategoryProperties)
       ),
+      ...Object.keys(datePicker).map(
+        (key) =>
+          ({
+            name: key,
+            type: "date-picker",
+            values: datePicker[key],
+          } as ICategoryProperties)
+      ),
     ],
     rows: rows.map((row) => {
-      const token = data?.items.find(
+      const token = assetsList?.find(
         (item) => item.tokenInfo.address === row.currency
       );
       return token
@@ -257,18 +283,17 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
           };
     }),
   };
+  console.log("body", paymentRequestBody);
 
-  const checkAllFields = () => {
+  const checkAllFields = async () => {
     if (!paymentRequestBody.rows.length) {
       return;
     }
+    const sns_check_list: string[] = [];
+    const ens_check_list: string[] = [];
     for (const item of paymentRequestBody.rows) {
       if (!item.recipient || !item.amount || !item.currency_contract_address) {
         toast.error("Please fill all fields");
-        return;
-      }
-      if (!isAddress(item.recipient)) {
-        toast.error(`Invalid address: ${item.recipient}`);
         return;
       }
       if (Number(item.amount) <= 0) {
@@ -277,7 +302,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
       }
       try {
         const amountBigInt = parseUnits(item.amount, item.decimals);
-        const selectToken = data?.items.find(
+        const selectToken = assetsList?.find(
           (s) => s.tokenInfo.address === item.currency_contract_address
         );
         if (BigInt(selectToken?.balance || 0) < amountBigInt) {
@@ -290,17 +315,69 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
         toast.error(`Invalid decimal amount: ${item.amount}`);
         return;
       }
+      if (item.recipient.endsWith(".seedao")) {
+        sns_check_list.push(item.recipient);
+      } else if (item.recipient.endsWith(".eth")) {
+        ens_check_list.push(item.recipient);
+      } else if (!isAddress(item.recipient)) {
+        toast.error(`Invalid address: ${item.recipient}`);
+        return;
+      }
     }
-    return true;
+    const name_address_map = new Map<string, string>();
+    if (sns_check_list.length) {
+      const res = await parseSNS(Array.from(new Set(sns_check_list)));
+      console.log("parse sns", res);
+      for (let i = 0; i < sns_check_list.length; i++) {
+        if (res[i] === zeroAddress) {
+          toast.error(`Invalid SNS: ${sns_check_list[i]}`);
+          return;
+        }
+        name_address_map.set(sns_check_list[i], res[i]);
+      }
+    }
+
+    if (ens_check_list.length) {
+      const res = await parseENS(
+        Array.from(new Set(ens_check_list)),
+        workspace.chain_id
+      );
+      console.log("parse ens", res);
+      for (let i = 0; i < ens_check_list.length; i++) {
+        if (!res[i]) {
+          toast.error(`Invalid ENS: ${ens_check_list[i]}`);
+          return;
+        }
+        name_address_map.set(ens_check_list[i], res[i]!);
+      }
+    }
+    return name_address_map;
   };
 
   // submit
-  const handlePaymentRequestSubmit = () => {
+  const handlePaymentRequestSubmit = async () => {
     // check all of fields
-    if (!checkAllFields()) {
+    setLoading(true);
+    const name_address_map = await checkAllFields();
+    setLoading(false);
+
+    if (!name_address_map) {
       return;
     }
-    createPaymentRequest(Number(id), paymentRequestBody, navigate).then((r) => {
+
+    createPaymentRequest(
+      Number(id),
+      {
+        ...paymentRequestBody,
+        rows: paymentRequestBody.rows.map((row) => {
+          return {
+            ...row,
+            recipient: name_address_map.get(row.recipient) || row.recipient,
+          };
+        }),
+      },
+      navigate
+    ).then((r) => {
       if (r) {
         onClose();
         const target_path = `/workspace/${id}/payment-request`;
@@ -325,31 +402,54 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
           <TableSection>
             <TableContainer
               sx={{
-                paddingInline: "46px",
-                paddingTop: "30px",
-                // boxShadow: "none",
                 boxShadow: "none",
+                border: "1px solid var(--border-table)",
+                borderRadius: "10px",
+                // maxWidth: 680,
+                // margin: "26px auto",
               }}
             >
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
+              <Table sx={{ width: "100%" }} aria-label="simple table">
+                <TableHead style={{ backgroundColor: "var(--bg-secondary)" }}>
                   <TableRow>
                     <TableCell
                       sx={{
                         width: 200,
-                        border: 0,
-                        paddingInline: 0,
+                        borderRight: "1px solid var(--border-table)",
+                        fontWeight: 500,
+                        fontSize: "16px",
                       }}
                     >
                       Recipient
                     </TableCell>
-                    <TableCell sx={{ width: 150, border: 0, paddingInline: 0 }}>
+                    <TableCell
+                      sx={{
+                        width: 150,
+                        borderRight: "1px solid var(--border-table)",
+                        fontWeight: 500,
+                        fontSize: "16px",
+                      }}
+                    >
                       Amount
                     </TableCell>
-                    <TableCell sx={{ width: 200, border: 0, paddingInline: 0 }}>
+                    <TableCell
+                      sx={{
+                        width: 200,
+                        border: 0,
+                        fontWeight: 500,
+                        fontSize: "16px",
+                      }}
+                    >
                       Currency
                     </TableCell>
-                    <TableCell sx={{ width: 50, border: 0 }}></TableCell>
+                    <TableCell
+                      sx={{
+                        width: 50,
+                        border: 0,
+                        fontWeight: 500,
+                        fontSize: "16px",
+                      }}
+                    ></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -359,13 +459,13 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                       key={index}
                       sx={{
                         height: "30px",
-                        // borderRadius: "10px",
                       }}
                     >
                       <TableCell
                         sx={{
                           border: "1px solid var(--border-table)",
                           padding: 0,
+                          borderLeft: 0,
                         }}
                       >
                         <TextField
@@ -394,7 +494,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           borderRadius: "5px",
                           padding: 0,
                           paddingLeft: "10px",
-                          // minHeight: "40px",
                         }}
                       >
                         <TextField
@@ -410,7 +509,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             style: { padding: 0 },
                           }}
                           name={`service-${index}`}
-                          type="text"
+                          type="number"
                           id={`service-${index}`}
                           value={row.amount}
                           onChange={(e) =>
@@ -449,26 +548,30 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             "& fieldset": { border: "none" },
                           }}
                         >
-                          {data?.items.map((item) => (
-                            <MenuItem
-                              value={item.tokenInfo.address}
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                                "&.Mui-selected": {
-                                  backgroundColor: "var(--hover-bg)",
-                                },
-                              }}
-                            >
-                              {item.tokenInfo.symbol}(
-                              {formatBalance(
-                                item.balance,
-                                item.tokenInfo.decimals
-                              )}
+                          {assetsList?.map(
+                            (item, i) =>
+                              !item.hidden && (
+                                <MenuItem
+                                  key={i}
+                                  value={item.tokenInfo.address}
+                                  sx={{
+                                    "&:hover": {
+                                      backgroundColor: "var(--hover-bg)",
+                                    },
+                                    "&.Mui-selected": {
+                                      backgroundColor: "var(--hover-bg)",
+                                    },
+                                  }}
+                                >
+                                  {item.tokenInfo.symbol}(
+                                  {formatBalance(
+                                    item.balance,
+                                    item.tokenInfo.decimals
+                                  )}
+                                  )
+                                </MenuItem>
                               )
-                            </MenuItem>
-                          ))}
+                          )}
 
                           {/* <MenuItem value="Option2">Twenty</MenuItem> */}
                         </Select>
@@ -492,24 +595,31 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                 <img src={add} alt="" />
                 <span>Add</span>
               </AddPayment>
-            </TableContainer>
-            {/* note info */}
-            <NoteInformation>
-              <h3>Note Information</h3>
+              {/* </TableContainer> */}
+              {/* note info */}
+              <NoteInformation style={{ marginTop: "30px" }}>
+                <NoteHeader>
+                  <h3>Note Information</h3>
+                </NoteHeader>
 
-              <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                {/* <TableContainer> */}
+                <Table sx={{ width: "100%" }} aria-label="simple table">
                   <TableBody>
                     <TableRow
                       sx={{
                         td: {
-                          border: "1px solid var(--border-table)",
                           padding: 0,
                           paddingInline: "16px",
                         },
                       }}
                     >
-                      <TableCell sx={{ height: 1, width: 200 }}>
+                      <TableCell
+                        sx={{
+                          height: 1,
+                          width: 200,
+                          borderRight: "1px solid var(--border-table)",
+                        }}
+                      >
                         <NoteInfo>
                           <Image src={categoryIcon} alt="" /> Category
                         </NoteInfo>
@@ -570,13 +680,18 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           <TableRow
                             sx={{
                               td: {
-                                border: "1px solid var(--border-table)",
                                 padding: 0,
                                 paddingInline: "16px",
                               },
                             }}
                           >
-                            <TableCell sx={{ height: 1, width: 200 }}>
+                            <TableCell
+                              sx={{
+                                height: 1,
+                                width: 200,
+                                borderRight: "1px solid var(--border-table)",
+                              }}
+                            >
                               <NoteInfo>
                                 <Image src={selectIcon} alt="" />{" "}
                                 {property.name}
@@ -603,12 +718,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                     value: v,
                                     label: v,
                                   }))}
-                                // options={[
-                                //   {
-                                //     value: property.values,
-                                //     label: property.values,
-                                //   },
-                                // ]}
                                 isMulti={false}
                                 // defaultValues={[options[1]]}
                               />
@@ -619,9 +728,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               values: property.values,
                             })} */}
                           </TableRow>
-                          // {
-                          //   propertyObjects
-                          // }
                         )}
                       </>
                     ))}
@@ -631,13 +737,18 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           <TableRow
                             sx={{
                               td: {
-                                border: "1px solid var(--border-table)",
                                 padding: 0,
                                 paddingInline: "16px",
                               },
                             }}
                           >
-                            <TableCell sx={{ height: 1, width: 200 }}>
+                            <TableCell
+                              sx={{
+                                height: 1,
+                                width: 200,
+                                borderRight: "1px solid var(--border-table)",
+                              }}
+                            >
                               <NoteInfo>
                                 <Image src={multiSelect} alt="" />{" "}
                                 {property.name}
@@ -671,61 +782,26 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                       </>
                     ))}
 
-                    {/* single select */}
+                    {/* text */}
                     {selectedCategory?.properties?.map((property) => (
                       <>
-                        {/* {property.type === "Text" && (
-                          <TableRow
-                            sx={{
-                              td: {
-                                border: "1px solid var(--border-table)",
-                                padding: 0,
-                                paddingInline: "16px",
-                              },
-                            }}
-                          >
-                            <TableCell sx={{ height: 1, width: 200 }}>
-                              <NoteInfo>
-                                <Image src={optionsIcon} alt="" />{" "}
-                                {property.name}
-                              </NoteInfo>
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                sx={{
-                                  "& fieldset": { border: "none" },
-                                }}
-                                size="small"
-                                fullWidth
-                                value={propertyContent}
-                                // id="fullWidth"
-                                placeholder="Enter content"
-                                onChange={(e) =>
-                                  handlePropertyText(
-                                    e,
-                                    property.name,
-                                    property.type
-                                  )
-                                }
-                                InputProps={{
-                                  style: { padding: 0 },
-                                }}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        )} */}
                         {property.type === "Text" && (
                           <TableRow
-                            key={property.name} // Add a unique key for each property
+                            key={property.name}
                             sx={{
                               td: {
-                                border: "1px solid var(--border-table)",
                                 padding: 0,
                                 paddingInline: "16px",
                               },
                             }}
                           >
-                            <TableCell sx={{ height: 1, width: 200 }}>
+                            <TableCell
+                              sx={{
+                                height: 1,
+                                width: 200,
+                                borderRight: "1px solid var(--border-table)",
+                              }}
+                            >
                               <NoteInfo>
                                 <Image src={optionsIcon} alt="" />{" "}
                                 {property.name}
@@ -756,10 +832,58 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                         )}
                       </>
                     ))}
+                    {/* date picker */}
+                    {selectedCategory?.properties?.map((property) => (
+                      <>
+                        {property.type === "date-picker" && (
+                          <TableRow
+                            key={property.name}
+                            sx={{
+                              td: {
+                                padding: 0,
+                                paddingInline: "16px",
+                              },
+                            }}
+                          >
+                            <TableCell
+                              sx={{
+                                height: 1,
+                                width: 200,
+                                borderRight: "1px solid var(--border-table)",
+                              }}
+                            >
+                              <NoteInfo>
+                                <Image src={multiSelect} alt="" />{" "}
+                                {property.name}
+                              </NoteInfo>
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                sx={{
+                                  "& fieldset": { border: "none" },
+                                }}
+                                size="small"
+                                fullWidth
+                                value={datePicker[property.name] || ""}
+                                placeholder="yyyy-mm-dd"
+                                type="date"
+                                onChange={(e) =>
+                                  handleDatePickerProperty(e, property.name)
+                                }
+                                InputProps={{
+                                  style: { padding: 0 },
+                                }}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </>
+                    ))}
                   </TableBody>
                 </Table>
-              </TableContainer>
-            </NoteInformation>
+                {/* </TableContainer> */}
+              </NoteInformation>
+            </TableContainer>
             <Btn>
               <RequestSubmit onClick={handlePaymentRequestSubmit}>
                 Submit

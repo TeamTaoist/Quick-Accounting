@@ -56,16 +56,51 @@ export const Header = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   input {
-    border: none;
+    border: 1px solid var(--border);
     outline: none;
     background-color: transparent;
     padding: 5px 10px;
+    border-radius: 7px;
   }
-  img {
-    width: 24px;
-    margin-right: 30px;
+`;
+export const HeaderOptions = styled.div`
+  margin-right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    img {
+      width: 24px;
+    }
+    p {
+      font-size: 18px;
+    }
   }
+`;
+export const UpdateBtn = styled.button`
+  border: none;
+  outline: none;
+  background: var(--bg-primary);
+  padding: 8px 18px;
+  border-radius: 7px;
+  font-size: 18px;
+  margin-right: 10px;
+  cursor: pointer;
+`;
+export const UpdateLoadingBtn = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg-primary);
+  padding: 8px 18px;
+  border-radius: 7px;
+  font-size: 18px;
+  margin-right: 10px;
 `;
 export const CategoryProperties = styled.div`
   display: flex;
@@ -117,21 +152,24 @@ export const Option = styled.div`
 export const PropertyBtns = styled.div`
   display: flex;
   justify-content: space-between;
-  border: 1px solid var(--border-table);
+  /* border: 1px solid var(--border-table); */
 `;
 export const OptionCreateButtons = styled.div`
   border-right: 1px solid var(--border-table);
-  display: flex;
-  justify-content: space-evenly;
+  /* display: flex;
+  justify-content: space-evenly; */
   /* min-height: 80px; */
   width: 50%;
   button {
     display: flex;
-    background: transparent;
+    background: var(--bg-primary);
     gap: 7px;
-    padding: 28px 40px;
+    padding: 8px 20px;
+    margin: 20px;
+    margin-bottom: 20px;
     border: none;
     outline: none;
+    border-radius: 10px;
     cursor: pointer;
     img {
       width: 16px;
@@ -143,9 +181,9 @@ export const OptionCreateButtons = styled.div`
   /* button:first-child {
     border-right: 1px solid var(--border-table);
   } */
-  button:first-of-type {
+  /* button:first-of-type {
     border-right: 1px solid var(--border-table);
-  }
+  } */
 `;
 export const PropertyTitle = styled.div`
   display: flex;

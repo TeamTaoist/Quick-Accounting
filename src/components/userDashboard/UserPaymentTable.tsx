@@ -12,19 +12,19 @@ import { formatNumber } from "../../utils/number";
 import { Status } from "../workspace/paymentRequest/RejectPaymentRequestTable";
 import statusIcon from "../../assets/workspace/status-icon.svg";
 import { getPaymentStatus, getPaymentUpdateTime } from "../../utils/payment";
+import { useDomainStore } from "../../store/useDomain";
+import { getShortAddress } from "../../utils";
 
 interface UserPaymentTableProps {
   filterData: IPaymentRequest[];
   handleUserPaymentDetails: (data: IPaymentRequest) => void;
 }
 
-const recipientFormate = (n: string) => {
-  return `${n.slice(0, 6)}...${n.slice(-4)}`;
-};
 const UserPaymentTable = ({
   filterData,
   handleUserPaymentDetails,
 }: UserPaymentTableProps) => {
+  const { formatAddressToDomain } = useDomainStore();
   return (
     <TableContainer
       component={Paper}
@@ -90,12 +90,18 @@ const UserPaymentTable = ({
               <TableCell>
                 <div>
                   <p>{payment.workspace_name}</p>
-                  <p>{recipientFormate(payment.vault_wallet)}</p>
+                  <p>{getShortAddress(payment.vault_wallet)}</p>
                 </div>
               </TableCell>
               <TableCell>
                 <div>
-                  <p>{recipientFormate(payment.counterparty)}</p>
+                  <p>
+                    {formatAddressToDomain(
+                      payment.counterparty,
+                      payment.workspace_chain_id,
+                      payment.name_service === "sns"
+                    )}
+                  </p>
                 </div>
               </TableCell>
               <TableCell>

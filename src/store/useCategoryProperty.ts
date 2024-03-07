@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { useLoading } from "./useLoading";
 import axiosClient from "../utils/axios";
 import { toast } from "react-toastify";
+import { CategoryPropertyBody } from "../pages/workspace/category/Category";
 export interface CategoryProperties {
   ID: number;
   CreatedAt: string;
@@ -21,6 +22,7 @@ export interface CategoryProperties {
       name: string;
       type: string;
       values: string;
+      archived?: boolean;
     }
   ];
 }
@@ -37,6 +39,7 @@ interface CategoryProperty {
     name: string;
     type: string;
     values: string;
+    archived: boolean;
   };
 }
 interface UpdatedPropertyBody {
@@ -52,11 +55,18 @@ interface UseCategoryProperty {
     workspaceId: number,
     includeArchived?: boolean
   ) => void;
-  createWorkspaceCategoryProperties: (propertyValues: any) => Promise<void>;
+  createWorkspaceCategoryProperties: (
+    propertyValues: CategoryPropertyBody
+  ) => Promise<void>;
   updateWorkspaceCategoryProperties: (
     workspaceId: number | undefined,
     workspaceCategoryId: number | undefined,
     workspaceCategoryPropertyId: number | undefined,
+    updatedPropertyBody: UpdatedPropertyBody
+  ) => Promise<boolean | undefined>;
+  editCategoryNameAndProperties: (
+    workspaceId: number | undefined,
+    workspaceCategoryId: number | undefined,
     updatedPropertyBody: UpdatedPropertyBody
   ) => Promise<boolean | undefined>;
   archiveWorkspaceCategoryProperties: (
@@ -93,6 +103,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
         name: "",
         type: "",
         values: "",
+        archived: false,
       },
     },
     archivedCategoryProperty: [],
@@ -153,6 +164,27 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
         console.log(error);
       } finally {
         setLoading(false);
+      }
+    },
+    // update category name & properties
+    editCategoryNameAndProperties: async (
+      workspaceId,
+      workspaceCategoryId,
+      updatedPropertyBody
+    ) => {
+      try {
+        // setLoading(true);
+        const { data } = await axiosClient.put(
+          `/workspace_category_property/${workspaceId}/${workspaceCategoryId}/edit`,
+          updatedPropertyBody
+        );
+        set({ categoryProperty: data });
+        toast.success("Property updated successfully");
+        return true;
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        // setLoading(false);
       }
     },
     // archive property

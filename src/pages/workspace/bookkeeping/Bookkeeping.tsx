@@ -39,6 +39,8 @@ import ReactPaginate from "react-paginate";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import BookkeepingTable from "../../../components/workspace/bookkeeping/BookkeepingTable";
 import Pagination from "../../../components/Pagination";
+import { useDomainStore } from "../../../store/useDomain";
+import { useWorkspace } from "../../../store/useWorkspace";
 
 const Bookkeeping = () => {
   const { id } = useParams();
@@ -54,6 +56,8 @@ const Bookkeeping = () => {
     bookkeepingHiddenList,
   } = useBookkeeping();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
+  const { queryNameService } = useDomainStore();
+  const { workspace } = useWorkspace();
 
   const [paymentRequest, setPaymentRequest] = useState(true);
 
@@ -172,6 +176,16 @@ const Bookkeeping = () => {
     new Set(bookkeepingList.map((payment) => payment.category_name))
   );
 
+  useEffect(() => {
+    if (bookkeepingList.length && workspace.chain_id) {
+      queryNameService(
+        bookkeepingList,
+        workspace.name_service === "sns",
+        workspace.chain_id
+      );
+    }
+  }, [bookkeepingList, workspace, queryNameService]);
+
   return (
     <PaymentRequestContainer>
       <CustomModal
@@ -227,7 +241,7 @@ const Bookkeeping = () => {
               </MenuItem>
               {uniqueCategoryNames.map(
                 (categoryName) =>
-                  categoryName.trim() !== "" && (
+                  categoryName?.trim() !== "" && (
                     <MenuItem value={categoryName} key={categoryName}>
                       {categoryName}
                     </MenuItem>
@@ -325,7 +339,6 @@ const LeftDirStyle = css`
 `;
 
 export const Logo = styled.div<{ $dir?: string }>`
-  flex: 0 0 30%;
   img {
     width: 20px;
     ${({ $dir }) => $dir === "i" && LeftDirStyle}

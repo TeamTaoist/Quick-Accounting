@@ -34,13 +34,18 @@ const MultiSelectType = ({
       <TableRow
         sx={{
           td: {
-            border: "1px solid var(--border-table)",
             padding: 1,
             paddingInline: 1,
           },
         }}
       >
-        <TableCell sx={{ height: 1, width: 200 }}>
+        <TableCell
+          sx={{
+            height: 1,
+            width: 200,
+            borderRight: "1px solid var(--border-table)",
+          }}
+        >
           <NoteInfo>
             <Image src={multiSelect} alt="" /> {property.name}
           </NoteInfo>
@@ -58,7 +63,7 @@ const MultiSelectType = ({
               label: v,
             }))}
             defaultValues={parseCategoryProperties
-              .filter(
+              ?.filter(
                 (p: any) =>
                   p.type === "multi-select" && p.name === property.name
               )

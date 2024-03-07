@@ -21,6 +21,7 @@ import { formatNumber } from "../../../utils/number";
 import { CategoryCell } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import { formatDate } from "../../../utils/time";
 import { getPaymentUpdateTime } from "../../../utils/payment";
+import { useDomainStore } from "../../../store/useDomain";
 
 interface BookkeepingTableProps {
   selected: number[];
@@ -37,6 +38,7 @@ const BookkeepingTable = ({
 }: BookkeepingTableProps) => {
   const { bookkeepingList } = useBookkeeping();
   const { workspace } = useWorkspace();
+  const { formatAddressToDomain } = useDomainStore();
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -125,7 +127,11 @@ const BookkeepingTable = ({
                   </SafeSection>
                 </TableCell>
                 <TableCell>
-                  {getShortAddress(bookkeeping.counterparty)}
+                  {formatAddressToDomain(
+                    bookkeeping.counterparty,
+                    workspace.chain_id,
+                    workspace.name_service === "sns"
+                  )}
                 </TableCell>
                 <TableCell>
                   {formatNumber(Number(bookkeeping.amount))}{" "}
