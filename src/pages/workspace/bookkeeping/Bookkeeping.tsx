@@ -339,7 +339,6 @@ const LeftDirStyle = css`
 `;
 
 export const Logo = styled.div<{ $dir?: string }>`
-  flex: 0 0 30%;
   img {
     width: 20px;
     ${({ $dir }) => $dir === "i" && LeftDirStyle}

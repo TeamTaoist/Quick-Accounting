@@ -36,6 +36,7 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import PaymentCurrencyTable from "../../../components/paymentRequestDetails/PaymentCurrencyTable";
 import { Status, StatusBtn, SubmissionTime } from "./PaymentRequestDetails";
 import { useDomainStore } from "../../../store/useDomain";
+import { useLocation } from "react-router-dom";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -145,28 +146,29 @@ const Cell = ({ children }: { children: React.ReactNode }) => (
   </TableCell>
 );
 
+const HeaderCell = styled(TableCell)`
+  padding-block: 10px;
+  width: 200px;
+  font-size: 18px;
+`;
+
 const TransferTop = ({
   data: paymentRequestDetails,
 }: {
   data: IPaymentRequest;
 }) => {
   const { formatAddressToDomain } = useDomainStore();
+  const { workspace } = useWorkspace();
+  const { pathname } = useLocation();
+
   return (
     <>
-      <TableHead sx={{ paddingBottom: 8 }}>
+      <TableHead sx={{ background: "var(--bg-secondary)" }}>
         <TableRow>
-          <TableCell sx={{ padding: 0, width: 200, paddingBottom: 1 }}>
-            Safe
-          </TableCell>
-          <TableCell sx={{ padding: 0, width: 150, paddingBottom: 1 }}>
-            Counterparty
-          </TableCell>
-          <TableCell sx={{ padding: 0, width: 150, paddingBottom: 1 }}>
-            Amount
-          </TableCell>
-          <TableCell sx={{ padding: 0, width: 150, paddingBottom: 1 }}>
-            Currency
-          </TableCell>
+          <HeaderCell>Safe</HeaderCell>
+          <HeaderCell>Counterparty</HeaderCell>
+          <HeaderCell>Amount</HeaderCell>
+          <HeaderCell>Currency</HeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -193,8 +195,10 @@ const TransferTop = ({
           <Cell>
             {formatAddressToDomain(
               paymentRequestDetails?.counterparty,
-              paymentRequestDetails?.workspace_chain_id,
-              paymentRequestDetails?.name_service === "sns"
+              paymentRequestDetails?.workspace_chain_id || workspace?.chain_id,
+              pathname.startsWith("/user")
+                ? paymentRequestDetails.name_service === "sns"
+                : workspace.name_service === "sns"
             )}
           </Cell>
           <Cell>{paymentRequestDetails.amount}</Cell>

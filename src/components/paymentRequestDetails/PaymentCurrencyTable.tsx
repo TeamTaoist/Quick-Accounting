@@ -8,14 +8,15 @@ import {
   TextField,
 } from "@mui/material";
 import usePaymentsStore from "../../store/usePayments";
-import { getShortAddress } from "../../utils";
 import { useDomainStore } from "../../store/useDomain";
 import { useWorkspace } from "../../store/useWorkspace";
+import { useLocation } from "react-router-dom";
 
 const PaymentCurrencyTable = () => {
   const { paymentRequestDetails } = usePaymentsStore();
   const { formatAddressToDomain } = useDomainStore();
   const { workspace } = useWorkspace();
+  const { pathname } = useLocation();
 
   return (
     // <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>
@@ -78,8 +79,10 @@ const PaymentCurrencyTable = () => {
               size="small"
               value={formatAddressToDomain(
                 paymentRequestDetails?.counterparty,
-                workspace.chain_id,
-                workspace.name_service === "sns"
+                paymentRequestDetails.workspace_chain_id || workspace.chain_id,
+                pathname.startsWith("/user")
+                  ? paymentRequestDetails.name_service === "sns"
+                  : workspace.name_service === "sns"
               )}
               fullWidth
               // id="fullWidth"
