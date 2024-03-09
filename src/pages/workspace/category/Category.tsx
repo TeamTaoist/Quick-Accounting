@@ -378,7 +378,11 @@ const Category = () => {
     }
     handleCategoryCollapse(categoryId, true);
   };
-
+  const handleCancelEdit = (e: any, categoryId: number) => {
+    e.stopPropagation();
+    const updatedIds = editableCategoryId.filter((id) => id !== categoryId);
+    setEditableCategoryId(updatedIds);
+  };
   // update category name & properties
   const [updateLoading, setUpdateLoading] = useState(false);
   const handleUpdatedCategoryProperty = (categoryId: number, e: any) => {
@@ -526,7 +530,12 @@ const Category = () => {
                       </div>
                       {/* {editableCategoryId === category.ID ? ( */}
                       {editableCategoryId.includes(category.ID) ? (
-                        <>
+                        <div>
+                          <CancelBtn
+                            onClick={(e) => handleCancelEdit(e, category.ID)}
+                          >
+                            Cancel
+                          </CancelBtn>
                           {updateLoading ? (
                             <UpdateLoadingBtn>
                               <CircularProgress
@@ -537,7 +546,6 @@ const Category = () => {
                             </UpdateLoadingBtn>
                           ) : (
                             <UpdateBtn
-                              // onClick={(e) => handleEditCategory(e, category.ID)}
                               onClick={(e) =>
                                 handleUpdatedCategoryProperty(category.ID, e)
                               }
@@ -545,7 +553,7 @@ const Category = () => {
                               Update
                             </UpdateBtn>
                           )}
-                        </>
+                        </div>
                       ) : (
                         <HeaderOptions>
                           <div

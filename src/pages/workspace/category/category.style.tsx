@@ -271,12 +271,14 @@ export const CreateCategoryBtn = styled.button`
   cursor: pointer;
 `;
 export const CancelBtn = styled.button`
-  background: transparent;
+  cursor: pointer;
+  border: none;
   outline: none;
+  background: transparent;
   border: 1px solid var(--border-table);
+  padding: 8px 18px;
+  border-radius: 7px;
   font-size: 18px;
-  padding: 8px 50px;
-  border-radius: 10px;
-  width: 100%;
+  margin-right: 20px;
   cursor: pointer;
 `;
