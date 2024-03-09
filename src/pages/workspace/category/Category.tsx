@@ -347,22 +347,37 @@ const Category = () => {
     });
   };
 
+  // category collapse & expand
+  const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
+
+  const handleCategoryCollapse = (
+    categoryId: number,
+    isEditAction?: boolean
+  ) => {
+    const isExpanded = expandedCategories.includes(categoryId);
+
+    if (!isEditAction && isExpanded) {
+      const category = expandedCategories.filter((id) => id !== categoryId);
+      setExpandedCategories(category);
+    } else if (!isExpanded) {
+      setExpandedCategories([...expandedCategories, categoryId]);
+    }
+  };
+
   // edit category
-  // const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
   const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
+
   const handleEditCategory = (e: any, categoryId: number) => {
     e.stopPropagation();
     const isSelected = editableCategoryId.includes(categoryId);
-
     if (isSelected) {
       const updatedIds = editableCategoryId.filter((id) => id !== categoryId);
       setEditableCategoryId(updatedIds);
     } else {
       setEditableCategoryId([...editableCategoryId, categoryId]);
     }
+    handleCategoryCollapse(categoryId, true);
   };
-
-  const handleCategoryCollapse = (categoryId: number) => {};
 
   // update category name & properties
   const [updateLoading, setUpdateLoading] = useState(false);
@@ -470,7 +485,7 @@ const Category = () => {
             {/* category option */}
             {categoryList?.map((category, index) => (
               <CategoryOption key={category.ID}>
-                <Accordion>
+                <Accordion expanded={expandedCategories.includes(category.ID)}>
                   <AccordionSummary
                     onClick={() => handleCategoryCollapse(category.ID)}
                     expandIcon={
