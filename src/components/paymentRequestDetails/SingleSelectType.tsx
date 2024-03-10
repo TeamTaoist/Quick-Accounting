@@ -47,7 +47,9 @@ const SingleSelectType = ({
           }}
         >
           <NoteInfo>
-            <Image src={selectIcon} alt="" /> {property.name}
+            {/* <Image src={selectIcon} alt="" /> {property.name} */}
+            <Image src={selectIcon} alt="" />{" "}
+            <input type="text" value={property.name} />
           </NoteInfo>
         </TableCell>
         <TableCell onBlur={handleUpdateCategory}>

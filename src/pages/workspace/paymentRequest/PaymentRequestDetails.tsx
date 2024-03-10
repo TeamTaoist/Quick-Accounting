@@ -127,6 +127,22 @@ const PaymentRequestDetails = ({
       },
     });
   };
+  // const handleSelectSingleChange = (
+  //   selectedOption: ReactSelectOption,
+  //   property: PropertyValues
+  // ) => {
+  //   setSelectSingleValue(selectedOption);
+  //   if (property && property.name) {
+  //     setPropertyValues({
+  //       ...propertyValues,
+  //       [property?.name]: {
+  //         name: property.name,
+  //         type: property.type,
+  //         values: selectedOption.value,
+  //       },
+  //     });
+  //   }
+  // };
 
   // property value input
   const [propertyContent, setPropertyContent] = useState<string>("");

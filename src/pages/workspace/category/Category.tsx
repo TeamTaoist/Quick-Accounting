@@ -25,6 +25,7 @@ import {
   Details,
   Header,
   HeaderOptions,
+  HeaderRight,
   Option,
   OptionCreateButtons,
   Options,
@@ -530,7 +531,7 @@ const Category = () => {
                       </div>
                       {/* {editableCategoryId === category.ID ? ( */}
                       {editableCategoryId.includes(category.ID) ? (
-                        <div>
+                        <HeaderRight>
                           <CancelBtn
                             onClick={(e) => handleCancelEdit(e, category.ID)}
                           >
@@ -553,7 +554,7 @@ const Category = () => {
                               Update
                             </UpdateBtn>
                           )}
-                        </div>
+                        </HeaderRight>
                       ) : (
                         <HeaderOptions>
                           <div

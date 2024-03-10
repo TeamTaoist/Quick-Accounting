@@ -107,6 +107,10 @@ export const Image = styled.img`
 export const NoteInfo = styled.div`
   display: flex;
   gap: 6px;
+  input {
+    border: none;
+    outline: none;
+  }
 `;
 export const Btn = styled.div`
   /* padding-inline: 40px; */

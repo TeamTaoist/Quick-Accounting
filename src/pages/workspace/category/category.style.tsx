@@ -65,6 +65,11 @@ export const Header = styled.div`
     border-radius: 7px;
   }
 `;
+export const HeaderRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
 export const HeaderOptions = styled.div`
   margin-right: 30px;
   display: flex;
