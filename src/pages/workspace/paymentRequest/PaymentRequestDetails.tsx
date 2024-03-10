@@ -99,8 +99,6 @@ const PaymentRequestDetails = ({
     type: string
   ) => {
     setSelectedValues(selectedOptions);
-    console.log(selectedOptions, name, type);
-    // const v = selectedOptions?.map((p) => p.value);
     setPropertyMultiValues({
       ...propertyMultiValues,
       [name]: {
@@ -158,13 +156,6 @@ const PaymentRequestDetails = ({
       },
     });
   };
-  const [age, setAge] = useState("Category");
-
-  const handleCategoryChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
-  };
-  // get the selected category list
-  const [categoryProperties, setCategoryProperties] = useState<any>([]);
 
   const [selectedCategoryID, setSelectedCategoryID] = useState<
     number | undefined
@@ -172,29 +163,46 @@ const PaymentRequestDetails = ({
   const [selectedCategory, setSelectedCategory] = useState<any>({});
   useEffect(() => {
     setSelectedCategoryID(paymentRequestDetails.category_id);
-  }, [setOpen]);
+  }, [setOpen, paymentRequestDetails.category_id]);
   useEffect(() => {
     const selectedCategory = workspaceCategoryProperties?.find(
       (f) => f?.ID === selectedCategoryID
     );
     if (selectedCategory) {
       setSelectedCategory(selectedCategory);
-      setCategoryProperties(selectedCategory?.properties);
     } else {
       setSelectedCategory({});
-      setCategoryProperties([]);
     }
   }, [selectedCategoryID, workspaceCategoryProperties]);
 
   // handle category
-  const handleCategory = async (categoryId: number) => {
-    setSelectedCategoryID(categoryId);
+  const handleCategory = async (category: any) => {
+    setSelectedCategoryID(category.ID);
     setPropertyValues({});
     setPropertyMultiValues({});
     setPropertyTextValue({});
     setPropertyContent("");
     parseCategoryProperties = {};
     setDatePicker({});
+    const updatedPaymentBody = {
+      category_id: category.ID,
+      category_name: category.name,
+      category_properties: [],
+    };
+    setIsUpdating(true);
+    await updatePaymentRequestCategory(
+      id,
+      paymentRequestDetails?.ID.toString(),
+      updatedPaymentBody
+    ).then((res) => {
+      if (res) {
+        setIsUpdating(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 3000);
+      }
+    });
   };
   // form data
   const updatedPaymentBody = {
@@ -285,21 +293,11 @@ const PaymentRequestDetails = ({
     setDatePicker(initialPropertyDateValue);
   }, []);
 
-  useEffect(() => {
-    const initialSelectedCategory = workspaceCategoryProperties?.find(
-      (f) => f?.ID === selectedCategoryID
-    );
-    setSelectedCategory(initialSelectedCategory);
-    if (initialSelectedCategory) {
-      setCategoryProperties(initialSelectedCategory?.properties);
-    }
-  }, []);
-
   // updating loading state
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
-  const handleUpdateCategory = async () => {
+  const handleUpdateCategory = async (category?: any) => {
     setIsUpdating(true);
     await updatePaymentRequestCategory(
       id,
@@ -404,11 +402,11 @@ const PaymentRequestDetails = ({
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          value={age}
+                          value={paymentRequestDetails?.category_name}
                           label="Age"
                           size="small"
-                          onChange={handleCategoryChange}
-                          onBlur={handleUpdateCategory}
+                          // onChange={handleUpdateCategory}
+                          // onBlur={handleUpdateCategory}
                           IconComponent={() => (
                             <InputAdornment position="start">
                               <img
@@ -432,7 +430,7 @@ const PaymentRequestDetails = ({
                               key={category.ID}
                               value={category.name}
                               // onBlur={handleUpdateCategory}
-                              onClick={() => handleCategory(category.ID)}
+                              onClick={() => handleCategory(category)}
                             >
                               {category.name}
                             </MenuItem>
