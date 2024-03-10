@@ -31,7 +31,10 @@ import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
 import usePaymentsStore from "../../../store/usePayments";
 import { useLoading } from "../../../store/useLoading";
-import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import {
+  CategoryProperties,
+  useCategoryProperty,
+} from "../../../store/useCategoryProperty";
 import PaymentCurrencyTable from "../../../components/paymentRequestDetails/PaymentCurrencyTable";
 import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
 import { useWorkspace } from "../../../store/useWorkspace";
@@ -176,7 +179,7 @@ const PaymentRequestDetails = ({
   }, [selectedCategoryID, workspaceCategoryProperties]);
 
   // handle category
-  const handleCategory = async (category: any) => {
+  const handleCategory = async (category: CategoryProperties) => {
     setSelectedCategoryID(category.ID);
     setPropertyValues({});
     setPropertyMultiValues({});
@@ -405,8 +408,6 @@ const PaymentRequestDetails = ({
                           value={paymentRequestDetails?.category_name}
                           label="Age"
                           size="small"
-                          // onChange={handleUpdateCategory}
-                          // onBlur={handleUpdateCategory}
                           IconComponent={() => (
                             <InputAdornment position="start">
                               <img

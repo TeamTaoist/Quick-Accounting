@@ -44,7 +44,10 @@ import CHAINS from "../../../utils/chain";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
 import { getShortAddress } from "../../../utils";
-import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import {
+  CategoryProperties,
+  useCategoryProperty,
+} from "../../../store/useCategoryProperty";
 import { useBookkeeping } from "../../../store/useBookkeeping";
 import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
 import { formatTimestamp } from "../../../utils/time";
@@ -170,19 +173,7 @@ const BookkeepingTransferDetails = ({
     });
   };
 
-  const [age, setAge] = useState("Category");
-
-  const handleCategoryChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
-  };
-
-  // const handleSelectChange = (selectedOptions: any) => {
-  //   setSelectedValues(selectedOptions);
-  // };
-
   // get the selected category list
-  const [categoryProperties, setCategoryProperties] = useState<any>([]);
-
   const [selectedCategoryID, setSelectedCategoryID] = useState<number>(
     bookkeepingDetails?.category_id
   );
@@ -194,19 +185,39 @@ const BookkeepingTransferDetails = ({
     const selectedCategory = workspaceCategoryProperties?.find(
       (f) => f?.ID === selectedCategoryID
     );
-    setSelectedCategory(selectedCategory);
     if (selectedCategory) {
-      setCategoryProperties(selectedCategory?.properties);
+      setSelectedCategory(selectedCategory);
+    } else {
+      setSelectedCategory({});
     }
   }, [selectedCategoryID, workspaceCategoryProperties]);
 
-  const handleCategory = async (categoryId: number) => {
-    setSelectedCategoryID(categoryId);
+  const handleCategory = async (category: CategoryProperties) => {
+    setSelectedCategoryID(category.ID);
     setPropertyValues({});
     setPropertyMultiValues({});
     setPropertyTextValue({});
     setPropertyContent("");
     setDatePicker({});
+    const updatedPaymentBody = {
+      category_id: category.ID,
+      category_name: category.name,
+      category_properties: [],
+    };
+    setIsUpdating(true);
+    await updateBookkeepingCategory(
+      id,
+      bookkeepingDetails.ID.toString(),
+      updatedPaymentBody
+    ).then((res) => {
+      if (res) {
+        setIsUpdating(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 3000);
+      }
+    });
   };
   // form data
   const updatedPaymentBody = {
@@ -294,16 +305,6 @@ const BookkeepingTransferDetails = ({
     setPropertyValues(initialSelectSingleValue);
     setPropertyTextValue(initialPropertyTextValue);
     setDatePicker(initialPropertyDateValue);
-  }, []);
-
-  useEffect(() => {
-    const initialSelectedCategory = workspaceCategoryProperties?.find(
-      (f) => f?.ID === selectedCategoryID
-    );
-    setSelectedCategory(initialSelectedCategory);
-    if (initialSelectedCategory) {
-      setCategoryProperties(initialSelectedCategory?.properties);
-    }
   }, []);
 
   // updating loading state
@@ -469,16 +470,14 @@ const BookkeepingTransferDetails = ({
                     <TableCell>
                       <FormControl
                         fullWidth
-                        disabled={bookkeepingDetails.status === 2}
+                        disabled={bookkeepingDetails?.status === 2}
                       >
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          value={age}
+                          value={bookkeepingDetails?.category_name}
                           label="Age"
                           size="small"
-                          onChange={handleCategoryChange}
-                          onBlur={handleUpdateCategory}
                           IconComponent={() => (
                             <InputAdornment position="start">
                               <img
@@ -502,7 +501,7 @@ const BookkeepingTransferDetails = ({
                               key={category.ID}
                               value={category.name}
                               // onBlur={handleUpdateCategory}
-                              onClick={() => handleCategory(category.ID)}
+                              onClick={() => handleCategory(category)}
                             >
                               {category.name}
                             </MenuItem>
