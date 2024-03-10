@@ -176,10 +176,11 @@ const PaymentRequestGroupDetails = ({
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<any>([]);
 
-  const handleCategoryDropdown = (
+  const handleCategoryDropdown = async (
     categoryId: number,
     categoryName: string,
-    index: number
+    index: number,
+    paymentId: number
   ) => {
     const updatedCategoryIDs = [...selectedCategoryIDs];
     updatedCategoryIDs[index] = categoryId;
@@ -197,6 +198,26 @@ const PaymentRequestGroupDetails = ({
       workspaceCategoryProperties?.find((category) => category.ID === id)
     );
     setSelectedCategories(updatedSelectedCategories);
+    // update category
+    const paymentRequestBody = {
+      category_id: categoryId,
+      category_name: categoryName,
+      category_properties: [],
+    };
+    await updatePaymentRequestCategory(
+      id,
+      paymentId.toString(),
+      paymentRequestBody
+    ).then((res) => {
+      if (res) {
+        setIsUpdating(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+          setUpdatingPaymentId(null);
+        }, 3000);
+      }
+    });
   };
 
   useEffect(() => {
@@ -505,10 +526,6 @@ const PaymentRequestGroupDetails = ({
                                 sharePaymentRequestForm[index].category_name
                               }
                               size="small"
-                              onChange={handleCategoryChange}
-                              onBlur={() =>
-                                handleUpdatePaymentRequest(payment.id)
-                              }
                               IconComponent={() => (
                                 <InputAdornment position="start">
                                   <img
@@ -535,7 +552,8 @@ const PaymentRequestGroupDetails = ({
                                     handleCategoryDropdown(
                                       category.ID,
                                       category.name,
-                                      index
+                                      index,
+                                      payment.id
                                     );
                                   }}
                                   sx={{
