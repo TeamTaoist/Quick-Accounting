@@ -3,6 +3,7 @@ import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPa
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import { CategoryProperties } from "../../store/useCategoryProperty";
+import { useRef } from "react";
 
 interface TextTypeProps {
   property: any;
@@ -23,7 +24,10 @@ const DatePickerType = ({
   status,
   defaultPropertyValue,
 }: TextTypeProps) => {
-  console.log("d", datePicker);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleInputClick = () => {
+    inputRef.current?.showPicker();
+  };
 
   if (!!defaultPropertyValue || !property.archived) {
     return (
@@ -49,22 +53,30 @@ const DatePickerType = ({
 
         <TableCell onBlur={handleUpdateCategory}>
           <TextField
+            inputRef={inputRef}
             disabled={status === 2}
             sx={{
               "& fieldset": { border: "none" },
+              "& input::-webkit-calendar-picker-indicator": {
+                // display: "none",
+              },
+              "& input": {
+                paddingInline: "10px",
+              },
             }}
             size="small"
             fullWidth
             type="date"
             value={datePicker[property.name]?.values || ""}
-            // value={property.values || ""}
-            // id="fullWidth"
-            placeholder="Enter content"
             onChange={(e) =>
               handleDatePickerProperty(e, property.name, property.type)
             }
+            onClick={handleInputClick}
             InputProps={{
-              style: { padding: 0 },
+              style: {
+                paddingInline: 0,
+                color: datePicker[property.name]?.values ? "black" : "gray",
+              },
             }}
           />
         </TableCell>
