@@ -7,17 +7,11 @@ import Sidebar from "../sidebar/Sidebar";
 const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
-      <Sidebar>
-        {/* workspace sidebar */}
-        <WorkspaceContent>
-          {/* <div className="user-dashboard"> */}
-          <WorkspaceSidebar />
-          <Details>
-            {children}
-            {/* <WorkspaceSidebar>{children}</WorkspaceSidebar> */}
-          </Details>
-        </WorkspaceContent>
-      </Sidebar>
+      <Sidebar />
+      <WorkspaceContent>
+        <WorkspaceSidebar />
+        <Details>{children}</Details>
+      </WorkspaceContent>
     </div>
   );
 };
@@ -26,6 +20,8 @@ export default WorkspaceLayout;
 
 const WorkspaceContent = styled.div`
   display: flex;
+  padding-top: 72px;
+  max-height: 100vh;
 `;
 const Details = styled.div`
   flex: 1;

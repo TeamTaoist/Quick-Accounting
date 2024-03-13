@@ -5,12 +5,13 @@ import styled from "@emotion/styled";
 
 const UserDashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Sidebar>
+    <>
+      <Sidebar />
       <WorkspaceContent>
         <UserSidebar />
         <Details>{children}</Details>
       </WorkspaceContent>
-    </Sidebar>
+    </>
   );
 };
 
@@ -18,6 +19,8 @@ export default UserDashboardLayout;
 
 const WorkspaceContent = styled.div`
   display: flex;
+  padding-top: 72px;
+  max-height: 100vh;
 `;
 const Details = styled.div`
   flex: 1;

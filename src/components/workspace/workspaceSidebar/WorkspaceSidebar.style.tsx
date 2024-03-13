@@ -4,7 +4,8 @@ import { SidebarProps } from "./WorkspaceSidebar";
 export const SidebarContainer = styled.div<SidebarProps>`
   border-right: 1px solid var(--border);
   /* max-width: 327px; */
-  height: 100vh;
+  /* height: 100vh; */
+  height: calc(100vh - 72px);
   overflow-y: auto;
   overflow-x: hidden;
   width: ${({ hideSidebar }) => (hideSidebar ? "80px" : "327px")};

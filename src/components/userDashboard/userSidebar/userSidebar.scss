@@ -1,10 +1,8 @@
 .user-sidebar {
   border-right: 1px solid var(--border);
   width: 327px;
-  height: 100vh;
+  height: calc(100vh - 72px);
   position: relative;
-  // height: 100%;
-  // padding-top: 137px;
   .arrow-icon {
     width: 24px;
     position: absolute;
