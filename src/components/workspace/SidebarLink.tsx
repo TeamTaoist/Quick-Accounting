@@ -21,20 +21,22 @@ const SidebarLink = ({ to, name, icon, hideSidebar }: SidebarLinkProps) => {
 export default SidebarLink;
 
 const SidebarLinks = styled(NavLink)<SidebarProps>`
-  padding: ${({ hideSidebar }) =>
-    hideSidebar ? "10px 0 10px 0" : "10px 0 10px 43px"};
+  /* padding: ${({ hideSidebar }) =>
+    hideSidebar ? "10px 0 10px 0" : "10px 0 10px 43px"}; */
+  padding: 10px;
   display: flex;
   justify-content: ${({ hideSidebar }) => (hideSidebar ? "center" : "start")};
   margin-bottom: 10px;
   text-decoration: none;
-  font-size: 20px;
+  font-size: 14px;
   color: #000;
   cursor: pointer;
   display: flex;
   gap: 13px;
   align-items: center;
+  border-radius: 6px;
   img {
-    width: 20px;
+    width: 14px;
   }
   &:hover {
     background-color: var(--bg-primary);

@@ -1,61 +1,69 @@
 .user-sidebar {
   border-right: 1px solid var(--border);
-  width: 327px;
+  width: 256px;
   height: calc(100vh - 72px);
   position: relative;
-  .arrow-icon {
-    width: 24px;
-    position: absolute;
-    right: 0;
-    top: 36px;
-    right: 30px;
-  }
-  .user-address {
-    padding-top: 140px;
-    padding-inline: 18px;
+  padding: 20px;
+  // margin-inline: 20px;
+
+  // .arrow-icon {
+  //   width: 24px;
+  //   position: absolute;
+  //   right: 0;
+  //   top: 36px;
+  //   right: 30px;
+  // }
+  // .user-address {
+  // padding-top: 140px;
+  // padding-inline: 18px;
+  // display: flex;
+  // gap: 10px;
+  // justify-content: space-between;
+  // align-items: center;
+  .address {
     display: flex;
-    gap: 10px;
     justify-content: space-between;
     align-items: center;
-    .address {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      img {
-        width: 30px;
-      }
-      p {
-        font-size: 22px;
-        font-weight: 500px;
-      }
+    gap: 9px;
+    padding: 20px 0;
+    img {
+      width: 16px;
     }
-    .disconnect {
-      border: none;
-      outline: none;
-      background: var(--bg-primary);
-      font-size: 15px;
-      padding: 8px 20px;
-      border-radius: 7px;
-      cursor: pointer;
+    h5 {
+      font-size: 16px;
+      // font-weight: 700px;
     }
   }
-  // payment request
-  .payment-request {
-    padding: 40px 0;
-    ul > li {
-      list-style: none;
-      background: var(--bg-primary);
-      font-size: 18px;
-      padding: 10px 0;
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      align-items: center;
-      margin: 20px 0;
-      img {
-        width: 16px;
-        padding-top: 3.5px;
-      }
+  .disconnect {
+    button {
+      border: 1px solid var(--clr-gray-300);
+      outline: none;
+      background: transparent;
+      font-size: 15px;
+      padding: 14px 0;
+      border-radius: 7px;
+      cursor: pointer;
+      width: 100%;
     }
   }
 }
+// payment request
+.payment-request {
+  padding: 40px 0;
+  ul > li {
+    list-style: none;
+    background: var(--bg-primary);
+    font-size: 18px;
+    padding: 10px 0;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    img {
+      width: 16px;
+      padding-top: 3.5px;
+    }
+  }
+}
+// }

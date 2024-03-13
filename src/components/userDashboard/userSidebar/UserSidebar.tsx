@@ -12,6 +12,8 @@ import { SidebarLinkList } from "../../workspace/workspaceSidebar/WorkspaceSideb
 import SidebarLink from "../../workspace/SidebarLink";
 import { useEffect, useState } from "react";
 import { useDomainStore } from "../../../store/useDomain";
+import styled from "@emotion/styled";
+import { SidebarProps } from "../../workspace/workspaceSidebar/WorkspaceSidebar";
 
 const UserSidebar = () => {
   const { t } = useTranslation();
@@ -22,6 +24,9 @@ const UserSidebar = () => {
     logout(navigate);
   };
   const [hideSidebar, setHideSidebar] = useState(false);
+  const handleSidebar = () => {
+    setHideSidebar(!hideSidebar);
+  };
   const { queryENS, formatAddressToDomain } = useDomainStore();
 
   useEffect(() => {
@@ -31,22 +36,33 @@ const UserSidebar = () => {
   }, [address, chainId]);
   return (
     <>
-      <div className="user-sidebar">
-        <img className="arrow-icon" src={arrow} alt="" />
+      <UserSidebarSection hideSidebar={hideSidebar}>
         {/* user address */}
-        <div className="user-address">
-          <div className="address">
-            <img src={addressCard} alt="" />
-            <p>
+        {/* <div className="user-address"> */}
+        <Address hideSidebar={hideSidebar}>
+          {/* <img src={addressCard} alt="" /> */}
+          {!hideSidebar && (
+            <h5>
               {address &&
                 chainId &&
                 formatAddressToDomain(address, chainId, false)}
-            </p>
-          </div>
-          <button onClick={handleLogout} className="disconnect">
-            {t("user.Disconnect")}
-          </button>
-        </div>
+            </h5>
+          )}
+
+          <img
+            onClick={handleSidebar}
+            className="arrow-icon"
+            src={arrow}
+            alt=""
+          />
+        </Address>
+        {!hideSidebar && (
+          <Disconnect>
+            <button onClick={handleLogout}>{t("user.Disconnect")}</button>
+          </Disconnect>
+        )}
+
+        {/* </div> */}
         {/* user payment request */}
         <SidebarLinkList className="">
           <SidebarLink
@@ -62,10 +78,55 @@ const UserSidebar = () => {
             hideSidebar={hideSidebar}
           />
         </SidebarLinkList>
-      </div>
+      </UserSidebarSection>
       {/* {children} */}
     </>
   );
 };
 
 export default UserSidebar;
+
+const UserSidebarSection = styled.div<SidebarProps>`
+  border-right: 1px solid var(--border);
+  /* width: 256px; */
+  width: ${({ hideSidebar }) => (hideSidebar ? "80px" : "256px")};
+  height: calc(100vh - 72px);
+  position: relative;
+  padding: 20px;
+  transition: width 0.3s ease-in-out;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
+const Address = styled.div<SidebarProps>`
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  gap: 9px;
+  padding: 20px 0;
+  justify-content: ${({ hideSidebar }) =>
+    hideSidebar ? "center" : "space-between"};
+  img {
+    width: 16px;
+    transform: ${({ hideSidebar }) => hideSidebar && "rotate(180deg)"};
+    cursor: pointer;
+  }
+  h5 {
+    font-size: 16px;
+    // font-weight: 700px;
+  }
+`;
+const Disconnect = styled.div`
+  button {
+    border: 1px solid var(--clr-gray-300);
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    padding: 14px 0;
+    border-radius: 7px;
+    cursor: pointer;
+    width: 100%;
+  }
+`;
