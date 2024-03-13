@@ -11,6 +11,7 @@ import { createSiweMessage } from "../../../utils";
 import { useAuthStore } from "../../../store/useAuthStore";
 import metamask from "../../../assets/auth/metamask.svg";
 import cancelIcon from "../../../assets/auth/cancel.svg";
+import arrowRight from "../../../assets/auth/arrow-right.svg";
 import { toast } from "react-toastify";
 
 interface IProps {
@@ -88,14 +89,24 @@ export default function LoginContent({ handleClose, loginCallback }: IProps) {
   return (
     <div className="login">
       <div className="popup">
-        <span onClick={handleClose}>
-          <img className="close-btn" src={cancelIcon} alt="" />
-        </span>
-        <h3>{t("login.LoginTitle")}</h3>
-        <button className="btn" onClick={onClickConnect}>
-          <img src={metamask} alt="" />
-          <span>{t("login.MetaMask")}</span>
-        </button>
+        <div className="login-header">
+          <h3>{t("login.LoginTitle")}</h3>
+          <span onClick={handleClose}>
+            <img className="close-btn" src={cancelIcon} alt="" />
+          </span>
+        </div>
+        <div className="auth-provider">
+          <div className="meta-mask">
+            <button className="btn" onClick={onClickConnect}>
+              <img src={metamask} alt="" />
+              <span>{t("login.MetaMask")}</span>
+            </button>
+          </div>
+          <div className="wallet-link">
+            <p>Get your first wallet</p>
+            <img src={arrowRight} alt="" />
+          </div>
+        </div>
       </div>
     </div>
   );

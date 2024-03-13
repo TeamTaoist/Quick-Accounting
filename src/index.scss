@@ -32,12 +32,13 @@ img {
   --clr-gray-100: #f1f5f9;
   --clr-gray-50: #f8fafc;
   --clr-white: #ffffff;
-  --clr-modal-mask: #0f172a7c;
+  --clr-modal-mask: #0f172a98;
 }
 
 body {
   // font-family: "PingFangHK";
   font-family: "Inter", sans-serif;
+  color: var(--clr-primary-900);
 }
 
 ul,
