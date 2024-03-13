@@ -10,6 +10,10 @@ export const Header = styled.div`
   justify-content: space-between;
   min-width: 940px;
 `;
+export const Filter = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 export const PaymentRequestBody = styled.div``;
 export const ActionBtn = styled.div`
   display: flex;

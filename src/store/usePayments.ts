@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 interface IPaymentsStore {
   paymentRequestList: IPaymentRequest[];
+  filterData: IPaymentRequest[];
   paymentRequestDetails: IPaymentRequest;
   paymentRequestGroupDetails: IPaymentRequest[];
   paymentRquestMap: Map<string, IPaymentRequest[]>;
@@ -13,7 +14,9 @@ interface IPaymentsStore {
     workspaceId: number,
     isRejected?: boolean,
     page?: number,
-    size?: number
+    size?: number,
+    searchKeyWords?: string,
+    categoryId?: number
   ) => Promise<number>;
   createPaymentRequest: (
     workspaceId: number,
@@ -78,6 +81,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
 
   return {
     paymentRequestList: [],
+    filterData: [],
     paymentRequestDetails: {
       ID: 0,
       CreatedAt: "",
@@ -116,14 +120,20 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       workspaceId,
       isRejected = false,
       page = 0,
-      size = 10
+      size = 10,
+      searchKeyWords,
+      categoryId
     ) => {
       setLoading(true);
       try {
         const { data } = await axiosClient.get(
-          `/payment_request/${workspaceId}?rejected=${isRejected}&page=${page}&size=${size}&sort_field=created_at&sort_order=desc`
+          `/payment_request/${workspaceId}?rejected=${isRejected}&page=${page}&size=${size}&sort_field=created_at&sort_order=desc&search_words=${searchKeyWords}` +
+            (categoryId !== undefined ? `&filter_category=${categoryId}` : "")
         );
-        set({ paymentRequestList: data.data.rows });
+        if (searchKeyWords === "") {
+          set({ paymentRequestList: data.data.rows });
+        }
+        set({ filterData: data.data.rows });
         if (data.msg === "success" && data.code === 200) {
           return data.data.total;
         }

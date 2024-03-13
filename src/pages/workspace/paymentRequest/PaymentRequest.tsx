@@ -30,6 +30,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   ActionBtn,
   Btn,
+  Filter,
   Header,
   Image,
   Option,
@@ -68,6 +69,7 @@ const PaymentRequest = () => {
     getPaymentRequestGroupDetails,
     exportPaymentList,
     setCurrentPaymentRequestDetail,
+    filterData,
   } = usePaymentsStore();
   const { workspace } = useWorkspace();
   const { queryNameService } = useDomainStore();
@@ -112,23 +114,39 @@ const PaymentRequest = () => {
   // modal end
   // search payments
   const [searchTerm, setSearchTerm] = useState("");
-  const handleChange = (event: any) => {
-    setSearchTerm(event.target.value);
+  const [isSearch, setIsSearch] = useState(false);
+  const handleChange = (e: any) => {
+    setSearchTerm(e.target.value);
   };
+  const handleSearchPayment = (e: any) => {
+    e.preventDefault();
+    getPaymentRequestList(workspaceId, false, pageNumbers, 10, searchTerm).then(
+      (res) => {
+        setTotalItem(res);
+        setIsSearch(true);
+      }
+    );
+  };
+  useEffect(() => {
+    if (!searchTerm && isSearch) {
+      getPaymentRequestList(
+        workspaceId,
+        false,
+        pageNumbers,
+        10,
+        searchTerm
+      ).then((res) => {
+        setTotalItem(res);
+        setIsSearch(false);
+      });
+    }
+  }, [searchTerm]);
+
   const [selectedValue, setSelectedValue] = useState<string>("");
 
   const handleDropdownChange = (event: any) => {
     setSelectedValue(event.target.value);
   };
-  // filter table data
-  const filterData = paymentRequestList.filter((data) => {
-    const searchItem = data.counterparty
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const filterByCategory =
-      selectedValue === "" || data.category_name === selectedValue;
-    return searchItem && filterByCategory;
-  });
   // fetch payment request
   const [rejectPaymentLoading, setRejectPaymentLoading] =
     useState<boolean>(false);
@@ -145,9 +163,11 @@ const PaymentRequest = () => {
 
   const workspaceId = Number(id);
   useEffect(() => {
-    getPaymentRequestList(workspaceId, false, pageNumbers).then((res) => {
-      setTotalItem(res);
-    });
+    getPaymentRequestList(workspaceId, false, pageNumbers, 10, searchTerm).then(
+      (res) => {
+        setTotalItem(res);
+      }
+    );
   }, [
     getPaymentRequestList,
     workspaceId,
@@ -280,24 +300,28 @@ const PaymentRequest = () => {
             }}
           />
           <Header>
-            <div>
-              <TextField
-                id="search"
-                type="search"
-                autoComplete="off"
-                placeholder={t("paymentRequest.Search")}
-                value={searchTerm}
-                onChange={handleChange}
-                sx={{ width: 350 }}
-                size="small"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <img src={searchIcon} alt="" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+            <Filter>
+              <form onSubmit={handleSearchPayment}>
+                <TextField
+                  id="search"
+                  type="search"
+                  autoComplete="off"
+                  placeholder={t("paymentRequest.Search")}
+                  value={searchTerm}
+                  onChange={handleChange}
+                  sx={{
+                    width: 350,
+                  }}
+                  size="small"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <img src={searchIcon} alt="" />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </form>
               <FormControl sx={{ marginLeft: "25px", minWidth: 100 }}>
                 <Select
                   value={selectedValue}
@@ -322,7 +346,7 @@ const PaymentRequest = () => {
                   )}
                 </Select>
               </FormControl>
-            </div>
+            </Filter>
             <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
               {paymentRequest ? (
                 <div onClick={handleRejectedPayments}>
