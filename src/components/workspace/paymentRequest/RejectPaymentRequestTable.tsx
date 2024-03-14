@@ -201,9 +201,31 @@ const RejectPaymentRequestTable = ({
 
 export default RejectPaymentRequestTable;
 
-export const Status = styled.div`
+export const Status = styled.div<any>`
   display: flex;
+  align-items: center;
   gap: 5px;
+  p {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: ${({ status }) => {
+      switch (status) {
+        case "Submitted":
+          return "#16A34A";
+        case "Rejected":
+          return "#FACC15";
+        case "Pending":
+          return "#94A3B8";
+        case "Failed":
+          return "#DC2626";
+        case "Executed":
+          return "#2563EB";
+        default:
+          return "gray";
+      }
+    }};
+  }
   img {
     width: 7px;
   }

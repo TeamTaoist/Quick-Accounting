@@ -120,6 +120,9 @@ const Address = styled.div<SidebarProps>`
   h5 {
     font-size: 16px;
     overflow: hidden;
+    &:hover {
+      color: var(--clr-gray-600);
+    }
   }
 `;
 const Disconnect = styled.div`

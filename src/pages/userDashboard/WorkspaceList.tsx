@@ -29,6 +29,7 @@ export default WorkspaceList;
 
 const WorkspaceListContainer = styled.div`
   padding: 30px;
+  width: 1136px;
 `;
 const Workspaces = styled.div`
   display: flex;

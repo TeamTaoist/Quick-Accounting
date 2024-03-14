@@ -7,13 +7,16 @@ import {
   TableRow,
   Paper,
   Button,
+  Tooltip,
 } from "@mui/material";
 import { formatNumber } from "../../utils/number";
 import { Status } from "../workspace/paymentRequest/RejectPaymentRequestTable";
 import statusIcon from "../../assets/workspace/status-icon.svg";
+import details from "../../assets/details.svg";
 import { getPaymentStatus, getPaymentUpdateTime } from "../../utils/payment";
 import { useDomainStore } from "../../store/useDomain";
 import { getShortAddress } from "../../utils";
+import styled from "@emotion/styled";
 
 interface UserPaymentTableProps {
   filterData: IPaymentRequest[];
@@ -25,6 +28,12 @@ const UserPaymentTable = ({
   handleUserPaymentDetails,
 }: UserPaymentTableProps) => {
   const { formatAddressToDomain } = useDomainStore();
+  const CustomTooltip = styled(Tooltip)(() => ({
+    "& .css-ja5taz-MuiTooltip-tooltip": {
+      backgroundColor: "red",
+      color: "white",
+    },
+  }));
   return (
     <TableContainer
       component={Paper}
@@ -44,42 +53,44 @@ const UserPaymentTable = ({
           <TableRow>
             <TableCell
               sx={{
-                background: "var(--bg-primary)",
+                background: "var(--clr-gray-200)",
+                width: "25%",
               }}
             >
-              Safe
+              Workspace
             </TableCell>
             <TableCell
               sx={{
-                background: "var(--bg-primary)",
+                background: "var(--clr-gray-200)",
               }}
             >
               Recipient
             </TableCell>
             <TableCell
               sx={{
-                background: "var(--bg-primary)",
+                background: "var(--clr-gray-200)",
+                width: "25%",
               }}
             >
               Amount
             </TableCell>
             <TableCell
               sx={{
-                background: "var(--bg-primary)",
+                background: "var(--clr-gray-200)",
               }}
             >
               Status
             </TableCell>
             <TableCell
               sx={{
-                background: "var(--bg-primary)",
+                background: "var(--clr-gray-200)",
               }}
             >
               Date
             </TableCell>
             <TableCell
               sx={{
-                background: "var(--bg-primary)",
+                background: "var(--clr-gray-200)",
               }}
             ></TableCell>
           </TableRow>
@@ -90,7 +101,7 @@ const UserPaymentTable = ({
               <TableCell>
                 <div>
                   <p>{payment.workspace_name}</p>
-                  <p>{getShortAddress(payment.vault_wallet)}</p>
+                  {/* <p>{getShortAddress(payment.vault_wallet)}</p> */}
                 </div>
               </TableCell>
               <TableCell>
@@ -108,24 +119,37 @@ const UserPaymentTable = ({
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
               </TableCell>
               <TableCell>
-                <Status>
-                  <img src={statusIcon} alt="" />
+                {/* <img src={statusIcon} alt="" /> */}
+                <Status status={getPaymentStatus(payment.status)}>
+                  <p></p>
                   {getPaymentStatus(payment.status)}
                 </Status>
               </TableCell>
               <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
               <TableCell>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderColor: "black",
-                    color: "black",
-                    textTransform: "lowercase",
+                <Tooltip
+                  title="View details"
+                  placement="top"
+                  componentsProps={{
+                    tooltip: {
+                      sx: {
+                        background: "var(--clr-white)",
+                        color: "#111",
+                        border: "1px solid var(--clr-gray-200)",
+                        padding: "8px 16px",
+                        fontSize: "12px",
+                      },
+                    },
                   }}
-                  onClick={() => handleUserPaymentDetails(payment)}
                 >
-                  view more
-                </Button>
+                  <img
+                    src={details}
+                    alt=""
+                    style={{ width: "16px" }}
+                    onClick={() => handleUserPaymentDetails(payment)}
+                  />
+                  {/* </Button> */}
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}

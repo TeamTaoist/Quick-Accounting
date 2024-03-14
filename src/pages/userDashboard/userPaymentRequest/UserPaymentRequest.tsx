@@ -79,8 +79,9 @@ const UserPaymentRequest = () => {
           <TextField
             id="search"
             type="search"
+            size="small"
             autoComplete="off"
-            placeholder="Search workspace name"
+            placeholder="Search workspace / recipient / token"
             value={searchTerm}
             onChange={handleChange}
             sx={{ width: 350 }}
@@ -115,12 +116,11 @@ const UserPaymentRequest = () => {
 export default UserPaymentRequest;
 
 const UserPaymentContainer = styled.div`
-  padding-inline: 30px;
-  margin-top: 47px;
+  padding: 30px;
   flex: 1;
 `;
 const PaymentLIst = styled.div`
-  margin-top: 60px;
+  margin-top: 20px;
 `;
 export const Details = styled.div`
   display: flex;
@@ -139,5 +139,5 @@ export const PaymentTable = styled.div`
 `;
 export const PaymentPagination = styled.div`
   /* display: flex; */
-  padding: 20px 30px;
+  padding: 20px 0px;
 `;
