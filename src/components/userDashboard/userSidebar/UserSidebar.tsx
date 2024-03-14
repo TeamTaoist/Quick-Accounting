@@ -1,4 +1,3 @@
-import "./userSidebar.scss";
 import addressCard from "../../../assets/dashboard/address-card.svg";
 import file from "../../../assets/dashboard/file.svg";
 import myPayment from "../../../assets/dashboard/my-payment.svg";
@@ -8,7 +7,7 @@ import { useAccount } from "wagmi";
 import { getShortAddress } from "../../../utils/index";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import { SidebarLinkList } from "../../workspace/workspaceSidebar/WorkspaceSidebar.style";
+// import { SidebarLinkList } from "../../workspace/workspaceSidebar/WorkspaceSidebar.style";
 import SidebarLink from "../../workspace/SidebarLink";
 import { useEffect, useState } from "react";
 import { useDomainStore } from "../../../store/useDomain";
@@ -35,61 +34,58 @@ const UserSidebar = () => {
     }
   }, [address, chainId]);
   return (
-    <>
-      <UserSidebarSection hideSidebar={hideSidebar}>
-        {/* user address */}
-        {/* <div className="user-address"> */}
-        <Address hideSidebar={hideSidebar}>
-          {/* <img src={addressCard} alt="" /> */}
-          {!hideSidebar && (
-            <h5>
-              {address &&
-                chainId &&
-                formatAddressToDomain(address, chainId, false)}
-            </h5>
-          )}
-
-          <img
-            onClick={handleSidebar}
-            className="arrow-icon"
-            src={arrow}
-            alt=""
-          />
-        </Address>
+    <UserSidebarSection hideSidebar={hideSidebar}>
+      {/* user address */}
+      {/* <div className="user-address"> */}
+      <Address hideSidebar={hideSidebar}>
+        {/* <img src={addressCard} alt="" /> */}
         {!hideSidebar && (
-          <Disconnect>
-            <button onClick={handleLogout}>{t("user.Disconnect")}</button>
-          </Disconnect>
+          <h5>
+            {address &&
+              chainId &&
+              formatAddressToDomain(address, chainId, false)}
+          </h5>
         )}
 
-        {/* </div> */}
-        {/* user payment request */}
-        <SidebarLinkList className="">
-          <SidebarLink
-            icon={file}
-            name="My payment requests"
-            to={`/user/payment-request`}
-            hideSidebar={hideSidebar}
-          />
-          <SidebarLink
-            icon={myPayment}
-            name="My payments"
-            to={`/user/my-payments`}
-            hideSidebar={hideSidebar}
-          />
-        </SidebarLinkList>
-      </UserSidebarSection>
-      {/* {children} */}
-    </>
+        <img
+          onClick={handleSidebar}
+          className="arrow-icon"
+          src={arrow}
+          alt=""
+        />
+      </Address>
+      {!hideSidebar && (
+        <Disconnect>
+          <button onClick={handleLogout}>{t("user.Disconnect")}</button>
+        </Disconnect>
+      )}
+
+      {/* </div> */}
+      {/* user payment request */}
+      <SidebarLinkList hideSidebar={hideSidebar}>
+        <SidebarLink
+          icon={file}
+          name="My payment requests"
+          to={`/user/payment-request`}
+          hideSidebar={hideSidebar}
+        />
+        <SidebarLink
+          icon={myPayment}
+          name="My payments"
+          to={`/user/my-payments`}
+          hideSidebar={hideSidebar}
+        />
+      </SidebarLinkList>
+    </UserSidebarSection>
   );
 };
 
 export default UserSidebar;
 
 const UserSidebarSection = styled.div<SidebarProps>`
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--clr-gray-300);
   /* width: 256px; */
-  width: ${({ hideSidebar }) => (hideSidebar ? "80px" : "256px")};
+  width: ${({ hideSidebar }) => (hideSidebar ? "88px" : "256px")};
   height: calc(100vh - 72px);
   position: relative;
   padding: 20px;
@@ -105,7 +101,7 @@ const Address = styled.div<SidebarProps>`
   /* justify-content: space-between; */
   align-items: center;
   gap: 9px;
-  padding: 20px 0;
+  padding: 8px 0;
   justify-content: ${({ hideSidebar }) =>
     hideSidebar ? "center" : "space-between"};
   img {
@@ -115,10 +111,12 @@ const Address = styled.div<SidebarProps>`
   }
   h5 {
     font-size: 16px;
-    // font-weight: 700px;
+    overflow: hidden;
   }
 `;
 const Disconnect = styled.div`
+  overflow: hidden;
+  margin: 10px 0;
   button {
     border: 1px solid var(--clr-gray-300);
     outline: none;
@@ -129,4 +127,7 @@ const Disconnect = styled.div`
     cursor: pointer;
     width: 100%;
   }
+`;
+const SidebarLinkList = styled.div<SidebarProps>`
+  margin-top: ${({ hideSidebar }) => (hideSidebar ? "38px" : "30px")};
 `;

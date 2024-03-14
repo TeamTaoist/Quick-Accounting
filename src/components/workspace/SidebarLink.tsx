@@ -29,19 +29,20 @@ const SidebarLinks = styled(NavLink)<SidebarProps>`
   margin-bottom: 10px;
   text-decoration: none;
   font-size: 14px;
-  color: #000;
+  font-weight: 500;
+  color: var(--clr-gray-700);
   cursor: pointer;
   display: flex;
-  gap: 13px;
+  gap: 12px;
   align-items: center;
   border-radius: 6px;
   img {
     width: 14px;
   }
   &:hover {
-    background-color: var(--bg-primary);
+    background-color: var(--clr-gray-100);
   }
   &.active {
-    background-color: #efefef;
+    background-color: var(--clr-gray-100);
   }
 `;

@@ -6,7 +6,7 @@ import {
   WorkspaceInfo,
 } from "./WorkspaceSidebar.style";
 import arrow from "../../../assets/workspace/arrow.svg";
-import add from "../../../assets/workspace/add.svg";
+import add from "../../../assets/workspace/plus-white.svg";
 import share from "../../../assets/workspace/share.svg";
 import { useEffect, useState } from "react";
 import SidebarLink from "../SidebarLink";

@@ -1,8 +1,8 @@
 import logo from "../../../assets/navbar/logo.svg";
-import plus from "../../../assets/dashboard/plus.svg";
+// import plus from "../../../assets/dashboard/plus.svg";
+import plus from "../../../assets/workspace/add.svg";
 import avatar from "../../../assets/dashboard/avatar.svg";
-import "./sidebar.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useEffect } from "react";
 import { useLoading } from "../../../store/useLoading";
@@ -16,6 +16,7 @@ import { getChainLogo } from "../../../utils/chain";
 // const Sidebar = ({ children }: { children: React.ReactNode }) => {
 const Sidebar = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const { address } = useAccount();
   const { user } = useAuthStore();
   const { getUserWorkspace, userWorkspaces, getWorkspaceDetails, workspace } =
@@ -51,11 +52,16 @@ const Sidebar = () => {
           {/* <Workspace> */}
           <WorkspaceList>
             {/* user workspaces */}
-            {/* <div> */}
             {userWorkspaces.data.rows.map((workspace) => (
               <Workspace
                 key={workspace.ID}
                 onClick={() => handleFetchWorkspaceDetails(workspace.ID)}
+                // isActive={id === workspace.ID}
+                style={
+                  Number(id) === workspace.ID
+                    ? { border: "2px solid var(--clr-primary-900)" }
+                    : undefined
+                }
               >
                 {workspace.avatar === "" ? (
                   <p>{workspace.name.slice(0, 1)}</p>
@@ -65,7 +71,6 @@ const Sidebar = () => {
                 <ChainLogo src={getChainLogo(workspace.chain_id)} alt="" />
               </Workspace>
             ))}
-            {/* </div> */}
             <Link to="/create-workspace">
               <AddIcon>
                 <img src={plus} alt="" />
@@ -81,7 +86,6 @@ const Sidebar = () => {
           {/* <Version /> */}
         </UserBox>
       </SidebarSection>
-      {/* <div className="sidebar-details">{children}</div> */}
     </SidebarContainer>
   );
 };
@@ -103,20 +107,30 @@ const SidebarSection = styled.div`
 `;
 const LeftSide = styled.div`
   display: flex;
-  gap: 150px;
 `;
 const Logo = styled.div`
+  margin-right: 240px;
   img {
     width: 40px;
   }
 `;
+const WorkspaceList = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  /* height: 100%; */
+  /* overflow-y: auto; */
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+`;
+
 const Workspace = styled.div`
-  /* margin-top: 20px; */
   width: 40px;
   height: 40px;
-  border: 1px solid var(--border);
   border-radius: 50%;
-  background: var(--bg-primary);
+  background: var(--clr-gray-200);
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -141,28 +155,13 @@ const AddIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid var(--border);
+  border: 1px solid var(--clr-gray-200);
   border-radius: 50%;
-  background: var(--bg-primary);
+  color: #111;
   cursor: pointer;
   img {
     width: 16px;
   }
-`;
-
-const WorkspaceList = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  /* height: 100%; */
-  /* overflow-y: auto; */
-  &::-webkit-scrollbar {
-    display: none;
-    width: 0;
-  }
-  /* div {
-    display: flex;
-  } */
 `;
 
 const UserBox = styled.div`
