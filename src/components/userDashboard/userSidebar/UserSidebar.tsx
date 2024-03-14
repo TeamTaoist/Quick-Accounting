@@ -1,5 +1,6 @@
 import addressCard from "../../../assets/dashboard/address-card.svg";
 import file from "../../../assets/dashboard/file.svg";
+import workspaceIcon from "../../../assets/dashboard/workspace-icon.svg";
 import myPayment from "../../../assets/dashboard/my-payment.svg";
 import arrow from "../../../assets/workspace/arrow.svg";
 import { useTranslation } from "react-i18next";
@@ -13,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useDomainStore } from "../../../store/useDomain";
 import styled from "@emotion/styled";
 import { SidebarProps } from "../../workspace/workspaceSidebar/WorkspaceSidebar";
+import Version from "../../version";
 
 const UserSidebar = () => {
   const { t } = useTranslation();
@@ -36,9 +38,7 @@ const UserSidebar = () => {
   return (
     <UserSidebarSection hideSidebar={hideSidebar}>
       {/* user address */}
-      {/* <div className="user-address"> */}
       <Address hideSidebar={hideSidebar}>
-        {/* <img src={addressCard} alt="" /> */}
         {!hideSidebar && (
           <h5>
             {address &&
@@ -60,9 +60,14 @@ const UserSidebar = () => {
         </Disconnect>
       )}
 
-      {/* </div> */}
       {/* user payment request */}
       <SidebarLinkList hideSidebar={hideSidebar}>
+        <SidebarLink
+          icon={workspaceIcon}
+          name="Workspace"
+          to={`/user/workspaces`}
+          hideSidebar={hideSidebar}
+        />
         <SidebarLink
           icon={file}
           name="My payment requests"
@@ -76,6 +81,9 @@ const UserSidebar = () => {
           hideSidebar={hideSidebar}
         />
       </SidebarLinkList>
+      <BuildVersion>
+        <Version />
+      </BuildVersion>
     </UserSidebarSection>
   );
 };
@@ -130,4 +138,9 @@ const Disconnect = styled.div`
 `;
 const SidebarLinkList = styled.div<SidebarProps>`
   margin-top: ${({ hideSidebar }) => (hideSidebar ? "38px" : "30px")};
+`;
+export const BuildVersion = styled.div`
+  position: fixed;
+  bottom: 20px;
+  left: 10px;
 `;

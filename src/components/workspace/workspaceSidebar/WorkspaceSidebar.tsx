@@ -36,6 +36,8 @@ import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
 import CopyBox from "../../copy";
 import CopyIcon from "../../../assets/copy.svg";
 import styled from "@emotion/styled";
+import { BuildVersion } from "../../userDashboard/userSidebar/UserSidebar";
+import Version from "../../version";
 
 export interface SidebarProps {
   hideSidebar: boolean;
@@ -206,6 +208,9 @@ const WorkspaceSidebar = () => {
           />
         </SidebarLinkList>
       </SidebarContainer>
+      <BuildVersion>
+        <Version />
+      </BuildVersion>
       {newPaymentsVisible && (
         <NewPaymentRequest onClose={() => setNewPaymentsVisible(false)} />
       )}

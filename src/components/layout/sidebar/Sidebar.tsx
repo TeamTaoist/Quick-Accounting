@@ -137,6 +137,7 @@ const Workspace = styled.div`
   align-items: center;
   position: relative;
   p {
+    font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
   }
@@ -145,8 +146,9 @@ const ChainLogo = styled.img`
   width: 16px;
   height: 16px;
   position: absolute;
-  right: 0;
-  bottom: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(40%, 10%);
   border-radius: 50%;
 `;
 const AddIcon = styled.div`

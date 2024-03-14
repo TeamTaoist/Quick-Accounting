@@ -72,9 +72,7 @@ const UserPaymentRequest = () => {
       />
       {userPaymentRequest.rows.length === 0 ? (
         <Details>
-          <h2>
-            You don't have any payment <br /> request
-          </h2>
+          <h2>You don't have any payment requests.</h2>
         </Details>
       ) : (
         <PaymentTable>
@@ -129,10 +127,10 @@ export const Details = styled.div`
   justify-content: center;
   align-items: center;
   min-width: 500px;
-  height: 90vh;
+  height: 80vh;
   h2 {
-    font-size: 30px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
     text-align: center;
   }
 `;
