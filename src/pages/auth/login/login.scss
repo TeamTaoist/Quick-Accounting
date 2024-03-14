@@ -12,8 +12,8 @@
   z-index: 1;
   background: var(--clr-modal-mask);
   .popup {
-    width: 480px;
-    height: 600px;
+    width: 400px;
+    height: 480px;
     background: var(--clr-white);
     position: relative;
     border-radius: 6px;
@@ -24,13 +24,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-inline: 30px;
+      padding-inline: 40px;
       .close-btn {
-        width: 12px;
+        width: 24px;
         cursor: pointer;
       }
       h3 {
         font-size: 24px;
+        font-weight: 500;
       }
     }
   }
@@ -39,8 +40,8 @@
     flex-direction: column;
     justify-content: space-between;
     height: calc(100% - 96px);
-    padding: 50px 0;
-    padding-inline: 30px;
+    padding: 40px 0;
+    padding-inline: 40px;
     .meta-mask {
       .btn {
         display: flex;
@@ -55,12 +56,12 @@
         border-radius: 10px;
         cursor: pointer;
         img {
-          width: 34px;
+          width: 32px;
           margin-left: 18px;
         }
         span {
-          font-size: 20px;
-          font-weight: 400;
+          font-size: 16px;
+          font-weight: 500;
         }
       }
     }
@@ -71,9 +72,11 @@
       gap: 7px;
       p {
         font-size: 14px;
+        color: #000000;
       }
       img {
         width: 20px;
+        margin-top: 2px;
       }
     }
   }
@@ -89,18 +92,17 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 600px;
+    max-width: 610px;
     margin-inline: auto;
 
     img {
-      width: 140px;
-      height: 140px;
+      width: 118px;
       margin-right: 40px;
     }
 
     &-title {
       font-size: 24px;
-      font-weight: 500;
+      font-weight: 600;
       margin-top: 35px;
       color: var(--clr-primary-900);
     }
@@ -110,13 +112,15 @@
       font-weight: 400;
       margin: 8px 5px;
       text-align: center;
+      line-height: 20px;
     }
 
     .connect-btn {
       background: var(--clr-primary-900);
       font-size: 14px;
       font-weight: 400;
-      padding: 16px 0;
+      padding: 12px 0;
+      // height: 40px;
       width: 100%;
       border-radius: 7px;
       margin-top: 30px;
