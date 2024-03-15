@@ -1,5 +1,4 @@
 import Header from "../../components/layout/header/Header";
-// import "./workSpaceForm.scss";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -13,6 +12,7 @@ import {
   WorkspaceForm,
   ChainMenuItem,
   SelectBox,
+  FormHeader,
 } from "./WorkSpaceForm.style";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -26,6 +26,7 @@ import { useWorkspace } from "../../store/useWorkspace";
 import { useLoading } from "../../store/useLoading";
 import Loading from "../../utils/Loading";
 import { useAccount } from "wagmi";
+import cancelBtn from "../../assets/auth/x.svg";
 
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
@@ -70,64 +71,81 @@ const WorkSpaceForm = () => {
   return (
     <>
       {isLoading && <Loading />}
-      <Header>
-        <WorkspaceContainer>
-          <WorkspaceForm>
-            <h3>{t("workspaceForm.FormTitle")}</h3>
+      <WorkspaceContainer>
+        <WorkspaceForm>
+          <FormHeader>
+            <div>
+              <h3>{t("workspaceForm.FormTitle")}</h3>
+              <img src={cancelBtn} alt="" onClick={() => navigate(-1)} />
+            </div>
             <p>{t("workspaceForm.FormDescription")}</p>
-
-            <Safe className="safe">
-              <InputLabel
-                htmlFor="Workspace name"
-                sx={{ pb: 1, color: "#111", fontSize: "18px" }}
-              >
-                {t("workspaceForm.WorkspaceName")}
-              </InputLabel>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                placeholder="Eenter your workspace name"
+          </FormHeader>
+          <Safe className="safe">
+            <InputLabel
+              htmlFor="Workspace name"
+              sx={{
+                pb: 1,
+                fontSize: "14px",
+                fontWeight: "600",
+                color: "var(--clr-primary-900)",
+              }}
+            >
+              {t("workspaceForm.WorkspaceName")}
+            </InputLabel>
+            <TextField
+              id="outlined-basic"
+              variant="outlined"
+              placeholder="Enter your workspace name"
+              size="small"
+              sx={{ minWidth: "100%" }}
+              value={workspaceName}
+              onChange={(e) => setWorkspaceName(e.target.value)}
+            />
+            <CreateSafe>
+              <p>{t("workspaceForm.AddASafe")}</p>
+              <a href="https://safe.global/" target="_blank" rel="noreferrer">
+                {t("workspaceForm.CreateASafe")} &nbsp;&gt;
+              </a>
+            </CreateSafe>
+            {/* select */}
+            <SelectBox>
+              <Select
+                value={selectChainId}
+                onChange={onSelectChain}
                 size="small"
-                sx={{ minWidth: "100%" }}
-                value={workspaceName}
-                onChange={(e) => setWorkspaceName(e.target.value)}
-              />
-              <CreateSafe>
-                <p>{t("workspaceForm.AddASafe")}</p>
-                <a href="https://safe.global/" target="_blank" rel="noreferrer">
-                  {t("workspaceForm.CreateASafe")} &gt;&gt;
-                </a>
-              </CreateSafe>
-              {/* select */}
-              <SelectBox>
-                <Select value={selectChainId} onChange={onSelectChain}>
-                  {CHAINS.map((item) => (
-                    <MenuItem value={item.chainId} key={item.chainId}>
-                      <ChainMenuItem>
-                        <img src={item.logoPath} alt="" />
-                        {item.chainName}
-                      </ChainMenuItem>
-                    </MenuItem>
-                  ))}
-                </Select>
-                <Select fullWidth value={safe} onChange={handleChange}>
-                  {safeList.map((item) => (
-                    <MenuItem value={item} key={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </SelectBox>
-              <Button
-                onClick={handleCreateWorkspace}
-                disabled={!workspaceName || !safe || !workspaceName.trim()}
               >
-                {t("workspaceForm.FormSubmitBtn")}
-              </Button>
-            </Safe>
-          </WorkspaceForm>
-        </WorkspaceContainer>
-      </Header>
+                {CHAINS.map((item) => (
+                  <MenuItem value={item.chainId} key={item.chainId}>
+                    <ChainMenuItem>
+                      <img src={item.logoPath} alt="" />
+                      {item.chainName}
+                    </ChainMenuItem>
+                  </MenuItem>
+                ))}
+              </Select>
+              <Select
+                fullWidth
+                size="small"
+                value={safe}
+                onChange={handleChange}
+                sx={{ overflow: "hidden" }}
+              >
+                {safeList.map((item) => (
+                  <MenuItem value={item} key={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </Select>
+            </SelectBox>
+            <Button
+              onClick={handleCreateWorkspace}
+              disabled={!workspaceName || !safe || !workspaceName.trim()}
+            >
+              {t("workspaceForm.FormSubmitBtn")}
+            </Button>
+          </Safe>
+        </WorkspaceForm>
+      </WorkspaceContainer>
     </>
   );
 };
