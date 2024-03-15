@@ -48,7 +48,7 @@ const UserPaymentRequest = () => {
 
   const pageCount = Math.ceil(totalItem / pageSize);
 
-  const handlePageClick = (event: any) => {
+  const handlePageClick = (event: { selected: number }) => {
     setPageNumbers(event.selected);
   };
   // get user payment request
@@ -100,12 +100,11 @@ const UserPaymentRequest = () => {
             />
           </PaymentLIst>
           {totalItem >= 10 && (
-            <PaymentPagination>
-              <Pagination
-                handlePageClick={handlePageClick}
-                pageCount={pageCount}
-              />
-            </PaymentPagination>
+            <Pagination
+              handlePageClick={handlePageClick}
+              pageCount={pageCount}
+              pageNumbers={pageNumbers}
+            />
           )}
         </PaymentTable>
       )}
@@ -138,6 +137,8 @@ export const PaymentTable = styled.div`
   flex: 1;
 `;
 export const PaymentPagination = styled.div`
-  /* display: flex; */
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 20px 0px;
 `;
