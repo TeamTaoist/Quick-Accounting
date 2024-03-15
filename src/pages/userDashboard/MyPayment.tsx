@@ -62,17 +62,16 @@ const MyPayment = () => {
       />
       {myPayment.rows.length === 0 ? (
         <Details>
-          <h2>
-            You don't have any payment <br /> request
-          </h2>
+          <h2>You don't have any payment request</h2>
         </Details>
       ) : (
         <PaymentTable>
           <TextField
             id="search"
             type="search"
+            size="small"
             autoComplete="off"
-            placeholder="Search workspace name"
+            placeholder="Search workspace / recipient / token"
             value={searchTerm}
             onChange={handleChange}
             sx={{ width: 350 }}
@@ -95,6 +94,7 @@ const MyPayment = () => {
               <Pagination
                 handlePageClick={handlePageClick}
                 pageCount={pageCount}
+                pageNumbers={pageNumbers}
               />
             </PaymentPagination>
           )}
@@ -107,22 +107,21 @@ const MyPayment = () => {
 export default MyPayment;
 
 const UserPaymentContainer = styled.div`
-  padding-inline: 30px;
-  margin-top: 47px;
+  padding: 30px;
   flex: 1;
 `;
 const PaymentLIst = styled.div`
-  margin-top: 60px;
+  margin-top: 20px;
 `;
 export const Details = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   min-width: 500px;
-  height: 90vh;
+  height: 70vh;
   h2 {
-    font-size: 30px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
     text-align: center;
   }
 `;

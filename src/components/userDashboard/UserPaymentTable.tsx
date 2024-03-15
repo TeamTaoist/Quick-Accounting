@@ -6,17 +6,13 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
   Tooltip,
 } from "@mui/material";
 import { formatNumber } from "../../utils/number";
 import { Status } from "../workspace/paymentRequest/RejectPaymentRequestTable";
-import statusIcon from "../../assets/workspace/status-icon.svg";
 import details from "../../assets/details.svg";
 import { getPaymentStatus, getPaymentUpdateTime } from "../../utils/payment";
 import { useDomainStore } from "../../store/useDomain";
-import { getShortAddress } from "../../utils";
-import styled from "@emotion/styled";
 
 interface UserPaymentTableProps {
   filterData: IPaymentRequest[];
@@ -28,12 +24,6 @@ const UserPaymentTable = ({
   handleUserPaymentDetails,
 }: UserPaymentTableProps) => {
   const { formatAddressToDomain } = useDomainStore();
-  const CustomTooltip = styled(Tooltip)(() => ({
-    "& .css-ja5taz-MuiTooltip-tooltip": {
-      backgroundColor: "red",
-      color: "white",
-    },
-  }));
   return (
     <TableContainer
       component={Paper}
@@ -55,6 +45,8 @@ const UserPaymentTable = ({
               sx={{
                 background: "var(--clr-gray-200)",
                 width: "25%",
+                fontSize: "14px",
+                fontWeight: "600",
               }}
             >
               Workspace
@@ -62,6 +54,8 @@ const UserPaymentTable = ({
             <TableCell
               sx={{
                 background: "var(--clr-gray-200)",
+                fontSize: "14px",
+                fontWeight: "600",
               }}
             >
               Recipient
@@ -70,6 +64,8 @@ const UserPaymentTable = ({
               sx={{
                 background: "var(--clr-gray-200)",
                 width: "25%",
+                fontSize: "14px",
+                fontWeight: "600",
               }}
             >
               Amount
@@ -77,6 +73,8 @@ const UserPaymentTable = ({
             <TableCell
               sx={{
                 background: "var(--clr-gray-200)",
+                fontSize: "14px",
+                fontWeight: "600",
               }}
             >
               Status
@@ -84,6 +82,8 @@ const UserPaymentTable = ({
             <TableCell
               sx={{
                 background: "var(--clr-gray-200)",
+                fontSize: "14px",
+                fontWeight: "600",
               }}
             >
               Date
@@ -91,6 +91,8 @@ const UserPaymentTable = ({
             <TableCell
               sx={{
                 background: "var(--clr-gray-200)",
+                fontSize: "14px",
+                fontWeight: "600",
               }}
             ></TableCell>
           </TableRow>
@@ -148,7 +150,6 @@ const UserPaymentTable = ({
                     style={{ width: "16px" }}
                     onClick={() => handleUserPaymentDetails(payment)}
                   />
-                  {/* </Button> */}
                 </Tooltip>
               </TableCell>
             </TableRow>
