@@ -13,6 +13,7 @@ import {
   ChainMenuItem,
   SelectBox,
   FormHeader,
+  Item,
 } from "./WorkSpaceForm.style";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -27,6 +28,7 @@ import { useLoading } from "../../store/useLoading";
 import Loading from "../../utils/Loading";
 import { useAccount } from "wagmi";
 import cancelBtn from "../../assets/auth/x.svg";
+import CheckIcon from "@mui/icons-material/Check";
 
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
@@ -66,7 +68,7 @@ const WorkSpaceForm = () => {
   const onSelectChain = (e: any) => {
     setSelectChanId(e.target.value);
   };
-  console.log(formData);
+  console.log(safe);
 
   return (
     <>
@@ -113,6 +115,20 @@ const WorkSpaceForm = () => {
                 value={selectChainId}
                 onChange={onSelectChain}
                 size="small"
+                MenuProps={{
+                  sx: {
+                    "& .MuiMenuItem-root": {
+                      marginInline: "10px",
+                      borderRadius: "6px",
+                      "&:hover": {
+                        bgcolor: "var(--clr-gray-100)",
+                      },
+                      "&.Mui-selected": {
+                        bgcolor: "var(--clr-gray-100)",
+                      },
+                    },
+                  },
+                }}
               >
                 {CHAINS.map((item) => (
                   <MenuItem value={item.chainId} key={item.chainId}>
@@ -129,10 +145,48 @@ const WorkSpaceForm = () => {
                 value={safe}
                 onChange={handleChange}
                 sx={{ overflow: "hidden" }}
+                renderValue={(selectedValue) => (
+                  <div style={{ overflow: "hidden" }}>{selectedValue}</div>
+                )}
+                MenuProps={{
+                  sx: {
+                    "& .MuiMenuItem-root": {
+                      marginInline: "10px",
+                      borderRadius: "6px",
+                      "&:hover": {
+                        bgcolor: "var(--clr-gray-100)",
+                      },
+                      "&.Mui-selected": {
+                        bgcolor: "var(--clr-gray-100)",
+                      },
+                    },
+                  },
+                }}
               >
                 {safeList.map((item) => (
-                  <MenuItem value={item} key={item}>
-                    {item}
+                  <MenuItem
+                    value={item}
+                    key={item}
+                    sx={{ paddingInline: "5px" }}
+                  >
+                    <Item>
+                      <div
+                        style={{
+                          width: "14px",
+                          marginRight: "10px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {safe === item && (
+                          <CheckIcon
+                            style={{ color: "#334155", width: "16px" }}
+                          />
+                        )}
+                      </div>
+
+                      {item}
+                    </Item>
                   </MenuItem>
                 ))}
               </Select>

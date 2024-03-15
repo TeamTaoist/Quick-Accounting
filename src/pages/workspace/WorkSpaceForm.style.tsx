@@ -38,12 +38,13 @@ export const FormHeader = styled.div`
 `;
 
 export const Safe = styled.div`
-  padding: 40px;
+  padding: 36px 40px;
 `;
 export const CreateSafe = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 40px 0 12px 0;
+  align-items: center;
+  padding: 30px 0 12px 0;
   p {
     font-size: 14px;
     font-weight: 600;
@@ -87,4 +88,8 @@ export const ChainMenuItem = styled.div`
 export const SelectBox = styled.div`
   display: flex;
   gap: 12px;
+`;
+export const Item = styled.div`
+  display: flex;
+  align-items: center;
 `;
