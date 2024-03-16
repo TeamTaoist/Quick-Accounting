@@ -4,9 +4,8 @@ import {
   CreateBtn,
   CreateOptionButton,
 } from "../category/category.style";
-import add from "../../../assets/workspace/add.svg";
+import add from "../../../assets/workspace/plus-white.svg";
 import archive from "../../../assets/workspace/archive.svg";
-import searchIcon from "../../../assets/workspace/search-icon.svg";
 import approve from "../../../assets/workspace/select.svg";
 import download from "../../../assets/workspace/download.svg";
 import reject from "../../../assets/workspace/reject.svg";
@@ -15,7 +14,6 @@ import filterIcon from "../../../assets/workspace/filtering.svg";
 import {
   Checkbox,
   FormControl,
-  InputAdornment,
   MenuItem,
   Select,
   Table,
@@ -24,9 +22,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   ActionBtn,
   Btn,
@@ -48,25 +45,23 @@ import SignPaymentRequest from "./SignPaymentRequest";
 import usePaymentsStore from "../../../store/usePayments";
 import PaymentRequestGroupDetails from "../../../components/workspace/paymentRequest/PaymentRequestGroupDetails";
 import NewPaymentRequest from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
-import ReactPaginate from "react-paginate";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import PaymentRequestTableList from "../../../components/workspace/paymentRequest/PaymentRequestTableList";
 import Pagination from "../../../components/Pagination";
 import RejectPaymentRequestTable from "../../../components/workspace/paymentRequest/RejectPaymentRequestTable";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useDomainStore } from "../../../store/useDomain";
+import SearchInput from "../../../components/workspace/SearchInput";
+import NoPaymentFoundMessage from "../../../components/workspace/paymentRequest/NoPaymentFoundMessage";
 
 const PaymentRequest = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
   const { t } = useTranslation();
 
   const {
     getPaymentRequestList,
     paymentRequestList,
-    getPaymentRequestDetails,
     rejectPaymentRequest,
-    getPaymentRequestGroupDetails,
     exportPaymentList,
     setCurrentPaymentRequestDetail,
     filterData,
@@ -257,23 +252,10 @@ const PaymentRequest = () => {
   return (
     <PaymentRequestContainer>
       {paymentRequestList.length === 0 && paymentRequest ? (
-        <CategoryTitle>
-          <h3>No payment request yet.</h3>
-          <p style={{ width: "509px", textAlign: "center" }}>
-            Payments requests are requested by share link or drafted directly by
-            multi-signer will show up here.
-          </p>
-          <CreateOptionButton>
-            <CreateBtn onClick={() => setNewPaymentsVisible(true)}>
-              <img src={add} alt="" />
-              <span>Create request</span>
-            </CreateBtn>
-            <CreateBtn onClick={handleRejectedPayments}>
-              <img src={archive} alt="" />
-              <span>View rejection</span>
-            </CreateBtn>
-          </CreateOptionButton>
-        </CategoryTitle>
+        <NoPaymentFoundMessage
+          setNewPaymentsVisible={setNewPaymentsVisible}
+          handleRejectedPayments={handleRejectedPayments}
+        />
       ) : (
         <>
           {/* payment request details modal */}
@@ -301,27 +283,12 @@ const PaymentRequest = () => {
           />
           <Header>
             <Filter>
-              <form onSubmit={handleSearchPayment}>
-                <TextField
-                  id="search"
-                  type="search"
-                  autoComplete="off"
-                  placeholder={t("paymentRequest.Search")}
-                  value={searchTerm}
-                  onChange={handleChange}
-                  sx={{
-                    width: 350,
-                  }}
-                  size="small"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <img src={searchIcon} alt="" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </form>
+              <SearchInput
+                handleSearchPayment={handleSearchPayment}
+                placeholder="Search token"
+                searchTerm={searchTerm}
+                handleChange={handleChange}
+              />
               <FormControl sx={{ marginLeft: "25px", minWidth: 100 }}>
                 <Select
                   value={selectedValue}

@@ -11,13 +11,15 @@ export const CategoryTitle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  line-height: 32px;
   h3 {
     font-size: 24px;
     font-weight: 600;
   }
   p {
     font-size: 14px;
+    margin-top: 16px;
+    margin-bottom: 30px;
+    line-height: 20px;
   }
 `;
 export const CreateOptionButton = styled.div`
@@ -26,16 +28,16 @@ export const CreateOptionButton = styled.div`
   gap: 20px;
   margin-bottom: 24px;
 `;
-export const CreateBtn = styled.button`
-  background: transparent;
+export const CreateBtn = styled.button<any>`
+  background: ${(props) => props.bg || "transparent"};
   outline: none;
   border: 1px solid var(--clr-gray-300);
-  padding: 8px 18px;
+  padding: 12px 18px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  color: var(--text-primary);
+  color: ${(props) => props.clr || "#0f172a"};
   display: flex;
   justify-content: center;
   align-items: center;
