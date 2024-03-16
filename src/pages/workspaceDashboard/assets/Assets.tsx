@@ -4,12 +4,14 @@ import {
   AssetSection,
   AssetTable,
   AssetValue,
+  EmptyAsset,
   RowCell,
   RowLink,
 } from "./assets.style";
 import { InputAdornment, Switch, SwitchProps, TextField } from "@mui/material";
 import searchIcon from "../../../assets/workspace/search-icon.svg";
 import linkIcon from "../../../assets/workspace/link-icon.svg";
+import rightArrow from "../../../assets/workspace/arrow-right.svg";
 import {
   Table,
   TableBody,
@@ -24,6 +26,7 @@ import { formatBalance } from "../../../utils/number";
 import { useWorkspace } from "../../../store/useWorkspace";
 import CHAINS from "../../../utils/chain";
 import styled from "@emotion/styled";
+import Pagination from "../../../components/Pagination";
 
 type AssetType = {
   name: string;
@@ -95,26 +98,28 @@ const Assets = () => {
 
   //switch style
   const AssetsSwitch = styled(Switch)(() => ({
-    padding: 8,
+    padding: 6,
     "& .MuiSwitch-track": {
-      borderRadius: 22 / 2,
+      // borderRadius: 22 / 2,
+      borderRadius: "20px",
     },
     "& .MuiSwitch-thumb": {
       boxShadow: "none",
-      width: 16,
-      height: 16,
-      margin: 2,
+      width: 20,
+      height: 20,
+      // margin: 2,
     },
     "& .css-1yjjitx-MuiSwitch-track": {
-      background: "white",
-      border: "3px solid gray",
+      background: "var(--clr-gray-300)",
+      opacity: 1,
     },
     "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track":
       {
-        background: "#757575",
+        background: "#111",
+        opacity: 1,
       },
     "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase": {
-      color: "gray",
+      color: "white",
     },
     "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked": {
       color: "white",
@@ -134,131 +139,182 @@ const Assets = () => {
       console.log("hide");
     }
   };
-
   console.log("assetsList", assetsList);
+  // pagination
+  const [pageNumbers, setPageNumbers] = useState(0);
+  const pageSize = 10;
+  const totalItem = assetsList.length;
+
+  const pageCount = Math.ceil(totalItem / pageSize);
+
+  const handlePageClick = (event: any) => {
+    setPageNumbers(event.selected);
+  };
+  console.log("page", pageCount);
 
   return (
     <AssetSection>
-      <AssetHeader>
-        <TextField
-          id="search"
-          type="search"
-          autoComplete="off"
-          placeholder={t("assets.SearchPlaceholder")}
-          value={searchTerm}
-          onChange={handleChange}
-          sx={{ width: 350 }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <img src={searchIcon} alt="" />
-              </InputAdornment>
-            ),
-          }}
+      {!assetsList.length ? (
+        <EmptyAsset>
+          <h3>There are no assets in this wallet address yet.</h3>
+          <p>All assets in that wallet address will be displayed here.</p>
+          <button>
+            <h6>Check in Safe</h6>
+            <span>
+              <img src={rightArrow} alt="" />
+            </span>
+          </button>
+        </EmptyAsset>
+      ) : (
+        <>
+          <AssetHeader>
+            <TextField
+              id="search"
+              type="search"
+              size="small"
+              autoComplete="off"
+              placeholder={t("assets.SearchPlaceholder")}
+              value={searchTerm}
+              onChange={handleChange}
+              sx={{ width: 350 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <img src={searchIcon} alt="" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </AssetHeader>
+          <AssetValue>Value: ${totalAssetsValue}</AssetValue>
+          <AssetTable>
+            <TableContainer
+              sx={{
+                maxHeight: 500,
+                minWidth: 700,
+                border: "1px solid var(--clr-gray-200)",
+                borderRadius: "6px",
+              }}
+            >
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow sx={{ border: "1xp solid red" }}>
+                    <TableCell
+                      sx={{
+                        background: "var(--clr-gray-200)",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        width: "25%",
+                      }}
+                    >
+                      Assets
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        background: "var(--clr-gray-200)",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        width: "25%",
+                      }}
+                    >
+                      Current price
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        background: "var(--clr-gray-200)",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        width: "25%",
+                      }}
+                    >
+                      Balance
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        background: "var(--clr-gray-200)",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        width: "17%",
+                      }}
+                    >
+                      Hide the asset
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        background: "var(--clr-gray-200)",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        width: "8%",
+                      }}
+                    ></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filterList.map((data, i) => (
+                    <TableRow key={i} sx={{}}>
+                      <TableCell
+                        sx={{
+                          textAlign: "left",
+                        }}
+                      >
+                        {/* {recipientFormate(row.assetsName)} */}
+                        <RowCell>
+                          <h6>{data.symbol}</h6>
+                          <p>{data.name}</p>
+                        </RowCell>
+                      </TableCell>
+                      <TableCell>
+                        <RowCell>
+                          <h6>$ {data.price}</h6>
+                          <p style={{ color: "#2F82CF" }}>
+                            (+{data.priceIncrease}%)
+                          </p>
+                        </RowCell>
+                      </TableCell>
+                      <TableCell>
+                        <RowCell>
+                          <h6>
+                            {data.balanceDisplay} {data.symbol}
+                          </h6>
+                          <p>${data.balanceUSD}</p>
+                        </RowCell>
+                      </TableCell>
+                      <TableCell>
+                        <RowCell>
+                          <AssetsSwitch
+                            checked={data.hidden}
+                            onChange={(e) => handleAsset(e, data)}
+                          />
+                        </RowCell>
+                      </TableCell>
+                      <TableCell sx={{ paddingRight: "30px" }}>
+                        {data.link && (
+                          <RowLink>
+                            <a
+                              href={data.link}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <img src={linkIcon} alt="" />
+                            </a>
+                          </RowLink>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </AssetTable>
+        </>
+      )}
+      {totalItem >= 10 && (
+        <Pagination
+          handlePageClick={handlePageClick}
+          pageCount={pageCount}
+          pageNumbers={pageNumbers}
         />
-      </AssetHeader>
-      <AssetValue>Value: ${totalAssetsValue}</AssetValue>
-      <AssetTable>
-        <TableContainer
-          component={Paper}
-          sx={{ maxHeight: 500, minWidth: 700 }}
-        >
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  sx={{
-                    // textAlign: "center",
-                    background: "var(--bg-primary)",
-                  }}
-                >
-                  Assets
-                </TableCell>
-                <TableCell
-                  sx={{
-                    // textAlign: "center",
-                    background: "var(--bg-primary)",
-                  }}
-                >
-                  Current price
-                </TableCell>
-                <TableCell
-                  sx={{
-                    // textAlign: "center",
-                    background: "var(--bg-primary)",
-                  }}
-                >
-                  Balance
-                </TableCell>
-                <TableCell
-                  sx={{
-                    // textAlign: "center",
-                    background: "var(--bg-primary)",
-                  }}
-                >
-                  Hide the asset
-                </TableCell>
-                <TableCell
-                  sx={{
-                    // textAlign: "center",
-                    background: "var(--bg-primary)",
-                  }}
-                ></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filterList.map((data, i) => (
-                <TableRow key={i}>
-                  <TableCell
-                    sx={{
-                      textAlign: "left",
-                    }}
-                  >
-                    {/* {recipientFormate(row.assetsName)} */}
-                    <RowCell>
-                      <h6>{data.symbol}</h6>
-                      <p>{data.name}</p>
-                    </RowCell>
-                  </TableCell>
-                  <TableCell>
-                    <RowCell>
-                      <h6>$ {data.price}</h6>
-                      <p style={{ color: "#2F82CF" }}>
-                        (+{data.priceIncrease}%)
-                      </p>
-                    </RowCell>
-                  </TableCell>
-                  <TableCell>
-                    <RowCell>
-                      <h6>
-                        {data.balanceDisplay} {data.symbol}
-                      </h6>
-                      <p>${data.balanceUSD}</p>
-                    </RowCell>
-                  </TableCell>
-                  <TableCell>
-                    <RowCell>
-                      <AssetsSwitch
-                        checked={data.hidden}
-                        onChange={(e) => handleAsset(e, data)}
-                      />
-                    </RowCell>
-                  </TableCell>
-                  <TableCell sx={{ paddingRight: "30px" }}>
-                    {data.link && (
-                      <RowLink>
-                        <a href={data.link} target="_blank" rel="noreferrer">
-                          <img src={linkIcon} alt="" />
-                        </a>
-                      </RowLink>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </AssetTable>
+      )}
     </AssetSection>
   );
 };
