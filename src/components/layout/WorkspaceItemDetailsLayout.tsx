@@ -74,23 +74,32 @@ export const Request = styled.div`
   background: #fff;
 `;
 export const RequestHeader = styled.div`
-  max-height: 110px;
-  min-height: 90px;
-  background: var(--bg-secondary);
-  padding: 10px 26px;
+  height: 120px;
+  /* min-height: 90px; */
+  background: var(--clr-gray-100);
+  /* padding: 30px 40px; */
   position: relative;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+  padding-inline: 40px;
   img {
     width: 20px;
     cursor: pointer;
     position: absolute;
-    top: 24px;
+    top: 30px;
     right: 40px;
   }
 `;
 const HeaderDescription = styled.div`
   h1 {
     font-size: 24px;
+    font-weight: 600;
+  }
+  P {
+    font-size: 14px;
     font-weight: 500;
+    margin-top: 6px;
   }
 `;
 const WorkspaceInfo = styled.div`

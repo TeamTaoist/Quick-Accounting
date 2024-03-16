@@ -12,6 +12,7 @@ import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItem
 import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import { checkboxClasses } from "@mui/material/Checkbox";
 
 interface CategoryPropertyArchivedListProps {
   setOpen: (open: boolean) => void;
@@ -95,16 +96,19 @@ const CategoryPropertyArchivedList = ({
             </Unarchive>
             <ArchiveTable>
               <TableContainer
-                sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
+                sx={{
+                  border: "1px solid var(--clr-gray-300)",
+                  borderRadius: "10px",
+                }}
               >
                 <Table>
                   <TableHead
                     style={{
-                      background: "var(--bg-secondary)",
+                      background: "var(--clr-gray-200)",
                     }}
                   >
                     <TableRow>
-                      <TableCell>
+                      <TableCell sx={{ fontWeight: 600, padding: "5px 10px" }}>
                         <Checkbox
                           indeterminate={
                             selected.length > 0 &&
@@ -114,24 +118,55 @@ const CategoryPropertyArchivedList = ({
                             selected.length === archivedCategoryProperty.length
                           }
                           onChange={handleSelectAllClick}
+                          sx={{
+                            marginRight: "30px",
+                            [`&, &.${checkboxClasses.checked}`]: {
+                              color: "#0f172a",
+                            },
+                            [`&, &.${checkboxClasses.indeterminate}`]: {
+                              color: "#0f172a",
+                            },
+                            "& .MuiSvgIcon-root": {
+                              fontSize: 30,
+                              borderRadius: 6,
+                            },
+                          }}
                         />
-                        Category Properties
+                        Properties
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {archivedCategoryProperty.map((property) => (
+                    {archivedCategoryProperty.map((property, i) => (
                       <TableRow key={property.ID}>
                         <TableCell
-                          sx={{ display: "flex", alignItems: "center" }}
+                          sx={{
+                            padding: "5px 10px",
+                            display: "flex",
+                            alignItems: "center",
+                            borderBottom:
+                              i === archivedCategoryProperty.length - 1
+                                ? "none"
+                                : undefined,
+                          }}
                         >
                           <Checkbox
                             checked={isSelected(property.ID)}
                             onChange={(event) =>
                               handleCheckboxClick(event, property.ID)
                             }
+                            sx={{
+                              marginRight: "30px",
+                              [`&, &.${checkboxClasses.checked}`]: {
+                                color: "#0f172a",
+                              },
+                              "& .MuiSvgIcon-root": {
+                                fontSize: 30,
+                                borderRadius: 6,
+                              },
+                            }}
                           />
-                          <CellValue>{property.name}</CellValue>
+                          {property.name}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -152,19 +187,20 @@ const Unarchive = styled.div`
   display: flex;
   justify-content: end;
   padding-right: 30px;
-  margin-top: 20px;
+  margin-top: 30px;
 
   div {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background: var(--bg-primary);
-    font-size: 20px;
+    border: 1px solid var(--clr-gray-300);
+    padding: 8px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
     img {
-      width: 20px;
+      width: 13px;
     }
   }
 `;

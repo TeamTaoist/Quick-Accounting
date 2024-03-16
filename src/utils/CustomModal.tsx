@@ -33,6 +33,7 @@ const CustomModal = ({
             "&::-webkit-scrollbar": {
               display: "none",
             },
+            background: "var(--clr-modal-mask)",
             "-ms-overflow-style": "none",
             scrollbarWidth: "none",
           }}

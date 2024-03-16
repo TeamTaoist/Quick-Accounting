@@ -7,10 +7,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
-import archive from "../../../assets/workspace/archive.svg";
+import unarchive from "../../../assets/workspace/unarchive.svg";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
 import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
+import { checkboxClasses } from "@mui/material/Checkbox";
 
 const CategoryArchivedList = ({ setOpen }: any) => {
   const { id } = useParams();
@@ -75,22 +76,25 @@ const CategoryArchivedList = ({ setOpen }: any) => {
           <>
             <Unarchive>
               <div onClick={handleUnArchive}>
-                <img src={archive} alt="" />
+                <img src={unarchive} alt="" />
                 <p>Unarchive</p>
               </div>
             </Unarchive>
             <ArchiveTable>
               <TableContainer
-                sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
+                sx={{
+                  border: "1px solid var(--clr-gray-300)",
+                  borderRadius: "10px",
+                }}
               >
                 <Table>
                   <TableHead
                     style={{
-                      background: "var(--bg-secondary)",
+                      background: "var(--clr-gray-200)",
                     }}
                   >
                     <TableRow>
-                      <TableCell>
+                      <TableCell sx={{ fontWeight: 600, padding: "5px 10px" }}>
                         <Checkbox
                           indeterminate={
                             selected.length > 0 &&
@@ -102,24 +106,55 @@ const CategoryArchivedList = ({ setOpen }: any) => {
                             workspaceCategories.data.rows.length
                           }
                           onChange={handleSelectAllClick}
+                          sx={{
+                            marginRight: "30px",
+                            [`&, &.${checkboxClasses.checked}`]: {
+                              color: "#0f172a",
+                            },
+                            [`&, &.${checkboxClasses.indeterminate}`]: {
+                              color: "#0f172a",
+                            },
+                            "& .MuiSvgIcon-root": {
+                              fontSize: 30,
+                              borderRadius: 6,
+                            },
+                          }}
                         />
                         Category
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {workspaceCategories.data.rows.map((category) => (
+                    {workspaceCategories.data.rows.map((category, i) => (
                       <TableRow key={category.ID}>
                         <TableCell
-                          sx={{ display: "flex", alignItems: "center" }}
+                          sx={{
+                            padding: "5px 10px",
+                            display: "flex",
+                            alignItems: "center",
+                            borderBottom:
+                              i === workspaceCategories.data.rows.length - 1
+                                ? "none"
+                                : undefined,
+                          }}
                         >
                           <Checkbox
                             checked={isSelected(category.ID)}
                             onChange={(event) =>
                               handleCheckboxClick(event, category.ID)
                             }
+                            sx={{
+                              marginRight: "30px",
+                              [`&, &.${checkboxClasses.checked}`]: {
+                                color: "#0f172a",
+                              },
+                              "& .MuiSvgIcon-root": {
+                                fontSize: 30,
+                                borderRadius: 6,
+                              },
+                            }}
                           />
-                          <CellValue>{category.name}</CellValue>
+                          {category.name}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -140,29 +175,25 @@ const Unarchive = styled.div`
   display: flex;
   justify-content: end;
   padding-right: 30px;
-  margin-top: 20px;
+  margin-top: 30px;
 
   div {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background: var(--bg-primary);
-    font-size: 20px;
+    border: 1px solid var(--clr-gray-300);
+    padding: 8px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
     img {
-      width: 20px;
+      width: 13px;
     }
   }
 `;
 const ArchiveTable = styled.div`
   padding: 30px;
-`;
-const CellValue = styled.div`
-  background: var(--bg-primary);
-  padding: 5px 10px;
-  border-radius: 4px;
 `;
 const Archivemsg = styled.div`
   font-size: 20px;
