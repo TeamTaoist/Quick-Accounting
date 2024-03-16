@@ -1,9 +1,8 @@
 import styled from "@emotion/styled";
 
 export const CreateCategory = styled.div`
-  padding-top: 30px;
-  margin-left: 40px;
-  min-width: 600px;
+  padding: 30px;
+  min-width: 700px;
 `;
 export const CategoryTitle = styled.div`
   height: 90vh;
@@ -12,29 +11,29 @@ export const CategoryTitle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  line-height: 32px;
   h3 {
-    font-size: 30px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
   }
   p {
-    font-size: 18px;
-    padding: 30px 0;
+    font-size: 14px;
   }
 `;
 export const CreateOptionButton = styled.div`
   display: flex;
-  gap: 50px;
-  margin-bottom: 50px;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-bottom: 24px;
 `;
 export const CreateBtn = styled.button`
-  background: var(--bg-primary);
+  background: transparent;
   outline: none;
-  border: none;
-  font-size: 20px;
-  font-weight: 400;
-  padding: 10px 50px;
-  border-radius: 4px;
-  margin-top: 21px;
+  border: 1px solid var(--clr-gray-300);
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   color: var(--text-primary);
   display: flex;
@@ -46,7 +45,7 @@ export const CreateBtn = styled.button`
   }
 `;
 export const CategoryForm = styled.div`
-  margin-right: 40px;
+  /* margin-right: 40px; */
 `;
 export const CategoryOption = styled.div`
   min-width: 900px;
@@ -57,12 +56,15 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: var(--clr-primary-900);
+  font-weight: 500;
   input {
-    border: 1px solid var(--border);
+    border: 1px solid var(--clr-gray-300);
     outline: none;
-    background-color: transparent;
-    padding: 5px 10px;
-    border-radius: 7px;
+    background-color: var(--clr-white);
+    padding: 12px 10px;
+    border-radius: 6px;
+    width: 310px;
   }
 `;
 export const HeaderRight = styled.div`
@@ -90,8 +92,9 @@ export const HeaderOptions = styled.div`
 export const UpdateBtn = styled.button`
   border: none;
   outline: none;
-  background: var(--bg-primary);
-  padding: 8px 18px;
+  background: var(--clr-primary-900);
+  color: var(--clr-white);
+  padding: 10px 18px;
   border-radius: 7px;
   font-size: 18px;
   margin-right: 10px;
@@ -101,11 +104,11 @@ export const UpdateLoadingBtn = styled.div`
   display: flex;
   align-items: center;
   gap: 7px;
-  background: var(--bg-primary);
-  padding: 8px 18px;
+  padding-inline: 18px;
   border-radius: 7px;
-  font-size: 18px;
+  font-size: 14px;
   margin-right: 10px;
+  color: var(--clr-gray-400);
 `;
 export const CategoryProperties = styled.div`
   display: flex;
@@ -120,13 +123,12 @@ export const Options = styled.div`
   h4 {
     font-size: 14px;
     font-weight: 500;
-    padding-left: 10px;
-    margin-top: 10px;
-    color: #7c7777;
+    padding: 16px;
+    color: var(--clr-gray-500);
   }
 `;
 export const PropertyOptions = styled.div`
-  border-right: 1px solid var(--border-table);
+  border-right: 1px solid var(--clr-gray-200);
   width: 50%;
   height: 326px;
   flex: 1;
@@ -144,14 +146,14 @@ export const Option = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 20px 12px;
-  margin-top: 20px;
-  background: var(--bg-primary);
+  margin-inline: 8px;
+  border-radius: 6px;
 
   img {
-    width: 24px;
+    width: 16px;
   }
   p {
-    font-size: 18px;
+    font-size: 16px;
   }
 `;
 export const PropertyBtns = styled.div`
@@ -160,27 +162,26 @@ export const PropertyBtns = styled.div`
   /* border: 1px solid var(--border-table); */
 `;
 export const OptionCreateButtons = styled.div`
-  border-right: 1px solid var(--border-table);
-  /* display: flex;
-  justify-content: space-evenly; */
-  /* min-height: 80px; */
   width: 50%;
+  border-right: 1px solid var(--clr-gray-200);
+
   button {
     display: flex;
-    background: var(--bg-primary);
+    background: transparent;
     gap: 7px;
-    padding: 8px 20px;
+    padding: 10px 24px;
     margin: 20px;
     margin-bottom: 20px;
-    border: none;
+    border: 1px solid var(--clr-gray-400);
     outline: none;
-    border-radius: 10px;
+    border-radius: 6px;
     cursor: pointer;
     img {
       width: 16px;
     }
     span {
-      font-size: 16px;
+      font-size: 14px;
+      font-weight: 500;
     }
   }
   /* button:first-child {
@@ -222,6 +223,8 @@ export const DetailsInput = styled.div`
 export const PropertyInput = styled.input`
   padding: 10px;
   width: 100%;
+  border: 1px solid var(--clr-gray-300);
+  border-radius: 6px;
 `;
 export const PropertyOptionsValue = styled.div`
   display: flex;
@@ -246,6 +249,8 @@ export const PropertyOptionsValueBtn = styled.button`
 export const PropertyInputValue = styled.input`
   padding: 10px;
   width: 100%;
+  border: 1px solid var(--clr-gray-300);
+  outline: none;
 `;
 export const DropdownOption = styled.div`
   display: flex;
@@ -279,10 +284,10 @@ export const CancelBtn = styled.button`
   cursor: pointer;
   border: none;
   outline: none;
-  background: transparent;
-  border: 1px solid var(--border-table);
-  padding: 8px 18px;
-  border-radius: 7px;
+  background: var(--clr-white);
+  border: 1px solid var(--clr-gray-200);
+  padding: 10px 18px;
+  border-radius: 6px;
   font-size: 18px;
   margin-right: 20px;
   cursor: pointer;

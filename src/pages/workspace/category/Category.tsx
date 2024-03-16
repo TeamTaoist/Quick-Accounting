@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import add from "../../../assets/workspace/add.svg";
 import archive from "../../../assets/workspace/archive.svg";
 import edit from "../../../assets/workspace/edit.svg";
@@ -45,6 +45,7 @@ import CategoryPropertyDetails from "../../../components/workspace/category/Cate
 import CategoryArchivedList from "../../../components/workspace/category/CategoryArchivedList";
 import CategoryPropertyArchivedList from "../../../components/workspace/category/CategoryPropertyArchivedList";
 import { CircularProgress } from "@mui/material";
+import { getPropertyIconByType } from "../../../utils/payment";
 
 export interface CategoryPropertyBody {
   name: string;
@@ -363,6 +364,11 @@ const Category = () => {
     } else if (!isExpanded) {
       setExpandedCategories([...expandedCategories, categoryId]);
     }
+    // default selected property
+    const selectedCategory = workspaceCategoryProperties.find(
+      (c) => c.ID === categoryId
+    );
+    setShowProperty(selectedCategory?.properties?.[0].ID);
   };
 
   // edit category
@@ -443,6 +449,11 @@ const Category = () => {
       // setCategoryList(workspaceCategoryProperties);
     }
   }, [workspaceCategoryProperties]);
+  // const AccordionStyle = {
+  //   "&:before": {
+  //     backgroundColor: "transparent !important",
+  //   },
+  // };
 
   return (
     <CreateCategory>
@@ -490,7 +501,10 @@ const Category = () => {
             {/* category option */}
             {categoryList?.map((category, index) => (
               <CategoryOption key={category.ID}>
-                <Accordion expanded={expandedCategories.includes(category.ID)}>
+                <Accordion
+                  expanded={expandedCategories.includes(category.ID)}
+                  elevation={0}
+                >
                   <AccordionSummary
                     onClick={() => handleCategoryCollapse(category.ID)}
                     expandIcon={
@@ -502,7 +516,17 @@ const Category = () => {
                     }
                     aria-controls="panel1a-content"
                     id="panel1a-header"
-                    sx={{ backgroundColor: "var(--hover-bg)" }}
+                    sx={{
+                      borderRadius: expandedCategories.includes(category.ID)
+                        ? "6px 6px 0 0"
+                        : "6px",
+                      backgroundColor: "var(--clr-gray-200)",
+                      border: "1px solid var(--clr-gray-200)",
+                      height: "56px",
+                      "&:before": {
+                        borderRadius: "6px",
+                      },
+                    }}
                   >
                     <Header>
                       <div>
@@ -532,11 +556,6 @@ const Category = () => {
                       {/* {editableCategoryId === category.ID ? ( */}
                       {editableCategoryId.includes(category.ID) ? (
                         <HeaderRight>
-                          <CancelBtn
-                            onClick={(e) => handleCancelEdit(e, category.ID)}
-                          >
-                            Cancel
-                          </CancelBtn>
                           {updateLoading ? (
                             <UpdateLoadingBtn>
                               <CircularProgress
@@ -546,14 +565,20 @@ const Category = () => {
                               <p>Updating</p>
                             </UpdateLoadingBtn>
                           ) : (
-                            <UpdateBtn
-                              onClick={(e) =>
-                                handleUpdatedCategoryProperty(category.ID, e)
-                              }
+                            <CancelBtn
+                              onClick={(e) => handleCancelEdit(e, category.ID)}
                             >
-                              Update
-                            </UpdateBtn>
+                              Cancel
+                            </CancelBtn>
                           )}
+                          <UpdateBtn
+                            onClick={(e) =>
+                              handleUpdatedCategoryProperty(category.ID, e)
+                            }
+                          >
+                            Update
+                          </UpdateBtn>
+                          {/* )} */}
                         </HeaderRight>
                       ) : (
                         <HeaderOptions>
@@ -580,12 +605,21 @@ const Category = () => {
                       )}
                     </Header>
                   </AccordionSummary>
-                  <AccordionDetails sx={{ p: 0, maxHeight: "500px" }}>
+                  <AccordionDetails
+                    sx={{
+                      p: 0,
+                      maxHeight: "500px",
+                      borderLeft: "1px solid var(--clr-gray-200)",
+                      borderBottom: "1px solid var(--clr-gray-200)",
+                      borderRight: "1px solid var(--clr-gray-200)",
+                      borderRadius: "0 0 6px 6px",
+                    }}
+                  >
                     {/* category property */}
                     <CategoryProperties>
                       <Options>
                         <PropertyOptions>
-                          <h4>ADD PROPERTIES</h4>
+                          <h4>PROPERTIES</h4>
                           {category.properties?.map((property, index) => (
                             <div
                               key={index}
@@ -593,9 +627,18 @@ const Category = () => {
                                 handleSelectedProperty(property, index)
                               }
                             >
-                              <Option>
+                              <Option
+                                style={
+                                  showProperty === property.ID
+                                    ? { background: "#e2e8f0" }
+                                    : { background: "transparent" }
+                                }
+                              >
                                 <PropertyTitle>
-                                  <img src={property1} alt="" />
+                                  <img
+                                    src={getPropertyIconByType(property.type)}
+                                    alt=""
+                                  />
                                   <p>{property.name}</p>
                                 </PropertyTitle>
                                 {!editableCategoryId.includes(category.ID) && (

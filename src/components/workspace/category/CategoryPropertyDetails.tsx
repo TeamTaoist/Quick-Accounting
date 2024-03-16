@@ -2,6 +2,7 @@ import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import option from "../../../assets/workspace/option.svg";
 import select from "../../../assets/workspace/select.svg";
 import multiSelect from "../../../assets/workspace/multi-select.svg";
+import calendar from "../../../assets/workspace/calendar.svg";
 import propertyAdd from "../../../assets/workspace/property-add.svg";
 import propertyDelete from "../../../assets/workspace/property-delete.svg";
 import {
@@ -70,6 +71,11 @@ const CategoryPropertyDetails = ({
                 e.target.value
               )
             }
+            style={
+              isEditable
+                ? { background: "#e2e8f0" }
+                : { background: "transparent" }
+            }
           />
           <h3>Property Type</h3>
           <Select
@@ -84,13 +90,11 @@ const CategoryPropertyDetails = ({
                 e.target.value
               )
             }
-            // onBlur={() =>
-            //   handleUpdatedCategoryProperty(
-            //     property.workspace_id,
-            //     property.category_id,
-            //     property.ID
-            //   )
-            // }
+            style={
+              isEditable
+                ? { background: "#e2e8f0" }
+                : { background: "transparent" }
+            }
             size="small"
             IconComponent={() => (
               <InputAdornment position="start">
@@ -103,7 +107,29 @@ const CategoryPropertyDetails = ({
             )}
             sx={{
               minWidth: "100%",
-              "& fieldset": { border: 1 },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "var(--clr-gray-300)",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "var(--clr-gray-300)",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "var(--clr-gray-300)",
+              },
+            }}
+            MenuProps={{
+              sx: {
+                "& .MuiMenuItem-root": {
+                  marginInline: "10px",
+                  borderRadius: "6px",
+                  "&:hover": {
+                    bgcolor: "var(--clr-gray-100)",
+                  },
+                  "&.Mui-selected": {
+                    bgcolor: "var(--clr-gray-100)",
+                  },
+                },
+              },
             }}
           >
             <MenuItem
@@ -134,7 +160,7 @@ const CategoryPropertyDetails = ({
             </MenuItem>
             <MenuItem value="date-picker">
               <DropdownOption>
-                <img src={multiSelect} alt="" />
+                <img src={calendar} alt="" />
                 Datepicker
               </DropdownOption>
             </MenuItem>
@@ -149,6 +175,7 @@ const CategoryPropertyDetails = ({
                     key={valueIndex}
                     placeholder=""
                     value={value}
+                    disabled={isEditable}
                     onChange={(e) =>
                       handlePropertyValueChang(
                         property.category_id,
@@ -157,35 +184,39 @@ const CategoryPropertyDetails = ({
                         valueIndex
                       )
                     }
-                  />
-                  <img
-                    // onClick={() =>
-                    //   handleUpdateDeleteProperty(
-                    //     valueIndex,
-                    //     property.workspace_id,
-                    //     property.category_id,
-                    //     property.ID
-                    //   )
-                    // }
-                    onClick={() =>
-                      handleDeleteProperty(
-                        property.category_id,
-                        property.ID,
-                        valueIndex
-                      )
+                    style={
+                      isEditable
+                        ? { background: "#e2e8f0" }
+                        : { background: "transparent" }
                     }
-                    src={propertyDelete}
-                    alt=""
                   />
+                  {!isEditable && (
+                    <img
+                      onClick={() =>
+                        handleDeleteProperty(
+                          property.category_id,
+                          property.ID,
+                          valueIndex
+                        )
+                      }
+                      src={propertyDelete}
+                      alt=""
+                    />
+                  )}
                 </PropertyOptionsValue>
               ))}
-              <PropertyOptionsValueBtn
-                onClick={() =>
-                  handleUpdateAddButtonClick(property.category_id, property.ID)
-                }
-              >
-                + Add option
-              </PropertyOptionsValueBtn>
+              {!isEditable && (
+                <PropertyOptionsValueBtn
+                  onClick={() =>
+                    handleUpdateAddButtonClick(
+                      property.category_id,
+                      property.ID
+                    )
+                  }
+                >
+                  + Add option
+                </PropertyOptionsValueBtn>
+              )}
             </>
           )}
         </DetailsInput>
