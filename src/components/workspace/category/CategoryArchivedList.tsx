@@ -13,6 +13,23 @@ import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
 import { checkboxClasses } from "@mui/material/Checkbox";
 
+export const CheckBoxStyle = {
+  marginRight: "30px",
+  [`&, &.${checkboxClasses.colorPrimary}`]: {
+    color: "#cbd5e1",
+  },
+  [`&, &.${checkboxClasses.checked}`]: {
+    color: "#0f172a",
+  },
+  [`&, &.${checkboxClasses.indeterminate}`]: {
+    color: "#0f172a",
+  },
+  "& .MuiSvgIcon-root": {
+    // fontSize: 30,
+    borderRadius: 6,
+  },
+};
+
 const CategoryArchivedList = ({ setOpen }: any) => {
   const { id } = useParams();
   const [selected, setSelected] = useState<number[]>([]);
@@ -106,19 +123,7 @@ const CategoryArchivedList = ({ setOpen }: any) => {
                             workspaceCategories.data.rows.length
                           }
                           onChange={handleSelectAllClick}
-                          sx={{
-                            marginRight: "30px",
-                            [`&, &.${checkboxClasses.checked}`]: {
-                              color: "#0f172a",
-                            },
-                            [`&, &.${checkboxClasses.indeterminate}`]: {
-                              color: "#0f172a",
-                            },
-                            "& .MuiSvgIcon-root": {
-                              fontSize: 30,
-                              borderRadius: 6,
-                            },
-                          }}
+                          sx={CheckBoxStyle}
                         />
                         Category
                       </TableCell>
@@ -143,16 +148,7 @@ const CategoryArchivedList = ({ setOpen }: any) => {
                             onChange={(event) =>
                               handleCheckboxClick(event, category.ID)
                             }
-                            sx={{
-                              marginRight: "30px",
-                              [`&, &.${checkboxClasses.checked}`]: {
-                                color: "#0f172a",
-                              },
-                              "& .MuiSvgIcon-root": {
-                                fontSize: 30,
-                                borderRadius: 6,
-                              },
-                            }}
+                            sx={CheckBoxStyle}
                           />
                           {category.name}
                         </TableCell>

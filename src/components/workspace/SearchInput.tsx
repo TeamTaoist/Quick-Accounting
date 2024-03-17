@@ -6,6 +6,7 @@ interface SearchInputProps {
   placeholder: string;
   searchTerm: string;
   handleChange: (e: any) => void;
+  width?: string;
 }
 
 const SearchInput = ({
@@ -13,6 +14,7 @@ const SearchInput = ({
   placeholder,
   searchTerm,
   handleChange,
+  width = "auto",
 }: SearchInputProps) => {
   return (
     <form onSubmit={handleSearchPayment}>
@@ -24,7 +26,11 @@ const SearchInput = ({
         value={searchTerm}
         onChange={handleChange}
         sx={{
-          width: 350,
+          width: width,
+          "& fieldset.MuiOutlinedInput-notchedOutline": {
+            borderColor: "var(--clr-gray-300)",
+            borderRadius: "6px",
+          },
         }}
         size="small"
         InputProps={{

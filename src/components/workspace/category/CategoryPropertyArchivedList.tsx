@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { checkboxClasses } from "@mui/material/Checkbox";
+import { CheckBoxStyle } from "./CategoryArchivedList";
 
 interface CategoryPropertyArchivedListProps {
   setOpen: (open: boolean) => void;
@@ -118,19 +119,7 @@ const CategoryPropertyArchivedList = ({
                             selected.length === archivedCategoryProperty.length
                           }
                           onChange={handleSelectAllClick}
-                          sx={{
-                            marginRight: "30px",
-                            [`&, &.${checkboxClasses.checked}`]: {
-                              color: "#0f172a",
-                            },
-                            [`&, &.${checkboxClasses.indeterminate}`]: {
-                              color: "#0f172a",
-                            },
-                            "& .MuiSvgIcon-root": {
-                              fontSize: 30,
-                              borderRadius: 6,
-                            },
-                          }}
+                          sx={CheckBoxStyle}
                         />
                         Properties
                       </TableCell>
@@ -155,16 +144,7 @@ const CategoryPropertyArchivedList = ({
                             onChange={(event) =>
                               handleCheckboxClick(event, property.ID)
                             }
-                            sx={{
-                              marginRight: "30px",
-                              [`&, &.${checkboxClasses.checked}`]: {
-                                color: "#0f172a",
-                              },
-                              "& .MuiSvgIcon-root": {
-                                fontSize: 30,
-                                borderRadius: 6,
-                              },
-                            }}
+                            sx={CheckBoxStyle}
                           />
                           {property.name}
                         </TableCell>

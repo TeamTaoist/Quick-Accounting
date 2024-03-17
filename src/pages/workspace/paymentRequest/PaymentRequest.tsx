@@ -1,21 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  CategoryTitle,
-  CreateBtn,
-  CreateOptionButton,
-} from "../category/category.style";
-import add from "../../../assets/workspace/plus-white.svg";
-import archive from "../../../assets/workspace/archive.svg";
-import approve from "../../../assets/workspace/select.svg";
-import download from "../../../assets/workspace/download.svg";
 import reject from "../../../assets/workspace/reject.svg";
 import back from "../../../assets/workspace/back.svg";
-import filterIcon from "../../../assets/workspace/filtering.svg";
 import {
   Checkbox,
-  FormControl,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -25,12 +12,9 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import {
-  ActionBtn,
-  Btn,
   Filter,
   Header,
   Image,
-  Option,
   PaymentPagination,
   PaymentRequestBody,
   PaymentRequestContainer,
@@ -53,6 +37,9 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import { useDomainStore } from "../../../store/useDomain";
 import SearchInput from "../../../components/workspace/SearchInput";
 import NoPaymentFoundMessage from "../../../components/workspace/paymentRequest/NoPaymentFoundMessage";
+import FilterCategorySelect from "../../../components/workspace/FilterCategorySelect";
+import ActionButton from "../../../components/workspace/paymentRequest/ActionButton";
+import { CheckBoxStyle } from "../../../components/workspace/category/CategoryArchivedList";
 
 const PaymentRequest = () => {
   const { id } = useParams();
@@ -281,6 +268,7 @@ const PaymentRequest = () => {
               selectedItem: selected,
             }}
           />
+          {/* header component */}
           <Header>
             <Filter>
               <SearchInput
@@ -288,31 +276,23 @@ const PaymentRequest = () => {
                 placeholder="Search token"
                 searchTerm={searchTerm}
                 handleChange={handleChange}
+                width="220px"
               />
-              <FormControl sx={{ marginLeft: "25px", minWidth: 100 }}>
-                <Select
-                  value={selectedValue}
-                  onChange={handleDropdownChange}
-                  displayEmpty
-                  inputProps={{ "aria-label": "Select a value" }}
-                  size="small"
-                >
-                  <MenuItem value="" disabled>
-                    <Option>
-                      <Image src={filterIcon} alt="" />
-                      {t("paymentRequest.Filter")}
-                    </Option>
-                  </MenuItem>
-                  {uniqueCategoryNames.map(
-                    (categoryName) =>
-                      categoryName.trim() !== "" && (
-                        <MenuItem value={categoryName} key={categoryName}>
-                          {categoryName}
-                        </MenuItem>
-                      )
-                  )}
-                </Select>
-              </FormControl>
+              <FilterCategorySelect
+                selectedValue={selectedValue}
+                handleDropdownChange={handleDropdownChange}
+                uniqueCategoryNames={uniqueCategoryNames}
+              />
+              {/* action */}
+              {paymentRequest && (
+                <ActionButton
+                  handleExportPaymentRequestList={
+                    handleExportPaymentRequestList
+                  }
+                  handleRejectPaymentRequest={handleRejectPaymentRequest}
+                  handlePaymentRequestChaiModal={handlePaymentRequestChaiModal}
+                />
+              )}
             </Filter>
             <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
               {paymentRequest ? (
@@ -330,34 +310,36 @@ const PaymentRequest = () => {
           </Header>
           {paymentRequest && (
             <PaymentRequestBody>
-              <ActionBtn>
-                <Btn onClick={handleExportPaymentRequestList}>
-                  <img src={download} alt="" />
-                  <p>{t("paymentRequest.Download")}</p>
-                </Btn>
-                <Btn onClick={handleRejectPaymentRequest}>
-                  <img src={reject} alt="" />
-                  <p>{t("paymentRequest.Reject")}</p>
-                </Btn>
-                <Btn onClick={() => handlePaymentRequestChaiModal()}>
-                  <img src={approve} alt="" />
-                  <p>{t("paymentRequest.Approve")}</p>
-                </Btn>
-              </ActionBtn>
               <TableSection>
                 {/* table */}
                 <TableContainer
-                  style={{
+                  sx={{
                     border: "1px solid #ddd",
                     borderRadius: "8px",
                     maxHeight: "100%",
                     overflow: "auto",
+                    minWidth: "1100px",
+                    "&::-webkit-scrollbar": {
+                      display: "none",
+                    },
+                    "-ms-overflow-style": "none",
+                    scrollbarWidth: "none",
                   }}
                 >
                   <Table size="small">
-                    <TableHead style={{ backgroundColor: "#f0f0f0" }}>
+                    <TableHead
+                      style={{
+                        backgroundColor: "var(--clr-gray-200)",
+                      }}
+                    >
                       <TableRow>
-                        <TableCell sx={{ width: "30%" }}>
+                        <TableCell
+                          sx={{
+                            width: "30%",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                          }}
+                        >
                           <Checkbox
                             indeterminate={
                               selected.length > 0 &&
@@ -366,13 +348,37 @@ const PaymentRequest = () => {
                             checked={
                               selected.length === paymentRequestList.length
                             }
+                            sx={CheckBoxStyle}
                             onChange={handleSelectAllClick}
                           />
                           Recipient
                         </TableCell>
-                        <TableCell sx={{ width: "20%" }}>Amount</TableCell>
-                        <TableCell sx={{ width: "20%" }}>Category</TableCell>
-                        <TableCell>Date</TableCell>
+                        <TableCell
+                          sx={{
+                            width: "20%",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Amount
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            width: "20%",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Category
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            fontSize: "14px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Date
+                        </TableCell>
                         <TableCell></TableCell>
                       </TableRow>
                     </TableHead>

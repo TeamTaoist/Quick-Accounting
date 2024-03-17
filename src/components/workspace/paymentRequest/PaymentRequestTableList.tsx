@@ -17,6 +17,9 @@ import { formatDate } from "../../../utils/time";
 import { getPaymentUpdateTime } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { Tooltip } from "@mui/material";
+import details from "../../../assets/details.svg";
+import { CheckBoxStyle } from "../category/CategoryArchivedList";
 
 interface PaymentRequestTableListProps {
   items: IPaymentRequest[];
@@ -86,6 +89,7 @@ const PaymentRequestTableList = ({
               onChange={(event) =>
                 handleCheckboxClick(event, Number(paymentId))
               }
+              sx={CheckBoxStyle}
             />
             {items.length} payment requests
             <IconButton
@@ -93,7 +97,7 @@ const PaymentRequestTableList = ({
               size="small"
               style={{
                 position: "absolute",
-                left: "200px",
+                left: "240px",
               }}
             >
               {openRows.includes(Number(id)) ? (
@@ -104,17 +108,28 @@ const PaymentRequestTableList = ({
             </IconButton>
           </TableCell>
           <TableCell>
-            <Button
-              variant="outlined"
-              sx={{
-                borderColor: "black",
-                color: "black",
-                textTransform: "lowercase",
+            <Tooltip
+              title="View details"
+              placement="top"
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    background: "var(--clr-white)",
+                    color: "#111",
+                    border: "1px solid var(--clr-gray-200)",
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                  },
+                },
               }}
-              onClick={() => handleGroupPaymentDetails(items)}
             >
-              view more
-            </Button>
+              <img
+                src={details}
+                alt=""
+                style={{ width: "16px" }}
+                onClick={() => handleGroupPaymentDetails(items)}
+              />
+            </Tooltip>
           </TableCell>
         </TableRow>
       ) : (
@@ -135,6 +150,7 @@ const PaymentRequestTableList = ({
                   onChange={(event) =>
                     handleCheckboxClick(event, payment.payment_request_id)
                   }
+                  sx={CheckBoxStyle}
                 />
                 {formatAddressToDomain(
                   payment.counterparty,
@@ -152,17 +168,28 @@ const PaymentRequestTableList = ({
               </TableCell>
               <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
               <TableCell>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderColor: "black",
-                    color: "black",
-                    textTransform: "lowercase",
+                <Tooltip
+                  title="View details"
+                  placement="top"
+                  componentsProps={{
+                    tooltip: {
+                      sx: {
+                        background: "var(--clr-white)",
+                        color: "#111",
+                        border: "1px solid var(--clr-gray-200)",
+                        padding: "8px 16px",
+                        fontSize: "12px",
+                      },
+                    },
                   }}
-                  onClick={() => handleOpenModal(payment)}
                 >
-                  view more
-                </Button>
+                  <img
+                    src={details}
+                    alt=""
+                    style={{ width: "16px" }}
+                    onClick={() => handleOpenModal(payment)}
+                  />
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}
@@ -189,7 +216,7 @@ const PaymentRequestTableList = ({
                     <TableCell
                       // colSpan={1}
                       sx={{
-                        paddingLeft: "42px",
+                        paddingLeft: "72px",
                         width: "29%",
                       }}
                     >

@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { formatNumber } from "../../utils/number";
 import { Status } from "../workspace/paymentRequest/RejectPaymentRequestTable";
-import statusIcon from "../../assets/workspace/status-icon.svg";
 import details from "../../assets/details.svg";
 import { getPaymentStatus, getPaymentUpdateTime } from "../../utils/payment";
 
