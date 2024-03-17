@@ -7,14 +7,18 @@ import {
   TableRow,
   Paper,
   Button,
+  Tooltip,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   CategoryCell,
+  Image,
   PaymentPagination,
   TableSection,
+  ViewReject,
 } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import statusIcon from "../../../assets/workspace/status-icon.svg";
+import details from "../../../assets/details.svg";
 import styled from "@emotion/styled";
 import CustomModal from "../../../utils/CustomModal";
 import PaymentRequestDetails from "../../../pages/workspace/paymentRequest/PaymentRequestDetailsReadOnly";
@@ -23,9 +27,12 @@ import usePaymentsStore from "../../../store/usePayments";
 import { formatNumber } from "../../../utils/number";
 import Pagination from "../../Pagination";
 import { useWorkspace } from "../../../store/useWorkspace";
-import { getPaymentUpdateTime } from "../../../utils/payment";
+import { getPaymentStatus, getPaymentUpdateTime } from "../../../utils/payment";
 import { getShortAddress } from "../../../utils";
 import { useDomainStore } from "../../../store/useDomain";
+import SearchInput from "../SearchInput";
+import FilterCategorySelect from "../FilterCategorySelect";
+import back from "../../../assets/workspace/back.svg";
 
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
@@ -33,11 +40,7 @@ interface RejectDataTableProps {
   isInQueue?: boolean;
 }
 
-const RejectPaymentRequestTable = ({
-  searchTerm,
-  selectedValue,
-  isInQueue,
-}: RejectDataTableProps) => {
+const RejectPaymentRequestTable = ({ isInQueue }: RejectDataTableProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
@@ -61,6 +64,44 @@ const RejectPaymentRequestTable = ({
     });
     setOpenModal(true);
   };
+
+  // search payments
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
+  const handleChange = (e: any) => {
+    setSearchTerm(e.target.value);
+  };
+  const handleSearchPayment = (e: any) => {
+    e.preventDefault();
+    // getPaymentRequestList(workspaceId, false, pageNumbers, 10, searchTerm).then(
+    //   (res) => {
+    //     setTotalItem(res);
+    //     setIsSearch(true);
+    //   }
+    // );
+  };
+  useEffect(() => {
+    // if (!searchTerm && isSearch) {
+    //   getPaymentRequestList(
+    //     workspaceId,
+    //     false,
+    //     pageNumbers,
+    //     10,
+    //     searchTerm
+    //   ).then((res) => {
+    //     setTotalItem(res);
+    //     setIsSearch(false);
+    //   });
+    // }
+  }, [searchTerm]);
+  const [selectedValue, setSelectedValue] = useState<string>("");
+
+  const handleDropdownChange = (event: any) => {
+    setSelectedValue(event.target.value);
+  };
+  const uniqueCategoryNames = Array.from(
+    new Set(list.map((payment) => payment.category_name))
+  );
   // filter table data
   const filterData = searchTerm
     ? list.filter((data) => {
@@ -113,35 +154,84 @@ const RejectPaymentRequestTable = ({
         setOpen={setOpenModal}
         component={PaymentRequestDetails}
       />
+      <RejectHeader>
+        <div>
+          <SearchInput
+            handleSearchPayment={handleSearchPayment}
+            placeholder="Search token"
+            searchTerm={searchTerm}
+            handleChange={handleChange}
+            width="300px"
+          />
+          <FilterCategorySelect
+            selectedValue={selectedValue}
+            handleDropdownChange={handleDropdownChange}
+            uniqueCategoryNames={uniqueCategoryNames}
+          />
+        </div>
+        <BackBtn>
+          <Image src={back} alt="" />
+          <p>Back</p>
+        </BackBtn>
+      </RejectHeader>
       <TableSection>
         <TableContainer
-          component={Paper}
           sx={{
-            minWidth: 800,
-            borderRadius: "10px",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
             maxHeight: "100%",
             overflow: "auto",
+            minWidth: "1100px",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            "-ms-overflow-style": "none",
+            scrollbarWidth: "none",
           }}
         >
-          <Table stickyHeader>
+          <Table stickyHeader size="small">
             <TableHead>
               <TableRow>
-                <TableCell sx={{ background: "var(--bg-primary)" }}>
+                <TableCell
+                  sx={{
+                    backgroundColor: "var(--clr-gray-200)",
+                  }}
+                >
                   Recipient
                 </TableCell>
-                <TableCell sx={{ background: "var(--bg-primary)" }}>
+                <TableCell
+                  sx={{
+                    backgroundColor: "var(--clr-gray-200)",
+                  }}
+                >
                   Amount
                 </TableCell>
-                <TableCell sx={{ background: "var(--bg-primary)" }}>
+                <TableCell
+                  sx={{
+                    backgroundColor: "var(--clr-gray-200)",
+                  }}
+                >
                   Category
                 </TableCell>
-                <TableCell sx={{ background: "var(--bg-primary)" }}>
+                <TableCell
+                  sx={{
+                    backgroundColor: "var(--clr-gray-200)",
+                  }}
+                >
                   Status
                 </TableCell>
-                <TableCell sx={{ background: "var(--bg-primary)" }}>
+                <TableCell
+                  sx={{
+                    backgroundColor: "var(--clr-gray-200)",
+                  }}
+                >
                   Date
                 </TableCell>
-                <TableCell sx={{ background: "var(--bg-primary)" }}></TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "var(--clr-gray-200)",
+                  }}
+                ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -162,14 +252,14 @@ const RejectPaymentRequestTable = ({
                     <CategoryCell>{payment.category_name}</CategoryCell>
                   </TableCell>
                   <TableCell>
-                    <Status>
-                      <img src={statusIcon} alt="" />
-                      {"Rejected"}
+                    <Status status={getPaymentStatus(payment.status)}>
+                      <p></p>
+                      {getPaymentStatus(payment.status)}
                     </Status>
                   </TableCell>
                   <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
                   <TableCell>
-                    <Button
+                    {/* <Button
                       variant="outlined"
                       sx={{
                         borderColor: "black",
@@ -179,7 +269,29 @@ const RejectPaymentRequestTable = ({
                       onClick={() => handleOpenModal(payment)}
                     >
                       view more
-                    </Button>
+                    </Button> */}
+                    <Tooltip
+                      title="View details"
+                      placement="top"
+                      componentsProps={{
+                        tooltip: {
+                          sx: {
+                            background: "var(--clr-white)",
+                            color: "#111",
+                            border: "1px solid var(--clr-gray-200)",
+                            padding: "8px 16px",
+                            fontSize: "12px",
+                          },
+                        },
+                      }}
+                    >
+                      <img
+                        src={details}
+                        alt=""
+                        style={{ width: "16px" }}
+                        onClick={() => handleOpenModal(payment)}
+                      />
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}
@@ -229,4 +341,22 @@ export const Status = styled.div<any>`
   img {
     width: 7px;
   }
+`;
+const RejectHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  div {
+    display: flex;
+  }
+`;
+const BackBtn = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--clr-gray-300);
+  padding-inline: 8px;
+  border-radius: 6px;
 `;

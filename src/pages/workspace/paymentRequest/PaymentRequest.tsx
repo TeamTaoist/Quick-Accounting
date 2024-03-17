@@ -269,22 +269,22 @@ const PaymentRequest = () => {
             }}
           />
           {/* header component */}
-          <Header>
-            <Filter>
-              <SearchInput
-                handleSearchPayment={handleSearchPayment}
-                placeholder="Search token"
-                searchTerm={searchTerm}
-                handleChange={handleChange}
-                width="220px"
-              />
-              <FilterCategorySelect
-                selectedValue={selectedValue}
-                handleDropdownChange={handleDropdownChange}
-                uniqueCategoryNames={uniqueCategoryNames}
-              />
-              {/* action */}
-              {paymentRequest && (
+          {paymentRequest && (
+            <Header>
+              <Filter>
+                <SearchInput
+                  handleSearchPayment={handleSearchPayment}
+                  placeholder="Search token"
+                  searchTerm={searchTerm}
+                  handleChange={handleChange}
+                  width="220px"
+                />
+                <FilterCategorySelect
+                  selectedValue={selectedValue}
+                  handleDropdownChange={handleDropdownChange}
+                  uniqueCategoryNames={uniqueCategoryNames}
+                />
+                {/* action */}
                 <ActionButton
                   handleExportPaymentRequestList={
                     handleExportPaymentRequestList
@@ -292,22 +292,15 @@ const PaymentRequest = () => {
                   handleRejectPaymentRequest={handleRejectPaymentRequest}
                   handlePaymentRequestChaiModal={handlePaymentRequestChaiModal}
                 />
-              )}
-            </Filter>
-            <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
-              {paymentRequest ? (
+              </Filter>
+              <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
                 <div onClick={handleRejectedPayments}>
                   <Image src={reject} alt="" />
                   <p>{t("paymentRequest.ViewRejection")}</p>
                 </div>
-              ) : (
-                <div onClick={handleBackBtn}>
-                  <Image src={back} alt="" />
-                  <p>{t("paymentRequest.Back")}</p>
-                </div>
-              )}
-            </ViewReject>
-          </Header>
+              </ViewReject>
+            </Header>
+          )}
           {paymentRequest && (
             <PaymentRequestBody>
               <TableSection>

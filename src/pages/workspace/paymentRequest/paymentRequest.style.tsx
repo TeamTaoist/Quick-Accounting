@@ -64,7 +64,7 @@ export const ViewReject = styled.div`
   }
 `;
 export const RejectSection = styled.div`
-  margin-top: 90px;
+  margin-top: 20px;
 `;
 export const BookkeepingRejectSection = styled.div`
   /* margin-top: 8px; */
