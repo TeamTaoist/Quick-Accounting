@@ -7,7 +7,10 @@ const animatedComponents = makeAnimated();
 export const customStyles: any = {
   control: (provided: any, state: any) => ({
     ...provided,
-    border: "none",
+    border: "1px solid var(--clr-gray-200)",
+    borderRadius: "6px",
+    margin: "4px 0",
+    padding: "3px 0",
     boxShadow: state.isFocused ? null : null,
     backgroundColor: state.isDisabled
       ? "transparent"
