@@ -16,6 +16,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -33,6 +34,7 @@ import { formatEther, formatUnits, zeroAddress } from "viem";
 import CHAINS from "../../utils/chain";
 import { UpdateEvent } from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
 import { useDomainStore } from "../../store/useDomain";
+import details from "../../assets/details.svg";
 
 export const isArrayParameter = (parameter: string): boolean =>
   /(\[\d*?])+$/.test(parameter);
@@ -302,7 +304,17 @@ const QueueTransactionItem = ({
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-          sx={{ backgroundColor: "var(--hover-bg)" }}
+          sx={{
+            backgroundColor: "var(--clr-gray-200)",
+            border: "1px solid var(--clr-gray-200)",
+            height: "76px",
+            "&:before": {
+              borderRadius: "6px",
+            },
+            borderBottom: "none",
+            paddingInline: "24px",
+            minWidth: "900px",
+          }}
         >
           <Header>
             <HeaderTitle>
@@ -316,7 +328,7 @@ const QueueTransactionItem = ({
             </h5>
           </Header>
         </AccordionSummary>
-        <AccordionDetails sx={{ p: 0 }}>
+        <AccordionDetails sx={{ p: "24px" }}>
           {/* category property */}
           <Action>
             <Approvals>
@@ -327,19 +339,24 @@ const QueueTransactionItem = ({
                   0}
                 /{approveTransaction.confirmationsRequired || threshold}
               </h4>
-              {filterConfirmSigners?.map((owner) => (
-                <p key={owner}>{getShortAddress(owner)}</p>
-              ))}
+              <Owners>
+                {filterConfirmSigners?.map((owner) => (
+                  // <p key={owner}>{getShortAddress(owner)}</p>
+                  <p key={owner}>{owner}</p>
+                ))}
+              </Owners>
 
-              <button disabled={hasConfirmed} onClick={handleApprove}>
-                {t("queue.Approve")}
-              </button>
-              <button
-                disabled={!canExecuteConfirm}
-                onClick={handleExecuteApprove}
-              >
-                {t("queue.Execute")}
-              </button>
+              <ActionButtons>
+                <ApproveBtn disabled={hasConfirmed} onClick={handleApprove}>
+                  {t("queue.Approve")}
+                </ApproveBtn>
+                <ExecuteBtn
+                  disabled={!canExecuteConfirm}
+                  onClick={handleExecuteApprove}
+                >
+                  {t("queue.Execute")}
+                </ExecuteBtn>
+              </ActionButtons>
             </Approvals>
             <Approvals>
               <h4>
@@ -355,82 +372,140 @@ const QueueTransactionItem = ({
               {filterRejectSigners?.map((owner) => (
                 <p key={owner}>{getShortAddress(owner)}</p>
               ))}
-              <button disabled={hasRejected} onClick={handleReject}>
+              <ExecuteBtn disabled={hasRejected} onClick={handleReject}>
                 Reject
-              </button>
-              <button
+              </ExecuteBtn>
+              <ApproveBtn
                 disabled={!canExecuteReject}
                 onClick={handleExecuteReject}
               >
                 Execute
-              </button>
+              </ApproveBtn>
             </Approvals>
           </Action>
           <TableContainer
-            component={Paper}
             sx={{
-              // maxHeight: 200,
               minWidth: 800,
               boxShadow: "none",
+              border: "1px solid var(--clr-gray-200)",
+              borderRadius: "6px",
             }}
           >
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell>Safe</TableCell>
-                  <TableCell>Counterparty</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "var(--clr-gray-200)",
+                      width: "15%",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Safe
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "var(--clr-gray-200)",
+                      width: "15%",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Counterparty
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "var(--clr-gray-200)",
+                      width: "15%",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Amount
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "var(--clr-gray-200)",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Category
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "var(--clr-gray-200)",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Date
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "var(--clr-gray-200)",
+                    }}
+                  ></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {(payments || []).map((queueItem: IPaymentRequest) => (
                   <TableRow key={queueItem.ID}>
-                    <TableCell>
+                    <TableCell sx={{ padding: "8px 14px" }}>
                       {getShortAddress(workspace?.vault_wallet)}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ padding: "8px 14px" }}>
                       {formatAddressToDomain(
                         queueItem.counterparty,
                         workspace.chain_id,
                         workspace.name_service === "sns"
                       )}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ padding: "8px 14px" }}>
                       {queueItem.amount} {queueItem.currency_name}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ padding: "8px 14px" }}>
                       <CategoryCell>{queueItem.category_name}</CategoryCell>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ padding: "8px 14px" }}>
                       {formatTime(
                         queueItem.approve_ts || approveTransaction.timestamp,
                         "-",
                         false
                       )}
                     </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          borderColor: "black",
-                          color: "black",
-                          textTransform: "lowercase",
+                    <TableCell sx={{ padding: "8px 14px" }}>
+                      <Tooltip
+                        title="View details"
+                        placement="top"
+                        componentsProps={{
+                          tooltip: {
+                            sx: {
+                              background: "var(--clr-white)",
+                              color: "#111",
+                              border: "1px solid var(--clr-gray-200)",
+                              padding: "8px 16px",
+                              fontSize: "12px",
+                            },
+                          },
                         }}
-                        onClick={() => onOpenMoreModal(queueItem)}
                       >
-                        view more
-                      </Button>
+                        <img
+                          src={details}
+                          alt=""
+                          style={{ width: "16px" }}
+                          onClick={() => onOpenMoreModal(queueItem)}
+                        />
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
+            <TotalValue>Total value: ${totalValue}</TotalValue>
           </TableContainer>
         </AccordionDetails>
-        <TotalValue>Total value: ${totalValue}</TotalValue>
       </Accordion>
     </QueueNotice>
   );
@@ -477,8 +552,8 @@ const Header = styled.div`
   align-items: center;
   h5 {
     margin-right: 20px;
-    font-size: 20px;
-    font-weight: 400;
+    font-size: 16px;
+    font-weight: 500;
   }
   /* {
     width: 24px;
@@ -486,55 +561,91 @@ const Header = styled.div`
 `;
 const HeaderTitle = styled.div`
   h6 {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
+    padding-bottom: 7px;
   }
   p {
     font-size: 12px;
-    color: var(--text-secondary);
+    color: var(--clr-gray-500);
   }
 `;
 
 const Action = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   padding: 16px 0;
+  gap: 40px;
 `;
 const Approvals = styled.div`
+  width: 50%;
   h4 {
-    font-size: 20px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
   }
-  p {
-    font-size: 12px;
-    color: #7c7777;
-    padding-top: 5px;
+`;
+const ActionButtons = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+`;
+const ExecuteBtn = styled.button`
+  border: none;
+  background: var(--clr-primary-900);
+  color: #fff;
+  outline: none;
+  padding: 8px 14px;
+  border-radius: 7px;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-top: 12px;
+  cursor: pointer;
+  &:disabled {
+    background: #cbd5e1;
   }
-  button {
-    border: 1px solid var(--border);
-    background: transparent;
-    outline: none;
-    padding: 6px 12px;
-    border-radius: 7px;
-    font-size: 18px;
-    margin-right: 10px;
-    margin-top: 12px;
-    cursor: pointer;
-  }
-  button[disabled]:hover {
+  &:disabled:hover {
     cursor: not-allowed;
   }
 `;
+const ApproveBtn = styled.button`
+  border: 1px solid var(--clr-gray-200);
+  background: transparent;
+  outline: none;
+  padding: 8px 14px;
+  border-radius: 7px;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-top: 12px;
+  cursor: pointer;
+  &:disabled:hover {
+    cursor: not-allowed;
+  }
+`;
+const Owners = styled.div`
+  border: 1px solid var(--clr-gray-200);
+  border-radius: 6px;
+  padding: 16px 14px;
+  width: 100%;
+  height: 68px;
+  margin-top: 10px;
+  p {
+    font-size: 12px;
+    color: var(--clr-gray-500);
+  }
+`;
 const TotalValue = styled.div`
-  padding: 10px 0;
+  padding: 12px 0;
   text-align: center;
-  background: var(--bg-primary);
+  background: var(--clr-gray-100);
   overflow: hidden;
+  font-size: 16px;
+  font-weight: 700;
   /* margin-top: 20px; */
 `;
 const CategoryCell = styled.div`
-  background: var(--bg-primary);
-  padding: 4px 10px;
+  background: var(--clr-gray-200);
+  padding: 6px;
+  font-size: 14px;
   text-align: center;
-  border-radius: 4px;
+  border-radius: 5px;
 `;

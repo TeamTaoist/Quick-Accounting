@@ -73,13 +73,18 @@ const PaymentRequestTableList = ({
         <TableRow
           onClick={() => handleRowToggle(Number(id))}
           style={{ cursor: "pointer" }}
+          sx={{
+            "& > .MuiTableCell-root": {
+              borderBottom: "none",
+            },
+          }}
         >
           <TableCell
             colSpan={4}
             style={{
               padding: 0,
               paddingLeft: "16px",
-              borderBottom: "1px solid #ddd",
+              // borderBottom: "1px solid #ddd",
               borderTop: "none",
               position: "relative",
             }}
@@ -136,13 +141,18 @@ const PaymentRequestTableList = ({
         // )}
         <>
           {items.map((payment) => (
-            <TableRow key={payment.ID}>
+            <TableRow
+              key={payment.ID}
+              sx={{
+                "& > .MuiTableCell-root": {
+                  borderBottom: "none",
+                },
+              }}
+            >
               <TableCell
                 style={{
                   padding: 0,
                   paddingLeft: "16px",
-                  borderBottom: "1px solid #ddd",
-                  borderTop: "none",
                 }}
               >
                 <Checkbox
@@ -200,8 +210,8 @@ const PaymentRequestTableList = ({
           colSpan={5}
           sx={{
             padding: 0,
-            paddingLeft: "16px",
-            borderTop: "1px solid #ddd",
+            // paddingLeft: "16px",
+            // borderTop: "1px solid #ddd",
           }}
         >
           <Collapse
@@ -216,7 +226,7 @@ const PaymentRequestTableList = ({
                     <TableCell
                       // colSpan={1}
                       sx={{
-                        paddingLeft: "72px",
+                        paddingLeft: "90px",
                         width: "29%",
                       }}
                     >

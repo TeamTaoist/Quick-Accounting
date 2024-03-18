@@ -391,12 +391,11 @@ const PaymentRequest = () => {
                   </Table>
                 </TableContainer>
                 {totalItem > 10 && (
-                  <PaymentPagination>
-                    <Pagination
-                      handlePageClick={handlePageClick}
-                      pageCount={pageCount}
-                    />
-                  </PaymentPagination>
+                  <Pagination
+                    handlePageClick={handlePageClick}
+                    pageCount={pageCount}
+                    pageNumbers={pageNumbers}
+                  />
                 )}
               </TableSection>
             </PaymentRequestBody>

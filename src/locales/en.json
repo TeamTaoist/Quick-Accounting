@@ -62,7 +62,8 @@
     "Action": "Action",
     "Approve": "Approve",
     "Execute": "Execute",
-    "Import": "Import"
+    "Import": "Import",
+    "ViewFailed": "View failed"
   },
   "bookkeeping": {
     "ViewHidden": "View hidden",

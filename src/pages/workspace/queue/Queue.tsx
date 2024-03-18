@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import reject from "../../../assets/workspace/reject.svg";
 import back from "../../../assets/workspace/back.svg";
-import view from "../../../assets/workspace/view.svg";
+import failedIcon from "../../../assets/workspace/failed-icon.svg";
 import { CategoryTitle } from "../category/category.style";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -93,23 +93,18 @@ const Queue = () => {
             show up here.
           </p>
           <HideBtn onClick={() => setPaymentRequest(!paymentRequest)}>
-            <img src={view} alt="" style={{ width: "20px" }} />
-            <span>View rejection</span>
+            <img src={failedIcon} alt="" style={{ width: "20px" }} />
+            <span>View failed</span>
           </HideBtn>
         </BookkeepingTitle>
       ) : (
         <QueueContainer>
           <QueHeader>
             <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
-              {paymentRequest ? (
+              {paymentRequest && (
                 <div>
-                  <Image src={reject} alt="" />
-                  <p>{t("paymentRequest.ViewRejection")}</p>
-                </div>
-              ) : (
-                <div>
-                  <Image src={back} alt="" />
-                  <p>{t("paymentRequest.Back")}</p>
+                  <Image src={failedIcon} alt="" />
+                  <p>{t("queue.ViewFailed")}</p>
                 </div>
               )}
             </ViewReject>
@@ -150,7 +145,7 @@ const Queue = () => {
 
 export default Queue;
 const QueueContainer = styled.div`
-  padding: 30px 0;
+  /* padding: 30px 0; */
 `;
 
 const QueueSection = styled.div`
@@ -162,5 +157,5 @@ const QueHeader = styled.div`
   justify-content: end;
 `;
 export const RejectSection = styled.div`
-  margin-top: 50px;
+  margin-top: 10px;
 `;

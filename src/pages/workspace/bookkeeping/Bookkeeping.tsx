@@ -202,7 +202,7 @@ const Bookkeeping = () => {
           </p>
           <HideBtn onClick={handleViewHiddenList}>
             <img src={view} alt="" style={{ width: "20px" }} />
-            <span>View hidden</span>
+            <span>View failed</span>
           </HideBtn>
         </BookkeepingTitle>
       )}
@@ -352,29 +352,26 @@ export const BookkeepingTitle = styled.div`
   justify-content: center;
   align-items: center;
   h3 {
-    font-size: 30px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
   }
   p {
-    font-size: 18px;
-    padding: 30px 0;
+    font-size: 14px;
+    margin-top: 16px;
+    margin-bottom: 30px;
+    line-height: 20px;
   }
 `;
-export const HideBtn = styled.button`
-  position: absolute;
-  top: 0;
-  right: 5%;
-  top: 20px;
-  background: var(--bg-primary);
+export const HideBtn = styled.button<any>`
+  background: ${(props) => props.bg || "transparent"};
   outline: none;
-  border: none;
-  font-size: 20px;
-  font-weight: 400;
-  padding: 10px 30px;
-  border-radius: 4px;
-  margin-top: 21px;
+  border: 1px solid var(--clr-gray-300);
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  color: var(--text-primary);
+  color: ${(props) => props.clr || "#0f172a"};
   display: flex;
   justify-content: center;
   align-items: center;
