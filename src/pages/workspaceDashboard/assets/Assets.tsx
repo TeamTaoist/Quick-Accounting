@@ -198,13 +198,14 @@ const Assets = () => {
             >
               <Table stickyHeader>
                 <TableHead>
-                  <TableRow sx={{ border: "1xp solid red" }}>
+                  <TableRow>
                     <TableCell
                       sx={{
                         background: "var(--clr-gray-200)",
                         fontSize: "14px",
                         fontWeight: "600",
                         width: "25%",
+                        padding: "14px 16px",
                       }}
                     >
                       Assets
@@ -215,6 +216,7 @@ const Assets = () => {
                         fontSize: "14px",
                         fontWeight: "600",
                         width: "25%",
+                        padding: "14px 16px",
                       }}
                     >
                       Current price
@@ -225,6 +227,7 @@ const Assets = () => {
                         fontSize: "14px",
                         fontWeight: "600",
                         width: "25%",
+                        padding: "14px 16px",
                       }}
                     >
                       Balance
@@ -235,6 +238,7 @@ const Assets = () => {
                         fontSize: "14px",
                         fontWeight: "600",
                         width: "17%",
+                        padding: "14px 16px",
                       }}
                     >
                       Hide the asset
@@ -245,6 +249,7 @@ const Assets = () => {
                         fontSize: "14px",
                         fontWeight: "600",
                         width: "8%",
+                        padding: "14px 16px",
                       }}
                     ></TableCell>
                   </TableRow>
@@ -255,6 +260,9 @@ const Assets = () => {
                       <TableCell
                         sx={{
                           textAlign: "left",
+                          padding: "12px 16px",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
                         }}
                       >
                         {/* {recipientFormate(row.assetsName)} */}
@@ -263,7 +271,13 @@ const Assets = () => {
                           <p>{data.name}</p>
                         </RowCell>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "12px 16px",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <RowCell>
                           <h6>$ {data.price}</h6>
                           <p style={{ color: "#2F82CF" }}>
@@ -271,7 +285,13 @@ const Assets = () => {
                           </p>
                         </RowCell>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "12px 16px",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <RowCell>
                           <h6>
                             {data.balanceDisplay} {data.symbol}
@@ -279,7 +299,13 @@ const Assets = () => {
                           <p>${data.balanceUSD}</p>
                         </RowCell>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        sx={{
+                          padding: "12px 16px",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <RowCell>
                           <AssetsSwitch
                             checked={data.hidden}
@@ -287,7 +313,14 @@ const Assets = () => {
                           />
                         </RowCell>
                       </TableCell>
-                      <TableCell sx={{ paddingRight: "30px" }}>
+                      <TableCell
+                        sx={{
+                          paddingRight: "30px",
+                          padding: "12px 16px",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         {data.link && (
                           <RowLink>
                             <a

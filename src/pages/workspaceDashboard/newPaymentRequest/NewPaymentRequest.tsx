@@ -553,7 +553,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                         }}
                       >
                         <Select
-                          // labelId={`dropdown-${index}-label`}
+                          labelId={`dropdown-${index}-label`}
+                          variant="outlined"
                           id={`dropdown-${index}`}
                           value={row.currency}
                           onChange={(e) =>
@@ -572,6 +573,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           sx={{
                             minWidth: "100%",
                             height: "40px",
+                            // .css-q8hpuo-MuiFormControl-root
                             "&.MuiOutlinedInput-root": {
                               "& fieldset": {
                                 borderColor: "var(--clr-gray-200)",
@@ -647,6 +649,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                         td: {
                           padding: 1,
                           paddingInline: "16px",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
                         },
                       }}
                     >
@@ -692,14 +696,15 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 display: "block",
                               },
                               "&.MuiOutlinedInput-root": {
+                                border: "1px solid var(--clr-gray-200)",
                                 "& fieldset": {
-                                  borderColor: "var(--clr-gray-200)",
+                                  border: "none",
                                 },
                                 "&:hover fieldset": {
-                                  borderColor: "var(--clr-gray-200)",
+                                  border: "none",
                                 },
                                 "&.Mui-focused fieldset": {
-                                  borderColor: "var(--clr-gray-200)",
+                                  border: "none",
                                 },
                               },
                               // "& fieldset": { border: "none" },
@@ -739,6 +744,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               td: {
                                 padding: 0,
                                 paddingInline: "16px",
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
                               },
                             }}
                           >
@@ -749,6 +756,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 // borderRight: "1px solid var(--border-table)",
                                 fontSize: "16px",
                                 fontWeight: "500",
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
                               }}
                             >
                               <NoteInfo>
@@ -798,6 +807,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               td: {
                                 padding: 0,
                                 paddingInline: "16px",
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
                               },
                             }}
                           >
@@ -807,6 +818,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 width: 200,
                                 fontSize: "16px",
                                 fontWeight: "500",
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
                               }}
                             >
                               <NoteInfo>
@@ -852,6 +865,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               td: {
                                 padding: 0,
                                 paddingInline: "16px",
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
                               },
                             }}
                           >
@@ -861,6 +876,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 width: 200,
                                 fontSize: "16px",
                                 fontWeight: "500",
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
                               }}
                             >
                               <NoteInfo>
