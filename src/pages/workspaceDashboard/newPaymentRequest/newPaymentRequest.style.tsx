@@ -1,30 +1,38 @@
 import styled from "@emotion/styled";
-import Header from "../../../components/layout/header/Header";
 
-export const FullScreenDialog = styled(Header)`
+export const FullScreenDialog = styled.div`
   width: 100vw;
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
   z-index: 99;
-  background-color: #fff;
-`;
-
-export const CreateRequest = styled.table`
-  display: grid;
+  background-color: var(--clr-modal-mask);
+  display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+`;
+export const CreateRequest = styled.table`
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  background: #fff;
+  width: 800px;
+  max-height: 480px;
+  z-index: 100;
+  border-radius: 6px;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center; */
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 export const Request = styled.div`
-  margin-top: 92px;
-  width: 750px;
-  /* min-width: 750px; */
-  border: 1px solid var(--border-table);
-  padding-bottom: 20px;
-  border-radius: 10px;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,6 +45,9 @@ export const RequestHeader = styled.div`
   justify-content: center;
   padding-inline: 40px;
   gap: 20px;
+  /* position: fixed;
+  inset: 0;
+  z-index: 1; */
 `;
 export const HeaderTitle = styled.div`
   display: flex;
@@ -107,9 +118,10 @@ export const WorkspaceDetails = styled.div`
 `;
 
 export const TableSection = styled.table`
-  /* padding-inline: 10px; */
-  margin: 20px;
-  /* max-width: 500px; */
+  margin-inline: 20px;
+  margin-top: 20px;
+  /* padding-top: 150px; */
+  margin-bottom: 30px;
 `;
 
 export const DeleteIcon = styled.div`
@@ -121,25 +133,28 @@ export const DeleteIcon = styled.div`
     cursor: pointer;
   }
 `;
-export const AddPayment = styled.button`
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 10px 0;
-  width: 96%;
-  border-radius: 4px;
-  margin: 8px 0;
-  /* margin-top: 21px; */
-  margin-inline: 2%;
-  cursor: pointer;
+export const AddPayment = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 10px;
-  img {
-    width: 10px;
+  button {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 0;
+    border-radius: 4px;
+    margin: 8px 0;
+    /* margin-top: 21px; */
+    margin-inline: 2%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    img {
+      width: 10px;
+    }
   }
 `;
 
@@ -178,26 +193,26 @@ export const Btn = styled.div`
   margin: 0 auto; */
 `;
 export const RequestSubmit = styled.button`
-  background: var(--bg-primary);
+  background: var(--clr-primary-900);
   border: none;
   outline: none;
-  font-size: 18px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 500;
   padding: 10px 0;
   width: 100%;
-  border-radius: 4px;
-  margin-top: 21px;
+  border-radius: 6px;
+  margin-top: 30px;
   cursor: pointer;
-  color: var(--text-primary);
+  color: var(--clr-white);
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
   img {
-    width: 10px;
+    width: 14px;
   }
 `;
-export const PaymentRequestInput = styled.input`
+export const PaymentRequestInput = styled.input<any>`
   border: 1px solid var(--clr-gray-200);
   outline: none;
   padding: 10px 12px;
@@ -205,6 +220,7 @@ export const PaymentRequestInput = styled.input`
   margin: 4px 0;
   height: 40px;
   width: 100%;
+  color: ${(props) => (props.isDatePicker ? "#111" : "gray")};
   &::placeholder {
     opacity: 0.5;
   }

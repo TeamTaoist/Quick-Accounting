@@ -25,6 +25,7 @@ import cancel from "../../../assets/auth/cancel.svg";
 import trash from "../../../assets/workspace/trash.svg";
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import add from "../../../assets/workspace/add.svg";
+import addIcon from "../../../assets/workspace/plus-white.svg";
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
 import selectIcon from "../../../assets/workspace/select.svg";
 import multiSelect from "../../../assets/workspace/multi-select.svg";
@@ -47,7 +48,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactSelect from "../../../components/ReactSelect";
@@ -400,6 +401,11 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   };
   console.log(paymentRequestBody);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleInputClick = () => {
+    inputRef.current?.showPicker();
+  };
+
   return (
     <FullScreenDialog>
       <CreateRequest>
@@ -434,10 +440,25 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
               sx={{
                 boxShadow: "none",
                 border: "1px solid var(--clr-gray-200)",
-                borderRadius: "6px",
-                // maxWidth: 680,
-                // margin: "26px auto",
+                maxHeight: "100%",
+                overflow: "auto",
+                width: "100%",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                "-ms-overflow-style": "none",
+                scrollbarWidth: "none",
               }}
+              // sx={{
+              //   boxShadow: "none",
+              //   border: "1px solid var(--clr-gray-200)",
+              //   borderRadius: "6px",
+              //   height: "100%",
+              //   // overflowY: "hidden",
+              //   // height: "250px",
+              //   // maxWidth: 680,
+              //   // margin: "26px auto",
+              // }}
             >
               <Table sx={{ width: "100%" }} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "var(--clr-gray-200)" }}>
@@ -503,7 +524,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                         <PaymentRequestInput
                           placeholder="Enter content"
                           value={row.recipient}
-                          onChange={(e) =>
+                          onChange={(e: any) =>
                             handleServiceChange(e, index, "recipient")
                           }
                         />
@@ -519,7 +540,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           type="text"
                           placeholder="0.00"
                           value={row.amount}
-                          onChange={(e) =>
+                          onChange={(e: any) =>
                             handleServiceChange(e, index, "amount")
                           }
                         />
@@ -605,9 +626,11 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                   ))}
                 </TableBody>
               </Table>
-              <AddPayment onClick={handleAddPayment}>
-                <img src={add} alt="" />
-                <span>Add</span>
+              <AddPayment>
+                <button onClick={handleAddPayment}>
+                  <img src={add} alt="" />
+                  <span>Add</span>
+                </button>
               </AddPayment>
               {/* </TableContainer> */}
               {/* note info */}
@@ -868,7 +891,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               <PaymentRequestInput
                                 placeholder="Enter content"
                                 value={textPropertyValues[property.name] || ""}
-                                onChange={(e) =>
+                                onChange={(e: any) =>
                                   handlePropertyText(
                                     e,
                                     property.name,
@@ -925,11 +948,14 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 }}
                               /> */}
                               <PaymentRequestInput
-                                placeholder="yyyy-mm-dd"
                                 type="date"
-                                onChange={(e) =>
+                                value={datePicker[property.name] || ""}
+                                onChange={(e: any) =>
                                   handleDatePickerProperty(e, property.name)
                                 }
+                                isDatePicker={datePicker[property.name]}
+                                onClick={handleInputClick}
+                                inputRef={inputRef}
                               />
                             </TableCell>
                           </TableRow>
@@ -943,7 +969,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
             </TableContainer>
             <Btn>
               <RequestSubmit onClick={handlePaymentRequestSubmit}>
-                Submit
+                <img src={addIcon} alt="" />
+                Create payment request
               </RequestSubmit>
             </Btn>
           </TableSection>

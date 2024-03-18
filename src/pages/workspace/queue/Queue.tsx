@@ -137,7 +137,11 @@ const Queue = () => {
       )}
       {!paymentRequest && (
         <RejectSection>
-          <RejectDataTable isInQueue />
+          <RejectDataTable
+            isInQueue
+            paymentRequest={paymentRequest}
+            setPaymentRequest={setPaymentRequest}
+          />
         </RejectSection>
       )}
     </QueueSection>

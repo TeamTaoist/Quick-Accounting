@@ -38,9 +38,15 @@ interface RejectDataTableProps {
   searchTerm?: string | undefined;
   selectedValue?: string;
   isInQueue?: boolean;
+  paymentRequest: boolean;
+  setPaymentRequest: (paymentRequest: boolean) => void;
 }
 
-const RejectPaymentRequestTable = ({ isInQueue }: RejectDataTableProps) => {
+const RejectPaymentRequestTable = ({
+  isInQueue,
+  paymentRequest,
+  setPaymentRequest,
+}: RejectDataTableProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
@@ -169,7 +175,7 @@ const RejectPaymentRequestTable = ({ isInQueue }: RejectDataTableProps) => {
             uniqueCategoryNames={uniqueCategoryNames}
           />
         </div>
-        <BackBtn>
+        <BackBtn onClick={() => setPaymentRequest(true)}>
           <Image src={back} alt="" />
           <p>Back</p>
         </BackBtn>
@@ -195,6 +201,9 @@ const RejectPaymentRequestTable = ({ isInQueue }: RejectDataTableProps) => {
                 <TableCell
                   sx={{
                     backgroundColor: "var(--clr-gray-200)",
+                    width: "30%",
+                    fontSize: "14px",
+                    fontWeight: "600",
                   }}
                 >
                   Recipient
@@ -202,6 +211,9 @@ const RejectPaymentRequestTable = ({ isInQueue }: RejectDataTableProps) => {
                 <TableCell
                   sx={{
                     backgroundColor: "var(--clr-gray-200)",
+                    width: "20%",
+                    fontSize: "14px",
+                    fontWeight: "600",
                   }}
                 >
                   Amount
@@ -209,6 +221,9 @@ const RejectPaymentRequestTable = ({ isInQueue }: RejectDataTableProps) => {
                 <TableCell
                   sx={{
                     backgroundColor: "var(--clr-gray-200)",
+                    width: "20%",
+                    fontSize: "14px",
+                    fontWeight: "600",
                   }}
                 >
                   Category
@@ -216,6 +231,8 @@ const RejectPaymentRequestTable = ({ isInQueue }: RejectDataTableProps) => {
                 <TableCell
                   sx={{
                     backgroundColor: "var(--clr-gray-200)",
+                    fontSize: "14px",
+                    fontWeight: "600",
                   }}
                 >
                   Status
@@ -223,6 +240,8 @@ const RejectPaymentRequestTable = ({ isInQueue }: RejectDataTableProps) => {
                 <TableCell
                   sx={{
                     backgroundColor: "var(--clr-gray-200)",
+                    fontSize: "14px",
+                    fontWeight: "600",
                   }}
                 >
                   Date
@@ -346,6 +365,7 @@ const RejectHeader = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 18px;
+  min-width: 1100px;
   div {
     display: flex;
   }

@@ -408,6 +408,8 @@ const PaymentRequest = () => {
           <RejectPaymentRequestTable
             searchTerm={searchTerm}
             selectedValue={selectedValue}
+            paymentRequest={paymentRequest}
+            setPaymentRequest={setPaymentRequest}
           />
         </RejectSection>
       )}
