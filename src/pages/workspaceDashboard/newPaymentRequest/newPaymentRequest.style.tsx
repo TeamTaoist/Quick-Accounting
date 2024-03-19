@@ -12,30 +12,20 @@ export const FullScreenDialog = styled.div`
   justify-content: center;
   align-items: center;
 `;
-export const CreateRequest = styled.table`
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
+export const CreateRequest = styled.div`
   background: #fff;
   width: 800px;
-  max-height: 480px;
+  height: 480px;
+  /* height: 30vh; */
   z-index: 100;
   border-radius: 6px;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center; */
-  overflow: auto;
+  overflow: scroll;
+
   &::-webkit-scrollbar {
     display: none;
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
-`;
-export const Request = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 `;
 export const RequestHeader = styled.div`
   height: 150px;
@@ -45,9 +35,21 @@ export const RequestHeader = styled.div`
   justify-content: center;
   padding-inline: 40px;
   gap: 20px;
-  /* position: fixed;
-  inset: 0;
-  z-index: 1; */
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+`;
+export const Request = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* overflow: scroll; */
+  /* position: relative; */
+  /* max-height: 480px; */
+  /* overflow-y: scroll; */
+  margin-inline: 16px;
 `;
 export const HeaderTitle = styled.div`
   display: flex;
@@ -117,7 +119,7 @@ export const WorkspaceDetails = styled.div`
   }
 `;
 
-export const TableSection = styled.table`
+export const TableSection = styled.div`
   margin-inline: 20px;
   margin-top: 20px;
   /* padding-top: 150px; */

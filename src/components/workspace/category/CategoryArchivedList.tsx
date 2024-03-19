@@ -15,6 +15,7 @@ import { checkboxClasses } from "@mui/material/Checkbox";
 
 export const CheckBoxStyle = {
   marginRight: "30px",
+  overflow: "hidden",
   [`&, &.${checkboxClasses.colorPrimary}`]: {
     color: "#cbd5e1",
   },
@@ -27,6 +28,8 @@ export const CheckBoxStyle = {
   "& .MuiSvgIcon-root": {
     // fontSize: 30,
     borderRadius: 6,
+    // backgroundColor: "#fff",
+    // overflow: "hidden",
   },
 };
 

@@ -185,20 +185,20 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   };
 
   const workspaceId = Number(id);
-  // useEffect(() => {
-  //   getWorkspaceCategoryProperties(workspaceId);
-  // }, [getWorkspaceCategoryProperties, workspaceId]);
+  useEffect(() => {
+    getWorkspaceCategoryProperties(workspaceId);
+  }, [getWorkspaceCategoryProperties, workspaceId]);
 
   // get assets list
   const { workspace, assetsList, getAssets, getHideAssets } = useWorkspace();
 
-  // useEffect(() => {
-  //   const fetchAssetsList = async () => {
-  //     workspace?.vault_wallet && (await getAssets());
-  //     workspace?.vault_wallet && (await getHideAssets());
-  //   };
-  //   fetchAssetsList();
-  // }, [workspace?.vault_wallet]);
+  useEffect(() => {
+    const fetchAssetsList = async () => {
+      workspace?.vault_wallet && (await getAssets());
+      workspace?.vault_wallet && (await getHideAssets());
+    };
+    fetchAssetsList();
+  }, [workspace?.vault_wallet]);
   console.log(assetsList);
 
   // property text content
@@ -409,37 +409,38 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
   return (
     <FullScreenDialog>
       <CreateRequest>
+        <RequestHeader>
+          <HeaderTitle>
+            <h1>New payment request</h1>
+            <img onClick={onClose} src={cancel} alt="" />
+          </HeaderTitle>
+          <WorkspaceInfo>
+            <WorkspaceItem>
+              <WorkspaceLogo>
+                {workspace.avatar === "" ? (
+                  <p>{workspace.name.slice(0, 1)}</p>
+                ) : (
+                  <img src={workspace.avatar} alt={workspace.name} />
+                )}
+              </WorkspaceLogo>
+              <WorkspaceDetails>
+                <h6>{workspace.name}</h6>
+                <p>{workspace.vault_wallet}</p>
+              </WorkspaceDetails>
+            </WorkspaceItem>
+            <UpdateInfo>
+              <img src={checkCircle} alt="" />
+              <p>Last updated at {formatTime(workspace.UpdatedAt)}</p>
+            </UpdateInfo>
+          </WorkspaceInfo>
+        </RequestHeader>
         <Request>
-          <RequestHeader>
-            <HeaderTitle>
-              <h1>New payment request</h1>
-              <img onClick={onClose} src={cancel} alt="" />
-            </HeaderTitle>
-            <WorkspaceInfo>
-              <WorkspaceItem>
-                <WorkspaceLogo>
-                  {workspace.avatar === "" ? (
-                    <p>{workspace.name.slice(0, 1)}</p>
-                  ) : (
-                    <img src={workspace.avatar} alt={workspace.name} />
-                  )}
-                </WorkspaceLogo>
-                <WorkspaceDetails>
-                  <h6>{workspace.name}</h6>
-                  <p>{workspace.vault_wallet}</p>
-                </WorkspaceDetails>
-              </WorkspaceItem>
-              <UpdateInfo>
-                <img src={checkCircle} alt="" />
-                <p>Last updated at {formatTime(workspace.UpdatedAt)}</p>
-              </UpdateInfo>
-            </WorkspaceInfo>
-          </RequestHeader>
           <TableSection>
             <TableContainer
               sx={{
                 boxShadow: "none",
                 border: "1px solid var(--clr-gray-200)",
+                borderRadius: "6px",
                 maxHeight: "100%",
                 overflow: "auto",
                 width: "100%",
@@ -449,16 +450,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                 "-ms-overflow-style": "none",
                 scrollbarWidth: "none",
               }}
-              // sx={{
-              //   boxShadow: "none",
-              //   border: "1px solid var(--clr-gray-200)",
-              //   borderRadius: "6px",
-              //   height: "100%",
-              //   // overflowY: "hidden",
-              //   // height: "250px",
-              //   // maxWidth: 680,
-              //   // margin: "26px auto",
-              // }}
             >
               <Table sx={{ width: "100%" }} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "var(--clr-gray-200)" }}>
@@ -550,6 +541,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           paddingTop: 0,
                           paddingBottom: 0,
                           width: "30%",
+                          borderTop: "1px solid var(--clr-gray-200)",
                         }}
                       >
                         <Select
@@ -585,7 +577,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 borderColor: "var(--clr-gray-200)",
                               },
                             },
-                            "& fieldset": { border: "1px solid red" },
+                            // "& fieldset": { border: "1px solid red" },
                           }}
                         >
                           {assetsList?.map(
@@ -661,13 +653,20 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           // borderRight: "1px solid var(--border-table)",
                           fontSize: "16px",
                           fontWeight: "500",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
                         }}
                       >
                         <NoteInfo>
                           <Image src={categoryIcon} alt="" /> Category
                         </NoteInfo>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        sx={{
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <FormControl fullWidth>
                           <Select
                             labelId="demo-simple-select-label"
@@ -744,8 +743,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               td: {
                                 padding: 0,
                                 paddingInline: "16px",
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
                               },
                             }}
                           >
@@ -766,7 +763,12 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               </NoteInfo>
                             </TableCell>
                             {/* add multi select */}
-                            <TableCell>
+                            <TableCell
+                              sx={{
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
+                              }}
+                            >
                               <ReactSelect
                                 // value={selectedValues}
                                 value={selectSingleValue}
@@ -807,8 +809,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               td: {
                                 padding: 0,
                                 paddingInline: "16px",
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
                               },
                             }}
                           >
@@ -829,7 +829,12 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             </TableCell>
                             {}
                             {/* add multi select */}
-                            <TableCell>
+                            <TableCell
+                              sx={{
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
+                              }}
+                            >
                               <ReactSelect
                                 value={selectedValues}
                                 onChange={(
@@ -865,8 +870,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               td: {
                                 padding: 0,
                                 paddingInline: "16px",
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
                               },
                             }}
                           >
@@ -885,7 +888,12 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 {property.name}
                               </NoteInfo>
                             </TableCell>
-                            <TableCell>
+                            <TableCell
+                              sx={{
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
+                              }}
+                            >
                               {/* <TextField
                                 sx={{
                                   "& fieldset": { border: "none" },
@@ -940,6 +948,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 width: 200,
                                 fontSize: "16px",
                                 fontWeight: "500",
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
                               }}
                             >
                               <NoteInfo>
@@ -947,7 +957,12 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 {property.name}
                               </NoteInfo>
                             </TableCell>
-                            <TableCell>
+                            <TableCell
+                              sx={{
+                                borderBottom: "none",
+                                borderTop: "1px solid var(--clr-gray-200)",
+                              }}
+                            >
                               {/* <TextField
                                 sx={{
                                   "& fieldset": { border: "none" },
