@@ -10,7 +10,8 @@ export const customStyles: any = {
     border: "1px solid var(--clr-gray-200)",
     borderRadius: "6px",
     margin: "4px 0",
-    padding: "3px 0",
+    padding: "2px 4px",
+    color: "var(--clr-primary-900)",
     boxShadow: state.isFocused ? null : null,
     backgroundColor: state.isDisabled
       ? "transparent"

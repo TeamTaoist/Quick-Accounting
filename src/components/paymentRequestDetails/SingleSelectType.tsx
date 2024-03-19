@@ -34,8 +34,9 @@ const SingleSelectType = ({
       <TableRow
         sx={{
           td: {
-            padding: 1,
-            paddingInline: 1,
+            padding: 0,
+            paddingInline: 2,
+            fontFamily: "Inter",
           },
         }}
       >
@@ -43,16 +44,25 @@ const SingleSelectType = ({
           sx={{
             height: 1,
             width: 200,
-            borderRight: "1px solid var(--border-table)",
+            fontSize: "16px",
+            fontWeight: "500",
+            borderBottom: "none",
+            borderTop: "1px solid var(--clr-gray-200)",
           }}
         >
           <NoteInfo>
-            {/* <Image src={selectIcon} alt="" /> {property.name} */}
-            <Image src={selectIcon} alt="" />{" "}
-            <input type="text" value={property.name} />
+            <Image src={selectIcon} alt="" /> {property.name}
+            {/* <Image src={selectIcon} alt="" />{" "}
+            <input type="text" value={property.name} /> */}
           </NoteInfo>
         </TableCell>
-        <TableCell onBlur={handleUpdateCategory}>
+        <TableCell
+          onBlur={handleUpdateCategory}
+          sx={{
+            borderBottom: "none",
+            borderTop: "1px solid var(--clr-gray-200)",
+          }}
+        >
           <ReactSelect
             isMulti={false}
             isDisabled={status === 2}

@@ -34,8 +34,10 @@ const MultiSelectType = ({
       <TableRow
         sx={{
           td: {
-            padding: 1,
-            paddingInline: 1,
+            padding: 0,
+            paddingInline: 2,
+            fontFamily: "Inter",
+            height: "56px",
           },
         }}
       >
@@ -43,7 +45,10 @@ const MultiSelectType = ({
           sx={{
             height: 1,
             width: 200,
-            borderRight: "1px solid var(--border-table)",
+            fontSize: "16px",
+            fontWeight: "500",
+            borderBottom: "none",
+            borderTop: "1px solid var(--clr-gray-200)",
           }}
         >
           <NoteInfo>
@@ -51,7 +56,13 @@ const MultiSelectType = ({
           </NoteInfo>
         </TableCell>
 
-        <TableCell onBlur={handleUpdateCategory}>
+        <TableCell
+          onBlur={handleUpdateCategory}
+          sx={{
+            borderBottom: "none",
+            borderTop: "1px solid var(--clr-gray-200)",
+          }}
+        >
           <ReactSelect
             isDisabled={status === 2}
             value={selectedValues}

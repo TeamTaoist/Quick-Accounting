@@ -135,11 +135,10 @@ const WorkspaceDetails = styled.div`
 const WorkspaceLogo = styled.div`
   /* margin-top: 20px; */
   padding: 14px 0;
-  width: 30px;
-  height: 30px;
-  border: 1px solid var(--border);
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: var(--bg-primary);
+  background: var(--clr-gray-200);
   cursor: pointer;
   display: flex;
   justify-content: center;

@@ -19,6 +19,7 @@ import {
   WorkspaceItem,
   UpdateInfo,
   PaymentRequestInput,
+  PaymentRequestDateInput,
   // Table,
 } from "./newPaymentRequest.style";
 import cancel from "../../../assets/auth/cancel.svg";
@@ -979,7 +980,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                   style: { padding: 0 },
                                 }}
                               /> */}
-                              <PaymentRequestInput
+                              <PaymentRequestDateInput
                                 type="date"
                                 value={datePicker[property.name] || ""}
                                 onChange={(e: any) =>

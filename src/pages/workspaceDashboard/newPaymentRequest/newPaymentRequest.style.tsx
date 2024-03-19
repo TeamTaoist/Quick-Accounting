@@ -168,11 +168,13 @@ export const NoteInformation = styled.div`
 export const NoteHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 10px 15px;
   background: var(--clr-gray-200);
+  height: 56px;
   h3 {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
   }
   .note {
     padding-bottom: 8px;
@@ -214,7 +216,19 @@ export const RequestSubmit = styled.button`
     width: 14px;
   }
 `;
-export const PaymentRequestInput = styled.input<any>`
+export const PaymentRequestInput = styled.input`
+  border: 1px solid var(--clr-gray-200);
+  outline: none;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin: 4px 0;
+  height: 40px;
+  width: 100%;
+  &::placeholder {
+    opacity: 0.5;
+  }
+`;
+export const PaymentRequestDateInput = styled.input<any>`
   border: 1px solid var(--clr-gray-200);
   outline: none;
   padding: 10px 12px;

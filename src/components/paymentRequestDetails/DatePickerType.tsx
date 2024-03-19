@@ -1,5 +1,8 @@
 import { TableCell, TableRow, TextField } from "@mui/material";
-import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
+import {
+  NoteInfo,
+  PaymentRequestDateInput,
+} from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import { CategoryProperties } from "../../store/useCategoryProperty";
@@ -34,8 +37,10 @@ const DatePickerType = ({
       <TableRow
         sx={{
           td: {
-            padding: 1,
-            paddingInline: 1,
+            padding: 0,
+            paddingInline: 2,
+            fontFamily: "Inter",
+            height: "56px",
           },
         }}
       >
@@ -43,7 +48,10 @@ const DatePickerType = ({
           sx={{
             height: 1,
             width: 200,
-            borderRight: "1px solid var(--border-table)",
+            fontSize: "16px",
+            fontWeight: "500",
+            borderBottom: "none",
+            borderTop: "1px solid var(--clr-gray-200)",
           }}
         >
           <NoteInfo>
@@ -51,8 +59,14 @@ const DatePickerType = ({
           </NoteInfo>
         </TableCell>
 
-        <TableCell onBlur={handleUpdateCategory}>
-          <TextField
+        <TableCell
+          onBlur={handleUpdateCategory}
+          sx={{
+            borderBottom: "none",
+            borderTop: "1px solid var(--clr-gray-200)",
+          }}
+        >
+          {/* <TextField
             inputRef={inputRef}
             disabled={status === 2}
             sx={{
@@ -78,6 +92,16 @@ const DatePickerType = ({
                 color: datePicker[property.name]?.values ? "black" : "gray",
               },
             }}
+          /> */}
+          <PaymentRequestDateInput
+            inputRef={inputRef}
+            disabled={status === 2}
+            type="date"
+            value={datePicker[property.name]?.values || ""}
+            onChange={(e: any) =>
+              handleDatePickerProperty(e, property.name, property.type)
+            }
+            onClick={handleInputClick}
           />
         </TableCell>
       </TableRow>

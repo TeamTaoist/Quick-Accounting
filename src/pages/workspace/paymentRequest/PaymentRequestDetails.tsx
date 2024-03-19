@@ -397,8 +397,8 @@ const PaymentRequestDetails = ({
                     sx={{
                       td: {
                         // border: "1px solid var(--border-table)",
-                        padding: 0,
-                        paddingInline: 1,
+                        padding: "6px",
+                        paddingInline: 2,
                       },
                     }}
                   >
@@ -406,19 +406,27 @@ const PaymentRequestDetails = ({
                       sx={{
                         height: 1,
                         width: 208,
-                        borderRight: "1px solid var(--border-table)",
+                        fontSize: "16px",
+                        fontWeight: "500",
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
                       }}
                     >
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
                     </TableCell>
-                    <TableCell>
+                    <TableCell
+                      sx={{
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
+                      }}
+                    >
                       <FormControl
                         fullWidth
                         disabled={paymentRequestDetails?.status === 2}
                       >
-                        <Select
+                        {/* <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
                           value={paymentRequestDetails?.category_name}
@@ -439,7 +447,6 @@ const PaymentRequestDetails = ({
                           }}
                         >
                           <MenuItem disabled value="Category">
-                            {/* {paymentRequestDetails.category_name} */}
                             {selectedCategory?.name}
                           </MenuItem>
                           {workspaceCategoryProperties?.map((category) => (
@@ -448,6 +455,72 @@ const PaymentRequestDetails = ({
                               value={category.name}
                               // onBlur={handleUpdateCategory}
                               onClick={() => handleCategory(category)}
+                            >
+                              {category.name}
+                            </MenuItem>
+                          ))}
+                        </Select> */}
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={paymentRequestDetails?.category_name}
+                          label="Age"
+                          // onChange={handleCategoryChange}
+                          size="small"
+                          IconComponent={() => (
+                            <InputAdornment position="start">
+                              <img
+                                src={arrowBottom}
+                                alt="Custom Arrow Icon"
+                                style={{ marginRight: "20px" }}
+                              />
+                            </InputAdornment>
+                          )}
+                          // sx={{
+                          //   minWidth: "100%",
+                          //   "& fieldset": { border: "none" },
+                          // }}
+                          sx={{
+                            minWidth: "100%",
+                            height: "42px",
+                            padding: 0,
+                            paddingInline: "1px",
+                            "& .MuiSelect-select": {
+                              display: "block",
+                            },
+                            "&.MuiOutlinedInput-root": {
+                              border: "1px solid var(--clr-gray-200)",
+                              "& fieldset": {
+                                border: "none",
+                              },
+                              "&:hover fieldset": {
+                                border: "none",
+                              },
+                              "&.Mui-focused fieldset": {
+                                border: "none",
+                              },
+                            },
+                            // "& fieldset": { border: "none" },
+                            "& .MuiInputLabel-root": { display: "none" },
+                          }}
+                        >
+                          <MenuItem disabled value="Category">
+                            Category name
+                          </MenuItem>
+                          {workspaceCategoryProperties?.map((category) => (
+                            <MenuItem
+                              key={category.ID}
+                              value={category.name}
+                              // onBlur={handleUpdateCategory}
+                              onClick={() => handleCategory(category)}
+                              sx={{
+                                "&:hover": {
+                                  backgroundColor: "var(--clr-gray-100)",
+                                },
+                                "&.Mui-selected": {
+                                  backgroundColor: "var(--clr-gray-200)",
+                                },
+                              }}
                             >
                               {category.name}
                             </MenuItem>
@@ -491,11 +564,12 @@ const PaymentRequestDetails = ({
             <p>Submission time</p>
             <div>{formatTimestamp(paymentRequestDetails.submit_ts)}</div>
           </SubmissionTime>
-          <Status>
-            <p>Status</p>
-            <StatusBtn>
+          <Status status={getPaymentStatus(paymentRequestDetails.status)}>
+            <h6>Status</h6>
+            <div>
+              <p></p>
               {getPaymentStatus(paymentRequestDetails.status)}
-            </StatusBtn>
+            </div>
           </Status>
         </RequestDetails>
       </WorkspaceItemDetailsLayout>
@@ -507,45 +581,63 @@ export default PaymentRequestDetails;
 
 const RequestDetails = styled.div`
   /* padding-bottom: 50px; */
-  margin: 30px;
-`;
-const PaymentStatus = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 20px;
-  img {
-    width: 20px;
-  }
-  p {
-    font-size: 20px;
-  }
+  margin: 30px 40px;
 `;
 export const SubmissionTime = styled.div`
-  padding-top: 14px;
+  padding-top: 18px;
   p {
-    font-size: 18px;
-    padding-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 8px;
   }
   div {
-    border: 1px solid var(--border-table);
+    border: 1px solid var(--clr-gray-200);
     padding: 10px 10px;
+    font-size: 14px;
     border-radius: 8px;
   }
 `;
-export const Status = styled.div`
+export const Status = styled.div<any>`
   padding-top: 14px;
-  p {
-    font-size: 18px;
-    padding-bottom: 6px;
+  h6 {
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 8px;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    p {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: ${({ status }) => {
+        switch (status) {
+          case "Submitted":
+            return "#16A34A";
+          case "Rejected":
+            return "#FACC15";
+          case "Pending":
+            return "#94A3B8";
+          case "Failed":
+            return "#DC2626";
+          case "Executed":
+            return "#2563EB";
+          default:
+            return "gray";
+        }
+      }};
+    }
+    img {
+      width: 7px;
+    }
   }
 `;
 export const StatusBtn = styled.button`
-  background: #7c7777;
+  background: transparent;
   border: none;
   outline: none;
   padding: 8px 14px;
   font-size: 16px;
-  border-radius: 7px;
-  color: #ffffff;
 `;
