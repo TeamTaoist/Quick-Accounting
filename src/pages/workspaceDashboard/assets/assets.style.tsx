@@ -62,16 +62,16 @@ export const RowCell = styled.div`
   justify-content: center;
   /* display: grid; */
   h6 {
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 400;
   }
   p {
-    font-size: 13px;
-    color: var(--text-secondary);
+    font-size: 12px;
+    color: var(--clr-gray-400);
   }
 `;
 export const RowLink = styled.div`
   img {
-    width: 23px;
+    width: 16px;
   }
 `;

@@ -60,29 +60,39 @@ const WorkspaceItemDetailsLayout = ({
 export default WorkspaceItemDetailsLayout;
 
 const WorkspaceItemContainer = styled.div`
-  display: grid;
+  display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
 `;
 export const Request = styled.div`
-  //margin-top: 92px;
-  width: 757px;
+  width: 800px;
+  height: 480px;
   border: 1px solid var(--border-table);
   border-radius: 10px;
-  overflow: hidden;
+  overflow: scroll;
   background: #fff;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 export const RequestHeader = styled.div`
-  height: 120px;
+  height: 152px;
   /* min-height: 90px; */
   background: var(--clr-gray-100);
   /* padding: 30px 40px; */
   position: relative;
-  line-height: 32px;
+  /* line-height: 32px; */
   display: flex;
   align-items: center;
   padding-inline: 40px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
   img {
     width: 20px;
     cursor: pointer;
@@ -92,14 +102,17 @@ export const RequestHeader = styled.div`
   }
 `;
 const HeaderDescription = styled.div`
+  line-height: 20px;
+  margin-top: 6px;
   h1 {
     font-size: 24px;
     font-weight: 600;
+    margin-bottom: 10px;
   }
   P {
     font-size: 14px;
     font-weight: 500;
-    margin-top: 6px;
+    /* margin-top: 6px; */
   }
 `;
 const WorkspaceInfo = styled.div`
@@ -110,7 +123,7 @@ const WorkspaceInfo = styled.div`
 `;
 const WorkspaceDetails = styled.div`
   h6 {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
   }
   p {

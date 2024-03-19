@@ -12,6 +12,13 @@ import { useDomainStore } from "../../store/useDomain";
 import { useWorkspace } from "../../store/useWorkspace";
 import { useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
+const HeaderStyles = {
+  padding: "10px 15px",
+  fontFamily: "Inter",
+  fontSize: "16px",
+  fontWeight: "500",
+  color: "#0F172A",
+};
 
 const PaymentCurrencyTable = () => {
   const { paymentRequestDetails } = usePaymentsStore();
@@ -22,35 +29,11 @@ const PaymentCurrencyTable = () => {
   return (
     // <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
-      <TableHead sx={{ backgroundColor: "var(--bg-secondary)" }}>
+      <TableHead sx={{ backgroundColor: "var(--clr-gray-200)" }}>
         <TableRow>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Recipient
-          </TableCell>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Amount
-          </TableCell>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Currency
-          </TableCell>
+          <TableCell sx={HeaderStyles}>Recipient</TableCell>
+          <TableCell sx={HeaderStyles}>Amount</TableCell>
+          <TableCell sx={HeaderStyles}>Currency</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -62,9 +45,9 @@ const PaymentCurrencyTable = () => {
           <TableCell
             // size="small"
             sx={{
-              border: "1px solid var(--border-table)",
-              padding: 0,
-              borderLeft: 0,
+              // border: "1px solid var(--border-table)",
+              border: 0,
+              padding: "5px",
             }}
           >
             <TextField
@@ -90,10 +73,8 @@ const PaymentCurrencyTable = () => {
           </TableCell>
           <TableCell
             sx={{
-              border: "1px solid var(--border-table)",
-              padding: 0,
-              paddingLeft: "10px",
-              // minHeight: "40px",
+              border: 0,
+              padding: "5px",
             }}
           >
             <TextField
@@ -113,9 +94,8 @@ const PaymentCurrencyTable = () => {
           </TableCell>
           <TableCell
             sx={{
-              border: "1px solid var(--border-table)",
-              borderRight: 0,
-              padding: 0,
+              border: 0,
+              padding: "5px",
             }}
           >
             <TextField

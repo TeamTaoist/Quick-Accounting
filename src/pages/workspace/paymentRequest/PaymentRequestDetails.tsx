@@ -379,8 +379,8 @@ const PaymentRequestDetails = ({
           <TableContainer
             sx={{
               boxShadow: "none",
-              border: "1px solid var(--border-table)",
-              borderRadius: "10px",
+              border: "1px solid var(--clr-gray-200)",
+              borderRadius: "6px",
             }}
           >
             <PaymentCurrencyTable />
