@@ -306,6 +306,14 @@ const PaymentRequestGroupDetails = ({
       setSelectedWorkspaceSafeAddress(selectedWorkspace.vault_wallet);
     }
   }, []);
+  const HeaderStyles = {
+    padding: "10px 15px",
+    fontFamily: "Inter",
+    fontSize: "16px",
+    fontWeight: "500",
+    color: "#0F172A",
+    width: "33%",
+  };
   return (
     <>
       <WorkspaceItemDetailsLayout
@@ -322,47 +330,22 @@ const PaymentRequestGroupDetails = ({
                 // sx={{ paddingInline: "40px", paddingTop: "30px" }}
                 sx={{
                   boxShadow: "none",
-                  border: "1px solid var(--border-table)",
-                  borderRadius: "10px",
-                  margin: "20px 0",
+                  border: "1px solid var(--clr-gray-200)",
+                  borderRadius: "6px",
+                  marginBottom: "30px",
                 }}
               >
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead sx={{ backgroundColor: "var(--bg-secondary)" }}>
+                  <TableHead
+                    sx={{
+                      backgroundColor: "var(--clr-gray-200)",
+                      height: "56px",
+                    }}
+                  >
                     <TableRow>
-                      <TableCell
-                        sx={{
-                          width: "30.2%",
-                          border: 0,
-                          borderRight: "1px solid var(--border-table)",
-                          fontWeight: 500,
-                          fontSize: "16px",
-                        }}
-                      >
-                        Recipient
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          width: "23%",
-                          border: 0,
-                          borderRight: "1px solid var(--border-table)",
-                          fontWeight: 500,
-                          fontSize: "16px",
-                        }}
-                      >
-                        Amount
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          width: "37%",
-                          border: 0,
-                          borderRight: "1px solid var(--border-table)",
-                          fontWeight: 500,
-                          fontSize: "16px",
-                        }}
-                      >
-                        Currency
-                      </TableCell>
+                      <TableCell sx={HeaderStyles}>Recipient</TableCell>
+                      <TableCell sx={HeaderStyles}>Amount</TableCell>
+                      <TableCell sx={HeaderStyles}>Currency</TableCell>
                     </TableRow>
                   </TableHead>
                   {/* {paymentRequestGroupDetails.map((payment) => ( */}
@@ -370,15 +353,17 @@ const PaymentRequestGroupDetails = ({
                     <TableRow
                       sx={{
                         height: "30px",
-                        borderRadius: "10px",
+                        // borderRadius: "10px",
                       }}
                     >
                       <TableCell
                         // size="small"
                         sx={{
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          borderLeft: 0,
+                          // border: "1px solid var(--border-table)",
+                          // padding: 0,
+                          // borderLeft: 0,
+                          border: 0,
+                          padding: "5px 0",
                         }}
                       >
                         <TextField
@@ -403,11 +388,13 @@ const PaymentRequestGroupDetails = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          border: "1px solid var(--border-table)",
-                          borderRadius: "5px",
-                          padding: 0,
-                          paddingLeft: "10px",
+                          // border: "1px solid var(--border-table)",
+                          // borderRadius: "5px",
+                          // padding: 0,
+                          // paddingLeft: "10px",
                           // minHeight: "40px",
+                          border: 0,
+                          padding: "5px 0",
                         }}
                       >
                         <TextField
@@ -428,10 +415,13 @@ const PaymentRequestGroupDetails = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          borderRight: 0,
+                          // border: "1px solid var(--border-table)",
+                          // padding: 0,
+                          // borderRight: 0,
                           // minHeight: "40px",
+                          border: 0,
+                          padding: "5px 0",
+                          paddingRight: "16px",
                         }}
                       >
                         <Select
@@ -452,7 +442,19 @@ const PaymentRequestGroupDetails = ({
                           )}
                           sx={{
                             minWidth: "100%",
-                            "& fieldset": { border: "none" },
+                            height: "40px",
+                            marginRight: "8px",
+                            "&.MuiOutlinedInput-root": {
+                              "& fieldset": {
+                                borderColor: "var(--clr-gray-200)",
+                              },
+                              "&:hover fieldset": {
+                                borderColor: "var(--clr-gray-200)",
+                              },
+                              "&.Mui-focused fieldset": {
+                                borderColor: "var(--clr-gray-200)",
+                              },
+                            },
                           }}
                           inputProps={{
                             readOnly: true,
@@ -494,9 +496,8 @@ const PaymentRequestGroupDetails = ({
                       <TableRow
                         sx={{
                           td: {
-                            // border: "1px solid var(--border-table)",
-                            padding: 0,
-                            paddingInline: 1,
+                            padding: "6px",
+                            paddingInline: 2,
                           },
                         }}
                       >
@@ -504,14 +505,22 @@ const PaymentRequestGroupDetails = ({
                           sx={{
                             height: 1,
                             width: "33.5%",
-                            borderRight: "1px solid var(--border-table)",
+                            fontSize: "16px",
+                            fontWeight: "500",
+                            borderBottom: "none",
+                            borderTop: "1px solid var(--clr-gray-200)",
                           }}
                         >
                           <NoteInfo>
                             <Image src={categoryIcon} alt="" /> Category
                           </NoteInfo>
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          sx={{
+                            borderBottom: "none",
+                            borderTop: "1px solid var(--clr-gray-200)",
+                          }}
+                        >
                           <FormControl
                             fullWidth
                             // disabled={paymentRequestDetails.status === 1}
@@ -537,7 +546,26 @@ const PaymentRequestGroupDetails = ({
                               )}
                               sx={{
                                 minWidth: "100%",
-                                "& fieldset": { border: "none" },
+                                height: "42px",
+                                padding: 0,
+                                paddingInline: "1px",
+                                "& .MuiSelect-select": {
+                                  display: "block",
+                                },
+                                "&.MuiOutlinedInput-root": {
+                                  border: "1px solid var(--clr-gray-200)",
+                                  "& fieldset": {
+                                    border: "none",
+                                  },
+                                  "&:hover fieldset": {
+                                    border: "none",
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    border: "none",
+                                  },
+                                },
+                                // "& fieldset": { border: "none" },
+                                "& .MuiInputLabel-root": { display: "none" },
                               }}
                             >
                               <MenuItem disabled value="Category">
@@ -558,10 +586,10 @@ const PaymentRequestGroupDetails = ({
                                   }}
                                   sx={{
                                     "&:hover": {
-                                      backgroundColor: "var(--hover-bg)",
+                                      backgroundColor: "var(--clr-gray-100)",
                                     },
                                     "&.Mui-selected": {
-                                      backgroundColor: "var(--hover-bg)",
+                                      backgroundColor: "var(--clr-gray-200)",
                                     },
                                   }}
                                 >
@@ -702,11 +730,12 @@ const PaymentRequestGroupDetails = ({
             <p>Submission time</p>
             <div>{formatTimestamp(groupDetails?.[0]?.submit_ts || 0)}</div>
           </SubmissionTime>
-          <Status>
-            <p>Status</p>
-            <StatusBtn>
+          <Status status={getPaymentStatus(groupDetails?.[0]?.status || 0)}>
+            <h6>Status</h6>
+            <div>
+              <p></p>
               {getPaymentStatus(groupDetails?.[0]?.status || 0)}
-            </StatusBtn>
+            </div>
           </Status>
         </RequestDetails>
       </WorkspaceItemDetailsLayout>

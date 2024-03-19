@@ -39,8 +39,12 @@ const GroupMultiSelectType = ({
       <TableRow
         sx={{
           td: {
-            padding: 1,
-            paddingInline: 1,
+            // padding: 1,
+            // paddingInline: 1,
+            padding: 0,
+            paddingInline: 2,
+            fontFamily: "Inter",
+            height: "56px",
           },
         }}
       >
@@ -48,14 +52,23 @@ const GroupMultiSelectType = ({
           sx={{
             height: 1,
             width: 200,
-            borderRight: "1px solid var(--border-table)",
+            fontSize: "16px",
+            fontWeight: "500",
+            borderBottom: "none",
+            borderTop: "1px solid var(--clr-gray-200)",
           }}
         >
           <NoteInfo>
             <Image src={multiSelect} alt="" /> {properties.name}
           </NoteInfo>
         </TableCell>
-        <TableCell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
+        <TableCell
+          sx={{
+            borderBottom: "none",
+            borderTop: "1px solid var(--clr-gray-200)",
+          }}
+          onBlur={() => handleUpdatePaymentRequest(payment.id)}
+        >
           <ReactSelect
             value={selectedValues}
             // isDisabled={isEditable}

@@ -158,7 +158,6 @@ const PaymentCurrencyTable = () => {
                     borderColor: "var(--clr-gray-200)",
                   },
                 },
-                // "& fieldset": { border: "1px solid red" },
               }}
             >
               {/* {assetsList?.map(

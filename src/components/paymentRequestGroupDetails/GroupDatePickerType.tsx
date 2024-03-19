@@ -1,5 +1,8 @@
 import { TableCell, TableRow, TextField } from "@mui/material";
-import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
+import {
+  NoteInfo,
+  PaymentRequestDateInput,
+} from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import { paymentRequestBody } from "../workspace/paymentRequest/PaymentRequestGroupDetails";
@@ -41,8 +44,12 @@ const GroupDatePickerType = ({
       <TableRow
         sx={{
           td: {
-            padding: 1,
-            paddingInline: 1,
+            // padding: 1,
+            // paddingInline: 1,
+            padding: 0,
+            paddingInline: 2,
+            fontFamily: "Inter",
+            height: "56px",
           },
         }}
       >
@@ -50,15 +57,24 @@ const GroupDatePickerType = ({
           sx={{
             height: 1,
             width: 200,
-            borderRight: "1px solid var(--border-table)",
+            fontSize: "16px",
+            fontWeight: "500",
+            borderBottom: "none",
+            borderTop: "1px solid var(--clr-gray-200)",
           }}
         >
           <NoteInfo>
             <Image src={multiSelect} alt="" /> {properties.name}
           </NoteInfo>
         </TableCell>
-        <TableCell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
-          <TextField
+        <TableCell
+          sx={{
+            borderBottom: "none",
+            borderTop: "1px solid var(--clr-gray-200)",
+          }}
+          onBlur={() => handleUpdatePaymentRequest(payment.id)}
+        >
+          {/* <TextField
             inputRef={inputRef}
             sx={{
               "& fieldset": { border: "none" },
@@ -98,6 +114,34 @@ const GroupDatePickerType = ({
                   : "gray",
               },
             }}
+          /> */}
+          <PaymentRequestDateInput
+            inputRef={inputRef}
+            isDatePicker={
+              sharePaymentRequestForm[index].category_properties?.find(
+                (p: any) =>
+                  p.type === "date-picker" && p.name === properties.name
+              )?.values
+            }
+            type="date"
+            value={
+              sharePaymentRequestForm[index].category_properties.find(
+                (p: any) =>
+                  p.type === "date-picker" && p.name === properties.name
+              )?.values || ""
+            }
+            // id="fullWidth"
+            placeholder="Enter content"
+            onChange={(e: any) =>
+              handleFormChange(
+                index,
+                "categoryProperties",
+                e.target.value,
+                properties.name,
+                properties.type
+              )
+            }
+            onClick={handleInputClick}
           />
         </TableCell>
       </TableRow>
