@@ -307,8 +307,8 @@ const PaymentRequest = () => {
                 {/* table */}
                 <TableContainer
                   sx={{
-                    border: "1px solid #ddd",
-                    borderRadius: "8px",
+                    border: "1px solid var(--clr-gray-200)",
+                    borderRadius: "6px",
                     maxHeight: "100%",
                     overflow: "auto",
                     minWidth: "1100px",
@@ -330,7 +330,9 @@ const PaymentRequest = () => {
                           sx={{
                             width: "30%",
                             fontSize: "14px",
-                            fontWeight: "600",
+                            fontWeight: "500",
+                            fontFamily: "Inter",
+                            color: "var(--clr-primary-900)",
                           }}
                         >
                           <Checkbox
@@ -350,7 +352,9 @@ const PaymentRequest = () => {
                           sx={{
                             width: "20%",
                             fontSize: "14px",
-                            fontWeight: "600",
+                            fontWeight: "500",
+                            fontFamily: "Inter",
+                            color: "var(--clr-primary-900)",
                           }}
                         >
                           Amount
@@ -359,7 +363,9 @@ const PaymentRequest = () => {
                           sx={{
                             width: "20%",
                             fontSize: "14px",
-                            fontWeight: "600",
+                            fontWeight: "500",
+                            fontFamily: "Inter",
+                            color: "var(--clr-primary-900)",
                           }}
                         >
                           Category
@@ -367,7 +373,9 @@ const PaymentRequest = () => {
                         <TableCell
                           sx={{
                             fontSize: "14px",
-                            fontWeight: "600",
+                            fontWeight: "500",
+                            fontFamily: "Inter",
+                            color: "var(--clr-primary-900)",
                           }}
                         >
                           Date

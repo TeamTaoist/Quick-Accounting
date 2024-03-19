@@ -109,7 +109,14 @@ const CategoryPropertyArchivedList = ({
                     }}
                   >
                     <TableRow>
-                      <TableCell sx={{ fontWeight: 600, padding: "5px 10px" }}>
+                      <TableCell
+                        sx={{
+                          fontWeight: 500,
+                          fontSize: "14px",
+                          padding: "5px 10px",
+                          fontFamily: "Inter",
+                        }}
+                      >
                         <Checkbox
                           indeterminate={
                             selected.length > 0 &&

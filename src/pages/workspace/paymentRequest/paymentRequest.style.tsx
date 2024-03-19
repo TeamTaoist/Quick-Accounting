@@ -37,7 +37,7 @@ export const Btn = styled.div`
   border-radius: 5px;
   p {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
   }
   cursor: pointer;
 `;

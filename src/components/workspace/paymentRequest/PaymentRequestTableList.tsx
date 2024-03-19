@@ -84,8 +84,7 @@ const PaymentRequestTableList = ({
             style={{
               padding: 0,
               paddingLeft: "16px",
-              // borderBottom: "1px solid #ddd",
-              borderTop: "none",
+              borderBottom: "1px solid var(--clr-gray-200)",
               position: "relative",
             }}
           >
@@ -153,6 +152,8 @@ const PaymentRequestTableList = ({
                 style={{
                   padding: 0,
                   paddingLeft: "16px",
+                  borderBottom: "none",
+                  borderTop: "1px solid red",
                 }}
               >
                 <Checkbox
