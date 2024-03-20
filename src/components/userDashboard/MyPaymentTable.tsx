@@ -27,11 +27,12 @@ const MyPaymentTable = ({
 }: MyPaymentTableProps) => {
   return (
     <TableContainer
-      component={Paper}
       sx={{
+        border: "1px solid var(--clr-gray-200)",
+        borderRadius: "6px",
         maxHeight: "100%",
         overflow: "auto",
-        minWidth: 800,
+        minWidth: "1100px",
         "&::-webkit-scrollbar": {
           display: "none",
         },
@@ -47,7 +48,9 @@ const MyPaymentTable = ({
                 background: "var(--clr-gray-200)",
                 width: "30%",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             >
               Workspace
@@ -57,7 +60,9 @@ const MyPaymentTable = ({
                 background: "var(--clr-gray-200)",
                 width: "30%",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             >
               Amount
@@ -66,7 +71,9 @@ const MyPaymentTable = ({
               sx={{
                 background: "var(--clr-gray-200)",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             >
               Status
@@ -75,7 +82,9 @@ const MyPaymentTable = ({
               sx={{
                 background: "var(--clr-gray-200)",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             >
               Date
@@ -84,7 +93,9 @@ const MyPaymentTable = ({
               sx={{
                 background: "var(--clr-gray-200)",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             ></TableCell>
           </TableRow>
@@ -92,23 +103,50 @@ const MyPaymentTable = ({
         <TableBody>
           {filterData.map((payment) => (
             <TableRow key={payment.ID}>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 <div>
                   <p>{payment.workspace_name}</p>
                   {/* <p>{recipientFormate(payment.vault_wallet)}</p> */}
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 <Status status={getPaymentStatus(payment.status)}>
                   <p></p>
                   {getPaymentStatus(payment.status)}
                 </Status>
               </TableCell>
-              <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
+                {getPaymentUpdateTime(payment)}
+              </TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 {/* <Button
                   variant="outlined"
                   sx={{

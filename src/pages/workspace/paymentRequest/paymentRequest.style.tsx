@@ -26,7 +26,7 @@ export const ActionBtn = styled.div`
   margin-left: 20px;
   /* margin-top: 60px; */
   img {
-    width: 20px;
+    width: 14px;
   }
 `;
 export const Btn = styled.div`
@@ -80,7 +80,7 @@ export const PaymentPagination = styled.div`
 `;
 export const CategoryCell = styled.div`
   background: var(--clr-gray-200);
-  padding: 6px;
+  padding: 8px 6px;
   font-size: 14px;
   text-align: center;
   border-radius: 5px;

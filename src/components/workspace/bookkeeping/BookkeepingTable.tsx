@@ -123,10 +123,10 @@ const BookkeepingTable = ({
         <TableBody>
           {filterData.map((bookkeeping) => (
             <React.Fragment key={bookkeeping.ID}>
-              <TableRow>
+              <TableRow sx={{ height: "56px" }}>
                 <TableCell
                   style={{
-                    padding: 0,
+                    padding: "6px 16px",
                     borderBottom: "none",
                     borderTop: "1px solid var(--clr-gray-200)",
                   }}
@@ -148,6 +148,7 @@ const BookkeepingTable = ({
                 </TableCell>
                 <TableCell
                   sx={{
+                    padding: "6px 16px",
                     borderBottom: "none",
                     borderTop: "1px solid var(--clr-gray-200)",
                   }}
@@ -160,6 +161,7 @@ const BookkeepingTable = ({
                 </TableCell>
                 <TableCell
                   sx={{
+                    padding: "6px 16px",
                     borderBottom: "none",
                     borderTop: "1px solid var(--clr-gray-200)",
                   }}
@@ -169,6 +171,7 @@ const BookkeepingTable = ({
                 </TableCell>
                 <TableCell
                   sx={{
+                    padding: "6px 16px",
                     borderBottom: "none",
                     borderTop: "1px solid var(--clr-gray-200)",
                   }}
@@ -177,6 +180,7 @@ const BookkeepingTable = ({
                 </TableCell>
                 <TableCell
                   sx={{
+                    padding: "6px 16px",
                     borderBottom: "none",
                     borderTop: "1px solid var(--clr-gray-200)",
                   }}
@@ -185,6 +189,7 @@ const BookkeepingTable = ({
                 </TableCell>
                 <TableCell
                   sx={{
+                    padding: "6px 16px",
                     borderBottom: "none",
                     borderTop: "1px solid var(--clr-gray-200)",
                   }}

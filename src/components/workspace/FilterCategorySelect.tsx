@@ -26,7 +26,30 @@ const FilterCategorySelect = ({
         displayEmpty
         inputProps={{ "aria-label": "Select a value" }}
         size="small"
-        sx={{ overflow: "hidden" }}
+        // sx={{ overflow: "hidden" }}
+        sx={{
+          minWidth: "100%",
+          height: "42px",
+          padding: 0,
+          paddingInline: "1px",
+          "& .MuiSelect-select": {
+            display: "block",
+          },
+          "&.MuiOutlinedInput-root": {
+            border: "1px solid var(--clr-gray-200)",
+            "& fieldset": {
+              border: "none",
+            },
+            "&:hover fieldset": {
+              border: "none",
+            },
+            "&.Mui-focused fieldset": {
+              border: "none",
+            },
+          },
+          // "& fieldset": { border: "none" },
+          "& .MuiInputLabel-root": { display: "none" },
+        }}
         // renderValue={(selectedValue) => (
         //   <div style={{ overflow: "hidden" }}>{selectedValue}</div>
         // )}
@@ -35,6 +58,7 @@ const FilterCategorySelect = ({
             "& .MuiMenuItem-root": {
               marginInline: "10px",
               borderRadius: "6px",
+              fontFamily: "Inter",
               // border: "1px solid var(--clr-gray-300)",
               "&:hover": {
                 bgcolor: "var(--clr-gray-100)",

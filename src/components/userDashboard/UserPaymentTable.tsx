@@ -26,11 +26,12 @@ const UserPaymentTable = ({
   const { formatAddressToDomain } = useDomainStore();
   return (
     <TableContainer
-      component={Paper}
       sx={{
+        border: "1px solid var(--clr-gray-200)",
+        borderRadius: "6px",
         maxHeight: "100%",
         overflow: "auto",
-        minWidth: 800,
+        minWidth: "1100px",
         "&::-webkit-scrollbar": {
           display: "none",
         },
@@ -46,7 +47,9 @@ const UserPaymentTable = ({
                 background: "var(--clr-gray-200)",
                 width: "25%",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             >
               Workspace
@@ -55,7 +58,9 @@ const UserPaymentTable = ({
               sx={{
                 background: "var(--clr-gray-200)",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             >
               Recipient
@@ -65,7 +70,9 @@ const UserPaymentTable = ({
                 background: "var(--clr-gray-200)",
                 width: "25%",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             >
               Amount
@@ -74,7 +81,9 @@ const UserPaymentTable = ({
               sx={{
                 background: "var(--clr-gray-200)",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             >
               Status
@@ -83,7 +92,9 @@ const UserPaymentTable = ({
               sx={{
                 background: "var(--clr-gray-200)",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             >
               Date
@@ -92,7 +103,9 @@ const UserPaymentTable = ({
               sx={{
                 background: "var(--clr-gray-200)",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
               }}
             ></TableCell>
           </TableRow>
@@ -100,13 +113,23 @@ const UserPaymentTable = ({
         <TableBody>
           {filterData.map((payment) => (
             <TableRow key={payment.ID}>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 <div>
                   <p>{payment.workspace_name}</p>
                   {/* <p>{getShortAddress(payment.vault_wallet)}</p> */}
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 <div>
                   <p>
                     {formatAddressToDomain(
@@ -117,18 +140,40 @@ const UserPaymentTable = ({
                   </p>
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 {/* <img src={statusIcon} alt="" /> */}
                 <Status status={getPaymentStatus(payment.status)}>
                   <p></p>
                   {getPaymentStatus(payment.status)}
                 </Status>
               </TableCell>
-              <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
+                {getPaymentUpdateTime(payment)}
+              </TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 <Tooltip
                   title="View details"
                   placement="top"
