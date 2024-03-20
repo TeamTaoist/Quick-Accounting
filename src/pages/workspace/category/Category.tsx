@@ -517,6 +517,7 @@ const Category = () => {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     sx={{
+                      fontFamily: "Inter",
                       borderRadius: expandedCategories.includes(category.ID)
                         ? "6px 6px 0 0"
                         : "6px",
@@ -545,8 +546,9 @@ const Category = () => {
                           <Typography
                             sx={{
                               padding: 1,
-                              fontSize: "20px",
+                              fontSize: "16px",
                               fontWeight: "500",
+                              fontFamily: "Inter",
                             }}
                           >
                             {category.name}

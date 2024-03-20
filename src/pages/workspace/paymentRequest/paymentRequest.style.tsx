@@ -33,7 +33,7 @@ export const Btn = styled.div`
   display: flex;
   gap: 8px;
   border: 1px solid var(--clr-gray-300);
-  padding: 6px 10px;
+  padding: 8px 10px;
   border-radius: 5px;
   p {
     font-size: 14px;
@@ -64,7 +64,7 @@ export const ViewReject = styled.div`
   }
 `;
 export const RejectSection = styled.div`
-  margin-top: 20px;
+  /* margin-top: 20px; */
 `;
 export const BookkeepingRejectSection = styled.div`
   /* margin-top: 8px; */

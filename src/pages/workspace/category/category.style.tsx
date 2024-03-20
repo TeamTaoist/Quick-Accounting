@@ -87,7 +87,8 @@ export const HeaderOptions = styled.div`
       width: 24px;
     }
     p {
-      font-size: 18px;
+      font-size: 14px;
+      font-weight: 500;
     }
   }
 `;
@@ -98,9 +99,11 @@ export const UpdateBtn = styled.button`
   color: var(--clr-white);
   padding: 10px 18px;
   border-radius: 7px;
-  font-size: 18px;
+  font-weight: 500;
+  margin-right: 20px;
   margin-right: 10px;
   cursor: pointer;
+  font-family: "Inter";
 `;
 export const UpdateLoadingBtn = styled.div`
   display: flex;
@@ -290,7 +293,9 @@ export const CancelBtn = styled.button`
   border: 1px solid var(--clr-gray-200);
   padding: 10px 18px;
   border-radius: 6px;
-  font-size: 18px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: "Inter";
   margin-right: 20px;
   cursor: pointer;
 `;

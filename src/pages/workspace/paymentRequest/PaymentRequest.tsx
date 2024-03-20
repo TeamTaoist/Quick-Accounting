@@ -317,6 +317,7 @@ const PaymentRequest = () => {
                     },
                     "-ms-overflow-style": "none",
                     scrollbarWidth: "none",
+                    // fontFamily: "Inter",
                   }}
                 >
                   <Table size="small">

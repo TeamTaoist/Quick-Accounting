@@ -75,8 +75,10 @@ const PaymentRequestTableList = ({
           style={{ cursor: "pointer" }}
           sx={{
             "& > .MuiTableCell-root": {
-              borderBottom: "none",
+              // borderBottom: "none",
             },
+            background: "var(--clr-gray-100)",
+            height: "55px",
           }}
         >
           <TableCell
@@ -84,8 +86,9 @@ const PaymentRequestTableList = ({
             style={{
               padding: 0,
               paddingLeft: "16px",
-              borderBottom: "1px solid var(--clr-gray-200)",
               position: "relative",
+              borderBottom: "none",
+              borderTop: "1px solid var(--clr-gray-200)",
             }}
           >
             <Checkbox
@@ -111,7 +114,12 @@ const PaymentRequestTableList = ({
               )}
             </IconButton>
           </TableCell>
-          <TableCell>
+          <TableCell
+            sx={{
+              borderBottom: "none",
+              borderTop: "1px solid var(--clr-gray-200)",
+            }}
+          >
             <Tooltip
               title="View details"
               placement="top"
@@ -120,7 +128,6 @@ const PaymentRequestTableList = ({
                   sx: {
                     background: "var(--clr-white)",
                     color: "#111",
-                    border: "1px solid var(--clr-gray-200)",
                     padding: "8px 16px",
                     fontSize: "12px",
                   },
@@ -146,6 +153,7 @@ const PaymentRequestTableList = ({
                 "& > .MuiTableCell-root": {
                   borderBottom: "none",
                 },
+                height: "55px",
               }}
             >
               <TableCell
@@ -153,7 +161,7 @@ const PaymentRequestTableList = ({
                   padding: 0,
                   paddingLeft: "16px",
                   borderBottom: "none",
-                  borderTop: "1px solid red",
+                  borderTop: "1px solid var(--clr-gray-200)",
                 }}
               >
                 <Checkbox
@@ -169,16 +177,38 @@ const PaymentRequestTableList = ({
                   workspace.name_service === "sns"
                 )}
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 {payment.category_name && (
                   <CategoryCell>{payment.category_name}</CategoryCell>
                 )}
               </TableCell>
-              <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
+                {getPaymentUpdateTime(payment)}
+              </TableCell>
+              <TableCell
+                sx={{
+                  borderBottom: "none",
+                  borderTop: "1px solid var(--clr-gray-200)",
+                }}
+              >
                 <Tooltip
                   title="View details"
                   placement="top"
@@ -223,12 +253,17 @@ const PaymentRequestTableList = ({
             <Table size="small">
               <TableBody>
                 {items.map((payments) => (
-                  <TableRow key={payments.ID}>
+                  <TableRow
+                    key={payments.ID}
+                    sx={{ background: "var(--clr-gray-100)", height: "55px" }}
+                  >
                     <TableCell
                       // colSpan={1}
                       sx={{
                         paddingLeft: "90px",
                         width: "29%",
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
                       }}
                     >
                       {formatAddressToDomain(
@@ -239,6 +274,8 @@ const PaymentRequestTableList = ({
                     <TableCell
                       sx={{
                         width: "20.5%",
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
                       }}
                     >
                       {payments.amount} {payments.currency_name}
@@ -246,13 +283,28 @@ const PaymentRequestTableList = ({
                     <TableCell
                       sx={{
                         width: "20%",
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
                       }}
                     >
                       <CategoryCell>{payments.category_name}</CategoryCell>
                     </TableCell>
-                    <TableCell>{getPaymentUpdateTime(payments)}</TableCell>
-                    <TableCell sx={{ visibility: "hidden" }}>
-                      <Button
+                    <TableCell
+                      sx={{
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
+                      }}
+                    >
+                      {getPaymentUpdateTime(payments)}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        // visibility: "hidden",
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
+                      }}
+                    >
+                      {/* <Button
                         variant="outlined"
                         sx={{
                           borderColor: "black",
@@ -262,7 +314,7 @@ const PaymentRequestTableList = ({
                         // onClick={() => handleOpenModal(payment)}
                       >
                         view more
-                      </Button>
+                      </Button> */}
                     </TableCell>
                   </TableRow>
                 ))}

@@ -197,13 +197,15 @@ const RejectPaymentRequestTable = ({
         >
           <Table stickyHeader size="small">
             <TableHead>
-              <TableRow>
+              <TableRow sx={{ height: "55px" }}>
                 <TableCell
                   sx={{
                     backgroundColor: "var(--clr-gray-200)",
                     width: "30%",
                     fontSize: "14px",
-                    fontWeight: "600",
+                    fontWeight: "500",
+                    fontFamily: "Inter",
+                    color: "var(--clr-primary-900)",
                   }}
                 >
                   Recipient
@@ -213,7 +215,9 @@ const RejectPaymentRequestTable = ({
                     backgroundColor: "var(--clr-gray-200)",
                     width: "20%",
                     fontSize: "14px",
-                    fontWeight: "600",
+                    fontWeight: "500",
+                    fontFamily: "Inter",
+                    color: "var(--clr-primary-900)",
                   }}
                 >
                   Amount
@@ -223,7 +227,9 @@ const RejectPaymentRequestTable = ({
                     backgroundColor: "var(--clr-gray-200)",
                     width: "20%",
                     fontSize: "14px",
-                    fontWeight: "600",
+                    fontWeight: "500",
+                    fontFamily: "Inter",
+                    color: "var(--clr-primary-900)",
                   }}
                 >
                   Category
@@ -232,7 +238,9 @@ const RejectPaymentRequestTable = ({
                   sx={{
                     backgroundColor: "var(--clr-gray-200)",
                     fontSize: "14px",
-                    fontWeight: "600",
+                    fontWeight: "500",
+                    fontFamily: "Inter",
+                    color: "var(--clr-primary-900)",
                   }}
                 >
                   Status
@@ -241,7 +249,9 @@ const RejectPaymentRequestTable = ({
                   sx={{
                     backgroundColor: "var(--clr-gray-200)",
                     fontSize: "14px",
-                    fontWeight: "600",
+                    fontWeight: "500",
+                    fontFamily: "Inter",
+                    color: "var(--clr-primary-900)",
                   }}
                 >
                   Date
@@ -255,29 +265,66 @@ const RejectPaymentRequestTable = ({
             </TableHead>
             <TableBody>
               {filterData?.map((payment) => (
-                <TableRow key={payment.ID}>
-                  <TableCell>
+                <TableRow
+                  key={payment.ID}
+                  sx={{
+                    height: "55px",
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      borderBottom: "none",
+                      borderTop: "1px solid var(--clr-gray-200)",
+                    }}
+                  >
                     {formatAddressToDomain(
                       payment.counterparty,
                       workspace.chain_id,
                       workspace.name_service === "sns"
                     )}
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "none",
+                      borderTop: "1px solid var(--clr-gray-200)",
+                    }}
+                  >
                     {formatNumber(Number(payment.amount))}{" "}
                     {payment.currency_name}
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "none",
+                      borderTop: "1px solid var(--clr-gray-200)",
+                    }}
+                  >
                     <CategoryCell>{payment.category_name}</CategoryCell>
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "none",
+                      borderTop: "1px solid var(--clr-gray-200)",
+                    }}
+                  >
                     <Status status={getPaymentStatus(payment.status)}>
                       <p></p>
                       {getPaymentStatus(payment.status)}
                     </Status>
                   </TableCell>
-                  <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "none",
+                      borderTop: "1px solid var(--clr-gray-200)",
+                    }}
+                  >
+                    {getPaymentUpdateTime(payment)}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "none",
+                      borderTop: "1px solid var(--clr-gray-200)",
+                    }}
+                  >
                     {/* <Button
                       variant="outlined"
                       sx={{
