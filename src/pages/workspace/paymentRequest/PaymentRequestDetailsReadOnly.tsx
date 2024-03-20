@@ -136,10 +136,8 @@ const NotTransferTop = ({
 const Cell = ({ children }: { children: React.ReactNode }) => (
   <TableCell
     sx={{
-      border: "1px solid var(--border-table)",
-      borderRadius: "5px",
-      padding: 0,
-      paddingLeft: "10px",
+      padding: 1,
+      paddingLeft: "17px",
     }}
   >
     {children}
@@ -154,61 +152,32 @@ const TransferTop = ({
   const { formatAddressToDomain } = useDomainStore();
   const { workspace } = useWorkspace();
   const { pathname } = useLocation();
-
+  const HeaderStyles = {
+    // padding: "16px",
+    fontFamily: "Inter",
+    fontSize: "16px",
+    fontWeight: "500",
+    color: "#0F172A",
+  };
   return (
     <>
       <TableHead sx={{ background: "var(--bg-secondary)" }}>
-        <TableRow>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Safe
-          </TableCell>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Counterparty
-          </TableCell>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Amount
-          </TableCell>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Currency
-          </TableCell>
+        <TableRow sx={{ height: "55px" }}>
+          <TableCell style={HeaderStyles}>Safe</TableCell>
+          <TableCell style={HeaderStyles}>Counterparty</TableCell>
+          <TableCell style={HeaderStyles}>Amount</TableCell>
+          <TableCell style={HeaderStyles}>Currency</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         <TableRow
           sx={{
-            height: "30px",
-            borderRadius: "10px",
+            height: "55px",
           }}
         >
           <TableCell
             sx={{
-              border: "1px solid var(--border-table)",
-              padding: 0,
-              paddingLeft: "10px",
+              padding: 1,
             }}
           >
             <SafeSection>
@@ -322,9 +291,12 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                   <TableRow
                     sx={{
                       td: {
-                        padding: 1,
-                        paddingInline: 1,
-                        paddingLeft: "12px",
+                        // padding: 1,
+                        // paddingInline: 1,
+                        // paddingLeft: "12px",
+                        padding: "6px",
+                        paddingInline: 2,
+                        height: "55px",
                       },
                     }}
                   >
@@ -332,14 +304,24 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                       sx={{
                         height: 1,
                         width: 208,
-                        borderRight: "1px solid var(--border-table)",
+                        fontSize: "16px",
+                        fontWeight: "500",
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
                       }}
                     >
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
                     </TableCell>
-                    <TableCell>
+                    <TableCell
+                      sx={{
+                        fontSize: "16px",
+                        fontWeight: "500",
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
+                      }}
+                    >
                       {paymentRequestDetails?.category_name}
                     </TableCell>
                   </TableRow>
@@ -347,13 +329,22 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                     <TableRow
                       sx={{
                         td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 1,
-                          paddingLeft: "12px",
+                          padding: "6px",
+                          paddingInline: 2,
+                          height: "55px",
                         },
                       }}
                     >
-                      <TableCell sx={{ height: 1, width: 200 }}>
+                      <TableCell
+                        sx={{
+                          height: 1,
+                          width: 200,
+                          fontSize: "16px",
+                          fontWeight: "500",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <NoteInfo>
                           <Image
                             src={getPropertyIconByType(property.type)}
@@ -362,7 +353,14 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           {property.name}
                         </NoteInfo>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: "500",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         {property.type === "multi-select"
                           ? property?.values
                               .split(";")
@@ -411,17 +409,18 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <img src={linkIcon} alt="" />
+                  {/* <img src={linkIcon} alt="" /> */}
                 </a>
               </div>
             </TransactionHash>
           )}
 
-          <Status>
-            <p>Status</p>
-            <StatusBtn>
+          <Status status={getPaymentStatus(paymentRequestDetails.status)}>
+            <h6>Status</h6>
+            <div>
+              <p></p>
               {getPaymentStatus(paymentRequestDetails.status)}
-            </StatusBtn>
+            </div>
           </Status>
         </RequestDetails>
       </WorkspaceItemDetailsLayout>
@@ -467,7 +466,7 @@ export const SafeSection = styled.div`
 
 const TransactionHash = styled(SubmissionTime)`
   div {
-    color: #888;
+    color: var(--clr-gray-400);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -491,14 +490,16 @@ const Logo = styled.div<{ $dir?: string }>`
   }
 `;
 const RejectTime = styled.div`
-  padding-top: 14px;
+  padding-top: 18px;
   p {
-    font-size: 18px;
-    padding-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 8px;
   }
   div {
-    border: 1px solid var(--border-table);
-    padding: 10px 7px;
+    border: 1px solid var(--clr-gray-200);
+    padding: 10px 10px;
+    font-size: 14px;
     border-radius: 8px;
   }
 `;

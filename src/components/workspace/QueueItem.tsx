@@ -307,7 +307,8 @@ const QueueTransactionItem = ({
           sx={{
             backgroundColor: "var(--clr-gray-200)",
             border: "1px solid var(--clr-gray-200)",
-            height: "76px",
+            height: "75px",
+            fontFamily: "Inter",
             "&:before": {
               borderRadius: "6px",
             },

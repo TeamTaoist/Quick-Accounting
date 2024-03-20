@@ -1,5 +1,4 @@
 import {
-  Button,
   Checkbox,
   Table,
   TableBody,
@@ -7,6 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import React from "react";
 import { useBookkeeping } from "../../../store/useBookkeeping";
@@ -17,12 +17,20 @@ import {
 import { getShortAddress } from "../../../utils";
 import { useWorkspace } from "../../../store/useWorkspace";
 import rightArrow from "../../../assets/workspace/right-arrow.svg";
+import details from "../../../assets/details.svg";
 import { formatNumber } from "../../../utils/number";
 import { CategoryCell } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
-import { formatDate } from "../../../utils/time";
 import { getPaymentUpdateTime } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
 
+const HeaderStyles = {
+  fontSize: "14px",
+  fontWeight: "500",
+  fontFamily: "Inter",
+  color: "var(--clr-primary-900)",
+  background: "var(--clr-gray-200)",
+  padding: "0 16px",
+};
 interface BookkeepingTableProps {
   selected: number[];
   setSelected: (selected: any) => void;
@@ -66,16 +74,24 @@ const BookkeepingTable = ({
   return (
     <TableContainer
       sx={{
-        border: "1px solid var(--border)",
-        borderRadius: "10px",
+        border: "1px solid var(--clr-gray-200)",
+        borderRadius: "6px",
         maxHeight: "100%",
         overflow: "auto",
+        minWidth: "1100px",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
+        "-ms-overflow-style": "none",
+        scrollbarWidth: "none",
       }}
     >
       <Table stickyHeader>
-        <TableHead style={{ backgroundColor: "#f0f0f0" }}>
+        <TableHead
+          style={{ background: "var(--clr-gray-200)", height: "55px" }}
+        >
           <TableRow>
-            <TableCell sx={{ background: "var(--bg-primary)" }}>
+            <TableCell sx={HeaderStyles}>
               <Checkbox
                 indeterminate={
                   selected.length > 0 &&
@@ -86,17 +102,22 @@ const BookkeepingTable = ({
               />
               Safe
             </TableCell>
-            <TableCell sx={{ background: "var(--bg-primary)" }}>
-              Counterparty
-            </TableCell>
-            <TableCell sx={{ background: "var(--bg-primary)" }}>
+            <TableCell sx={HeaderStyles}>Counterparty</TableCell>
+            <TableCell
+              sx={{
+                width: "30%",
+                fontSize: "14px",
+                fontWeight: "500",
+                fontFamily: "Inter",
+                color: "var(--clr-primary-900)",
+                background: "var(--clr-gray-200)",
+              }}
+            >
               Amount
             </TableCell>
-            <TableCell sx={{ background: "var(--bg-primary)" }}>
-              Category
-            </TableCell>
-            <TableCell sx={{ background: "var(--bg-primary)" }}>Date</TableCell>
-            <TableCell sx={{ background: "var(--bg-primary)" }}></TableCell>
+            <TableCell sx={HeaderStyles}>Category</TableCell>
+            <TableCell sx={HeaderStyles}>Date</TableCell>
+            <TableCell sx={HeaderStyles}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -106,9 +127,8 @@ const BookkeepingTable = ({
                 <TableCell
                   style={{
                     padding: 0,
-                    paddingLeft: "16px",
-                    borderBottom: "1px solid #ddd",
-                    borderTop: "none",
+                    borderBottom: "none",
+                    borderTop: "1px solid var(--clr-gray-200)",
                   }}
                 >
                   <SafeSection>
@@ -126,33 +146,71 @@ const BookkeepingTable = ({
                     </Logo>
                   </SafeSection>
                 </TableCell>
-                <TableCell>
+                <TableCell
+                  sx={{
+                    borderBottom: "none",
+                    borderTop: "1px solid var(--clr-gray-200)",
+                  }}
+                >
                   {formatAddressToDomain(
                     bookkeeping.counterparty,
                     workspace.chain_id,
                     workspace.name_service === "sns"
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell
+                  sx={{
+                    borderBottom: "none",
+                    borderTop: "1px solid var(--clr-gray-200)",
+                  }}
+                >
                   {formatNumber(Number(bookkeeping.amount))}{" "}
                   {bookkeeping.currency_name}
                 </TableCell>
-                <TableCell>
+                <TableCell
+                  sx={{
+                    borderBottom: "none",
+                    borderTop: "1px solid var(--clr-gray-200)",
+                  }}
+                >
                   <CategoryCell>{bookkeeping.category_name}</CategoryCell>
                 </TableCell>
-                <TableCell>{getPaymentUpdateTime(bookkeeping)}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      borderColor: "black",
-                      color: "black",
-                      textTransform: "lowercase",
+                <TableCell
+                  sx={{
+                    borderBottom: "none",
+                    borderTop: "1px solid var(--clr-gray-200)",
+                  }}
+                >
+                  {getPaymentUpdateTime(bookkeeping)}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    borderBottom: "none",
+                    borderTop: "1px solid var(--clr-gray-200)",
+                  }}
+                >
+                  <Tooltip
+                    title="View details"
+                    placement="top"
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          background: "var(--clr-white)",
+                          color: "#111",
+                          border: "1px solid var(--clr-gray-200)",
+                          padding: "8px 16px",
+                          fontSize: "12px",
+                        },
+                      },
                     }}
-                    onClick={() => handleBookkeepingDetails(bookkeeping)}
                   >
-                    view more
-                  </Button>
+                    <img
+                      src={details}
+                      alt=""
+                      style={{ width: "16px" }}
+                      onClick={() => handleBookkeepingDetails(bookkeeping)}
+                    />
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             </React.Fragment>

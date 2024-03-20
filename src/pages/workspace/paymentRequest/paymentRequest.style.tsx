@@ -22,8 +22,8 @@ export const ActionBtn = styled.div`
   display: flex;
   gap: 20px;
   width: 100%;
-  margin: 20px 0;
-  margin-left: 20px;
+  /* margin: 20px 0; */
+  /* margin-left: 20px; */
   /* margin-top: 60px; */
   img {
     width: 20px;
@@ -42,7 +42,7 @@ export const Btn = styled.div`
   cursor: pointer;
 `;
 export const Image = styled.img`
-  width: 20px;
+  width: 16px;
 `;
 export const Option = styled.div`
   display: flex;
@@ -73,6 +73,7 @@ export const TableSection = styled.div`
   height: 100%;
   height: 70vh;
   width: 100%;
+  margin-top: 30px;
 `;
 export const PaymentPagination = styled.div`
   padding: 20px 0;

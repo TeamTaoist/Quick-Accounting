@@ -7,6 +7,7 @@ import {
   TableRow,
   Button,
   Checkbox,
+  Tooltip,
 } from "@mui/material";
 import {
   HideBtn,
@@ -17,12 +18,15 @@ import { useEffect, useState } from "react";
 import rightArrow from "../../../assets/workspace/right-arrow.svg";
 import hide from "../../../assets/workspace/hide.svg";
 import back from "../../../assets/workspace/back.svg";
+import details from "../../../assets/details.svg";
 import styled from "@emotion/styled";
 import { useBookkeeping } from "../../../store/useBookkeeping";
 import { getShortAddress } from "../../../utils";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
 import {
+  ActionBtn,
+  Filter,
   Header,
   Image,
   Option,
@@ -43,7 +47,17 @@ import filterIcon from "../../../assets/workspace/filtering.svg";
 import { useTranslation } from "react-i18next";
 import { getPaymentUpdateTime } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
+import SearchInput from "../SearchInput";
+import FilterCategorySelect from "../FilterCategorySelect";
 
+const HeaderStyles = {
+  fontSize: "14px",
+  fontWeight: "500",
+  fontFamily: "Inter",
+  color: "var(--clr-primary-900)",
+  background: "var(--clr-gray-200)",
+  padding: "0 16px",
+};
 interface RejectTableProps {
   workspaceId: number;
   paymentRequest: boolean;
@@ -139,7 +153,15 @@ const BookkeepingRejectTable = ({
   const uniqueCategoryNames = Array.from(
     new Set(bookkeepingHiddenList.map((payment) => payment.category_name))
   );
-
+  const handleSearchPayment = (e: any) => {
+    // e.preventDefault();
+    // getPaymentRequestList(workspaceId, false, pageNumbers, 10, searchTerm).then(
+    //   (res) => {
+    //     setTotalItem(res);
+    //     setIsSearch(true);
+    //   }
+    // );
+  };
   return (
     <div>
       {bookkeepingHiddenList.length === 0 && !paymentRequest && (
@@ -157,47 +179,26 @@ const BookkeepingRejectTable = ({
       )}
       {bookkeepingHiddenList.length > 0 && (
         <Header>
-          <TextField
-            id="search"
-            type="search"
-            autoComplete="off"
-            placeholder={t("paymentRequest.Search")}
-            value={searchTerm}
-            onChange={handleChange}
-            sx={{ width: 350 }}
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <img src={searchIcon} alt="" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <FormControl sx={{ minWidth: 100 }}>
-            <Select
-              value={selectedValue}
-              onChange={handleDropdownChange}
-              displayEmpty
-              inputProps={{ "aria-label": "Select a value" }}
-              size="small"
-            >
-              <MenuItem value="" disabled>
-                <Option>
-                  <Image src={filterIcon} alt="" />
-                  {t("paymentRequest.Filter")}
-                </Option>
-              </MenuItem>
-              {uniqueCategoryNames.map(
-                (categoryName) =>
-                  categoryName.trim() !== "" && (
-                    <MenuItem value={categoryName} key={categoryName}>
-                      {categoryName}
-                    </MenuItem>
-                  )
-              )}
-            </Select>
-          </FormControl>
+          <Filter>
+            <SearchInput
+              handleSearchPayment={handleSearchPayment}
+              placeholder="Search token"
+              searchTerm={searchTerm}
+              handleChange={handleChange}
+              width="240px"
+            />
+            <FilterCategorySelect
+              selectedValue={selectedValue}
+              handleDropdownChange={handleDropdownChange}
+              uniqueCategoryNames={uniqueCategoryNames}
+            />
+            <UnhideBtn>
+              <Btn onClick={handleUnHideBookkeepingList}>
+                <img src={hide} alt="" />
+                <p>Unhide</p>
+              </Btn>
+            </UnhideBtn>
+          </Filter>
           <ViewReject>
             {bookkeepingHiddenList.length > 0 && !paymentRequest && (
               <div onClick={handleBackBtn}>
@@ -210,25 +211,27 @@ const BookkeepingRejectTable = ({
       )}
       {bookkeepingHiddenList.length > 0 && (
         <>
-          <UnhideBtn>
-            <Btn onClick={handleUnHideBookkeepingList}>
-              <img src={hide} alt="" />
-              <p>Unhide</p>
-            </Btn>
-          </UnhideBtn>
           <TableSection>
             <TableContainer
               sx={{
-                border: "1px solid var(--border)",
-                borderRadius: "10px",
+                border: "1px solid var(--clr-gray-200)",
+                borderRadius: "6px",
                 maxHeight: "100%",
                 overflow: "auto",
+                minWidth: "1100px",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                "-ms-overflow-style": "none",
+                scrollbarWidth: "none",
               }}
             >
               <Table>
-                <TableHead style={{ backgroundColor: "#f0f0f0" }}>
+                <TableHead
+                  style={{ background: "var(--clr-gray-200)", height: "55px" }}
+                >
                   <TableRow>
-                    <TableCell>
+                    <TableCell sx={HeaderStyles}>
                       <Checkbox
                         indeterminate={
                           selected.length > 0 &&
@@ -241,11 +244,22 @@ const BookkeepingRejectTable = ({
                       />
                       Safe
                     </TableCell>
-                    <TableCell>Counterparty</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell></TableCell>
+                    <TableCell sx={HeaderStyles}>Counterparty</TableCell>
+                    <TableCell
+                      sx={{
+                        width: "30%",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        fontFamily: "Inter",
+                        color: "var(--clr-primary-900)",
+                        background: "var(--clr-gray-200)",
+                      }}
+                    >
+                      Amount
+                    </TableCell>
+                    <TableCell sx={HeaderStyles}>Category</TableCell>
+                    <TableCell sx={HeaderStyles}>Date</TableCell>
+                    <TableCell sx={HeaderStyles}></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -254,10 +268,10 @@ const BookkeepingRejectTable = ({
                       <TableRow>
                         <TableCell
                           style={{
-                            padding: 0,
-                            paddingLeft: "16px",
-                            borderBottom: "1px solid #ddd",
-                            borderTop: "none",
+                            // padding: 0,
+                            padding: "0 16px",
+                            borderBottom: "none",
+                            borderTop: "1px solid var(--clr-gray-200)",
                           }}
                         >
                           <SafeSection>
@@ -275,39 +289,75 @@ const BookkeepingRejectTable = ({
                             </Logo>
                           </SafeSection>
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          sx={{
+                            borderBottom: "none",
+                            borderTop: "1px solid var(--clr-gray-200)",
+                          }}
+                        >
                           {formatAddressToDomain(
                             bookkeeping.counterparty,
                             workspace.chain_id,
                             workspace.name_service === "sns"
                           )}
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          sx={{
+                            borderBottom: "none",
+                            borderTop: "1px solid var(--clr-gray-200)",
+                          }}
+                        >
                           {formatNumber(Number(bookkeeping.amount))}{" "}
                           {bookkeeping.currency_name}
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          sx={{
+                            borderBottom: "none",
+                            borderTop: "1px solid var(--clr-gray-200)",
+                          }}
+                        >
                           <CategoryCell>
                             {bookkeeping.category_name}
                           </CategoryCell>
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          sx={{
+                            borderBottom: "none",
+                            borderTop: "1px solid var(--clr-gray-200)",
+                          }}
+                        >
                           {getPaymentUpdateTime(bookkeeping)}
                         </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              borderColor: "black",
-                              color: "black",
-                              textTransform: "lowercase",
+                        <TableCell
+                          sx={{
+                            borderBottom: "none",
+                            borderTop: "1px solid var(--clr-gray-200)",
+                          }}
+                        >
+                          <Tooltip
+                            title="View details"
+                            placement="top"
+                            componentsProps={{
+                              tooltip: {
+                                sx: {
+                                  background: "var(--clr-white)",
+                                  color: "#111",
+                                  border: "1px solid var(--clr-gray-200)",
+                                  padding: "8px 16px",
+                                  fontSize: "12px",
+                                },
+                              },
                             }}
-                            onClick={() =>
-                              handleBookkeepingDetails(bookkeeping)
-                            }
                           >
-                            view more
-                          </Button>
+                            <img
+                              src={details}
+                              alt=""
+                              style={{ width: "16px" }}
+                              onClick={() =>
+                                handleBookkeepingDetails(bookkeeping)
+                              }
+                            />
+                          </Tooltip>
                         </TableCell>
                       </TableRow>
                     </>
@@ -341,24 +391,22 @@ const CategoryCell = styled.div`
   border-radius: 5px;
 `;
 const UnhideBtn = styled.div`
-  display: flex;
-  justify-content: end;
+  padding-left: 14px;
 `;
 export const Btn = styled.div`
-  margin: 20px 0;
   display: flex;
   gap: 8px;
-  border: 1px solid var(--border);
-  padding: 6px 10px;
+  border: 1px solid var(--clr-gray-300);
+  padding: 10px 12px;
   border-radius: 5px;
-  border: 1px solid #111;
-  cursor: pointer;
-  img {
-    width: 22px;
-  }
   p {
-    font-size: 20px;
+    font-size: 14px;
+    font-weight: 500;
   }
+  img {
+    width: 16px;
+  }
+  cursor: pointer;
 `;
 const Message = styled.div`
   height: 50vh;
