@@ -19,12 +19,12 @@ export const customStyles: any = {
   }),
   option: (provided: any, state: any) => ({
     ...provided,
-    backgroundColor: state.isFocused && "#d3d3d3",
+    backgroundColor: state.isFocused && "#E2E8F0",
     color: "#222121",
   }),
   multiValue: (provided: any) => ({
     ...provided,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#E2E8F0",
   }),
   multiValueLabel: (provided: any) => ({
     ...provided,
@@ -32,7 +32,7 @@ export const customStyles: any = {
   }),
   multiValueRemove: (provided: any) => ({
     ...provided,
-    color: "#999",
+    color: "#475569",
     ":hover": {
       color: "##d9d9d9",
     },

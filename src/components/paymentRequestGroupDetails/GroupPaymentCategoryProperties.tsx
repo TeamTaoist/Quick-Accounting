@@ -13,7 +13,11 @@ import {
   TextField,
 } from "@mui/material";
 import { useSharePaymentRequest } from "../../store/useSharePaymentRequest";
-import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
+import {
+  NoteInfo,
+  PaymentRequestDateInput,
+  PaymentRequestInput,
+} from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import categoryIcon from "../../assets/workspace/category-icon.svg";
 import arrowBottom from "../../assets/workspace/arrow-bottom.svg";
@@ -57,17 +61,29 @@ const GroupPaymentCategoryProperties = ({
   return (
     <TableContainer>
       <Table sx={{ minWidth: 600 }} aria-label="simple table">
-        <TableBody>
+        <TableBody
+          sx={{ boxShadow: "none", border: "1px solid var(--clr-gray-200)" }}
+        >
           <TableRow
             sx={{
               td: {
-                border: "1px solid var(--border-table)",
-                padding: 0,
+                padding: 1,
                 paddingInline: "16px",
+                borderBottom: "none",
+                borderTop: "1px solid var(--clr-gray-200)",
               },
             }}
           >
-            <TableCell sx={{ height: 1, width: "33.5%" }}>
+            <TableCell
+              sx={{
+                height: 1,
+                width: "33.5%",
+                fontSize: "16px",
+                fontWeight: "500",
+                borderBottom: "none",
+                borderTop: "1px solid var(--clr-gray-200)",
+              }}
+            >
               <NoteInfo>
                 <Image src={categoryIcon} alt="" /> Category
               </NoteInfo>
@@ -92,7 +108,24 @@ const GroupPaymentCategoryProperties = ({
                   )}
                   sx={{
                     minWidth: "100%",
-                    "& fieldset": { border: "none" },
+                    height: "40px",
+                    "& .MuiSelect-select": {
+                      display: "block",
+                    },
+                    "&.MuiOutlinedInput-root": {
+                      border: "1px solid var(--clr-gray-200)",
+                      "& fieldset": {
+                        border: "none",
+                      },
+                      "&:hover fieldset": {
+                        border: "none",
+                      },
+                      "&.Mui-focused fieldset": {
+                        border: "none",
+                      },
+                    },
+                    // "& fieldset": { border: "none" },
+                    "& .MuiInputLabel-root": { display: "none" },
                   }}
                   inputProps={{
                     readOnly: isEditable,
@@ -114,10 +147,10 @@ const GroupPaymentCategoryProperties = ({
                       }}
                       sx={{
                         "&:hover": {
-                          backgroundColor: "var(--hover-bg)",
+                          backgroundColor: "var(--clr-gray-100)",
                         },
                         "&.Mui-selected": {
-                          backgroundColor: "var(--hover-bg)",
+                          backgroundColor: "var(--clr-gray-200)",
                         },
                       }}
                     >
@@ -137,19 +170,32 @@ const GroupPaymentCategoryProperties = ({
                     <TableRow
                       sx={{
                         td: {
-                          border: "1px solid var(--border-table)",
                           padding: 0,
                           paddingInline: "16px",
                         },
                       }}
                     >
-                      <TableCell sx={{ height: 1, width: 252 }}>
+                      <TableCell
+                        sx={{
+                          height: 1,
+                          width: 252,
+                          fontSize: "16px",
+                          fontWeight: "500",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <NoteInfo>
                           <Image src={selectIcon} alt="" /> {property.name}
                         </NoteInfo>
                       </TableCell>
                       {/* add multi select first */}
-                      <TableCell>
+                      <TableCell
+                        sx={{
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <ReactSelect
                           value={selectedValues}
                           isMulti={false}
@@ -192,19 +238,32 @@ const GroupPaymentCategoryProperties = ({
                     <TableRow
                       sx={{
                         td: {
-                          border: "1px solid var(--border-table)",
                           padding: 0,
                           paddingInline: "16px",
                         },
                       }}
                     >
-                      <TableCell sx={{ height: 1, width: 252 }}>
+                      <TableCell
+                        sx={{
+                          height: 1,
+                          width: 252,
+                          fontSize: "16px",
+                          fontWeight: "500",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <NoteInfo>
                           <Image src={multiSelect} alt="" /> {property.name}
                         </NoteInfo>
                       </TableCell>
                       {/* add multi select */}
-                      <TableCell>
+                      <TableCell
+                        sx={{
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <ReactSelect
                           value={selectedValues}
                           isDisabled={isEditable}
@@ -245,20 +304,33 @@ const GroupPaymentCategoryProperties = ({
                     <TableRow
                       sx={{
                         td: {
-                          border: "1px solid var(--border-table)",
                           padding: 0,
                           paddingInline: "16px",
                         },
                       }}
                     >
-                      <TableCell sx={{ height: 1, width: 252 }}>
+                      <TableCell
+                        sx={{
+                          height: 1,
+                          width: 252,
+                          fontSize: "16px",
+                          fontWeight: "500",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <NoteInfo>
                           <Image src={optionsIcon} alt="" /> {property.name}
                         </NoteInfo>
                       </TableCell>
                       {/* add multi select */}
-                      <TableCell>
-                        <TextField
+                      <TableCell
+                        sx={{
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
+                        {/* <TextField
                           sx={{
                             "& fieldset": { border: "none" },
                           }}
@@ -287,6 +359,26 @@ const GroupPaymentCategoryProperties = ({
                             style: { padding: 0 },
                             readOnly: isEditable,
                           }}
+                        /> */}
+                        <PaymentRequestInput
+                          value={
+                            sharePaymentRequestForm[
+                              index
+                            ].category_properties.find(
+                              (p) =>
+                                p.name === property.name && p.type === "Text"
+                            )?.values || ""
+                          }
+                          placeholder="Enter content"
+                          onChange={(e: any) =>
+                            handleFormChange(
+                              index,
+                              "categoryProperties",
+                              e.target.value,
+                              property.name,
+                              property.type
+                            )
+                          }
                         />
                       </TableCell>
                     </TableRow>
@@ -295,20 +387,33 @@ const GroupPaymentCategoryProperties = ({
                     <TableRow
                       sx={{
                         td: {
-                          border: "1px solid var(--border-table)",
                           padding: 0,
                           paddingInline: "16px",
                         },
                       }}
                     >
-                      <TableCell sx={{ height: 1, width: 252 }}>
+                      <TableCell
+                        sx={{
+                          height: 1,
+                          width: 252,
+                          fontSize: "16px",
+                          fontWeight: "500",
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
                         <NoteInfo>
                           <Image src={multiSelect} alt="" /> {property.name}
                         </NoteInfo>
                       </TableCell>
                       {/* add multi select */}
-                      <TableCell>
-                        <TextField
+                      <TableCell
+                        sx={{
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                        }}
+                      >
+                        {/* <TextField
                           sx={{
                             "& fieldset": { border: "none" },
                           }}
@@ -339,6 +444,35 @@ const GroupPaymentCategoryProperties = ({
                             style: { padding: 0 },
                             readOnly: isEditable,
                           }}
+                        /> */}
+                        <PaymentRequestDateInput
+                          type="date"
+                          value={
+                            sharePaymentRequestForm[
+                              index
+                            ].category_properties.find(
+                              (p) =>
+                                p.name === property.name &&
+                                p.type === "date-picker"
+                            )?.values || ""
+                          }
+                          placeholder="Enter content"
+                          isDatePicker={sharePaymentRequestForm[
+                            index
+                          ].category_properties.find(
+                            (p) =>
+                              p.name === property.name &&
+                              p.type === "date-picker"
+                          )}
+                          onChange={(e: any) =>
+                            handleFormChange(
+                              index,
+                              "categoryProperties",
+                              e.target.value,
+                              property.name,
+                              property.type
+                            )
+                          }
                         />
                       </TableCell>
                     </TableRow>

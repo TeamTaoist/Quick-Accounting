@@ -352,7 +352,7 @@ const PaymentRequestGroupDetails = ({
                   <TableBody>
                     <TableRow
                       sx={{
-                        height: "30px",
+                        height: "55px",
                         // borderRadius: "10px",
                       }}
                     >

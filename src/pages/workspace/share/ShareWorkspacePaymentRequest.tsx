@@ -1,21 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../../components/layout/header/Header";
 import React, { useEffect, useState } from "react";
-import {
-  FormControl,
-  InputAdornment,
-  MenuItem,
-  Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-} from "@mui/material";
 
-import categoryIcon from "../../../assets/workspace/category-icon.svg";
+import deleteIcon from "../../../assets/workspace/trash.svg";
 import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
 import { useLoading } from "../../../store/useLoading";
@@ -34,6 +21,7 @@ import LoginContent from "../../auth/login/LoginContent";
 import useLogin from "../../../hooks/useLogin";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useDomainStore } from "../../../store/useDomain";
+import { NoteHeader } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 
 const ShareWorkspacePaymentRequest = () => {
   const { shareId } = useParams();
@@ -447,38 +435,59 @@ const ShareWorkspacePaymentRequest = () => {
           <SharePaymentForm>
             <ShareHeader>
               <h3>New payment request from {workspace.name}</h3>
+              {workspace && (
+                <WorkspaceInfo>
+                  <WorkspaceLogo>
+                    {workspace.avatar === "" ? (
+                      <p>{workspace?.name?.slice(0, 1)}</p>
+                    ) : (
+                      <img src={workspace.avatar} alt={workspace.name} />
+                    )}
+                  </WorkspaceLogo>
+                  <WorkspaceDetails>
+                    <h6>{workspace?.name}</h6>
+                    <p>{workspace.vault_wallet}</p>
+                  </WorkspaceDetails>
+                </WorkspaceInfo>
+              )}
             </ShareHeader>
-            {sharePaymentRequestForm.map((value, index) => (
-              <RequestDetails key={index}>
-                <PaymentDetailsForm
-                  value={value}
-                  handleFormChange={handleFormChange}
-                  index={index}
-                  isEditable={isEditable}
-                  sharePaymentRequestForm={sharePaymentRequestForm}
-                />
-                {/* note info */}
-                <NoteInformation>
-                  <h3>Note Information</h3>
-                  <GroupPaymentCategoryProperties
-                    sharePaymentRequestForm={sharePaymentRequestForm}
+            <Request>
+              {sharePaymentRequestForm.map((value, index) => (
+                <RequestDetails key={index}>
+                  <PaymentDetailsForm
+                    value={value}
+                    handleFormChange={handleFormChange}
                     index={index}
                     isEditable={isEditable}
-                    handleCategoryDropdown={handleCategoryDropdown}
-                    selectedCategories={selectedCategories}
-                    selectedValues={selectedValues}
-                    handleFormChange={handleFormChange}
+                    sharePaymentRequestForm={sharePaymentRequestForm}
                   />
+                  {/* note info */}
+                  <NoteInformation>
+                    <NoteHeader>
+                      <h3>Note Information</h3>
+                    </NoteHeader>
+                    <GroupPaymentCategoryProperties
+                      sharePaymentRequestForm={sharePaymentRequestForm}
+                      index={index}
+                      isEditable={isEditable}
+                      handleCategoryDropdown={handleCategoryDropdown}
+                      selectedCategories={selectedCategories}
+                      selectedValues={selectedValues}
+                      handleFormChange={handleFormChange}
+                    />
 
-                  {!isEditable && (
-                    <DeleteBtn onClick={() => handleDeleteRequestForm(index)}>
-                      Delete
-                    </DeleteBtn>
-                  )}
-                </NoteInformation>
-                {/* <ReactSelect /> */}
-              </RequestDetails>
-            ))}
+                    {!isEditable && (
+                      <DeleteBtn onClick={() => handleDeleteRequestForm(index)}>
+                        <img src={deleteIcon} alt="" />
+                        <p>Delete</p>
+                      </DeleteBtn>
+                    )}
+                  </NoteInformation>
+                  {/* <ReactSelect /> */}
+                </RequestDetails>
+              ))}
+            </Request>
+
             {shareData?.payment_request_items?.[0]?.status !== 0 &&
             shareData?.payment_request_items?.length ? (
               <Btns>
@@ -539,30 +548,67 @@ const SharePaymentForm = styled.div`
   margin: 40px 0;
   /* padding: 40px 0; */
 `;
-const RequestDetails = styled.div`
-  padding: 40px 30px;
-`;
 const ShareHeader = styled.div`
-  height: 98px;
-  background: var(--bg-secondary);
-  padding: 22px 26px;
+  padding: 40px;
+  line-height: 20px;
+  height: 152px;
+  background: var(--clr-gray-100);
   h3 {
-    font-size: 30px;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  P {
+    font-size: 14px;
+    font-weight: 500;
+    /* margin-top: 6px; */
+  }
+`;
+const WorkspaceInfo = styled.div`
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+const WorkspaceLogo = styled.div`
+  /* margin-top: 20px; */
+  padding: 14px 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--clr-gray-200);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  p {
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+`;
+const WorkspaceDetails = styled.div`
+  h6 {
+    font-size: 14px;
     font-weight: 500;
   }
+  p {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-secondary);
+  }
+`;
+const Request = styled.div`
+  margin-top: 20px;
+  padding-inline: 40px;
+`;
+const RequestDetails = styled.div`
+  /* padding: 40px 30px; */
+  padding: 16px 0;
 `;
 
 export const NoteInformation = styled.div`
   /* padding-inline: 46px;
   padding-top: 21px; */
-
-  h3 {
-    font-size: 18px;
-    font-weight: 500;
-    padding: 8px;
-    padding-left: 16px;
-    background: var(--bg-primary);
-  }
 `;
 export const Image = styled.img`
   width: 16px;
@@ -592,21 +638,32 @@ export const RequestSubmit = styled.button`
   }
 `;
 const DeleteBtn = styled.button`
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 16px;
   width: 100%;
-  border: 1px solid var(--border-table);
-  padding: 8px 0;
+  border: 1px solid var(--clr-gray-200);
+  background: transparent;
+  border-top: none;
+  padding: 12px 0;
   border-radius: 0 0 7px 7px;
   cursor: pointer;
+  img {
+    width: 14px;
+  }
+  p {
+    margin-top: 3px;
+  }
 `;
 const Btns = styled.div`
-  padding-inline: 30px;
+  padding-inline: 40px;
   padding-bottom: 40px;
 `;
 const AddBtn = styled.button`
-  background: transparent;
+  background: #e2e8f0;
   font-size: 16px;
-  color: var(--text-secondary);
   width: 100%;
   padding: 8px 0;
   border: 1px solid var(--border-table);
@@ -614,6 +671,7 @@ const AddBtn = styled.button`
   border-radius: 7px;
   cursor: pointer;
   margin-bottom: 30px;
+  margin-top: 6px;
 `;
 const ViewProgressBtn = styled.button`
   background: var(--bg-primary);
@@ -634,7 +692,9 @@ const SubmitBtns = styled.div`
 const Save = styled.button`
   font-size: 18px;
   width: 100%;
-  border: 1px solid var(--border-table);
+  border: 1px solid var(--clr-gray-200);
+  background: var(--clr-primary-900);
+  color: var(--clr-white);
   padding: 8px 0;
   border-radius: 7px;
   cursor: pointer;

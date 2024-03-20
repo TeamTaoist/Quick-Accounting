@@ -501,7 +501,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                     <TableRow
                       key={index}
                       sx={{
-                        height: "30px",
+                        height: "55px",
                         // border: "1px solid red",
                       }}
                     >
