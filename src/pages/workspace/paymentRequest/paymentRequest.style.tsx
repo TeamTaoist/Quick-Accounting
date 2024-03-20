@@ -33,7 +33,7 @@ export const Btn = styled.div`
   display: flex;
   gap: 8px;
   border: 1px solid var(--clr-gray-300);
-  padding: 8px 10px;
+  padding: 10px 12px;
   border-radius: 5px;
   p {
     font-size: 14px;
@@ -55,7 +55,7 @@ export const ViewReject = styled.div`
     align-items: center;
     gap: 10px;
     background: var(--clr-gray-50);
-    padding: 8px 12px;
+    padding: 11px 14px;
     border-radius: 6px;
     p {
       font-size: 14px;

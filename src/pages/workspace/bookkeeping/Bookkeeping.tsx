@@ -283,12 +283,11 @@ const Bookkeeping = () => {
 
               {/* pagination */}
               {totalItem > 10 && (
-                <PaymentPagination>
-                  <Pagination
-                    handlePageClick={handlePageClick}
-                    pageCount={pageCount}
-                  />
-                </PaymentPagination>
+                <Pagination
+                  handlePageClick={handlePageClick}
+                  pageCount={pageCount}
+                  pageNumbers={pageNumbers}
+                />
               )}
             </TableSection>
           </PaymentRequestBody>
@@ -327,7 +326,7 @@ export const Logo = styled.div<{ $dir?: string }>`
   }
 `;
 export const BookkeepingTitle = styled.div`
-  height: 90vh;
+  height: 60vh;
   /* border: 1px solid var(--border); */
   display: flex;
   flex-direction: column;
@@ -339,9 +338,10 @@ export const BookkeepingTitle = styled.div`
   }
   p {
     font-size: 14px;
-    margin-top: 16px;
-    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-bottom: 20px;
     line-height: 20px;
+    width: 460px;
   }
 `;
 export const HideBtn = styled.button<any>`

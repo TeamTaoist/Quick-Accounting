@@ -84,7 +84,7 @@ export const HeaderOptions = styled.div`
     align-items: center;
     gap: 10px;
     img {
-      width: 24px;
+      width: 16px;
     }
     p {
       font-size: 14px;

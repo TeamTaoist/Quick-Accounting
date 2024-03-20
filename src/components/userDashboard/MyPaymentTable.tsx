@@ -5,7 +5,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Tooltip,
 } from "@mui/material";
 import { formatNumber } from "../../utils/number";

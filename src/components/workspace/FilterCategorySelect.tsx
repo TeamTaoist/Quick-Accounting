@@ -5,6 +5,8 @@ import {
 } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import filterIcon from "../../assets/workspace/filtering.svg";
 import { useTranslation } from "react-i18next";
+import CheckIcon from "@mui/icons-material/Check";
+import { Item } from "../../pages/workspace/WorkSpaceForm.style";
 
 interface FilterCategorySelectProps {
   selectedValue: string;
@@ -19,9 +21,33 @@ const FilterCategorySelect = ({
 }: FilterCategorySelectProps) => {
   const { t } = useTranslation();
   return (
-    <FormControl sx={{ marginLeft: "14px", minWidth: 200 }}>
+    <FormControl sx={{ marginLeft: "14px", minWidth: 240 }}>
       <Select
         value={selectedValue}
+        renderValue={(selected) => (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              fontFamily: "Inter",
+            }}
+          >
+            {selected ? (
+              selected
+            ) : (
+              <>
+                <img
+                  src={filterIcon}
+                  alt="Selected Icon"
+                  style={{ marginRight: "8px", width: "16px", height: "16px" }}
+                />
+                <div style={{ overflow: "hidden", fontSize: "14px" }}>
+                  Filter by Category
+                </div>
+              </>
+            )}
+          </div>
+        )}
         onChange={handleDropdownChange}
         displayEmpty
         inputProps={{ "aria-label": "Select a value" }}
@@ -29,7 +55,7 @@ const FilterCategorySelect = ({
         // sx={{ overflow: "hidden" }}
         sx={{
           minWidth: "100%",
-          height: "42px",
+          height: "40px",
           padding: 0,
           paddingInline: "1px",
           "& .MuiSelect-select": {
@@ -71,17 +97,32 @@ const FilterCategorySelect = ({
           },
         }}
       >
-        <MenuItem value="" disabled>
+        {/* <MenuItem value="" disabled>
           <Option>
             <Image src={filterIcon} alt="" />
             {t("paymentRequest.Filter")}
           </Option>
-        </MenuItem>
+        </MenuItem> */}
         {uniqueCategoryNames.map(
           (categoryName) =>
             categoryName.trim() !== "" && (
               <MenuItem value={categoryName} key={categoryName}>
-                {categoryName}
+                <Item>
+                  <div
+                    style={{
+                      width: "14px",
+                      marginRight: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {selectedValue === categoryName && (
+                      <CheckIcon style={{ color: "#334155", width: "16px" }} />
+                    )}
+                  </div>
+
+                  {categoryName}
+                </Item>
               </MenuItem>
             )
         )}

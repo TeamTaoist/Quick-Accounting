@@ -1,17 +1,27 @@
 import styled from "@emotion/styled";
-import { Workspace } from "../../store/useWorkspace";
+import { Workspace, useWorkspace } from "../../store/useWorkspace";
 import { getChainLogo } from "../../utils/chain";
 import { getShortAddress } from "../../utils";
+import { useNavigate } from "react-router-dom";
 
 interface SingleWorkspaceProps {
   workspace: Workspace;
 }
 
 const SingleWorkspace = ({ workspace }: SingleWorkspaceProps) => {
+  const navigate = useNavigate();
+  const { getWorkspaceDetails } = useWorkspace();
+
+  // fetch workspace
+  const handleFetchWorkspaceDetails = (workspaceId: number) => {
+    getWorkspaceDetails(workspaceId, navigate);
+    console.log(workspaceId);
+  };
   return (
-    <SingleWorkspaceSection>
+    <SingleWorkspaceSection
+      onClick={() => handleFetchWorkspaceDetails(workspace.ID)}
+    >
       <Logo
-      // onClick={() => handleFetchWorkspaceDetails(workspace.ID)}
       // isActive={id === workspace.ID}
       >
         {workspace.avatar === "" ? (
@@ -39,6 +49,7 @@ const SingleWorkspaceSection = styled.div`
   border: 1px solid var(--clr-gray-200);
   box-shadow: 0px 4px 6px 0px var(--clr-gray-200);
   border-radius: 6px;
+  cursor: pointer;
   h5 {
     font-size: 16px;
     font-weight: 700px;
