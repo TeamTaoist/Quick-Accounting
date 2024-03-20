@@ -23,7 +23,7 @@ export const ActionBtn = styled.div`
   gap: 20px;
   width: 100%;
   /* margin: 20px 0; */
-  /* margin-left: 20px; */
+  margin-left: 20px;
   /* margin-top: 60px; */
   img {
     width: 20px;

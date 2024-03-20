@@ -410,6 +410,7 @@ const PaymentRequestDetails = ({
                         fontWeight: "500",
                         borderBottom: "none",
                         borderTop: "1px solid var(--clr-gray-200)",
+                        fontFamily: "Inter",
                       }}
                     >
                       <NoteInfo>

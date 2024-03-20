@@ -6,7 +6,6 @@ import {
   FormControl,
   InputAdornment,
   MenuItem,
-  Paper,
   Select,
   SelectChangeEvent,
   Table,
@@ -60,6 +59,14 @@ import { getPaymentStatus } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
 import UpdateLoading from "../../../components/UpdateLoading";
 
+const HeaderStyles = {
+  padding: "10px 15px",
+  fontFamily: "Inter",
+  fontSize: "16px",
+  fontWeight: "500",
+  color: "#0F172A",
+  width: "33%",
+};
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
 }
@@ -345,60 +352,24 @@ const BookkeepingTransferDetails = ({
             // sx={{ boxShadow: "none" }}
             sx={{
               boxShadow: "none",
-              border: "1px solid var(--border-table)",
-              borderRadius: "10px",
+              border: "1px solid var(--clr-gray-200)",
+              borderRadius: "6px",
             }}
           >
             <Table>
-              <TableHead sx={{ backgroundColor: "var(--bg-secondary)" }}>
+              <TableHead
+                sx={{ backgroundColor: "var(--clr-gray-200)", height: "56px" }}
+              >
                 <TableRow>
-                  <TableCell
-                    style={{
-                      padding: "10px 15px",
-                      fontFamily: "PingFangHK",
-                      fontSize: "18px",
-                    }}
-                  >
-                    Safe
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      padding: "10px 15px",
-                      fontFamily: "PingFangHK",
-                      fontSize: "18px",
-                    }}
-                  >
-                    Counterparty
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      padding: "10px 15px",
-                      fontFamily: "PingFangHK",
-                      fontSize: "18px",
-                    }}
-                  >
-                    Amount
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      padding: "10px 15px",
-                      fontFamily: "PingFangHK",
-                      fontSize: "18px",
-                    }}
-                  >
-                    Currency
-                  </TableCell>
+                  <TableCell sx={HeaderStyles}>Safe</TableCell>
+                  <TableCell sx={HeaderStyles}>Counterparty</TableCell>
+                  <TableCell sx={HeaderStyles}>Amount</TableCell>
+                  <TableCell sx={HeaderStyles}>Currency</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell
-                    sx={{
-                      borderRight: "1px solid var(--border-table)",
-                      padding: 0,
-                      paddingLeft: "12px",
-                    }}
-                  >
+                  <TableCell>
                     <SafeSection>
                       <div>{getShortAddress(workspace.vault_wallet)}</div>
                       <Logo $dir={bookkeepingDetails.direction}>
@@ -406,37 +377,17 @@ const BookkeepingTransferDetails = ({
                       </Logo>
                     </SafeSection>
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      borderRight: "1px solid var(--border-table)",
-                      padding: 0,
-                      paddingLeft: "12px",
-                    }}
-                  >
+                  <TableCell>
                     {formatAddressToDomain(
                       bookkeepingDetails.counterparty,
                       workspace.chain_id,
                       workspace.name_service === "sns"
                     )}
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      borderRight: "1px solid var(--border-table)",
-                      padding: 0,
-                      paddingLeft: "12px",
-                    }}
-                  >
+                  <TableCell>
                     {formatNumber(Number(bookkeepingDetails.amount))}
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      borderRight: 0,
-                      padding: 0,
-                      paddingLeft: "12px",
-                    }}
-                  >
-                    {bookkeepingDetails.currency_name}
-                  </TableCell>
+                  <TableCell>{bookkeepingDetails.currency_name}</TableCell>
                 </TableRow>
                 {/* ))} */}
               </TableBody>
@@ -456,13 +407,22 @@ const BookkeepingTransferDetails = ({
                   <TableRow
                     sx={{
                       td: {
-                        border: "1px solid var(--border-table)",
-                        padding: 0,
-                        paddingInline: 1,
+                        padding: "6px",
+                        paddingInline: 2,
                       },
                     }}
                   >
-                    <TableCell sx={{ height: 1, width: 200 }}>
+                    <TableCell
+                      sx={{
+                        height: 1,
+                        width: 200,
+                        fontSize: "16px",
+                        fontWeight: "500",
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
+                        fontFamily: "Inter",
+                      }}
+                    >
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
@@ -472,7 +432,7 @@ const BookkeepingTransferDetails = ({
                         fullWidth
                         disabled={bookkeepingDetails?.status === 2}
                       >
-                        <Select
+                        {/* <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
                           value={bookkeepingDetails?.category_name}
@@ -493,7 +453,6 @@ const BookkeepingTransferDetails = ({
                           }}
                         >
                           <MenuItem disabled value="Category">
-                            {/* {paymentRequestDetails.category_name} */}
                             {selectedCategory?.name}
                           </MenuItem>
                           {workspaceCategoryProperties?.map((category) => (
@@ -502,6 +461,72 @@ const BookkeepingTransferDetails = ({
                               value={category.name}
                               // onBlur={handleUpdateCategory}
                               onClick={() => handleCategory(category)}
+                            >
+                              {category.name}
+                            </MenuItem>
+                          ))}
+                        </Select> */}
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={bookkeepingDetails?.category_name}
+                          label="Age"
+                          // onChange={handleCategoryChange}
+                          size="small"
+                          IconComponent={() => (
+                            <InputAdornment position="start">
+                              <img
+                                src={arrowBottom}
+                                alt="Custom Arrow Icon"
+                                style={{ marginRight: "20px" }}
+                              />
+                            </InputAdornment>
+                          )}
+                          // sx={{
+                          //   minWidth: "100%",
+                          //   "& fieldset": { border: "none" },
+                          // }}
+                          sx={{
+                            minWidth: "100%",
+                            height: "42px",
+                            padding: 0,
+                            paddingInline: "1px",
+                            "& .MuiSelect-select": {
+                              display: "block",
+                            },
+                            "&.MuiOutlinedInput-root": {
+                              border: "1px solid var(--clr-gray-200)",
+                              "& fieldset": {
+                                border: "none",
+                              },
+                              "&:hover fieldset": {
+                                border: "none",
+                              },
+                              "&.Mui-focused fieldset": {
+                                border: "none",
+                              },
+                            },
+                            // "& fieldset": { border: "none" },
+                            "& .MuiInputLabel-root": { display: "none" },
+                          }}
+                        >
+                          <MenuItem disabled value="Category">
+                            Category name
+                          </MenuItem>
+                          {workspaceCategoryProperties?.map((category) => (
+                            <MenuItem
+                              key={category.ID}
+                              value={category.name}
+                              // onBlur={handleUpdateCategory}
+                              onClick={() => handleCategory(category)}
+                              sx={{
+                                "&:hover": {
+                                  backgroundColor: "var(--clr-gray-100)",
+                                },
+                                "&.Mui-selected": {
+                                  backgroundColor: "var(--clr-gray-200)",
+                                },
+                              }}
                             >
                               {category.name}
                             </MenuItem>
@@ -552,13 +577,16 @@ const BookkeepingTransferDetails = ({
                 target="_blank"
                 rel="noreferrer"
               >
-                <img src={linkIcon} alt="" />
+                {/* <img src={linkIcon} alt="" /> */}
               </a>
             </div>
           </TransactionHash>
-          <Status>
-            <p>Status</p>
-            <StatusBtn>{getPaymentStatus(bookkeepingDetails.status)}</StatusBtn>
+          <Status status={getPaymentStatus(bookkeepingDetails.status)}>
+            <h6>Status</h6>
+            <div>
+              <p></p>
+              {getPaymentStatus(bookkeepingDetails.status)}
+            </div>
           </Status>
         </TransferTable>
       </RequestDetails>
