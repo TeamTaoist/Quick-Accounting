@@ -16,6 +16,9 @@ export const customStyles: any = {
     backgroundColor: state.isDisabled
       ? "transparent"
       : provided.backgroundColor,
+    "&:hover": {
+      border: "1px solid var(--clr-gray-200)",
+    },
   }),
   option: (provided: any, state: any) => ({
     ...provided,

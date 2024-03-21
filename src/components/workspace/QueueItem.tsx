@@ -453,30 +453,30 @@ const QueueTransactionItem = ({
               <TableBody>
                 {(payments || []).map((queueItem: IPaymentRequest) => (
                   <TableRow key={queueItem.ID}>
-                    <TableCell sx={{ padding: "8px 14px" }}>
+                    <TableCell sx={{ padding: "10px 14px" }}>
                       {getShortAddress(workspace?.vault_wallet)}
                     </TableCell>
-                    <TableCell sx={{ padding: "8px 14px" }}>
+                    <TableCell sx={{ padding: "10px 14px" }}>
                       {formatAddressToDomain(
                         queueItem.counterparty,
                         workspace.chain_id,
                         workspace.name_service === "sns"
                       )}
                     </TableCell>
-                    <TableCell sx={{ padding: "8px 14px" }}>
+                    <TableCell sx={{ padding: "10px 14px" }}>
                       {queueItem.amount} {queueItem.currency_name}
                     </TableCell>
-                    <TableCell sx={{ padding: "8px 14px" }}>
+                    <TableCell sx={{ padding: "10px 14px" }}>
                       <CategoryCell>{queueItem.category_name}</CategoryCell>
                     </TableCell>
-                    <TableCell sx={{ padding: "8px 14px" }}>
+                    <TableCell sx={{ padding: "10px 14px" }}>
                       {formatTime(
                         queueItem.approve_ts || approveTransaction.timestamp,
                         "-",
                         false
                       )}
                     </TableCell>
-                    <TableCell sx={{ padding: "8px 14px" }}>
+                    <TableCell sx={{ padding: "10px 14px" }}>
                       <Tooltip
                         title="View details"
                         placement="top"

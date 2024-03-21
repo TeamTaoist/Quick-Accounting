@@ -611,6 +611,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                         sx={{
                           paddingTop: 0,
                           paddingBottom: 0,
+                          borderTop: "1px solid var(--clr-gray-200)",
                         }}
                       >
                         <DeleteIcon onClick={() => handleDeletePayment(index)}>

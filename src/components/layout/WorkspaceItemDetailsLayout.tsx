@@ -94,7 +94,7 @@ export const RequestHeader = styled.div`
   right: 0;
   z-index: 1;
   img {
-    width: 20px;
+    width: 16px;
     cursor: pointer;
     position: absolute;
     top: 30px;

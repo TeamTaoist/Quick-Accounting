@@ -20,10 +20,10 @@ export const Filter = styled.div`
 export const PaymentRequestBody = styled.div``;
 export const ActionBtn = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 15px;
   width: 100%;
   /* margin: 20px 0; */
-  margin-left: 20px;
+  margin-left: 15px;
   /* margin-top: 60px; */
   img {
     width: 14px;

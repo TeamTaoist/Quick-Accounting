@@ -61,7 +61,7 @@ export const HeaderTitle = styled.div`
     font-weight: 600;
   }
   img {
-    width: 20px;
+    width: 16px;
     cursor: pointer;
   }
 `;

@@ -201,7 +201,7 @@ const RejectPaymentRequestTable = ({
                 <TableCell
                   sx={{
                     backgroundColor: "var(--clr-gray-200)",
-                    width: "30%",
+                    width: "20%",
                     fontSize: "14px",
                     fontWeight: "500",
                     fontFamily: "Inter",
@@ -213,7 +213,7 @@ const RejectPaymentRequestTable = ({
                 <TableCell
                   sx={{
                     backgroundColor: "var(--clr-gray-200)",
-                    width: "20%",
+                    width: "30%",
                     fontSize: "14px",
                     fontWeight: "500",
                     fontFamily: "Inter",
