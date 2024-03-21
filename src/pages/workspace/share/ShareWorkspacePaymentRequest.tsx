@@ -533,26 +533,42 @@ const ShareWorkspacePaymentRequest = () => {
 export default ShareWorkspacePaymentRequest;
 
 const SharePaymentContainer = styled.div`
-  /* display: grid; */
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 99;
+  background-color: var(--clr-modal-mask);
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding-top: 100px;
 `;
 const SharePaymentForm = styled.div`
-  width: 757px;
+  background: #fff;
+  width: 800px;
+  height: 480px;
   outline: 1px solid var(--border-table);
   border-radius: 10px;
-  overflow: hidden;
+  overflow-y: scroll;
   margin: 40px 0;
   /* padding: 40px 0; */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 const ShareHeader = styled.div`
   padding: 40px;
   line-height: 20px;
   height: 152px;
   background: var(--clr-gray-100);
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
   h3 {
     font-size: 24px;
     font-weight: 600;
