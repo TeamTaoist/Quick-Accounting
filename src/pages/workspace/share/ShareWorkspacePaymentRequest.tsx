@@ -434,7 +434,7 @@ const ShareWorkspacePaymentRequest = () => {
         <SharePaymentContainer>
           <SharePaymentForm>
             <ShareHeader>
-              <h3>New payment request from {workspace.name}</h3>
+              <h3>New payment request</h3>
               {workspace && (
                 <WorkspaceInfo>
                   <WorkspaceLogo>

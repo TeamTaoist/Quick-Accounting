@@ -299,7 +299,16 @@ const QueueTransactionItem = ({
 
   return (
     <QueueNotice>
-      <Accordion>
+      <Accordion
+        sx={{
+          boxShadow: "none",
+          fontFamily: "Inter",
+          border: "1px solid var(--clr-gray-200)",
+          "&:before": {
+            borderRadius: "6px",
+          },
+        }}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -307,7 +316,7 @@ const QueueTransactionItem = ({
           sx={{
             backgroundColor: "var(--clr-gray-200)",
             border: "1px solid var(--clr-gray-200)",
-            height: "75px",
+            height: "70px",
             fontFamily: "Inter",
             "&:before": {
               borderRadius: "6px",
