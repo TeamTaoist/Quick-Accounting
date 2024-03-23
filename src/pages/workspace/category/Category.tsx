@@ -503,7 +503,15 @@ const Category = () => {
               <CategoryOption key={category.ID}>
                 <Accordion
                   expanded={expandedCategories.includes(category.ID)}
-                  elevation={0}
+                  // elevation={0}
+                  sx={{
+                    boxShadow: "none",
+                    fontFamily: "Inter",
+                    border: "1px solid var(--clr-gray-200)",
+                    "&:before": {
+                      borderRadius: "6px",
+                    },
+                  }}
                 >
                   <AccordionSummary
                     onClick={() => handleCategoryCollapse(category.ID)}
@@ -518,9 +526,9 @@ const Category = () => {
                     id="panel1a-header"
                     sx={{
                       fontFamily: "Inter",
-                      borderRadius: expandedCategories.includes(category.ID)
-                        ? "6px 6px 0 0"
-                        : "6px",
+                      // borderRadius: expandedCategories.includes(category.ID)
+                      //   ? "6px 6px 0 0"
+                      //   : "6px",
                       backgroundColor: "var(--clr-gray-200)",
                       border: "1px solid var(--clr-gray-200)",
                       height: "56px",
@@ -611,10 +619,6 @@ const Category = () => {
                     sx={{
                       p: 0,
                       maxHeight: "500px",
-                      borderLeft: "1px solid var(--clr-gray-200)",
-                      borderBottom: "1px solid var(--clr-gray-200)",
-                      borderRight: "1px solid var(--clr-gray-200)",
-                      borderRadius: "0 0 6px 6px",
                     }}
                   >
                     {/* category property */}
