@@ -31,12 +31,15 @@ const SearchInput = ({
             borderColor: "var(--clr-gray-300)",
             borderRadius: "6px",
           },
+          "& .MuiInputBase-input": {
+            height: "19px",
+          },
         }}
         size="small"
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <img src={searchIcon} alt="" />
+              <img style={{ width: "16px" }} src={searchIcon} alt="" />
             </InputAdornment>
           ),
         }}

@@ -93,23 +93,6 @@ const UserPaymentRequest = () => {
         </Details>
       ) : (
         <PaymentTable>
-          {/* <TextField
-            id="search"
-            type="search"
-            size="small"
-            autoComplete="off"
-            placeholder="Search workspace / recipient / token"
-            value={searchTerm}
-            onChange={handleChange}
-            sx={{ width: 350 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <img src={searchIcon} alt="" />
-                </InputAdornment>
-              ),
-            }}
-          /> */}
           <SearchInput
             handleSearchPayment={handleSearchPayment}
             placeholder="Search workspace / recipient / token"

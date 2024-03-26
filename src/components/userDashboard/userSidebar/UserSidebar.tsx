@@ -96,8 +96,11 @@ const UserSidebarSection = styled.div<SidebarProps>`
   width: ${({ hideSidebar }) => (hideSidebar ? "88px" : "256px")};
   height: calc(100vh - 72px);
   position: relative;
-  padding: 20px;
+  padding: 23.5px;
   transition: width 0.3s ease-in-out;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
   &::-webkit-scrollbar {
     display: none;
   }
@@ -105,11 +108,11 @@ const UserSidebarSection = styled.div<SidebarProps>`
   scrollbar-width: none;
 `;
 const Address = styled.div<SidebarProps>`
+  margin-top: 6px;
   display: flex;
   /* justify-content: space-between; */
   align-items: center;
-  gap: 9px;
-  padding: 8px 0;
+  height: 24px;
   justify-content: ${({ hideSidebar }) =>
     hideSidebar ? "center" : "space-between"};
   img {
@@ -127,20 +130,21 @@ const Address = styled.div<SidebarProps>`
 `;
 const Disconnect = styled.div`
   overflow: hidden;
-  margin: 10px 0;
+  margin: 16px 0;
   button {
     border: 1px solid var(--clr-gray-300);
     outline: none;
     background: transparent;
-    font-size: 15px;
-    padding: 14px 0;
-    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    border-radius: 6px;
     cursor: pointer;
     width: 100%;
   }
 `;
 const SidebarLinkList = styled.div<SidebarProps>`
-  margin-top: ${({ hideSidebar }) => (hideSidebar ? "38px" : "30px")};
+  margin-top: ${({ hideSidebar }) => (hideSidebar ? "38px" : "26px")};
 `;
 export const BuildVersion = styled.div`
   position: fixed;

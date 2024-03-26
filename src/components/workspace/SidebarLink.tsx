@@ -23,7 +23,7 @@ export default SidebarLink;
 const SidebarLinks = styled(NavLink)<SidebarProps>`
   /* padding: ${({ hideSidebar }) =>
     hideSidebar ? "10px 0 10px 0" : "10px 0 10px 43px"}; */
-  padding: 10px;
+  padding: 6px 8px;
   display: flex;
   justify-content: ${({ hideSidebar }) => (hideSidebar ? "center" : "start")};
   margin-bottom: 10px;
@@ -33,9 +33,10 @@ const SidebarLinks = styled(NavLink)<SidebarProps>`
   color: var(--clr-gray-700);
   cursor: pointer;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
   border-radius: 6px;
+  height: 40px;
   img {
     width: 14px;
   }

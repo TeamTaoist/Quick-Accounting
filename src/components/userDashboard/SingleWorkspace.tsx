@@ -41,7 +41,7 @@ export default SingleWorkspace;
 
 const SingleWorkspaceSection = styled.div`
   width: 266px;
-  height: 130px;
+  height: 124px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -49,12 +49,14 @@ const SingleWorkspaceSection = styled.div`
   border: 1px solid var(--clr-gray-200);
   box-shadow: 0px 4px 6px 0px var(--clr-gray-200);
   border-radius: 6px;
+  padding: 16px;
   cursor: pointer;
   h5 {
     font-size: 16px;
     font-weight: 700px;
     color: var(--clr-primary-900);
-    padding: 12px 0 4px 0;
+    padding-top: 6px;
+    padding-bottom: 4px;
   }
   p {
     font-size: 14px;
@@ -73,7 +75,6 @@ const Logo = styled.div`
   position: relative;
   p {
     font-size: 14px;
-    font-weight: 600;
     text-transform: uppercase;
   }
 `;

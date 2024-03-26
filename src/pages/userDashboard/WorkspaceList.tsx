@@ -35,16 +35,17 @@ const Workspaces = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 30px;
+  gap: 24px;
 `;
 const CreateWorkspaceBtn = styled.div`
   width: 266px;
-  height: 130px;
+  height: 124px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 12px;
+  padding: 16px;
   border: 1px solid var(--clr-gray-200);
   box-shadow: 0px 4px 6px 0px var(--clr-gray-200);
   border-radius: 6px;

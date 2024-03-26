@@ -10,6 +10,7 @@ import usePaymentsStore from "../../store/usePayments";
 import { formatNumber } from "../../utils/number";
 import MyPaymentTable from "../../components/userDashboard/MyPaymentTable";
 import Pagination from "../../components/Pagination";
+import SearchInput from "../../components/workspace/SearchInput";
 
 const MyPayment = () => {
   const { id } = useParams();
@@ -51,6 +52,9 @@ const MyPayment = () => {
   useEffect(() => {
     getMyPayment(pageNumbers);
   }, [getMyPayment, pageNumbers]);
+  const handleSearchPayment = async (e: any) => {
+    e.preventDefault();
+  };
 
   return (
     <UserPaymentContainer>
@@ -66,22 +70,12 @@ const MyPayment = () => {
         </Details>
       ) : (
         <PaymentTable>
-          <TextField
-            id="search"
-            type="search"
-            size="small"
-            autoComplete="off"
+          <SearchInput
+            handleSearchPayment={handleSearchPayment}
             placeholder="Search workspace / recipient / token"
-            value={searchTerm}
-            onChange={handleChange}
-            sx={{ width: 350 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <img src={searchIcon} alt="" />
-                </InputAdornment>
-              ),
-            }}
+            searchTerm={searchTerm}
+            handleChange={handleChange}
+            width="350px"
           />
           <PaymentLIst>
             <MyPaymentTable

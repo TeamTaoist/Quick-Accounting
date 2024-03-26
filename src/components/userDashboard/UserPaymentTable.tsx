@@ -7,6 +7,7 @@ import {
   TableRow,
   Paper,
   Tooltip,
+  TableCellProps,
 } from "@mui/material";
 import { formatNumber } from "../../utils/number";
 import { Status } from "../workspace/paymentRequest/RejectPaymentRequestTable";
@@ -14,6 +15,39 @@ import details from "../../assets/details.svg";
 import { getPaymentStatus, getPaymentUpdateTime } from "../../utils/payment";
 import { useDomainStore } from "../../store/useDomain";
 
+interface CustomTableCellProps extends TableCellProps {
+  width?: string;
+}
+
+const HeaderCell = ({ width, children, ...props }: CustomTableCellProps) => (
+  <TableCell
+    sx={{
+      background: "var(--clr-gray-200)",
+      fontWeight: "500",
+      color: "var(--clr-primary-900)",
+      height: "56px",
+      padding: 0,
+      paddingInline: 2,
+      minWidth: width ? width : "auto",
+    }}
+    {...props}
+  >
+    {children}
+  </TableCell>
+);
+const Cell = ({ children }: { children: React.ReactNode }) => (
+  <TableCell
+    sx={{
+      borderBottom: "none",
+      borderTop: "1px solid var(--clr-gray-200)",
+      padding: 0,
+      paddingInline: 2,
+      height: "56px",
+    }}
+  >
+    {children}
+  </TableCell>
+);
 interface UserPaymentTableProps {
   filterData: IPaymentRequest[];
   handleUserPaymentDetails: (data: IPaymentRequest) => void;
@@ -31,7 +65,7 @@ const UserPaymentTable = ({
         borderRadius: "6px",
         maxHeight: "100%",
         overflow: "auto",
-        minWidth: "1100px",
+        minWidth: "1136px",
         "&::-webkit-scrollbar": {
           display: "none",
         },
@@ -42,94 +76,24 @@ const UserPaymentTable = ({
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell
-              sx={{
-                background: "var(--clr-gray-200)",
-                width: "25%",
-                fontSize: "14px",
-                fontWeight: "500",
-                fontFamily: "Inter",
-                color: "var(--clr-primary-900)",
-              }}
-            >
-              Workspace
-            </TableCell>
-            <TableCell
-              sx={{
-                background: "var(--clr-gray-200)",
-                fontSize: "14px",
-                fontWeight: "500",
-                fontFamily: "Inter",
-                color: "var(--clr-primary-900)",
-              }}
-            >
-              Recipient
-            </TableCell>
-            <TableCell
-              sx={{
-                background: "var(--clr-gray-200)",
-                width: "25%",
-                fontSize: "14px",
-                fontWeight: "500",
-                fontFamily: "Inter",
-                color: "var(--clr-primary-900)",
-              }}
-            >
-              Amount
-            </TableCell>
-            <TableCell
-              sx={{
-                background: "var(--clr-gray-200)",
-                fontSize: "14px",
-                fontWeight: "500",
-                fontFamily: "Inter",
-                color: "var(--clr-primary-900)",
-              }}
-            >
-              Status
-            </TableCell>
-            <TableCell
-              sx={{
-                background: "var(--clr-gray-200)",
-                fontSize: "14px",
-                fontWeight: "500",
-                fontFamily: "Inter",
-                color: "var(--clr-primary-900)",
-              }}
-            >
-              Date
-            </TableCell>
-            <TableCell
-              sx={{
-                background: "var(--clr-gray-200)",
-                fontSize: "14px",
-                fontWeight: "500",
-                fontFamily: "Inter",
-                color: "var(--clr-primary-900)",
-              }}
-            ></TableCell>
+            <HeaderCell width="286px">Workspace</HeaderCell>
+            <HeaderCell width="154px">Recipient</HeaderCell>
+            <HeaderCell width="286px">Amount</HeaderCell>
+            <HeaderCell width="237px">Status</HeaderCell>
+            <HeaderCell width="176px">Date</HeaderCell>
+            <HeaderCell width="96px"></HeaderCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {filterData.map((payment) => (
             <TableRow key={payment.ID}>
-              <TableCell
-                sx={{
-                  borderBottom: "none",
-                  borderTop: "1px solid var(--clr-gray-200)",
-                }}
-              >
+              <Cell>
                 <div>
                   <p>{payment.workspace_name}</p>
                   {/* <p>{getShortAddress(payment.vault_wallet)}</p> */}
                 </div>
-              </TableCell>
-              <TableCell
-                sx={{
-                  borderBottom: "none",
-                  borderTop: "1px solid var(--clr-gray-200)",
-                }}
-              >
+              </Cell>
+              <Cell>
                 <div>
                   <p>
                     {formatAddressToDomain(
@@ -139,39 +103,28 @@ const UserPaymentTable = ({
                     )}
                   </p>
                 </div>
-              </TableCell>
-              <TableCell
-                sx={{
-                  borderBottom: "none",
-                  borderTop: "1px solid var(--clr-gray-200)",
-                }}
-              >
+              </Cell>
+              <Cell>
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
-              </TableCell>
-              <TableCell
-                sx={{
-                  borderBottom: "none",
-                  borderTop: "1px solid var(--clr-gray-200)",
-                }}
-              >
+              </Cell>
+              <Cell>
                 {/* <img src={statusIcon} alt="" /> */}
                 <Status status={getPaymentStatus(payment.status)}>
                   <p></p>
                   {getPaymentStatus(payment.status)}
                 </Status>
-              </TableCell>
+              </Cell>
+              <Cell>{getPaymentUpdateTime(payment)}</Cell>
               <TableCell
                 sx={{
                   borderBottom: "none",
                   borderTop: "1px solid var(--clr-gray-200)",
-                }}
-              >
-                {getPaymentUpdateTime(payment)}
-              </TableCell>
-              <TableCell
-                sx={{
-                  borderBottom: "none",
-                  borderTop: "1px solid var(--clr-gray-200)",
+                  display: "grid",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: 0,
+                  paddingInline: 2,
+                  height: "56px",
                 }}
               >
                 <Tooltip
