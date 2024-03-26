@@ -9,12 +9,14 @@ export const WorkspaceContainer = styled.div`
 `;
 export const WorkspaceForm = styled.div`
   background: var(--clr-white);
-  width: 600px;
+  width: 720px;
+  height: 432px;
   border-radius: 6px;
   overflow: hidden;
 `;
 export const FormHeader = styled.div`
   background: var(--clr-gray-200);
+  height: 126px;
   padding: 36px;
   div {
     display: flex;
@@ -38,25 +40,29 @@ export const FormHeader = styled.div`
 `;
 
 export const Safe = styled.div`
-  padding: 36px 40px;
+  padding: 32px 40px;
 `;
 export const CreateSafe = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 0 12px 0;
+  padding: 30px 0 20px 0;
   p {
     font-size: 14px;
     font-weight: 600;
   }
   a {
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 400;
     text-decoration: none;
-    border: 1px solid var(--clr-gray-400);
     border-radius: 6px;
-    padding: 10px 20px;
     color: var(--clr-primary-900);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    img {
+      width: 16px;
+    }
   }
 `;
 export const Button = styled.button`

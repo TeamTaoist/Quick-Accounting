@@ -10,7 +10,7 @@ export const SidebarContainer = styled.div<SidebarProps>`
   overflow-x: hidden;
   width: ${({ hideSidebar }) => (hideSidebar ? "88px" : "256px")};
   transition: width 0.3s ease-in-out;
-  padding: 20px 24px;
+  padding: 23.5px;
   /* padding-inline: 20px; */
   &::-webkit-scrollbar {
     display: none;
@@ -25,14 +25,15 @@ export const WorkspaceInfo = styled.div<SidebarProps>`
     hideSidebar ? "center" : "space-between"};
   align-items: center;
   img {
-    width: 14px;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
     transform: ${({ hideSidebar }) => hideSidebar && "rotate(180deg)"};
   }
   h5 {
     font-size: 16px;
     font-weight: 700;
-    margin: 8px 0;
+    margin-bottom: 8px;
   }
   p {
     font-size: 14px;
@@ -55,6 +56,8 @@ export const RequestBtn = styled.button<SidebarProps>`
   margin: 18px 0;
   cursor: pointer;
   width: 100%;
+  height: 40px;
+  font-family: "Inter";
   &:first-child {
     color: var(--clr-white);
     background: var(--clr-primary-900);
@@ -64,9 +67,11 @@ export const RequestBtn = styled.button<SidebarProps>`
   border: 1px solid var(--clr-gray-200);
   img {
     width: 16px;
+    height: 16px;
   }
   span {
     font-size: 14px;
+    font-weight: 500;
   }
 `;
 export const SidebarLinkList = styled.div`

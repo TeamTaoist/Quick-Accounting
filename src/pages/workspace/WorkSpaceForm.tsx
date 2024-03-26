@@ -29,6 +29,7 @@ import Loading from "../../utils/Loading";
 import { useAccount } from "wagmi";
 import cancelBtn from "../../assets/auth/x.svg";
 import CheckIcon from "@mui/icons-material/Check";
+import rightArrow from "../../assets/workspace/right-direction.svg";
 
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
@@ -88,7 +89,7 @@ const WorkSpaceForm = () => {
               sx={{
                 pb: 1,
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
                 color: "var(--clr-primary-900)",
               }}
             >
@@ -99,14 +100,23 @@ const WorkSpaceForm = () => {
               variant="outlined"
               placeholder="Enter your workspace name"
               size="small"
-              sx={{ minWidth: "100%" }}
+              sx={{
+                width: "100%",
+                "& fieldset.MuiOutlinedInput-notchedOutline": {
+                  borderColor: "var(--clr-gray-300)",
+                  borderRadius: "6px",
+                },
+                "& .MuiInputBase-input": {
+                  height: "19px",
+                },
+              }}
               value={workspaceName}
               onChange={(e) => setWorkspaceName(e.target.value)}
             />
             <CreateSafe>
               <p>{t("workspaceForm.AddASafe")}</p>
               <a href="https://safe.global/" target="_blank" rel="noreferrer">
-                {t("workspaceForm.CreateASafe")} &nbsp;&gt;
+                {t("workspaceForm.CreateASafe")} <img src={rightArrow} alt="" />
               </a>
             </CreateSafe>
             {/* select */}

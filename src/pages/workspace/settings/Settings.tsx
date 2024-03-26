@@ -153,12 +153,14 @@ const InputSection = styled.div`
   gap: 13px;
   label {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
   }
   input {
     padding: 10px 13px;
     border: 1px solid var(--border-table);
     border-radius: 5px;
+    width: 371px;
+    height: 36px;
   }
 `;
 const Input = styled.div`
@@ -170,16 +172,16 @@ const NetWork = styled.div`
   margin-top: 30px;
   h3 {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 14px;
   }
   div {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     img {
-      width: 26px;
-      height: 26px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
     }
     p {
@@ -208,7 +210,7 @@ const MultiSigner = styled.div`
     color: var(--clr-gray-600);
   }
   .icon {
-    width: 20px;
+    width: 16px;
   }
 `;
 const ManageSafe = styled.a`
@@ -217,7 +219,7 @@ const ManageSafe = styled.a`
   align-items: center;
   justify-content: center;
   width: 165px;
-  padding: 10px;
+  padding: 10.5px 16px;
   border-radius: 6px;
   margin-top: 12px;
   gap: 8px;
