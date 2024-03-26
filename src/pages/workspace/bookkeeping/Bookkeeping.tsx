@@ -45,6 +45,7 @@ const Bookkeeping = () => {
     hideBookkeepingList,
     setCurrentBookkeepingDetail,
     bookkeepingHiddenList,
+    bookkeepingFilterList,
   } = useBookkeeping();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
   const { queryNameService } = useDomainStore();
@@ -106,20 +107,43 @@ const Bookkeeping = () => {
     setSearchTerm(event.target.value);
   };
   const [selectedValue, setSelectedValue] = useState<string>("");
+  const [isSearch, setIsSearch] = useState(false);
 
   const handleDropdownChange = (event: any) => {
     setSelectedValue(event.target.value);
   };
-
+  const handleSearchPayment = (e: any) => {
+    e.preventDefault();
+    getBookkeepingList(workspaceId, false, pageNumbers, 10, searchTerm).then(
+      (res) => {
+        if (res) {
+          setTotalItem(res);
+          setIsSearch(true);
+        }
+      }
+    );
+  };
+  useEffect(() => {
+    if (!searchTerm && isSearch) {
+      getBookkeepingList(workspaceId, false, pageNumbers, 10, searchTerm).then(
+        (res) => {
+          if (res) {
+            setTotalItem(res);
+            setIsSearch(false);
+          }
+        }
+      );
+    }
+  }, [searchTerm]);
   // filter table data
-  const filterData = bookkeepingList.filter((bookkeeping) => {
-    const searchItem = bookkeeping.counterparty
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const filterByCategory =
-      selectedValue === "" || bookkeeping.category_name === selectedValue;
-    return searchItem && filterByCategory;
-  });
+  // const filterData = bookkeepingList.filter((bookkeeping) => {
+  //   const searchItem = bookkeeping.counterparty
+  //     .toLowerCase()
+  //     .includes(searchTerm.toLowerCase());
+  //   const filterByCategory =
+  //     selectedValue === "" || bookkeeping.category_name === selectedValue;
+  //   return searchItem && filterByCategory;
+  // });
 
   // export
   const paymentRequestIds = selected.join(",");
@@ -176,15 +200,6 @@ const Bookkeeping = () => {
       );
     }
   }, [bookkeepingList, workspace, queryNameService]);
-  const handleSearchPayment = (e: any) => {
-    // e.preventDefault();
-    // getPaymentRequestList(workspaceId, false, pageNumbers, 10, searchTerm).then(
-    //   (res) => {
-    //     setTotalItem(res);
-    //     setIsSearch(true);
-    //   }
-    // );
-  };
 
   return (
     <PaymentRequestContainer>
@@ -277,7 +292,7 @@ const Bookkeeping = () => {
               <BookkeepingTable
                 selected={selected}
                 setSelected={setSelected}
-                filterData={filterData}
+                filterData={bookkeepingFilterList}
                 handleBookkeepingDetails={handleBookkeepingDetails}
               />
 

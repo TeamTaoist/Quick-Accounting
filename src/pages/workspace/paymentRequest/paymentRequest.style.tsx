@@ -85,3 +85,10 @@ export const CategoryCell = styled.div`
   text-align: center;
   border-radius: 5px;
 `;
+export const EmptySearchResult = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 85%;
+  font-size: 14px;
+`;

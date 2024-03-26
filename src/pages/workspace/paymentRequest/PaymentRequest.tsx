@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import {
+  EmptySearchResult,
   Filter,
   Header,
   Image,
@@ -303,6 +304,8 @@ const PaymentRequest = () => {
           )}
           {paymentRequest && (
             <PaymentRequestBody>
+              {/* TODO: no result found msg */}
+
               <TableSection>
                 {/* table */}
                 <TableContainer
@@ -384,21 +387,30 @@ const PaymentRequest = () => {
                         <TableCell></TableCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody>
-                      {sortedPayment.map(([id, items], index) => (
-                        <PaymentRequestTableList
-                          items={items}
-                          index={index}
-                          selected={selected}
-                          setSelected={setSelected}
-                          handleGroupPaymentDetails={handleGroupPaymentDetails}
-                          handleOpenModal={handleOpenModal}
-                          paymentId={id}
-                        />
-                      ))}
-                    </TableBody>
+                    {!(filterData.length === 0) && (
+                      <TableBody>
+                        {sortedPayment.map(([id, items], index) => (
+                          <PaymentRequestTableList
+                            items={items}
+                            index={index}
+                            selected={selected}
+                            setSelected={setSelected}
+                            handleGroupPaymentDetails={
+                              handleGroupPaymentDetails
+                            }
+                            handleOpenModal={handleOpenModal}
+                            paymentId={id}
+                          />
+                        ))}
+                      </TableBody>
+                    )}
                   </Table>
                 </TableContainer>
+                {/* no search result msg */}
+                <EmptySearchResult>
+                  {filterData.length === 0 && <p>No results found.</p>}
+                </EmptySearchResult>
+
                 {totalItem > 10 && (
                   <Pagination
                     handlePageClick={handlePageClick}

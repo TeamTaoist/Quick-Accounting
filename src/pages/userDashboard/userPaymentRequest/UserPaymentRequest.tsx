@@ -12,26 +12,22 @@ import UserPaymentTable from "../../../components/userDashboard/UserPaymentTable
 import Pagination from "../../../components/Pagination";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useDomainStore } from "../../../store/useDomain";
+import SearchInput from "../../../components/workspace/SearchInput";
 
 const UserPaymentRequest = () => {
   const { id } = useParams();
-  const { userPaymentRequest, getUserPaymentRequest } = useUserPayment();
+  const { userPaymentRequest, getUserPaymentRequest, userFilterList } =
+    useUserPayment();
   const { setCurrentPaymentRequestDetail } = usePaymentsStore();
   const { workspace } = useWorkspace();
   const { queryNameService } = useDomainStore();
 
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleChange = (event: any) => {
-    setSearchTerm(event.target.value);
-  };
-
   // filter table data
-  const filterData = userPaymentRequest.rows.filter(
-    (payment) =>
-      payment.workspace_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.vault_wallet.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filterData = userPaymentRequest.rows.filter(
+  //   (payment) =>
+  //     payment.workspace_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     payment.vault_wallet.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   // modal
   const [openModal, setOpenModal] = useState(false);
@@ -62,6 +58,27 @@ const UserPaymentRequest = () => {
     }
   }, [userPaymentRequest, workspace.chain_id]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
+
+  const handleChange = (event: any) => {
+    setSearchTerm(event.target.value);
+  };
+  const handleSearchPayment = async (e: any) => {
+    e.preventDefault();
+    await getUserPaymentRequest(pageNumbers, 10, searchTerm);
+    setIsSearch(true);
+  };
+  useEffect(() => {
+    const fetchPaymentList = async () => {
+      if (!searchTerm && isSearch) {
+        await getUserPaymentRequest(pageNumbers, 10, searchTerm);
+        setIsSearch(true);
+      }
+    };
+    fetchPaymentList();
+  }, [searchTerm]);
+
   return (
     <UserPaymentContainer>
       {/* modal */}
@@ -76,7 +93,7 @@ const UserPaymentRequest = () => {
         </Details>
       ) : (
         <PaymentTable>
-          <TextField
+          {/* <TextField
             id="search"
             type="search"
             size="small"
@@ -92,10 +109,17 @@ const UserPaymentRequest = () => {
                 </InputAdornment>
               ),
             }}
+          /> */}
+          <SearchInput
+            handleSearchPayment={handleSearchPayment}
+            placeholder="Search workspace / recipient / token"
+            searchTerm={searchTerm}
+            handleChange={handleChange}
+            width="350px"
           />
           <PaymentLIst>
             <UserPaymentTable
-              filterData={filterData}
+              filterData={userFilterList}
               handleUserPaymentDetails={handleUserPaymentDetails}
             />
           </PaymentLIst>

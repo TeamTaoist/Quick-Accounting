@@ -11,13 +11,18 @@ interface UserPaymentRequest {
     total: number;
     rows: IPaymentRequest[];
   };
+  userFilterList: IPaymentRequest[];
   myPayment: {
     page: number;
     size: number;
     total: number;
     rows: IPaymentRequest[];
   };
-  getUserPaymentRequest: (pageNumber: number) => Promise<void>;
+  getUserPaymentRequest: (
+    pageNumber?: number,
+    size?: number,
+    searchKeyWords?: string
+  ) => Promise<void>;
   getMyPayment: (pageNumber: number) => Promise<void>;
 }
 
@@ -30,19 +35,27 @@ export const useUserPayment = create<UserPaymentRequest>((set) => {
       total: 0,
       rows: [],
     },
+    userFilterList: [],
     myPayment: {
       page: 0,
       size: 0,
       total: 0,
       rows: [],
     },
-    getUserPaymentRequest: async (pageNumber) => {
+    getUserPaymentRequest: async (
+      pageNumber = 0,
+      size = 0,
+      searchKeyWords = ""
+    ) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
-          `/user/my_payment_requests?page=${pageNumber}&sort_field=submit_ts&sort_order=desc`
+          `/user/my_payment_requests?page=${pageNumber}&size=${size}&sort_field=submit_ts&sort_order=desc&search_wk_name=${searchKeyWords}`
         );
-        set({ userPaymentRequest: data.data });
+        if (searchKeyWords === "") {
+          set({ userPaymentRequest: data.data });
+        }
+        set({ userFilterList: data.data.rows });
       } catch (error: any) {
         toast.error(error?.data?.msg || error?.status || error);
       } finally {
