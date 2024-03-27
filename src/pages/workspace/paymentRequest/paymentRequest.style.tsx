@@ -80,9 +80,12 @@ export const PaymentPagination = styled.div`
 `;
 export const CategoryCell = styled.div`
   background: var(--clr-gray-200);
-  padding: 8px 6px;
+  padding: 2px 10px;
+  height: 40px;
   font-size: 14px;
-  text-align: center;
+  display: grid;
+  justify-content: center;
+  align-items: center;
   border-radius: 5px;
 `;
 export const EmptySearchResult = styled.div`

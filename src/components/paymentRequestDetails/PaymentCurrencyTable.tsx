@@ -15,15 +15,7 @@ import { useDomainStore } from "../../store/useDomain";
 import { useWorkspace } from "../../store/useWorkspace";
 import { useLocation } from "react-router-dom";
 import arrowBottom from "../../assets/workspace/arrow-bottom.svg";
-
-const HeaderStyles = {
-  padding: "10px 15px",
-  fontFamily: "Inter",
-  fontSize: "16px",
-  fontWeight: "500",
-  color: "#0F172A",
-  width: "33%",
-};
+import { Cell, HeaderCell } from "../table";
 
 const PaymentCurrencyTable = () => {
   const { paymentRequestDetails } = usePaymentsStore();
@@ -33,33 +25,22 @@ const PaymentCurrencyTable = () => {
 
   return (
     // <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>
-    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-      <TableHead
-        sx={{ backgroundColor: "var(--clr-gray-200)", height: "56px" }}
-      >
+    <Table aria-label="simple table">
+      <TableHead>
         <TableRow>
-          <TableCell sx={HeaderStyles}>Recipient</TableCell>
-          <TableCell sx={HeaderStyles}>Amount</TableCell>
-          <TableCell sx={HeaderStyles}>Currency</TableCell>
+          <HeaderCell width="280px">Recipient</HeaderCell>
+          <HeaderCell width="220px">Amount</HeaderCell>
+          <HeaderCell width="220px">Currency</HeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        <TableRow
-          sx={{
-            height: "30px",
-          }}
-        >
-          <TableCell
-            // size="small"
-            sx={{
-              // border: "1px solid var(--border-table)",
-              border: 0,
-              // padding: "5px",
-              padding: "5px 0",
-            }}
-          >
+        <TableRow>
+          <Cell>
             <TextField
               sx={{
+                "& input": {
+                  padding: 0,
+                },
                 "& fieldset": { border: "none" },
               }}
               size="small"
@@ -78,17 +59,13 @@ const PaymentCurrencyTable = () => {
                 readOnly: true,
               }}
             />
-          </TableCell>
-          <TableCell
-            sx={{
-              border: 0,
-              padding: "5px 0",
-              // padding: "5px 10px",
-              // paddingInline: "15px",
-            }}
-          >
+          </Cell>
+          <Cell>
             <TextField
               sx={{
+                "& input": {
+                  padding: 0,
+                },
                 "& fieldset": { border: "none" },
               }}
               size="small"
@@ -101,28 +78,8 @@ const PaymentCurrencyTable = () => {
                 readOnly: true,
               }}
             />
-          </TableCell>
-          <TableCell
-            sx={{
-              border: 0,
-              padding: "5px 0",
-              paddingRight: "16px",
-            }}
-          >
-            {/* <TextField
-              sx={{
-                "& fieldset": { border: "none" },
-              }}
-              size="small"
-              value={paymentRequestDetails?.currency_name}
-              fullWidth
-              // id="fullWidth"
-              placeholder="Enter wallet address"
-              InputProps={{
-                style: { padding: 0 },
-                readOnly: true,
-              }}
-            /> */}
+          </Cell>
+          <Cell>
             <Select
               readOnly={paymentRequestDetails?.status === 2}
               labelId=""
@@ -138,13 +95,13 @@ const PaymentCurrencyTable = () => {
                   <img
                     src={arrowBottom}
                     alt="Custom Arrow Icon"
-                    style={{ marginRight: "20px", width: "10px" }}
+                    style={{ marginRight: "8px", width: "16px" }}
                   />
                 </InputAdornment>
               )}
               sx={{
                 minWidth: "100%",
-                height: "40px",
+                height: "36px",
                 marginRight: "8px",
                 // .css-q8hpuo-MuiFormControl-root
                 "&.MuiOutlinedInput-root": {
@@ -180,7 +137,7 @@ const PaymentCurrencyTable = () => {
               {/* )
                           )} */}
             </Select>
-          </TableCell>
+          </Cell>
         </TableRow>
       </TableBody>
     </Table>

@@ -517,7 +517,7 @@ const Category = () => {
                     onClick={() => handleCategoryCollapse(category.ID)}
                     expandIcon={
                       !editableCategoryId.includes(category.ID) ? (
-                        <ExpandMoreIcon />
+                        <ExpandMoreIcon style={{ color: "#94A3B8" }} />
                       ) : (
                         ""
                       )
@@ -555,8 +555,7 @@ const Category = () => {
                             sx={{
                               padding: 1,
                               fontSize: "16px",
-                              fontWeight: "500",
-                              fontFamily: "Inter",
+                              fontWeight: "400",
                             }}
                           >
                             {category.name}

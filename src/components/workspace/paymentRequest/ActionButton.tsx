@@ -6,6 +6,7 @@ import approve from "../../../assets/workspace/approve.svg";
 import download from "../../../assets/workspace/archive.svg";
 import reject from "../../../assets/workspace/reject.svg";
 import { useTranslation } from "react-i18next";
+import Button from "../../button";
 
 interface ActionButtonProps {
   handleExportPaymentRequestList: () => void;
@@ -21,18 +22,23 @@ const ActionButton = ({
   const { t } = useTranslation();
   return (
     <ActionBtn>
-      <Btn onClick={handleExportPaymentRequestList}>
-        <img src={download} alt="" />
-        <p>{t("paymentRequest.Download")}</p>
-      </Btn>
-      <Btn onClick={handleRejectPaymentRequest}>
-        <img src={reject} alt="" />
-        <p>{t("paymentRequest.Reject")}</p>
-      </Btn>
-      <Btn onClick={() => handlePaymentRequestChaiModal()}>
-        <img src={approve} alt="" />
-        <p>{t("paymentRequest.Approve")}</p>
-      </Btn>
+      <Button
+        onClick={handleExportPaymentRequestList}
+        icon={download}
+        width="112px"
+      >
+        {t("paymentRequest.Download")}
+      </Button>
+      <Button onClick={handleRejectPaymentRequest} icon={reject} width="112px">
+        {t("paymentRequest.Reject")}
+      </Button>
+      <Button
+        onClick={() => handlePaymentRequestChaiModal()}
+        icon={approve}
+        width="112px"
+      >
+        {t("paymentRequest.Approve")}
+      </Button>
     </ActionBtn>
   );
 };

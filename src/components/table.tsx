@@ -25,7 +25,7 @@ export const HeaderCell = ({
   </TableCell>
 );
 
-export const Cell = ({ children }: { children: React.ReactNode }) => (
+export const Cell = ({ children, width }: CustomTableCellProps) => (
   <TableCell
     sx={{
       borderBottom: "none",
@@ -33,6 +33,7 @@ export const Cell = ({ children }: { children: React.ReactNode }) => (
       padding: 0,
       paddingInline: 2,
       height: "56px",
+      minWidth: width ? width : "100%",
     }}
   >
     {children}

@@ -22,15 +22,9 @@ import { formatNumber } from "../../../utils/number";
 import { CategoryCell } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import { getPaymentUpdateTime } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
+import { Cell, HeaderCell } from "../../table";
+import { CheckBoxStyle } from "../category/CategoryArchivedList";
 
-const HeaderStyles = {
-  fontSize: "14px",
-  fontWeight: "500",
-  fontFamily: "Inter",
-  color: "var(--clr-primary-900)",
-  background: "var(--clr-gray-200)",
-  padding: "0 16px",
-};
 interface BookkeepingTableProps {
   selected: number[];
   setSelected: (selected: any) => void;
@@ -91,7 +85,7 @@ const BookkeepingTable = ({
           style={{ background: "var(--clr-gray-200)", height: "55px" }}
         >
           <TableRow>
-            <TableCell sx={HeaderStyles}>
+            <HeaderCell width="230px">
               <Checkbox
                 indeterminate={
                   selected.length > 0 &&
@@ -99,38 +93,22 @@ const BookkeepingTable = ({
                 }
                 checked={selected.length === bookkeepingList.length}
                 onChange={handleSelectAllClick}
+                sx={CheckBoxStyle}
               />
               Safe
-            </TableCell>
-            <TableCell sx={HeaderStyles}>Counterparty</TableCell>
-            <TableCell
-              sx={{
-                width: "30%",
-                fontSize: "14px",
-                fontWeight: "500",
-                fontFamily: "Inter",
-                color: "var(--clr-primary-900)",
-                background: "var(--clr-gray-200)",
-              }}
-            >
-              Amount
-            </TableCell>
-            <TableCell sx={HeaderStyles}>Category</TableCell>
-            <TableCell sx={HeaderStyles}>Date</TableCell>
-            <TableCell sx={HeaderStyles}></TableCell>
+            </HeaderCell>
+            <HeaderCell width="154px">Counterparty</HeaderCell>
+            <HeaderCell width="290px">Amount</HeaderCell>
+            <HeaderCell width="180px">Category</HeaderCell>
+            <HeaderCell width="176px">Date</HeaderCell>
+            <HeaderCell width="96px"></HeaderCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {filterData.map((bookkeeping) => (
             <React.Fragment key={bookkeeping.ID}>
               <TableRow sx={{ height: "56px" }}>
-                <TableCell
-                  style={{
-                    padding: "6px 16px",
-                    borderBottom: "none",
-                    borderTop: "1px solid var(--clr-gray-200)",
-                  }}
-                >
+                <Cell>
                   <SafeSection>
                     <div>
                       <Checkbox
@@ -138,6 +116,7 @@ const BookkeepingTable = ({
                         onChange={(event) =>
                           handleCheckboxClick(event, bookkeeping.ID)
                         }
+                        sx={CheckBoxStyle}
                       />
                       {getShortAddress(workspace?.vault_wallet)}
                     </div>
@@ -145,55 +124,23 @@ const BookkeepingTable = ({
                       <img src={rightArrow} alt="" />
                     </Logo>
                   </SafeSection>
-                </TableCell>
-                <TableCell
-                  sx={{
-                    padding: "6px 16px",
-                    borderBottom: "none",
-                    borderTop: "1px solid var(--clr-gray-200)",
-                  }}
-                >
+                </Cell>
+                <Cell>
                   {formatAddressToDomain(
                     bookkeeping.counterparty,
                     workspace.chain_id,
                     workspace.name_service === "sns"
                   )}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    padding: "6px 16px",
-                    borderBottom: "none",
-                    borderTop: "1px solid var(--clr-gray-200)",
-                  }}
-                >
+                </Cell>
+                <Cell>
                   {formatNumber(Number(bookkeeping.amount))}{" "}
                   {bookkeeping.currency_name}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    padding: "6px 16px",
-                    borderBottom: "none",
-                    borderTop: "1px solid var(--clr-gray-200)",
-                  }}
-                >
+                </Cell>
+                <Cell>
                   <CategoryCell>{bookkeeping.category_name}</CategoryCell>
-                </TableCell>
-                <TableCell
-                  sx={{
-                    padding: "6px 16px",
-                    borderBottom: "none",
-                    borderTop: "1px solid var(--clr-gray-200)",
-                  }}
-                >
-                  {getPaymentUpdateTime(bookkeeping)}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    padding: "6px 16px",
-                    borderBottom: "none",
-                    borderTop: "1px solid var(--clr-gray-200)",
-                  }}
-                >
+                </Cell>
+                <Cell>{getPaymentUpdateTime(bookkeeping)}</Cell>
+                <Cell>
                   <Tooltip
                     title="View details"
                     placement="top"
@@ -216,7 +163,7 @@ const BookkeepingTable = ({
                       onClick={() => handleBookkeepingDetails(bookkeeping)}
                     />
                   </Tooltip>
-                </TableCell>
+                </Cell>
               </TableRow>
             </React.Fragment>
           ))}

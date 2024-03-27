@@ -32,10 +32,12 @@ export const CreateBtn = styled.button<any>`
   background: ${(props) => props.bg || "transparent"};
   outline: none;
   border: 1px solid var(--clr-gray-300);
-  padding: 12px 18px;
+  padding: 8px 16px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
+  width: 165px;
+  height: 40px;
   cursor: pointer;
   color: ${(props) => props.clr || "#0f172a"};
   display: flex;
@@ -66,7 +68,7 @@ export const Header = styled.div`
     background-color: var(--clr-white);
     padding: 12px 10px;
     border-radius: 6px;
-    width: 310px;
+    width: 350px;
   }
 `;
 export const HeaderRight = styled.div`
@@ -85,10 +87,11 @@ export const HeaderOptions = styled.div`
     gap: 10px;
     img {
       width: 16px;
+      height: 16px;
     }
     p {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 400;
     }
   }
 `;
@@ -97,13 +100,14 @@ export const UpdateBtn = styled.button`
   outline: none;
   background: var(--clr-primary-900);
   color: var(--clr-white);
-  padding: 10px 18px;
+  padding: 8px 16px;
+  width: 82px;
+  height: 40px;
   border-radius: 7px;
   font-weight: 500;
   margin-right: 20px;
   margin-right: 10px;
   cursor: pointer;
-  font-family: "Inter";
 `;
 export const UpdateLoadingBtn = styled.div`
   display: flex;
@@ -127,7 +131,7 @@ export const Options = styled.div`
 
   h4 {
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
     padding: 16px;
     color: var(--clr-gray-500);
   }
@@ -150,12 +154,15 @@ export const PropertyOptions = styled.div`
 export const Option = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 20px 12px;
+  align-items: center;
+  padding: 0 16px;
   margin-inline: 8px;
   border-radius: 6px;
+  height: 56px;
 
   img {
     width: 16px;
+    height: 16px;
   }
   p {
     font-size: 16px;
@@ -172,17 +179,22 @@ export const OptionCreateButtons = styled.div`
 
   button {
     display: flex;
+    justify-content: center;
+    align-items: center;
     background: transparent;
     gap: 7px;
-    padding: 10px 24px;
+    padding: 8px 16px;
     margin: 20px;
     margin-bottom: 20px;
+    width: 165px;
+    height: 40px;
     border: 1px solid var(--clr-gray-400);
     outline: none;
     border-radius: 6px;
     cursor: pointer;
     img {
       width: 16px;
+      height: 16px;
     }
     span {
       font-size: 14px;
@@ -201,7 +213,8 @@ export const PropertyTitle = styled.div`
   align-items: center;
   gap: 14px;
   img {
-    width: 20px;
+    width: 16px;
+    height: 16px;
   }
 `;
 export const Details = styled.div`
@@ -220,7 +233,7 @@ export const Details = styled.div`
 export const DetailsInput = styled.div`
   padding: 10px;
   h3 {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 400;
     padding: 10px 0;
   }
@@ -228,6 +241,7 @@ export const DetailsInput = styled.div`
 export const PropertyInput = styled.input`
   padding: 10px;
   width: 100%;
+  height: 40px;
   border: 1px solid var(--clr-gray-300);
   border-radius: 6px;
 `;
@@ -236,24 +250,37 @@ export const PropertyOptionsValue = styled.div`
   align-items: center;
   gap: 10px;
   margin-top: 16px;
-
-  img {
-    width: 20px;
-  }
+`;
+export const ValueIcon = styled.img`
+  width: 24px;
+  height: 24px;
+`;
+export const DeleteValue = styled.img`
+  width: 16px;
+  height: 16px;
 `;
 export const PropertyOptionsValueBtn = styled.button`
   border: none;
   outline: none;
   background: transparent;
-  font-size: 18px;
-  margin-left: 7px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  img {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 export const PropertyInputValue = styled.input`
   padding: 10px;
   width: 100%;
+  height: 40px;
+  border-radius: 6px;
   border: 1px solid var(--clr-gray-300);
   outline: none;
 `;
@@ -291,11 +318,12 @@ export const CancelBtn = styled.button`
   outline: none;
   background: var(--clr-white);
   border: 1px solid var(--clr-gray-200);
-  padding: 10px 18px;
+  padding: 8px 16px;
+  width: 82px;
+  height: 40px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
-  font-family: "Inter";
   margin-right: 20px;
   cursor: pointer;
 `;

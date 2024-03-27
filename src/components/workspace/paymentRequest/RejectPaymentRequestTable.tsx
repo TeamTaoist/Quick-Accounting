@@ -6,7 +6,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
   Tooltip,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -33,6 +32,8 @@ import { useDomainStore } from "../../../store/useDomain";
 import SearchInput from "../SearchInput";
 import FilterCategorySelect from "../FilterCategorySelect";
 import back from "../../../assets/workspace/back.svg";
+import Button from "../../button";
+import { Cell, HeaderCell } from "../../table";
 
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
@@ -175,10 +176,13 @@ const RejectPaymentRequestTable = ({
             uniqueCategoryNames={uniqueCategoryNames}
           />
         </div>
-        <BackBtn onClick={() => setPaymentRequest(true)}>
-          <Image src={back} alt="" />
-          <p>Back</p>
-        </BackBtn>
+        <Button
+          onClick={() => setPaymentRequest(true)}
+          icon={back}
+          width="89px"
+        >
+          Back
+        </Button>
       </RejectHeader>
       <TableSection>
         <TableContainer
@@ -197,70 +201,13 @@ const RejectPaymentRequestTable = ({
         >
           <Table stickyHeader size="small">
             <TableHead>
-              <TableRow sx={{ height: "55px" }}>
-                <TableCell
-                  sx={{
-                    backgroundColor: "var(--clr-gray-200)",
-                    width: "20%",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    fontFamily: "Inter",
-                    color: "var(--clr-primary-900)",
-                  }}
-                >
-                  Recipient
-                </TableCell>
-                <TableCell
-                  sx={{
-                    backgroundColor: "var(--clr-gray-200)",
-                    width: "30%",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    fontFamily: "Inter",
-                    color: "var(--clr-primary-900)",
-                  }}
-                >
-                  Amount
-                </TableCell>
-                <TableCell
-                  sx={{
-                    backgroundColor: "var(--clr-gray-200)",
-                    width: "20%",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    fontFamily: "Inter",
-                    color: "var(--clr-primary-900)",
-                  }}
-                >
-                  Category
-                </TableCell>
-                <TableCell
-                  sx={{
-                    backgroundColor: "var(--clr-gray-200)",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    fontFamily: "Inter",
-                    color: "var(--clr-primary-900)",
-                  }}
-                >
-                  Status
-                </TableCell>
-                <TableCell
-                  sx={{
-                    backgroundColor: "var(--clr-gray-200)",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    fontFamily: "Inter",
-                    color: "var(--clr-primary-900)",
-                  }}
-                >
-                  Date
-                </TableCell>
-                <TableCell
-                  sx={{
-                    backgroundColor: "var(--clr-gray-200)",
-                  }}
-                ></TableCell>
+              <TableRow>
+                <HeaderCell width="154px">Recipient</HeaderCell>
+                <HeaderCell width="393px">Amount</HeaderCell>
+                <HeaderCell width="180px">Category</HeaderCell>
+                <HeaderCell width="137px">Status</HeaderCell>
+                <HeaderCell width="176px">Date</HeaderCell>
+                <HeaderCell width="96px"></HeaderCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -271,71 +218,28 @@ const RejectPaymentRequestTable = ({
                     height: "55px",
                   }}
                 >
-                  <TableCell
-                    sx={{
-                      borderBottom: "none",
-                      borderTop: "1px solid var(--clr-gray-200)",
-                    }}
-                  >
+                  <Cell>
                     {formatAddressToDomain(
                       payment.counterparty,
                       workspace.chain_id,
                       workspace.name_service === "sns"
                     )}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      borderBottom: "none",
-                      borderTop: "1px solid var(--clr-gray-200)",
-                    }}
-                  >
+                  </Cell>
+                  <Cell>
                     {formatNumber(Number(payment.amount))}{" "}
                     {payment.currency_name}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      borderBottom: "none",
-                      borderTop: "1px solid var(--clr-gray-200)",
-                    }}
-                  >
+                  </Cell>
+                  <Cell>
                     <CategoryCell>{payment.category_name}</CategoryCell>
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      borderBottom: "none",
-                      borderTop: "1px solid var(--clr-gray-200)",
-                    }}
-                  >
+                  </Cell>
+                  <Cell>
                     <Status status={getPaymentStatus(payment.status)}>
                       <p></p>
                       {getPaymentStatus(payment.status)}
                     </Status>
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      borderBottom: "none",
-                      borderTop: "1px solid var(--clr-gray-200)",
-                    }}
-                  >
-                    {getPaymentUpdateTime(payment)}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      borderBottom: "none",
-                      borderTop: "1px solid var(--clr-gray-200)",
-                    }}
-                  >
-                    {/* <Button
-                      variant="outlined"
-                      sx={{
-                        borderColor: "black",
-                        color: "black",
-                        textTransform: "lowercase",
-                      }}
-                      onClick={() => handleOpenModal(payment)}
-                    >
-                      view more
-                    </Button> */}
+                  </Cell>
+                  <Cell>{getPaymentUpdateTime(payment)}</Cell>
+                  <Cell>
                     <Tooltip
                       title="View details"
                       placement="top"
@@ -358,7 +262,7 @@ const RejectPaymentRequestTable = ({
                         onClick={() => handleOpenModal(payment)}
                       />
                     </Tooltip>
-                  </TableCell>
+                  </Cell>
                 </TableRow>
               ))}
             </TableBody>
@@ -416,14 +320,4 @@ const RejectHeader = styled.div`
   div {
     display: flex;
   }
-`;
-const BackBtn = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  border: 1px solid var(--clr-gray-300);
-  padding-inline: 8px;
-  border-radius: 6px;
 `;

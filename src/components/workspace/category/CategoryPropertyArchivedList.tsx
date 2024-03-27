@@ -8,12 +8,13 @@ import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
 import archive from "../../../assets/workspace/archive.svg";
-import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
+import cancel from "../../../assets/auth/cancel.svg";
 import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { checkboxClasses } from "@mui/material/Checkbox";
 import { CheckBoxStyle } from "./CategoryArchivedList";
+import Button from "../../button";
 
 interface CategoryPropertyArchivedListProps {
   setOpen: (open: boolean) => void;
@@ -79,27 +80,44 @@ const CategoryPropertyArchivedList = ({
   };
 
   return (
-    <>
-      <WorkspaceItemDetailsLayout
-        title="Archived category properties"
-        // subtitle="These categories will continue to be applied to historical transfers."
-        setOpen={setOpen}
-      >
+    <ArchivedContainer>
+      <ArchivedList>
+        <Header>
+          <div>
+            <HeaderTitle>
+              <h1>Archived categories</h1>
+              <img onClick={() => setOpen(false)} src={cancel} alt="" />
+            </HeaderTitle>
+            <p>
+              These categories will continue to be applied to historical
+              transfers.
+            </p>
+          </div>
+        </Header>
+
         {archivedCategoryProperty.length === 0 ? (
           <Archivemsg>Archive list is empty</Archivemsg>
         ) : (
           <>
             <Unarchive>
-              <div onClick={handleUnArchive}>
-                <img src={archive} alt="" />
-                <p>Unarchive</p>
-              </div>
+              <Button onClick={handleUnArchive} icon={archive}>
+                Unarchive
+              </Button>
             </Unarchive>
             <ArchiveTable>
               <TableContainer
                 sx={{
-                  border: "1px solid var(--clr-gray-300)",
-                  borderRadius: "10px",
+                  boxShadow: "none",
+                  border: "1px solid var(--clr-gray-200)",
+                  borderRadius: "6px",
+                  maxHeight: "100%",
+                  overflow: "auto",
+                  width: "100%",
+                  "&::-webkit-scrollbar": {
+                    display: "none",
+                  },
+                  "-ms-overflow-style": "none",
+                  scrollbarWidth: "none",
                 }}
               >
                 <Table>
@@ -113,8 +131,8 @@ const CategoryPropertyArchivedList = ({
                         sx={{
                           fontWeight: 500,
                           fontSize: "14px",
-                          padding: "5px 10px",
-                          fontFamily: "Inter",
+                          padding: "0 10px",
+                          height: "56px",
                         }}
                       >
                         <Checkbox
@@ -137,13 +155,12 @@ const CategoryPropertyArchivedList = ({
                       <TableRow key={property.ID}>
                         <TableCell
                           sx={{
-                            padding: "5px 10px",
+                            padding: "0 10px",
                             display: "flex",
                             alignItems: "center",
-                            borderBottom:
-                              i === archivedCategoryProperty.length - 1
-                                ? "none"
-                                : undefined,
+                            borderBottom: "none",
+                            borderTop: "1px solid var(--clr-gray-200)",
+                            height: "56px",
                           }}
                         >
                           <Checkbox
@@ -163,12 +180,66 @@ const CategoryPropertyArchivedList = ({
             </ArchiveTable>
           </>
         )}
-      </WorkspaceItemDetailsLayout>
-    </>
+      </ArchivedList>
+      {/* </WorkspaceItemDetailsLayout> */}
+    </ArchivedContainer>
   );
 };
 
 export default CategoryPropertyArchivedList;
+
+const ArchivedContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+`;
+const ArchivedList = styled.div`
+  width: 800px;
+  height: 480px;
+  border: 1px solid var(--border-table);
+  border-radius: 10px;
+  overflow: scroll;
+  background: #fff;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
+
+const Header = styled.div`
+  display: grid;
+  align-items: center;
+  height: 126px;
+  background: var(--clr-gray-100);
+  padding-inline: 40px;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  p {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 16px;
+  }
+`;
+const HeaderTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  /* padding: 22px 26px; */
+
+  h1 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  img {
+    width: 16px;
+    cursor: pointer;
+  }
+`;
 
 const Unarchive = styled.div`
   display: flex;
@@ -192,7 +263,7 @@ const Unarchive = styled.div`
   }
 `;
 const ArchiveTable = styled.div`
-  padding: 30px;
+  padding: 22px 30px;
 `;
 const CellValue = styled.div`
   background: var(--bg-primary);

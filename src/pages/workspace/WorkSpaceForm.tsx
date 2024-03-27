@@ -125,11 +125,17 @@ const WorkSpaceForm = () => {
                 value={selectChainId}
                 onChange={onSelectChain}
                 size="small"
+                sx={{
+                  width: "395px",
+                  height: "42px",
+                }}
                 MenuProps={{
                   sx: {
                     "& .MuiMenuItem-root": {
                       marginInline: "10px",
                       borderRadius: "6px",
+                      fontSize: "14px",
+                      fontWeight: "500",
                       "&:hover": {
                         bgcolor: "var(--clr-gray-100)",
                       },
@@ -156,13 +162,17 @@ const WorkSpaceForm = () => {
                 onChange={handleChange}
                 sx={{ overflow: "hidden" }}
                 renderValue={(selectedValue) => (
-                  <div style={{ overflow: "hidden" }}>{selectedValue}</div>
+                  <div style={{ overflow: "hidden", fontSize: "14px" }}>
+                    {selectedValue}
+                  </div>
                 )}
                 MenuProps={{
                   sx: {
                     "& .MuiMenuItem-root": {
                       marginInline: "10px",
                       borderRadius: "6px",
+                      fontSize: "14px",
+                      fontWeight: "500",
                       "&:hover": {
                         bgcolor: "var(--clr-gray-100)",
                       },

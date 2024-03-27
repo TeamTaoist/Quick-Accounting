@@ -27,6 +27,7 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import CHAINS from "../../../utils/chain";
 import styled from "@emotion/styled";
 import Pagination from "../../../components/Pagination";
+import { Cell, HeaderCell } from "../../../components/table";
 
 type AssetType = {
   name: string;
@@ -194,6 +195,9 @@ const Assets = () => {
                   borderColor: "var(--clr-gray-300)",
                   borderRadius: "6px",
                 },
+                "& .MuiInputBase-input": {
+                  height: "19px",
+                },
               }}
               InputProps={{
                 startAdornment: (
@@ -208,79 +212,74 @@ const Assets = () => {
           <AssetTable>
             <TableContainer
               sx={{
-                maxHeight: 500,
-                minWidth: 700,
                 border: "1px solid var(--clr-gray-200)",
                 borderRadius: "6px",
+                maxHeight: "100%",
+                overflow: "auto",
+                minWidth: "1100px",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                "-ms-overflow-style": "none",
+                scrollbarWidth: "none",
               }}
             >
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={TableHeaderStyles}>Assets</TableCell>
-                    <TableCell sx={TableHeaderStyles}>Current price</TableCell>
-                    <TableCell sx={TableHeaderStyles}>Balance</TableCell>
-                    <TableCell
-                      sx={{
-                        background: "var(--clr-gray-200)",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                        width: "17%",
-                        padding: "14px 16px",
-                        fontFamily: "Inter",
-                        color: "#0F172A",
-                      }}
-                    >
-                      Hide the asset
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        background: "var(--clr-gray-200)",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                        width: "8%",
-                        padding: "14px 16px",
-                        fontFamily: "Inter",
-                        color: "#0F172A",
-                      }}
-                    ></TableCell>
+                    <HeaderCell width="208px">Assets</HeaderCell>
+                    <HeaderCell width="288px">Current price</HeaderCell>
+                    <HeaderCell width="288px">Balance</HeaderCell>
+                    <HeaderCell width="170px">Hide the asset</HeaderCell>
+                    <HeaderCell width="100px"></HeaderCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filterList.map((data, i) => (
                     <TableRow key={i} sx={{}}>
-                      <TableCell sx={TableCellsStyle}>
+                      <Cell>
                         {/* {recipientFormate(row.assetsName)} */}
                         <RowCell>
                           <h6>{data.symbol}</h6>
                           <p>{data.name}</p>
                         </RowCell>
-                      </TableCell>
-                      <TableCell sx={TableCellsStyle}>
+                      </Cell>
+                      <Cell>
                         <RowCell>
                           <h6>$ {data.price}</h6>
                           <p style={{ color: "#2F82CF" }}>
                             (+{data.priceIncrease}%)
                           </p>
                         </RowCell>
-                      </TableCell>
-                      <TableCell sx={TableCellsStyle}>
+                      </Cell>
+                      <Cell>
                         <RowCell>
                           <h6>
                             {data.balanceDisplay} {data.symbol}
                           </h6>
                           <p>${data.balanceUSD}</p>
                         </RowCell>
-                      </TableCell>
-                      <TableCell sx={TableCellsStyle}>
+                      </Cell>
+                      <Cell>
                         <RowCell>
                           <AssetsSwitch
                             checked={data.hidden}
                             onChange={(e) => handleAsset(e, data)}
                           />
                         </RowCell>
-                      </TableCell>
-                      <TableCell sx={TableCellsStyle}>
+                      </Cell>
+                      <TableCell
+                        sx={{
+                          borderBottom: "none",
+                          borderTop: "1px solid var(--clr-gray-200)",
+                          display: "grid",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          padding: 0,
+                          paddingInline: 2,
+                          height: "56px",
+                        }}
+                      >
                         {data.link && (
                           <RowLink>
                             <a

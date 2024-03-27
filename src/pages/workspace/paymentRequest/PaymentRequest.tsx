@@ -41,6 +41,8 @@ import NoPaymentFoundMessage from "../../../components/workspace/paymentRequest/
 import FilterCategorySelect from "../../../components/workspace/FilterCategorySelect";
 import ActionButton from "../../../components/workspace/paymentRequest/ActionButton";
 import { CheckBoxStyle } from "../../../components/workspace/category/CategoryArchivedList";
+import Button from "../../../components/button";
+import { HeaderCell } from "../../../components/table";
 
 const PaymentRequest = () => {
   const { id } = useParams();
@@ -278,7 +280,7 @@ const PaymentRequest = () => {
                   placeholder="Search token"
                   searchTerm={searchTerm}
                   handleChange={handleChange}
-                  width="220px"
+                  width="240px"
                 />
                 <FilterCategorySelect
                   selectedValue={selectedValue}
@@ -294,12 +296,15 @@ const PaymentRequest = () => {
                   handlePaymentRequestChaiModal={handlePaymentRequestChaiModal}
                 />
               </Filter>
-              <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
-                <div onClick={handleRejectedPayments}>
-                  <Image src={reject} alt="" />
-                  <p>{t("paymentRequest.ViewRejection")}</p>
-                </div>
-              </ViewReject>
+              {/* <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}> */}
+              <Button
+                onClick={handleRejectedPayments}
+                icon={reject}
+                bg="#F8FAFC"
+              >
+                {t("paymentRequest.ViewRejection")}
+              </Button>
+              {/* </ViewReject> */}
             </Header>
           )}
           {paymentRequest && (
@@ -330,15 +335,7 @@ const PaymentRequest = () => {
                       }}
                     >
                       <TableRow>
-                        <TableCell
-                          sx={{
-                            width: "30%",
-                            fontSize: "14px",
-                            fontWeight: "500",
-                            fontFamily: "Inter",
-                            color: "var(--clr-primary-900)",
-                          }}
-                        >
+                        <HeaderCell width="287px">
                           <Checkbox
                             indeterminate={
                               selected.length > 0 &&
@@ -351,40 +348,11 @@ const PaymentRequest = () => {
                             onChange={handleSelectAllClick}
                           />
                           Recipient
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            width: "20%",
-                            fontSize: "14px",
-                            fontWeight: "500",
-                            fontFamily: "Inter",
-                            color: "var(--clr-primary-900)",
-                          }}
-                        >
-                          Amount
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            width: "20%",
-                            fontSize: "14px",
-                            fontWeight: "500",
-                            fontFamily: "Inter",
-                            color: "var(--clr-primary-900)",
-                          }}
-                        >
-                          Category
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            fontSize: "14px",
-                            fontWeight: "500",
-                            fontFamily: "Inter",
-                            color: "var(--clr-primary-900)",
-                          }}
-                        >
-                          Date
-                        </TableCell>
-                        <TableCell></TableCell>
+                        </HeaderCell>
+                        <HeaderCell width="397px">Amount</HeaderCell>
+                        <HeaderCell width="180px">Category</HeaderCell>
+                        <HeaderCell width="176px">Date</HeaderCell>
+                        <HeaderCell width="96px"></HeaderCell>
                       </TableRow>
                     </TableHead>
                     {!(filterData.length === 0) && (

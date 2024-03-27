@@ -11,6 +11,7 @@ export const customStyles: any = {
     borderRadius: "6px",
     margin: "4px 0",
     padding: "2px 4px",
+    height: "40px",
     color: "var(--clr-primary-900)",
     boxShadow: state.isFocused ? null : null,
     backgroundColor: state.isDisabled

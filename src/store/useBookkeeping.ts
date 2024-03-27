@@ -65,7 +65,7 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
         );
         if (visibility) {
           set({ bookkeepingHiddenList: data.data.rows });
-          set({ bookkeepingFilterList: data.data.rows });
+          // set({ bookkeepingFilterList: data.data.rows });
         } else {
           set({ bookkeepingList: data.data.rows });
           set({ bookkeepingFilterList: data.data.rows });

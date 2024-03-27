@@ -68,6 +68,7 @@ import { parseUnits } from "ethers";
 import { useDomainStore } from "../../../store/useDomain";
 import { useLoading } from "../../../store/useLoading";
 import { formatTime } from "../../../utils/time";
+import { Cell, HeaderCell } from "../../../components/table";
 
 interface SubmitRowData {
   recipient: string;
@@ -455,64 +456,17 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
               <Table sx={{ width: "100%" }} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "var(--clr-gray-200)" }}>
                   <TableRow>
-                    <TableCell
-                      sx={{
-                        width: 200,
-                        // borderRight: "1px solid var(--border-table)",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                      }}
-                    >
-                      Recipient
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: 150,
-                        // borderRight: "1px solid var(--border-table)",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                      }}
-                    >
-                      Amount
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: 200,
-                        border: 0,
-                        fontSize: "14px",
-                        fontWeight: "600",
-                      }}
-                    >
-                      Currency
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: 50,
-                        border: 0,
-                        fontSize: "14px",
-                        fontWeight: "600",
-                      }}
-                    ></TableCell>
+                    <HeaderCell width="260px">Recipient</HeaderCell>
+                    <HeaderCell width="202px">Amount</HeaderCell>
+                    <HeaderCell width="202px">Currency</HeaderCell>
+                    <HeaderCell width="56px"></HeaderCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {/* <TableRow sx={{ td: { border: 1, padding: 0 } }}> */}
                   {rows?.map((row, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        height: "55px",
-                        // border: "1px solid red",
-                      }}
-                    >
-                      <TableCell
-                        sx={{
-                          paddingTop: 0,
-                          paddingBottom: 0,
-                          width: "40%",
-                          // borderLeft: 0,
-                        }}
-                      >
+                    <TableRow key={index}>
+                      <Cell>
                         <PaymentRequestInput
                           placeholder="Enter content"
                           value={row.recipient}
@@ -520,14 +474,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             handleServiceChange(e, index, "recipient")
                           }
                         />
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          paddingTop: 0,
-                          paddingBottom: 0,
-                          width: "30%",
-                        }}
-                      >
+                      </Cell>
+                      <Cell>
                         <PaymentRequestInput
                           type="text"
                           placeholder="0.00"
@@ -536,15 +484,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             handleServiceChange(e, index, "amount")
                           }
                         />
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          paddingTop: 0,
-                          paddingBottom: 0,
-                          width: "30%",
-                          borderTop: "1px solid var(--clr-gray-200)",
-                        }}
-                      >
+                      </Cell>
+                      <Cell>
                         <Select
                           labelId={`dropdown-${index}-label`}
                           variant="outlined"
@@ -559,7 +500,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               <img
                                 src={arrowBottom}
                                 alt="Custom Arrow Icon"
-                                style={{ marginRight: "20px", width: "10px" }}
+                                style={{ marginRight: "8px", width: "16px" }}
                               />
                             </InputAdornment>
                           )}
@@ -606,18 +547,18 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               )
                           )}
                         </Select>
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          paddingTop: 0,
-                          paddingBottom: 0,
-                          borderTop: "1px solid var(--clr-gray-200)",
-                        }}
+                      </Cell>
+                      <Cell
+                      // sx={{
+                      //   paddingTop: 0,
+                      //   paddingBottom: 0,
+                      //   borderTop: "1px solid var(--clr-gray-200)",
+                      // }}
                       >
                         <DeleteIcon onClick={() => handleDeletePayment(index)}>
                           <img src={trash} alt="" />
                         </DeleteIcon>
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -638,37 +579,13 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                 {/* <TableContainer> */}
                 <Table sx={{ width: "100%" }} aria-label="simple table">
                   <TableBody>
-                    <TableRow
-                      sx={{
-                        td: {
-                          padding: 1,
-                          paddingInline: "16px",
-                          borderBottom: "none",
-                          borderTop: "1px solid var(--clr-gray-200)",
-                        },
-                      }}
-                    >
-                      <TableCell
-                        sx={{
-                          height: 1,
-                          width: 200,
-                          // borderRight: "1px solid var(--border-table)",
-                          fontSize: "16px",
-                          fontWeight: "500",
-                          borderBottom: "none",
-                          borderTop: "1px solid var(--clr-gray-200)",
-                        }}
-                      >
+                    <TableRow>
+                      <Cell width="220px">
                         <NoteInfo>
                           <Image src={categoryIcon} alt="" /> Category
                         </NoteInfo>
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          borderBottom: "none",
-                          borderTop: "1px solid var(--clr-gray-200)",
-                        }}
-                      >
+                      </Cell>
+                      <Cell width="500px">
                         <FormControl fullWidth>
                           <Select
                             labelId="demo-simple-select-label"
@@ -682,7 +599,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 <img
                                   src={arrowBottom}
                                   alt="Custom Arrow Icon"
-                                  style={{ marginRight: "20px" }}
+                                  style={{ marginRight: "10px" }}
                                 />
                               </InputAdornment>
                             )}
@@ -735,7 +652,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             ))}
                           </Select>
                         </FormControl>
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                     {selectedCategory?.properties?.map((property) => (
                       <>
@@ -748,29 +665,14 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               },
                             }}
                           >
-                            <TableCell
-                              sx={{
-                                height: 1,
-                                width: 200,
-                                // borderRight: "1px solid var(--border-table)",
-                                fontSize: "16px",
-                                fontWeight: "500",
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
-                              }}
-                            >
+                            <Cell>
                               <NoteInfo>
                                 <Image src={selectIcon} alt="" />{" "}
                                 {property.name}
                               </NoteInfo>
-                            </TableCell>
+                            </Cell>
                             {/* add multi select */}
-                            <TableCell
-                              sx={{
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
-                              }}
-                            >
+                            <Cell>
                               <ReactSelect
                                 // value={selectedValues}
                                 value={selectSingleValue}
@@ -793,7 +695,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 isMulti={false}
                                 // defaultValues={[options[1]]}
                               />
-                            </TableCell>
+                            </Cell>
                             {/* {propertyObjects.push({
                               type: property.type,
                               name: property.name,
@@ -814,29 +716,15 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               },
                             }}
                           >
-                            <TableCell
-                              sx={{
-                                height: 1,
-                                width: 200,
-                                fontSize: "16px",
-                                fontWeight: "500",
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
-                              }}
-                            >
+                            <Cell>
                               <NoteInfo>
                                 <Image src={multiSelect} alt="" />{" "}
                                 {property.name}
                               </NoteInfo>
-                            </TableCell>
+                            </Cell>
                             {}
                             {/* add multi select */}
-                            <TableCell
-                              sx={{
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
-                              }}
-                            >
+                            <Cell>
                               <ReactSelect
                                 value={selectedValues}
                                 onChange={(
@@ -856,7 +744,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                   }))}
                                 // defaultValues={[options[1], options[2]]}
                               />
-                            </TableCell>
+                            </Cell>
                           </TableRow>
                         )}
                       </>
@@ -875,27 +763,13 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               },
                             }}
                           >
-                            <TableCell
-                              sx={{
-                                height: 1,
-                                width: 200,
-                                fontSize: "16px",
-                                fontWeight: "500",
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
-                              }}
-                            >
+                            <Cell>
                               <NoteInfo>
                                 <Image src={optionsIcon} alt="" />{" "}
                                 {property.name}
                               </NoteInfo>
-                            </TableCell>
-                            <TableCell
-                              sx={{
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
-                              }}
-                            >
+                            </Cell>
+                            <Cell>
                               {/* <TextField
                                 sx={{
                                   "& fieldset": { border: "none" },
@@ -926,7 +800,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                   )
                                 }
                               />
-                            </TableCell>
+                            </Cell>
                           </TableRow>
                         )}
                       </>
@@ -944,27 +818,13 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               },
                             }}
                           >
-                            <TableCell
-                              sx={{
-                                height: 1,
-                                width: 200,
-                                fontSize: "16px",
-                                fontWeight: "500",
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
-                              }}
-                            >
+                            <Cell>
                               <NoteInfo>
                                 <Image src={multiSelect} alt="" />{" "}
                                 {property.name}
                               </NoteInfo>
-                            </TableCell>
-                            <TableCell
-                              sx={{
-                                borderBottom: "none",
-                                borderTop: "1px solid var(--clr-gray-200)",
-                              }}
-                            >
+                            </Cell>
+                            <Cell>
                               {/* <TextField
                                 sx={{
                                   "& fieldset": { border: "none" },
@@ -991,7 +851,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 onClick={handleInputClick}
                                 inputRef={inputRef}
                               />
-                            </TableCell>
+                            </Cell>
                           </TableRow>
                         )}
                       </>

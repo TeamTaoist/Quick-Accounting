@@ -5,6 +5,7 @@ import ReactSelect from "../ReactSelect";
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import { ReactSelectOption } from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
 import { CategoryProperties } from "../../store/useCategoryProperty";
+import { Cell } from "../table";
 
 interface MultiSelectTypeProps {
   property: any;
@@ -31,38 +32,14 @@ const MultiSelectType = ({
 }: MultiSelectTypeProps) => {
   if (!!defaultPropertyValue || !property.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            padding: 0,
-            paddingInline: 2,
-            fontFamily: "Inter",
-            height: "56px",
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            fontSize: "16px",
-            fontWeight: "500",
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
+      <TableRow>
+        <Cell width="220">
           <NoteInfo>
             <Image src={multiSelect} alt="" /> {property.name}
           </NoteInfo>
-        </TableCell>
+        </Cell>
 
-        <TableCell
-          onBlur={handleUpdateCategory}
-          sx={{
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
+        <Cell width="500" onBlur={handleUpdateCategory}>
           <ReactSelect
             isDisabled={status === 2}
             value={selectedValues}
@@ -86,7 +63,7 @@ const MultiSelectType = ({
               )
               .flat()}
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

@@ -32,7 +32,7 @@ const SearchInput = ({
             borderRadius: "6px",
           },
           "& .MuiInputBase-input": {
-            height: "19px",
+            height: "23px",
           },
         }}
         size="small"

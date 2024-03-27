@@ -5,13 +5,16 @@ import multiSelect from "../../../assets/workspace/multi-select.svg";
 import calendar from "../../../assets/workspace/calendar.svg";
 import propertyAdd from "../../../assets/workspace/property-add.svg";
 import propertyDelete from "../../../assets/workspace/property-delete.svg";
+import add from "../../../assets/workspace/add.svg";
 import {
+  DeleteValue,
   DetailsInput,
   DropdownOption,
   PropertyInput,
   PropertyInputValue,
   PropertyOptionsValue,
   PropertyOptionsValueBtn,
+  ValueIcon,
 } from "../../../pages/workspace/category/category.style";
 import { InputAdornment, MenuItem, Select } from "@mui/material";
 interface CategoryPropertyDetailsProps {
@@ -92,7 +95,7 @@ const CategoryPropertyDetails = ({
             }
             style={
               isEditable
-                ? { background: "#e2e8f0" }
+                ? { background: "#e2e8f0", outline: "none" }
                 : { background: "transparent" }
             }
             size="small"
@@ -101,12 +104,13 @@ const CategoryPropertyDetails = ({
                 <img
                   src={arrowBottom}
                   alt="Custom Arrow Icon"
-                  style={{ marginRight: "20px" }}
+                  style={{ marginRight: "6px", width: "16px", height: "16px" }}
                 />
               </InputAdornment>
             )}
             sx={{
               minWidth: "100%",
+              height: "36px",
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: "var(--clr-gray-300)",
               },
@@ -115,6 +119,9 @@ const CategoryPropertyDetails = ({
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 borderColor: "var(--clr-gray-300)",
+              },
+              "&:disabled fieldset": {
+                border: "none",
               },
             }}
             MenuProps={{
@@ -170,10 +177,10 @@ const CategoryPropertyDetails = ({
             <>
               {propertyValues.map((value, valueIndex) => (
                 <PropertyOptionsValue>
-                  <img src={propertyAdd} alt="" />
+                  <ValueIcon src={propertyAdd} alt="" />
                   <PropertyInputValue
                     key={valueIndex}
-                    placeholder=""
+                    placeholder={`Option ${valueIndex + 1}`}
                     value={value}
                     disabled={isEditable}
                     onChange={(e) =>
@@ -191,7 +198,7 @@ const CategoryPropertyDetails = ({
                     }
                   />
                   {!isEditable && (
-                    <img
+                    <DeleteValue
                       onClick={() =>
                         handleDeleteProperty(
                           property.category_id,
@@ -214,7 +221,7 @@ const CategoryPropertyDetails = ({
                     )
                   }
                 >
-                  + Add option
+                  <img src={add} alt="" /> Add option
                 </PropertyOptionsValueBtn>
               )}
             </>

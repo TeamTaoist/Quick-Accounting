@@ -20,6 +20,7 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import { Tooltip } from "@mui/material";
 import details from "../../../assets/details.svg";
 import { CheckBoxStyle } from "../category/CategoryArchivedList";
+import { Cell } from "../../table";
 
 interface PaymentRequestTableListProps {
   items: IPaymentRequest[];
@@ -156,14 +157,7 @@ const PaymentRequestTableList = ({
                 height: "55px",
               }}
             >
-              <TableCell
-                style={{
-                  padding: 0,
-                  paddingLeft: "16px",
-                  borderBottom: "none",
-                  borderTop: "1px solid var(--clr-gray-200)",
-                }}
-              >
+              <Cell width="287px">
                 <Checkbox
                   checked={isSelected(payment.payment_request_id)}
                   onChange={(event) =>
@@ -176,39 +170,17 @@ const PaymentRequestTableList = ({
                   workspace.chain_id,
                   workspace.name_service === "sns"
                 )}
-              </TableCell>
-              <TableCell
-                sx={{
-                  borderBottom: "none",
-                  borderTop: "1px solid var(--clr-gray-200)",
-                }}
-              >
+              </Cell>
+              <Cell>
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
-              </TableCell>
-              <TableCell
-                sx={{
-                  borderBottom: "none",
-                  borderTop: "1px solid var(--clr-gray-200)",
-                }}
-              >
+              </Cell>
+              <Cell>
                 {payment.category_name && (
                   <CategoryCell>{payment.category_name}</CategoryCell>
                 )}
-              </TableCell>
-              <TableCell
-                sx={{
-                  borderBottom: "none",
-                  borderTop: "1px solid var(--clr-gray-200)",
-                }}
-              >
-                {getPaymentUpdateTime(payment)}
-              </TableCell>
-              <TableCell
-                sx={{
-                  borderBottom: "none",
-                  borderTop: "1px solid var(--clr-gray-200)",
-                }}
-              >
+              </Cell>
+              <Cell>{getPaymentUpdateTime(payment)}</Cell>
+              <Cell>
                 <Tooltip
                   title="View details"
                   placement="top"
@@ -231,7 +203,7 @@ const PaymentRequestTableList = ({
                     onClick={() => handleOpenModal(payment)}
                   />
                 </Tooltip>
-              </TableCell>
+              </Cell>
             </TableRow>
           ))}
         </>
@@ -261,7 +233,7 @@ const PaymentRequestTableList = ({
                       // colSpan={1}
                       sx={{
                         paddingLeft: "90px",
-                        width: "29%",
+                        minWidth: "287px",
                         borderBottom: "none",
                         borderTop: "1px solid var(--clr-gray-200)",
                       }}
@@ -271,51 +243,14 @@ const PaymentRequestTableList = ({
                         workspace.chain_id
                       )}
                     </TableCell>
-                    <TableCell
-                      sx={{
-                        width: "20.5%",
-                        borderBottom: "none",
-                        borderTop: "1px solid var(--clr-gray-200)",
-                      }}
-                    >
+                    <Cell width="397px">
                       {payments.amount} {payments.currency_name}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: "20%",
-                        borderBottom: "none",
-                        borderTop: "1px solid var(--clr-gray-200)",
-                      }}
-                    >
+                    </Cell>
+                    <Cell width="180px">
                       <CategoryCell>{payments.category_name}</CategoryCell>
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderBottom: "none",
-                        borderTop: "1px solid var(--clr-gray-200)",
-                      }}
-                    >
-                      {getPaymentUpdateTime(payments)}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        // visibility: "hidden",
-                        borderBottom: "none",
-                        borderTop: "1px solid var(--clr-gray-200)",
-                      }}
-                    >
-                      {/* <Button
-                        variant="outlined"
-                        sx={{
-                          borderColor: "black",
-                          color: "black",
-                          textTransform: "lowercase",
-                        }}
-                        // onClick={() => handleOpenModal(payment)}
-                      >
-                        view more
-                      </Button> */}
-                    </TableCell>
+                    </Cell>
+                    <Cell width="176px">{getPaymentUpdateTime(payments)}</Cell>
+                    <Cell width="96px"></Cell>
                   </TableRow>
                 ))}
               </TableBody>

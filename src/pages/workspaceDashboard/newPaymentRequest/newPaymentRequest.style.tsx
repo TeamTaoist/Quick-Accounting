@@ -28,7 +28,7 @@ export const CreateRequest = styled.div`
   scrollbar-width: none;
 `;
 export const RequestHeader = styled.div`
-  height: 150px;
+  height: 152px;
   background: var(--clr-gray-100);
   display: flex;
   flex-direction: column;
@@ -136,6 +136,7 @@ export const DeleteIcon = styled.div`
   }
 `;
 export const AddPayment = styled.div`
+  border-top: 1px solid var(--clr-gray-200);
   display: flex;
   justify-content: center;
   button {
@@ -143,7 +144,7 @@ export const AddPayment = styled.div`
     border: none;
     outline: none;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     padding: 10px 0;
     border-radius: 4px;
     margin: 8px 0;
@@ -171,6 +172,7 @@ export const NoteHeader = styled.div`
   align-items: center;
   padding: 10px 15px;
   background: var(--clr-gray-200);
+  border-top: 1px solid var(-clr-gray-200);
   height: 56px;
   h3 {
     font-size: 16px;
@@ -182,10 +184,14 @@ export const NoteHeader = styled.div`
 `;
 export const Image = styled.img`
   width: 16px;
+  height: 16px;
 `;
 export const NoteInfo = styled.div`
   display: flex;
+  align-items: center;
   gap: 6px;
+  font-size: 16px;
+  font-weight: 500;
   input {
     /* border: 1px solid var(-clr-gray-200); */
     outline: none;
@@ -202,8 +208,9 @@ export const RequestSubmit = styled.button`
   outline: none;
   font-size: 14px;
   font-weight: 500;
-  padding: 10px 0;
+  padding: 8px 16px;
   width: 100%;
+  height: 40px;
   border-radius: 6px;
   margin-top: 30px;
   cursor: pointer;
@@ -224,6 +231,7 @@ export const PaymentRequestInput = styled.input`
   margin: 4px 0;
   height: 40px;
   width: 100%;
+  font-size: 14px;
   &::placeholder {
     opacity: 0.5;
   }

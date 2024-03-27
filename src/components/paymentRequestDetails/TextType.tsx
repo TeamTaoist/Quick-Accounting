@@ -6,6 +6,7 @@ import {
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import optionsIcon from "../../assets/workspace/option.svg";
 import { CategoryProperties } from "../../store/useCategoryProperty";
+import { Cell } from "../table";
 
 interface TextTypeProps {
   property: any;
@@ -28,56 +29,14 @@ const TextType = ({
 }: TextTypeProps) => {
   if (!!defaultPropertyValue || !property.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            padding: 0,
-            paddingInline: 2,
-            fontFamily: "Inter",
-            height: "56px",
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            fontSize: "16px",
-            fontWeight: "500",
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
+      <TableRow>
+        <Cell width="220">
           <NoteInfo>
             <Image src={optionsIcon} alt="" /> {property.name}
           </NoteInfo>
-        </TableCell>
+        </Cell>
 
-        <TableCell
-          onBlur={handleUpdateCategory}
-          sx={{
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
-          {/* <TextField
-            disabled={status === 2}
-            sx={{
-              "& fieldset": { border: "none" },
-            }}
-            size="small"
-            fullWidth
-            // value={propertyContent}
-            value={proPertyTextValue[property.name]?.values || ""}
-            // id="fullWidth"
-            placeholder="Enter content"
-            onChange={(e) =>
-              handlePropertyText(e, property.name, property.type)
-            }
-            InputProps={{
-              style: { padding: 0 },
-            }}
-          /> */}
+        <Cell width="500" onBlur={handleUpdateCategory}>
           <PaymentRequestInput
             disabled={status === 2}
             value={proPertyTextValue[property.name]?.values || ""}
@@ -86,7 +45,7 @@ const TextType = ({
               handlePropertyText(e, property.name, property.type)
             }
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

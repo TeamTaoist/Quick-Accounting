@@ -41,6 +41,7 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import { getPaymentStatus } from "../../../utils/payment";
 import { formatTimestamp } from "../../../utils/time";
 import UpdateLoading from "../../../components/UpdateLoading";
+import { Cell } from "../../../components/table";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -381,6 +382,8 @@ const PaymentRequestDetails = ({
               boxShadow: "none",
               border: "1px solid var(--clr-gray-200)",
               borderRadius: "6px",
+              minWidth: "722px",
+              overflowX: "hidden",
             }}
           >
             <PaymentCurrencyTable />
@@ -391,38 +394,15 @@ const PaymentRequestDetails = ({
                 <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} />
               </NoteHeader>
               {/* <TableContainer> */}
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <Table aria-label="simple table">
                 <TableBody>
-                  <TableRow
-                    sx={{
-                      td: {
-                        // border: "1px solid var(--border-table)",
-                        padding: "6px",
-                        paddingInline: 2,
-                      },
-                    }}
-                  >
-                    <TableCell
-                      sx={{
-                        height: 1,
-                        width: 208,
-                        fontSize: "16px",
-                        fontWeight: "500",
-                        borderBottom: "none",
-                        borderTop: "1px solid var(--clr-gray-200)",
-                        fontFamily: "Inter",
-                      }}
-                    >
+                  <TableRow>
+                    <Cell width="220px">
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderBottom: "none",
-                        borderTop: "1px solid var(--clr-gray-200)",
-                      }}
-                    >
+                    </Cell>
+                    <Cell width="500px">
                       <FormControl
                         fullWidth
                         disabled={paymentRequestDetails?.status === 2}
@@ -528,7 +508,7 @@ const PaymentRequestDetails = ({
                           ))}
                         </Select>
                       </FormControl>
-                    </TableCell>
+                    </Cell>
                   </TableRow>
                   {selectedCategory && (
                     <>

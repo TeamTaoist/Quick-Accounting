@@ -18,6 +18,7 @@ import QueueItem from "../../../components/workspace/QueueItem";
 import { BookkeepingTitle, HideBtn } from "../bookkeeping/Bookkeeping";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { useDomainStore } from "../../../store/useDomain";
+import Button from "../../../components/button";
 
 const Queue = () => {
   const { id } = useParams();
@@ -100,12 +101,15 @@ const Queue = () => {
       ) : (
         <QueueContainer>
           <QueHeader>
-            <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
+            <ViewReject>
               {paymentRequest && (
-                <div>
-                  <Image src={failedIcon} alt="" />
-                  <p>{t("queue.ViewFailed")}</p>
-                </div>
+                <Button
+                  icon={failedIcon}
+                  bg="#F8FAFC"
+                  onClick={() => setPaymentRequest(!paymentRequest)}
+                >
+                  {t("queue.ViewFailed")}
+                </Button>
               )}
             </ViewReject>
           </QueHeader>

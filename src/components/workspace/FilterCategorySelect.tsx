@@ -21,7 +21,7 @@ const FilterCategorySelect = ({
 }: FilterCategorySelectProps) => {
   const { t } = useTranslation();
   return (
-    <FormControl sx={{ marginLeft: "14px", minWidth: 240 }}>
+    <FormControl sx={{ marginLeft: "14px", minWidth: "240px" }}>
       <Select
         value={selectedValue}
         renderValue={(selected) => (

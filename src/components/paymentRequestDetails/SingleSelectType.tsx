@@ -5,6 +5,7 @@ import ReactSelect from "../ReactSelect";
 import selectIcon from "../../assets/workspace/select.svg";
 import { ReactSelectOption } from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
 import { CategoryProperties } from "../../store/useCategoryProperty";
+import { Cell } from "../table";
 
 interface SingleSelectTypeProps {
   property: any;
@@ -31,38 +32,15 @@ const SingleSelectType = ({
 }: SingleSelectTypeProps) => {
   if (!!defaultPropertyValue || !property.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            padding: 0,
-            paddingInline: 2,
-            fontFamily: "Inter",
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            fontSize: "16px",
-            fontWeight: "500",
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
+      <TableRow>
+        <Cell width="220">
           <NoteInfo>
             <Image src={selectIcon} alt="" /> {property.name}
             {/* <Image src={selectIcon} alt="" />{" "}
             <input type="text" value={property.name} /> */}
           </NoteInfo>
-        </TableCell>
-        <TableCell
-          onBlur={handleUpdateCategory}
-          sx={{
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
+        </Cell>
+        <Cell width="500" onBlur={handleUpdateCategory}>
           <ReactSelect
             isMulti={false}
             isDisabled={status === 2}
@@ -91,7 +69,7 @@ const SingleSelectType = ({
               )
               .flat()}
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

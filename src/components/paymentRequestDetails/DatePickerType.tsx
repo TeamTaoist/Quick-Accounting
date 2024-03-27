@@ -7,6 +7,7 @@ import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import { CategoryProperties } from "../../store/useCategoryProperty";
 import { useRef } from "react";
+import { Cell } from "../table";
 
 interface TextTypeProps {
   property: any;
@@ -29,53 +30,38 @@ const DatePickerType = ({
 }: TextTypeProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const handleInputClick = () => {
-    inputRef.current?.showPicker();
+    // inputRef.current?.showPicker();
+    if (inputRef.current && inputRef.current.showPicker) {
+      inputRef.current.showPicker();
+    }
   };
 
   if (!!defaultPropertyValue || !property.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            padding: 0,
-            paddingInline: 2,
-            fontFamily: "Inter",
-            height: "56px",
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            fontSize: "16px",
-            fontWeight: "500",
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
+      <TableRow>
+        <Cell width="220">
           <NoteInfo>
             <Image src={multiSelect} alt="" /> {property.name}
           </NoteInfo>
-        </TableCell>
+        </Cell>
 
-        <TableCell
-          onBlur={handleUpdateCategory}
-          sx={{
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
-          {/* <TextField
+        <Cell width="500" onBlur={handleUpdateCategory}>
+          <TextField
             inputRef={inputRef}
             disabled={status === 2}
             sx={{
-              "& fieldset": { border: "none" },
+              "& fieldset": {
+                border: "1px solid var(--clr-gray-200)",
+                borderRadius: "6px",
+                fontSize: "14px",
+              },
               "& input::-webkit-calendar-picker-indicator": {
                 // display: "none",
               },
               "& input": {
                 paddingInline: "10px",
+                fontSize: "14px",
+                height: "23px",
               },
             }}
             size="small"
@@ -92,18 +78,8 @@ const DatePickerType = ({
                 color: datePicker[property.name]?.values ? "black" : "gray",
               },
             }}
-          /> */}
-          <PaymentRequestDateInput
-            inputRef={inputRef}
-            disabled={status === 2}
-            type="date"
-            value={datePicker[property.name]?.values || ""}
-            onChange={(e: any) =>
-              handleDatePickerProperty(e, property.name, property.type)
-            }
-            onClick={handleInputClick}
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

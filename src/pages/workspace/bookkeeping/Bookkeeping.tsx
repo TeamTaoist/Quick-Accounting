@@ -32,6 +32,7 @@ import { useDomainStore } from "../../../store/useDomain";
 import { useWorkspace } from "../../../store/useWorkspace";
 import SearchInput from "../../../components/workspace/SearchInput";
 import FilterCategorySelect from "../../../components/workspace/FilterCategorySelect";
+import Button from "../../../components/button";
 
 const Bookkeeping = () => {
   const { id } = useParams();
@@ -235,7 +236,7 @@ const Bookkeeping = () => {
                   placeholder="Search token"
                   searchTerm={searchTerm}
                   handleChange={handleChange}
-                  width="220px"
+                  width="240px"
                 />
                 <FilterCategorySelect
                   selectedValue={selectedValue}
@@ -245,26 +246,35 @@ const Bookkeeping = () => {
               </Filter>
               <BookkeepingAction>
                 <ActionBtn>
-                  <Btn onClick={() => inputFileRef.current!.click()}>
-                    <img src={importIcon} alt="" />
-                    <p>{t("bookkeeping.Import")}</p>
-                    <input
-                      type="file"
-                      name=""
-                      id=""
-                      hidden
-                      ref={inputFileRef}
-                      onChange={handleImportBookkeepingList}
-                    />
-                  </Btn>
-                  <Btn onClick={handleExportBookkeepingList}>
-                    <img src={download} alt="" />
-                    <p>{t("paymentRequest.Download")}</p>
-                  </Btn>
-                  <Btn onClick={handleHideBookkeepingList}>
-                    <img src={hide} alt="" />
-                    <p>{t("paymentRequest.Hide")}</p>
-                  </Btn>
+                  <Button
+                    onClick={() => inputFileRef.current!.click()}
+                    icon={importIcon}
+                    width="101px"
+                  >
+                    {t("bookkeeping.Import")}
+                  </Button>
+                  <input
+                    type="file"
+                    name=""
+                    id=""
+                    hidden
+                    ref={inputFileRef}
+                    onChange={handleImportBookkeepingList}
+                  />
+                  <Button
+                    onClick={handleExportBookkeepingList}
+                    icon={download}
+                    width="123px"
+                  >
+                    {t("paymentRequest.Download")}
+                  </Button>
+                  <Button
+                    onClick={handleHideBookkeepingList}
+                    icon={hide}
+                    width="87px"
+                  >
+                    {t("paymentRequest.Hide")}
+                  </Button>
                 </ActionBtn>
                 {/* <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
                   {paymentRequest && (
@@ -381,7 +391,9 @@ export const BookkeepingAction = styled.div`
   display: flex;
   align-items: center;
 `;
-const ViewHidden = styled.div`
+const ViewHidden = styled.button`
+  border: none;
+  outline: none;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -390,7 +402,7 @@ const ViewHidden = styled.div`
   background: var(--clr-gray-50);
   padding: 12px 14px;
   border-radius: 6px;
-  width: 100%;
+  min-width: 165px;
   margin-left: 20px;
   /* min-width: 165px; */
   p {
