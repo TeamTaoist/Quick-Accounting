@@ -128,7 +128,7 @@ const CategoryArchivedList = ({ setOpen }: any) => {
                 <Table>
                   <TableHead
                     style={{
-                      background: "var(--clr-gray-200)",
+                      background: "var(--clr-gray-100)",
                     }}
                   >
                     <TableRow>
@@ -138,6 +138,7 @@ const CategoryArchivedList = ({ setOpen }: any) => {
                           fontSize: "14px",
                           padding: "0 10px",
                           height: "56px",
+                          borderBottom: "none",
                         }}
                       >
                         <Checkbox

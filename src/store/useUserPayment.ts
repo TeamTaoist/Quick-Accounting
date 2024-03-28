@@ -57,7 +57,7 @@ export const useUserPayment = create<UserPaymentRequest>((set) => {
         }
         set({ userFilterList: data.data.rows });
       } catch (error: any) {
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
       }
@@ -70,7 +70,7 @@ export const useUserPayment = create<UserPaymentRequest>((set) => {
         );
         set({ myPayment: data.data });
       } catch (error: any) {
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
       }

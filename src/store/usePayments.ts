@@ -138,7 +138,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           return data.data.total;
         }
       } catch (error: any) {
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -156,7 +156,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           return true;
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -176,7 +176,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         set({ paymentRequestDetails: data.data });
         return true;
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -192,7 +192,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         set({ paymentRequestGroupDetails: data.data });
         return true;
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -215,7 +215,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           navigate(`/workspace/${workspaceId}/queue`);
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -232,7 +232,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           toast.success("Payment request rejected successfully");
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -262,7 +262,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
             set({ paymentRquestMap: new Map(paymentRquestMap) });
           })
           .catch((error) => {
-            toast.error(error?.data?.msg || error?.status || error);
+            toast(error?.data?.msg || error?.status || error);
             console.error(error);
           })
           .finally(() => {
@@ -301,7 +301,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         }
         throw Error(data.msg);
       } catch (error: any) {
-        toast.error(`Nonce ${nonce}: created payment request failed ${error}`);
+        toast(`Nonce ${nonce}: created payment request failed ${error}`);
         console.error(error);
       }
     },
@@ -366,7 +366,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           return true;
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         // setLoading(false);

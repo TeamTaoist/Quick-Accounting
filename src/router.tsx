@@ -23,14 +23,27 @@ import UserDashboardIndex from "./pages/userDashboard";
 import UserPaymentRequest from "./pages/userDashboard/userPaymentRequest/UserPaymentRequest";
 import MyPayment from "./pages/userDashboard/MyPayment";
 import WorkspaceList from "./pages/userDashboard/WorkspaceList";
+import styled from "@emotion/styled";
+
+const Toast = styled(ToastContainer)`
+  .Toastify__toast {
+    border: 1px solid #e2e8f0;
+    font-weight: 500;
+    color: #000000;
+    padding-left: 16px;
+  }
+  .Toastify__close-button {
+    display: none;
+  }
+`;
 
 const RouterLink = () => {
   return (
     <Router>
-      <ToastContainer
+      <Toast
         position="top-right"
         autoClose={5000}
-        hideProgressBar={false}
+        hideProgressBar={true}
         newestOnTop={false}
         closeOnClick
         rtl={false}

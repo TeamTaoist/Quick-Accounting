@@ -123,7 +123,7 @@ const CategoryPropertyArchivedList = ({
                 <Table>
                   <TableHead
                     style={{
-                      background: "var(--clr-gray-200)",
+                      background: "var(--clr-gray-100)",
                     }}
                   >
                     <TableRow>
@@ -133,6 +133,7 @@ const CategoryPropertyArchivedList = ({
                           fontSize: "14px",
                           padding: "0 10px",
                           height: "56px",
+                          borderBottom: "none",
                         }}
                       >
                         <Checkbox

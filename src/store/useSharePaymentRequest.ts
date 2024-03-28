@@ -52,11 +52,11 @@ export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
           sharePaymentRequestFormData
         );
         if (data.msg === "success" && data.code === 200) {
-          toast.success("Payment request submitted");
+          toast("Payment request submitted");
           return true;
         }
       } catch (error: any) {
-        toast.error(error?.response?.data?.msg);
+        toast(error?.response?.data?.msg);
       } finally {
         setLoading(false);
       }
@@ -69,7 +69,7 @@ export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
           `/workspace/${workspaceId}/new_share_code`
         );
         if (data.msg === "success" && data.code === 200) {
-          toast.success("The share link has been copied to your clipboard!");
+          toast("The share link has been copied to your clipboard!");
           return data.data.share_code;
         }
       } catch (error: any) {
@@ -105,11 +105,11 @@ export const useSharePaymentRequest = create<UseSharePaymentRequest>((set) => {
           sharePaymentRequestFormData
         );
         if (data.msg === "success" && data.code === 200) {
-          toast.success("Payment request saved");
+          toast("Payment request saved");
           return true;
         }
       } catch (error: any) {
-        toast.error(error?.response?.data?.msg);
+        toast(error?.response?.data?.msg);
       } finally {
         setLoading(false);
       }

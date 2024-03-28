@@ -14,40 +14,7 @@ import { Status } from "../workspace/paymentRequest/RejectPaymentRequestTable";
 import details from "../../assets/details.svg";
 import { getPaymentStatus, getPaymentUpdateTime } from "../../utils/payment";
 import { useDomainStore } from "../../store/useDomain";
-
-interface CustomTableCellProps extends TableCellProps {
-  width?: string;
-}
-
-const HeaderCell = ({ width, children, ...props }: CustomTableCellProps) => (
-  <TableCell
-    sx={{
-      background: "var(--clr-gray-200)",
-      fontWeight: "500",
-      color: "var(--clr-primary-900)",
-      height: "56px",
-      padding: 0,
-      paddingInline: 2,
-      minWidth: width ? width : "auto",
-    }}
-    {...props}
-  >
-    {children}
-  </TableCell>
-);
-const Cell = ({ children }: { children: React.ReactNode }) => (
-  <TableCell
-    sx={{
-      borderBottom: "none",
-      borderTop: "1px solid var(--clr-gray-200)",
-      padding: 0,
-      paddingInline: 2,
-      height: "56px",
-    }}
-  >
-    {children}
-  </TableCell>
-);
+import { Cell, HeaderCell } from "../table";
 interface UserPaymentTableProps {
   filterData: IPaymentRequest[];
   handleUserPaymentDetails: (data: IPaymentRequest) => void;

@@ -112,7 +112,7 @@ const Assets = () => {
 
   //switch style
   const AssetsSwitch = styled(Switch)(() => ({
-    padding: 6,
+    padding: 7,
     "& .MuiSwitch-track": {
       // borderRadius: 22 / 2,
       borderRadius: "20px",

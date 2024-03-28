@@ -117,11 +117,11 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
         );
         console.log(response);
         if (response.data.code === 200) {
-          toast.success("Success! Data imported.");
+          toast("Success! Data imported.");
         }
       } catch (error: any) {
         console.log(error);
-        toast.error("Failed to import bookkeeping list.");
+        toast("Failed to import bookkeeping list.");
       } finally {
         setLoading(false);
       }
@@ -135,7 +135,7 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
         );
         console.log(response);
         if (response.data.code === 200) {
-          toast.success("Selected items hidden successfully");
+          toast("Selected items hidden successfully");
         }
       } catch (error: any) {
         console.log(error);
@@ -152,7 +152,7 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
         );
         console.log(response);
         if (response.data.code === 200) {
-          toast.success("Selected items unhide successfully");
+          toast("Selected items unhide successfully");
         }
       } catch (error: any) {
         console.log(error);
@@ -193,7 +193,7 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
           return true;
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         // setLoading(false);

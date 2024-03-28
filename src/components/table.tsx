@@ -13,7 +13,7 @@ export const HeaderCell = ({
 }: CustomTableCellProps) => (
   <TableCell
     sx={{
-      background: "var(--clr-gray-200)",
+      background: "var(--clr-gray-100)",
       fontWeight: "500",
       color: "var(--clr-primary-900)",
       height: "56px",
@@ -21,6 +21,7 @@ export const HeaderCell = ({
       paddingInline: 2,
       minWidth: width ? width : "auto",
       fontSize: fontSize ? fontSize : "14px",
+      borderBottom: "none",
     }}
     {...props}
   >

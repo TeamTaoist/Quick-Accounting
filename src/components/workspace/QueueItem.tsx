@@ -316,10 +316,9 @@ const QueueTransactionItem = ({
           aria-controls="panel1a-content"
           id="panel1a-header"
           sx={{
-            backgroundColor: "var(--clr-gray-200)",
-            border: "1px solid var(--clr-gray-200)",
+            backgroundColor: "var(--clr-gray-100)",
+            // border: "1px solid var(--clr-gray-200)",
             height: "76px",
-            fontFamily: "Inter",
             "&:before": {
               borderRadius: "6px",
             },

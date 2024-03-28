@@ -157,7 +157,7 @@ export const useCategory = create<UseCategory>((set) => {
         }
       } catch (error: any) {
         console.log(error);
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
       } finally {
       }
     },

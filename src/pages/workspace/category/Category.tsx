@@ -529,8 +529,8 @@ const Category = () => {
                       // borderRadius: expandedCategories.includes(category.ID)
                       //   ? "6px 6px 0 0"
                       //   : "6px",
-                      backgroundColor: "var(--clr-gray-200)",
-                      border: "1px solid var(--clr-gray-200)",
+                      backgroundColor: "var(--clr-gray-100)",
+                      // border: "1px solid var(--clr-gray-200)",
                       height: "56px",
                       "&:before": {
                         borderRadius: "6px",
@@ -618,6 +618,7 @@ const Category = () => {
                     sx={{
                       p: 0,
                       maxHeight: "500px",
+                      // border: "1px solid var(--clr-gray-200)",
                     }}
                   >
                     {/* category property */}
@@ -635,7 +636,7 @@ const Category = () => {
                               <Option
                                 style={
                                   showProperty === property.ID
-                                    ? { background: "#e2e8f0" }
+                                    ? { background: "#F1F5F9" }
                                     : { background: "transparent" }
                                 }
                               >

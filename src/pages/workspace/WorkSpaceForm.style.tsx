@@ -15,7 +15,7 @@ export const WorkspaceForm = styled.div`
   overflow: hidden;
 `;
 export const FormHeader = styled.div`
-  background: var(--clr-gray-200);
+  background: var(--clr-gray-100);
   height: 126px;
   padding: 36px;
   div {

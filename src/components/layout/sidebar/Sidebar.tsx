@@ -47,6 +47,7 @@ const Sidebar = () => {
         <LeftSide>
           <Logo>
             <img src={logo} alt="" />
+            <h5>Quick Accounting</h5>
           </Logo>
           {/* workspace section */}
           {/* <Workspace> */}
@@ -109,9 +110,17 @@ const LeftSide = styled.div`
   display: flex;
 `;
 const Logo = styled.div`
-  margin-right: 240px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 110px;
+  h6 {
+    font-size: 16px;
+    font-weight: 700;
+  }
   img {
     width: 40px;
+    height: 40px;
   }
 `;
 const WorkspaceList = styled.div`

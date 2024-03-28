@@ -156,7 +156,9 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
                     decimals:
                       item.transaction.txInfo.transferInfo.decimals || 18,
                   };
-                } else if (item.transaction.txInfo.transferInfo.type === "NATIVE_COIN") {
+                } else if (
+                  item.transaction.txInfo.transferInfo.type === "NATIVE_COIN"
+                ) {
                   const ntoken = CHAINS.find(
                     (c) => c.chainId === chainId
                   )?.nativeToken;
@@ -232,7 +234,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
         return array;
       } catch (error: any) {
         console.error(error);
-        toast.error(error);
+        toast(error);
       } finally {
         setLoading(false);
       }
@@ -293,7 +295,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
         });
         return safeTxHash;
       } catch (error: any) {
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
       }
@@ -315,10 +317,10 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
 
         console.log("Added a new signature to transaction with safeTxGas");
         console.log("- Signer signature:", signatureResponse.signature);
-        toast.success("successfully");
+        toast("successfully");
         return true;
       } catch (error: any) {
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
       }
@@ -360,7 +362,7 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
         return true;
       } catch (error: any) {
         console.error(error);
-        toast.error(error);
+        toast(error);
       } finally {
         setLoading(false);
       }
@@ -401,14 +403,14 @@ export const useSafeStore = create<ISafeStore>((set, get) => {
               contractReceipt?.hash
             }&timestamp=${Date.now()}`
           );
-          toast.success("Executed");
+          toast("Executed");
           return true;
         } else {
           console.log("Transaction invalid. Transaction was not executed.");
-          toast.error("Transaction invalid. Transaction was not executed.");
+          toast("Transaction invalid. Transaction was not executed.");
         }
       } catch (error: any) {
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
       }

@@ -146,7 +146,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           navigate(`/workspace/${data.data.ID}/assets`);
         }
       } catch (error: any) {
-        toast.error(error?.response?.data?.msg || error?.status || error);
+        toast(error?.response?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
         // navigate("/assets");
@@ -161,7 +161,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           return data;
         }
       } catch (error: any) {
-        toast.error(error?.response?.data?.msg || error?.status || error);
+        toast(error?.response?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
         // navigate("/assets");
@@ -178,7 +178,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           navigate(`/workspace/${data.data.ID}/assets`);
         }
       } catch (error: any) {
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
       }
@@ -220,7 +220,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           return true;
         }
       } catch (error: any) {
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
       } finally {
         // setLoading(false);
       }
@@ -255,7 +255,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           toast.success("Hide assets successfully");
         }
       } catch (error: any) {
-        toast.error(error?.response?.data?.msg || error?.status || error);
+        toast(error?.response?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
         // navigate("/assets");
@@ -287,7 +287,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
 
         set({ assetsHideList: data.data, assetsList: updateAssets });
       } catch (error: any) {
-        toast.error(error?.response?.data?.msg || error?.status || error);
+        toast(error?.response?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
         // navigate("/assets");
@@ -308,7 +308,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           toast.success("Un-hide assets successfully");
         }
       } catch (error: any) {
-        toast.error(error?.response?.data?.msg || error?.status || error);
+        toast(error?.response?.data?.msg || error?.status || error);
       } finally {
         setLoading(false);
         // navigate("/assets");

@@ -138,7 +138,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
           }
         );
         set({ categoryProperty: data });
-        toast.success("Property created successfully");
+        toast("Property created successfully");
       } catch (error: any) {
         console.log(error);
       } finally {
@@ -158,7 +158,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
           updatedPropertyBody
         );
         set({ categoryProperty: data });
-        toast.success("Property updated successfully");
+        toast("Property updated successfully");
         return true;
       } catch (error: any) {
         console.log(error);
@@ -179,7 +179,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
           updatedPropertyBody
         );
         set({ categoryProperty: data });
-        toast.success("Property updated successfully");
+        toast("Property updated successfully");
         return true;
       } catch (error: any) {
         console.log(error);
@@ -198,7 +198,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
         await axiosClient.put(
           `/workspace_category_property/${workspaceId}/${workspaceCategoryId}/archive?ids=${workspaceCategoryPropertyId}`
         );
-        toast.success("Archived successfully");
+        toast("Archived successfully");
         return true;
       } catch (error: any) {
         console.log(error);
@@ -236,7 +236,7 @@ export const useCategoryProperty = create<UseCategoryProperty>((set) => {
         await axiosClient.put(
           `/workspace_category_property/${workspaceId}/${workspaceCategoryId}/unarchive?ids=${workspaceCategoryPropertyId}`
         );
-        toast.success("Un-Archived successfully");
+        toast("Un-Archived successfully");
         return true;
       } catch (error: any) {
         console.log(error);

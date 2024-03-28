@@ -76,7 +76,7 @@ const CategoryPropertyDetails = ({
             }
             style={
               isEditable
-                ? { background: "#e2e8f0" }
+                ? { background: "#F1F5F9" }
                 : { background: "transparent" }
             }
           />
@@ -95,7 +95,9 @@ const CategoryPropertyDetails = ({
             }
             style={
               isEditable
-                ? { background: "#e2e8f0", outline: "none" }
+                ? {
+                    background: "#F1F5F9",
+                  }
                 : { background: "transparent" }
             }
             size="small"
@@ -120,15 +122,13 @@ const CategoryPropertyDetails = ({
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 borderColor: "var(--clr-gray-300)",
               },
-              "&:disabled fieldset": {
-                border: "none",
-              },
             }}
             MenuProps={{
               sx: {
                 "& .MuiMenuItem-root": {
                   marginInline: "10px",
                   borderRadius: "6px",
+                  margin: "4px 6px",
                   "&:hover": {
                     bgcolor: "var(--clr-gray-100)",
                   },
@@ -193,7 +193,7 @@ const CategoryPropertyDetails = ({
                     }
                     style={
                       isEditable
-                        ? { background: "#e2e8f0" }
+                        ? { background: "#F1F5F9" }
                         : { background: "transparent" }
                     }
                   />

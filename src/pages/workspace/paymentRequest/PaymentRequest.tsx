@@ -329,11 +329,7 @@ const PaymentRequest = () => {
                   }}
                 >
                   <Table size="small">
-                    <TableHead
-                      style={{
-                        backgroundColor: "var(--clr-gray-200)",
-                      }}
-                    >
+                    <TableHead>
                       <TableRow>
                         <HeaderCell width="287px">
                           <Checkbox

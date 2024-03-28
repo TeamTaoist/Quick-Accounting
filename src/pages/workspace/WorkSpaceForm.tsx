@@ -136,6 +136,7 @@ const WorkSpaceForm = () => {
                       borderRadius: "6px",
                       fontSize: "14px",
                       fontWeight: "500",
+                      margin: "5px",
                       "&:hover": {
                         bgcolor: "var(--clr-gray-100)",
                       },
@@ -173,6 +174,7 @@ const WorkSpaceForm = () => {
                       borderRadius: "6px",
                       fontSize: "14px",
                       fontWeight: "500",
+                      margin: "5px 8px",
                       "&:hover": {
                         bgcolor: "var(--clr-gray-100)",
                       },

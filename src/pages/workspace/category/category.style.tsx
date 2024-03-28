@@ -184,7 +184,7 @@ export const OptionCreateButtons = styled.div`
     background: transparent;
     gap: 7px;
     padding: 8px 16px;
-    margin: 20px;
+    margin: 15px;
     margin-bottom: 20px;
     width: 165px;
     height: 40px;
