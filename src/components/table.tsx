@@ -2,11 +2,13 @@ import { TableCell, TableCellProps } from "@mui/material";
 
 interface CustomTableCellProps extends TableCellProps {
   width?: string;
+  fontSize?: string;
 }
 
 export const HeaderCell = ({
   width,
   children,
+  fontSize,
   ...props
 }: CustomTableCellProps) => (
   <TableCell
@@ -18,6 +20,7 @@ export const HeaderCell = ({
       padding: 0,
       paddingInline: 2,
       minWidth: width ? width : "auto",
+      fontSize: fontSize ? fontSize : "14px",
     }}
     {...props}
   >
@@ -25,7 +28,7 @@ export const HeaderCell = ({
   </TableCell>
 );
 
-export const Cell = ({ children, width }: CustomTableCellProps) => (
+export const Cell = ({ children, width, ...props }: CustomTableCellProps) => (
   <TableCell
     sx={{
       borderBottom: "none",
@@ -35,6 +38,7 @@ export const Cell = ({ children, width }: CustomTableCellProps) => (
       height: "56px",
       minWidth: width ? width : "100%",
     }}
+    {...props}
   >
     {children}
   </TableCell>

@@ -241,10 +241,11 @@ export const PaymentRequestDateInput = styled.input<any>`
   outline: none;
   padding: 10px 12px;
   border-radius: 6px;
+  font-size: 14px;
   margin: 4px 0;
   height: 40px;
   width: 100%;
-  color: ${(props) => (props.isDatePicker ? "#111" : "gray")};
+  color: ${(props) => (props.isActive ? "#111" : "gray")};
   &::placeholder {
     opacity: 0.5;
   }

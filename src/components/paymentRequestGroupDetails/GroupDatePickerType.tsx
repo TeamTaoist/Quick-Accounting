@@ -7,6 +7,7 @@ import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import { paymentRequestBody } from "../workspace/paymentRequest/PaymentRequestGroupDetails";
 import { useRef } from "react";
+import { Cell } from "../table";
 
 interface GroupTextTypeProps {
   properties: any;
@@ -41,39 +42,13 @@ const GroupDatePickerType = ({
 
   if (!!defaultPropertyValue || !properties.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            // padding: 1,
-            // paddingInline: 1,
-            padding: 0,
-            paddingInline: 2,
-            fontFamily: "Inter",
-            height: "56px",
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            fontSize: "16px",
-            fontWeight: "500",
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
+      <TableRow>
+        <Cell>
           <NoteInfo>
             <Image src={multiSelect} alt="" /> {properties.name}
           </NoteInfo>
-        </TableCell>
-        <TableCell
-          sx={{
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-          onBlur={() => handleUpdatePaymentRequest(payment.id)}
-        >
+        </Cell>
+        <Cell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
           {/* <TextField
             inputRef={inputRef}
             sx={{
@@ -117,7 +92,7 @@ const GroupDatePickerType = ({
           /> */}
           <PaymentRequestDateInput
             inputRef={inputRef}
-            isDatePicker={
+            isActive={
               sharePaymentRequestForm[index].category_properties?.find(
                 (p: any) =>
                   p.type === "date-picker" && p.name === properties.name
@@ -143,7 +118,7 @@ const GroupDatePickerType = ({
             }
             onClick={handleInputClick}
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

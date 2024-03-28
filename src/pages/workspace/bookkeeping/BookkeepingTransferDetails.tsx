@@ -58,6 +58,7 @@ import {
 import { getPaymentStatus } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
 import UpdateLoading from "../../../components/UpdateLoading";
+import { Cell, HeaderCell } from "../../../components/table";
 
 const HeaderStyles = {
   padding: "10px 15px",
@@ -347,47 +348,55 @@ const BookkeepingTransferDetails = ({
       <RequestDetails>
         <TransferTable>
           <TableContainer
-            // component={Paper}
-            // sx={{ boxShadow: "none", border: "1px solid var(--border)" }}
-            // sx={{ boxShadow: "none" }}
             sx={{
               boxShadow: "none",
               border: "1px solid var(--clr-gray-200)",
               borderRadius: "6px",
+              minWidth: "722px",
+              overflowX: "hidden",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              "-ms-overflow-style": "none",
+              scrollbarWidth: "none",
             }}
           >
             <Table>
-              <TableHead
-                sx={{ backgroundColor: "var(--clr-gray-200)", height: "56px" }}
-              >
+              <TableHead>
                 <TableRow>
-                  <TableCell sx={HeaderStyles}>Safe</TableCell>
-                  <TableCell sx={HeaderStyles}>Counterparty</TableCell>
-                  <TableCell sx={HeaderStyles}>Amount</TableCell>
-                  <TableCell sx={HeaderStyles}>Currency</TableCell>
+                  <HeaderCell width="160px" fontSize="16px">
+                    Safe
+                  </HeaderCell>
+                  <HeaderCell width="160px" fontSize="16px">
+                    Counterparty
+                  </HeaderCell>
+                  <HeaderCell width="200px" fontSize="16px">
+                    Amount
+                  </HeaderCell>
+                  <HeaderCell width="200px" fontSize="16px">
+                    Currency
+                  </HeaderCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell>
+                  <Cell>
                     <SafeSection>
                       <div>{getShortAddress(workspace.vault_wallet)}</div>
                       <Logo $dir={bookkeepingDetails.direction}>
                         <img src={transferArrow} alt="" />
                       </Logo>
                     </SafeSection>
-                  </TableCell>
-                  <TableCell>
+                  </Cell>
+                  <Cell>
                     {formatAddressToDomain(
                       bookkeepingDetails.counterparty,
                       workspace.chain_id,
                       workspace.name_service === "sns"
                     )}
-                  </TableCell>
-                  <TableCell>
-                    {formatNumber(Number(bookkeepingDetails.amount))}
-                  </TableCell>
-                  <TableCell>{bookkeepingDetails.currency_name}</TableCell>
+                  </Cell>
+                  <Cell>{formatNumber(Number(bookkeepingDetails.amount))}</Cell>
+                  <Cell>{bookkeepingDetails.currency_name}</Cell>
                 </TableRow>
                 {/* ))} */}
               </TableBody>
@@ -404,30 +413,13 @@ const BookkeepingTransferDetails = ({
               {/* <TableContainer> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
-                  <TableRow
-                    sx={{
-                      td: {
-                        padding: "6px",
-                        paddingInline: 2,
-                      },
-                    }}
-                  >
-                    <TableCell
-                      sx={{
-                        height: 1,
-                        width: 200,
-                        fontSize: "16px",
-                        fontWeight: "500",
-                        borderBottom: "none",
-                        borderTop: "1px solid var(--clr-gray-200)",
-                        fontFamily: "Inter",
-                      }}
-                    >
+                  <TableRow>
+                    <Cell width="220px">
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
-                    </TableCell>
-                    <TableCell>
+                    </Cell>
+                    <Cell width="500px">
                       <FormControl
                         fullWidth
                         disabled={bookkeepingDetails?.status === 2}
@@ -533,7 +525,7 @@ const BookkeepingTransferDetails = ({
                           ))}
                         </Select>
                       </FormControl>
-                    </TableCell>
+                    </Cell>
                   </TableRow>
                   {selectedCategory && (
                     <>

@@ -46,7 +46,7 @@ const DatePickerType = ({
         </Cell>
 
         <Cell width="500" onBlur={handleUpdateCategory}>
-          <TextField
+          {/* <TextField
             inputRef={inputRef}
             disabled={status === 2}
             sx={{
@@ -62,6 +62,9 @@ const DatePickerType = ({
                 paddingInline: "10px",
                 fontSize: "14px",
                 height: "23px",
+                "&:focus": {
+                  outline: "none",
+                },
               },
             }}
             size="small"
@@ -78,6 +81,17 @@ const DatePickerType = ({
                 color: datePicker[property.name]?.values ? "black" : "gray",
               },
             }}
+          /> */}
+          <PaymentRequestDateInput
+            inputRef={inputRef}
+            disabled={status === 2}
+            isActive={datePicker[property.name]?.values}
+            type="date"
+            value={datePicker[property.name]?.values || ""}
+            onChange={(e: any) =>
+              handleDatePickerProperty(e, property.name, property.type)
+            }
+            onClick={handleInputClick}
           />
         </Cell>
       </TableRow>

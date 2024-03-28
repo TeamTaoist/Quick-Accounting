@@ -37,6 +37,7 @@ import PaymentCurrencyTable from "../../../components/paymentRequestDetails/Paym
 import { Status, StatusBtn, SubmissionTime } from "./PaymentRequestDetails";
 import { useDomainStore } from "../../../store/useDomain";
 import { useLocation } from "react-router-dom";
+import { Cell, HeaderCell } from "../../../components/table";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -133,16 +134,16 @@ const NotTransferTop = ({
   );
 };
 
-const Cell = ({ children }: { children: React.ReactNode }) => (
-  <TableCell
-    sx={{
-      padding: 1,
-      paddingLeft: "17px",
-    }}
-  >
-    {children}
-  </TableCell>
-);
+// const Cell = ({ children }: { children: React.ReactNode }) => (
+//   <TableCell
+//     sx={{
+//       padding: 1,
+//       paddingLeft: "17px",
+//     }}
+//   >
+//     {children}
+//   </TableCell>
+// );
 
 const TransferTop = ({
   data: paymentRequestDetails,
@@ -152,30 +153,19 @@ const TransferTop = ({
   const { formatAddressToDomain } = useDomainStore();
   const { workspace } = useWorkspace();
   const { pathname } = useLocation();
-  const HeaderStyles = {
-    // padding: "16px",
-    fontFamily: "Inter",
-    fontSize: "16px",
-    fontWeight: "500",
-    color: "#0F172A",
-  };
   return (
     <>
-      <TableHead sx={{ background: "var(--bg-secondary)" }}>
-        <TableRow sx={{ height: "55px" }}>
-          <TableCell style={HeaderStyles}>Safe</TableCell>
-          <TableCell style={HeaderStyles}>Counterparty</TableCell>
-          <TableCell style={HeaderStyles}>Amount</TableCell>
-          <TableCell style={HeaderStyles}>Currency</TableCell>
+      <TableHead>
+        <TableRow>
+          <HeaderCell fontSize="16px">Safe</HeaderCell>
+          <HeaderCell fontSize="16px">Counterparty</HeaderCell>
+          <HeaderCell fontSize="16px">Amount</HeaderCell>
+          <HeaderCell fontSize="16px">Currency</HeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        <TableRow
-          sx={{
-            height: "55px",
-          }}
-        >
-          <TableCell
+        <TableRow>
+          <Cell
             sx={{
               padding: 1,
             }}
@@ -186,7 +176,7 @@ const TransferTop = ({
                 <img src={transferArrow} alt="" />
               </Logo>
             </SafeSection>
-          </TableCell>
+          </Cell>
           <Cell>
             {formatAddressToDomain(
               paymentRequestDetails?.counterparty,
@@ -266,8 +256,15 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
           <TableContainer
             sx={{
               boxShadow: "none",
-              border: "1px solid var(--border-table)",
-              borderRadius: "10px",
+              border: "1px solid var(--clr-gray-200)",
+              borderRadius: "6px",
+              minWidth: "722px",
+              overflowX: "hidden",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              "-ms-overflow-style": "none",
+              scrollbarWidth: "none",
             }}
           >
             <Table aria-label="simple table">
@@ -288,63 +285,19 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
               {/* <TableContainer sx={{ borderRadius: "7px" }}> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
-                  <TableRow
-                    sx={{
-                      td: {
-                        // padding: 1,
-                        // paddingInline: 1,
-                        // paddingLeft: "12px",
-                        padding: "6px",
-                        paddingInline: 2,
-                        height: "55px",
-                      },
-                    }}
-                  >
-                    <TableCell
-                      sx={{
-                        height: 1,
-                        width: 208,
-                        fontSize: "16px",
-                        fontWeight: "500",
-                        borderBottom: "none",
-                        borderTop: "1px solid var(--clr-gray-200)",
-                      }}
-                    >
+                  <TableRow>
+                    <Cell width="220px">
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        fontSize: "16px",
-                        fontWeight: "500",
-                        borderBottom: "none",
-                        borderTop: "1px solid var(--clr-gray-200)",
-                      }}
-                    >
+                    </Cell>
+                    <Cell width="500px">
                       {paymentRequestDetails?.category_name}
-                    </TableCell>
+                    </Cell>
                   </TableRow>
                   {categoryProperties?.map((property: any) => (
-                    <TableRow
-                      sx={{
-                        td: {
-                          padding: "6px",
-                          paddingInline: 2,
-                          height: "55px",
-                        },
-                      }}
-                    >
-                      <TableCell
-                        sx={{
-                          height: 1,
-                          width: 200,
-                          fontSize: "16px",
-                          fontWeight: "500",
-                          borderBottom: "none",
-                          borderTop: "1px solid var(--clr-gray-200)",
-                        }}
-                      >
+                    <TableRow>
+                      <Cell width="220px">
                         <NoteInfo>
                           <Image
                             src={getPropertyIconByType(property.type)}
@@ -352,15 +305,8 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           />{" "}
                           {property.name}
                         </NoteInfo>
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          fontSize: "16px",
-                          fontWeight: "500",
-                          borderBottom: "none",
-                          borderTop: "1px solid var(--clr-gray-200)",
-                        }}
-                      >
+                      </Cell>
+                      <Cell width="500px">
                         {property.type === "multi-select"
                           ? property?.values
                               .split(";")
@@ -368,7 +314,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                                 <MultiOption key={idx}>{v}</MultiOption>
                               ))
                           : property.values}
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -498,7 +444,7 @@ const RejectTime = styled.div`
   }
   div {
     border: 1px solid var(--clr-gray-200);
-    padding: 10px 10px;
+    padding: 8.5px 10px;
     font-size: 14px;
     border-radius: 8px;
   }

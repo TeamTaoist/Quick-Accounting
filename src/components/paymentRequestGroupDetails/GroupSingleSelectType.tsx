@@ -5,6 +5,7 @@ import selectIcon from "../../assets/workspace/select.svg";
 import { paymentRequestBody } from "../workspace/paymentRequest/PaymentRequestGroupDetails";
 import ReactSelect from "../ReactSelect";
 import { ReactSelectOption } from "../../pages/workspace/bookkeeping/BookkeepingTransferDetails";
+import { Cell } from "../table";
 
 interface GroupSingleSelectTypeProps {
   properties: any;
@@ -35,30 +36,13 @@ const GroupSingleSelectType = ({
 }: GroupSingleSelectTypeProps) => {
   if (!!defaultPropertyValue || !properties.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            padding: 0,
-            paddingInline: 2,
-            fontFamily: "Inter",
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            fontSize: "16px",
-            fontWeight: "500",
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
+      <TableRow>
+        <Cell>
           <NoteInfo>
             <Image src={selectIcon} alt="" /> {properties.name}
           </NoteInfo>
-        </TableCell>
-        <TableCell
+        </Cell>
+        <Cell
           sx={{
             borderBottom: "none",
             borderTop: "1px solid var(--clr-gray-200)",
@@ -95,7 +79,7 @@ const GroupSingleSelectType = ({
               )
               .flat()}
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

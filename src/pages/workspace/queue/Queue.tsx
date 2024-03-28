@@ -19,6 +19,7 @@ import { BookkeepingTitle, HideBtn } from "../bookkeeping/Bookkeeping";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { useDomainStore } from "../../../store/useDomain";
 import Button from "../../../components/button";
+import QueueFailedTable from "../../../components/workspace/QueueFailedTable";
 
 const Queue = () => {
   const { id } = useParams();
@@ -136,8 +137,12 @@ const Queue = () => {
       )}
       {!paymentRequest && (
         <RejectSection>
-          <RejectDataTable
-            isInQueue
+          {/* <RejectDataTable
+          isInQueue
+            paymentRequest={paymentRequest}
+            setPaymentRequest={setPaymentRequest}
+          /> */}
+          <QueueFailedTable
             paymentRequest={paymentRequest}
             setPaymentRequest={setPaymentRequest}
           />
@@ -161,5 +166,5 @@ const QueHeader = styled.div`
   justify-content: end;
 `;
 export const RejectSection = styled.div`
-  margin-top: 10px;
+  /* margin-top: 10px; */
 `;

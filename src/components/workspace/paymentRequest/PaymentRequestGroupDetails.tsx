@@ -51,6 +51,7 @@ import { getPaymentStatus } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
 import UpdateLoading from "../../UpdateLoading";
 import GroupDatePickerType from "../../paymentRequestGroupDetails/GroupDatePickerType";
+import { Cell, HeaderCell } from "../../table";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -306,14 +307,6 @@ const PaymentRequestGroupDetails = ({
       setSelectedWorkspaceSafeAddress(selectedWorkspace.vault_wallet);
     }
   }, []);
-  const HeaderStyles = {
-    padding: "10px 15px",
-    fontFamily: "Inter",
-    fontSize: "16px",
-    fontWeight: "500",
-    color: "#0F172A",
-    width: "33%",
-  };
   return (
     <>
       <WorkspaceItemDetailsLayout
@@ -336,38 +329,22 @@ const PaymentRequestGroupDetails = ({
                 }}
               >
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead
-                    sx={{
-                      backgroundColor: "var(--clr-gray-200)",
-                      height: "56px",
-                    }}
-                  >
+                  <TableHead>
                     <TableRow>
-                      <TableCell sx={HeaderStyles}>Recipient</TableCell>
-                      <TableCell sx={HeaderStyles}>Amount</TableCell>
-                      <TableCell sx={HeaderStyles}>Currency</TableCell>
+                      <HeaderCell width="280px">Recipient</HeaderCell>
+                      <HeaderCell width="220px">Amount</HeaderCell>
+                      <HeaderCell width="220px">Currency</HeaderCell>
                     </TableRow>
                   </TableHead>
                   {/* {paymentRequestGroupDetails.map((payment) => ( */}
                   <TableBody>
-                    <TableRow
-                      sx={{
-                        height: "55px",
-                        // borderRadius: "10px",
-                      }}
-                    >
-                      <TableCell
-                        // size="small"
-                        sx={{
-                          // border: "1px solid var(--border-table)",
-                          // padding: 0,
-                          // borderLeft: 0,
-                          border: 0,
-                          padding: "5px 0",
-                        }}
-                      >
+                    <TableRow>
+                      <Cell>
                         <TextField
                           sx={{
+                            "& input": {
+                              padding: 0,
+                            },
                             "& fieldset": { border: "none" },
                           }}
                           // disabled={paymentRequestDetails.status === 1}
@@ -385,20 +362,13 @@ const PaymentRequestGroupDetails = ({
                             readOnly: true,
                           }}
                         />
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          // border: "1px solid var(--border-table)",
-                          // borderRadius: "5px",
-                          // padding: 0,
-                          // paddingLeft: "10px",
-                          // minHeight: "40px",
-                          border: 0,
-                          padding: "5px 0",
-                        }}
-                      >
+                      </Cell>
+                      <Cell>
                         <TextField
                           sx={{
+                            "& input": {
+                              padding: 0,
+                            },
                             "& fieldset": { border: "none" },
                           }}
                           // disabled={paymentRequestDetails.status === 1}
@@ -412,18 +382,8 @@ const PaymentRequestGroupDetails = ({
                             readOnly: true,
                           }}
                         />
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          // border: "1px solid var(--border-table)",
-                          // padding: 0,
-                          // borderRight: 0,
-                          // minHeight: "40px",
-                          border: 0,
-                          padding: "5px 0",
-                          paddingRight: "16px",
-                        }}
-                      >
+                      </Cell>
+                      <Cell>
                         <Select
                           // disabled={paymentRequestDetails.status === 1}
                           labelId="demo-select-small-label"
@@ -436,13 +396,13 @@ const PaymentRequestGroupDetails = ({
                               <img
                                 src={arrowBottom}
                                 alt="Custom Arrow Icon"
-                                style={{ marginRight: "36px" }}
+                                style={{ marginRight: "8px", width: "16px" }}
                               />
                             </InputAdornment>
                           )}
                           sx={{
                             minWidth: "100%",
-                            height: "40px",
+                            height: "36px",
                             marginRight: "8px",
                             "&.MuiOutlinedInput-root": {
                               "& fieldset": {
@@ -472,7 +432,7 @@ const PaymentRequestGroupDetails = ({
                             {payment.currency_name}
                           </MenuItem>
                         </Select>
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                   </TableBody>
                   {/* ))} */}
@@ -491,36 +451,15 @@ const PaymentRequestGroupDetails = ({
                   </NoteHeader>
                   {/* {paymentRequestGroupDetails.map((payment) => ( */}
                   {/* <TableContainer> */}
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <Table aria-label="simple table">
                     <TableBody>
-                      <TableRow
-                        sx={{
-                          td: {
-                            padding: "6px",
-                            paddingInline: 2,
-                          },
-                        }}
-                      >
-                        <TableCell
-                          sx={{
-                            height: 1,
-                            width: "33.5%",
-                            fontSize: "16px",
-                            fontWeight: "500",
-                            borderBottom: "none",
-                            borderTop: "1px solid var(--clr-gray-200)",
-                          }}
-                        >
+                      <TableRow>
+                        <Cell width="220px">
                           <NoteInfo>
                             <Image src={categoryIcon} alt="" /> Category
                           </NoteInfo>
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            borderBottom: "none",
-                            borderTop: "1px solid var(--clr-gray-200)",
-                          }}
-                        >
+                        </Cell>
+                        <Cell width="500px">
                           <FormControl
                             fullWidth
                             // disabled={paymentRequestDetails.status === 1}
@@ -598,7 +537,7 @@ const PaymentRequestGroupDetails = ({
                               ))}
                             </Select>
                           </FormControl>
-                        </TableCell>
+                        </Cell>
                       </TableRow>
                       {selectedCategories[index]?.properties?.map(
                         (properties: ICategoryProperties, i: number) => (
@@ -746,5 +685,5 @@ const PaymentRequestGroupDetails = ({
 export default PaymentRequestGroupDetails;
 
 const RequestDetails = styled.div`
-  margin: 30px;
+  margin: 30px 37px;
 `;

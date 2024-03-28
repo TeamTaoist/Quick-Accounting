@@ -6,6 +6,7 @@ import {
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import optionsIcon from "../../assets/workspace/option.svg";
 import { paymentRequestBody } from "../workspace/paymentRequest/PaymentRequestGroupDetails";
+import { Cell } from "../table";
 
 interface GroupTextTypeProps {
   properties: any;
@@ -35,39 +36,13 @@ const GroupTextType = ({
 }: GroupTextTypeProps) => {
   if (!!defaultPropertyValue || !properties.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            // padding: 1,
-            // paddingInline: 1,
-            padding: 0,
-            paddingInline: 2,
-            fontFamily: "Inter",
-            height: "56px",
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            fontSize: "16px",
-            fontWeight: "500",
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-        >
+      <TableRow>
+        <Cell>
           <NoteInfo>
             <Image src={optionsIcon} alt="" /> {properties.name}
           </NoteInfo>
-        </TableCell>
-        <TableCell
-          sx={{
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-          onBlur={() => handleUpdatePaymentRequest(payment.id)}
-        >
+        </Cell>
+        <Cell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
           {/* <TextField
             sx={{
               "& fieldset": { border: "none" },
@@ -113,7 +88,7 @@ const GroupTextType = ({
               )
             }
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

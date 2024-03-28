@@ -1,9 +1,10 @@
-import { FormControl, MenuItem, Select } from "@mui/material";
+import { FormControl, InputAdornment, MenuItem, Select } from "@mui/material";
 import {
   Image,
   Option,
 } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import filterIcon from "../../assets/workspace/filtering.svg";
+import arrowBottom from "../../assets/workspace/arrow-bottom.svg";
 import { useTranslation } from "react-i18next";
 import CheckIcon from "@mui/icons-material/Check";
 import { Item } from "../../pages/workspace/WorkSpaceForm.style";
@@ -52,6 +53,15 @@ const FilterCategorySelect = ({
         displayEmpty
         inputProps={{ "aria-label": "Select a value" }}
         size="small"
+        IconComponent={() => (
+          <InputAdornment position="start">
+            <img
+              src={arrowBottom}
+              alt="Custom Arrow Icon"
+              style={{ marginRight: "10px" }}
+            />
+          </InputAdornment>
+        )}
         // sx={{ overflow: "hidden" }}
         sx={{
           minWidth: "100%",

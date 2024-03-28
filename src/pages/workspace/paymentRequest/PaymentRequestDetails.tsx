@@ -444,7 +444,10 @@ const PaymentRequestDetails = ({
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          value={paymentRequestDetails?.category_name}
+                          value={
+                            paymentRequestDetails?.category_id &&
+                            paymentRequestDetails?.category_name
+                          }
                           label="Age"
                           // onChange={handleCategoryChange}
                           size="small"
@@ -573,7 +576,7 @@ export const SubmissionTime = styled.div`
   }
   div {
     border: 1px solid var(--clr-gray-200);
-    padding: 10px 10px;
+    padding: 8.5px 10px;
     font-size: 14px;
     border-radius: 8px;
   }
