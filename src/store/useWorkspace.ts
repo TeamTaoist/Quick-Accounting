@@ -252,7 +252,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
         // set({ workspace: data.data });
 
         if (data.msg === "success" && data.code === 200) {
-          toast.success("Hide assets successfully");
+          toast("Hide assets successfully");
         }
       } catch (error: any) {
         toast(error?.response?.data?.msg || error?.status || error);
@@ -305,7 +305,7 @@ export const useWorkspace = create<UseWorkspace>((set, get) => {
           }
         );
         if (data.msg === "success" && data.code === 200) {
-          toast.success("Un-hide assets successfully");
+          toast("Un-hide assets successfully");
         }
       } catch (error: any) {
         toast(error?.response?.data?.msg || error?.status || error);

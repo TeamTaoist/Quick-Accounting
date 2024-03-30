@@ -31,6 +31,7 @@ import {
   Options,
   PropertyBtns,
   PropertyCreateButtons,
+  PropertyOption,
   PropertyOptions,
   PropertyTitle,
   UpdateBtn,
@@ -625,40 +626,68 @@ const Category = () => {
                     <CategoryProperties>
                       <Options>
                         <PropertyOptions>
-                          <h4>PROPERTIES</h4>
-                          {category.properties?.map((property, index) => (
-                            <div
-                              key={index}
-                              onClick={() =>
-                                handleSelectedProperty(property, index)
-                              }
-                            >
-                              <Option
-                                style={
-                                  showProperty === property.ID
-                                    ? { background: "#F1F5F9" }
-                                    : { background: "transparent" }
+                          <PropertyOption>
+                            <h4>PROPERTIES</h4>
+                            {category.properties?.map((property, index) => (
+                              <div
+                                key={index}
+                                onClick={() =>
+                                  handleSelectedProperty(property, index)
                                 }
                               >
-                                <PropertyTitle>
-                                  <img
-                                    src={getPropertyIconByType(property.type)}
-                                    alt=""
-                                  />
-                                  <p>{property.name}</p>
-                                </PropertyTitle>
-                                {!editableCategoryId.includes(category.ID) && (
-                                  <img
-                                    onClick={() =>
-                                      handleArchiveCategoryProperty(property)
-                                    }
-                                    src={archive}
-                                    alt=""
-                                  />
-                                )}
-                              </Option>
-                            </div>
-                          ))}
+                                <Option
+                                  style={
+                                    showProperty === property.ID
+                                      ? { background: "#F1F5F9" }
+                                      : { background: "transparent" }
+                                  }
+                                >
+                                  <PropertyTitle>
+                                    <img
+                                      src={getPropertyIconByType(property.type)}
+                                      alt=""
+                                    />
+                                    <p>{property.name}</p>
+                                  </PropertyTitle>
+                                  {!editableCategoryId.includes(
+                                    category.ID
+                                  ) && (
+                                    <img
+                                      onClick={() =>
+                                        handleArchiveCategoryProperty(property)
+                                      }
+                                      src={archive}
+                                      alt=""
+                                    />
+                                  )}
+                                </Option>
+                              </div>
+                            ))}
+                          </PropertyOption>
+                          {/* property button section */}
+                          <PropertyBtns>
+                            <OptionCreateButtons>
+                              {editableCategoryId.includes(category.ID) ? (
+                                <button
+                                  onClick={() => handleAddProperty(category.ID)}
+                                >
+                                  <img src={add} alt="" />
+                                  <span>Add property</span>
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() =>
+                                    handleCategoryPropertyArchivedList(
+                                      category.ID
+                                    )
+                                  }
+                                >
+                                  <img src={archive} alt="" />
+                                  <span>View archive</span>
+                                </button>
+                              )}
+                            </OptionCreateButtons>
+                          </PropertyBtns>
                         </PropertyOptions>
                         {/* property input section */}
                         <Details>
@@ -692,7 +721,7 @@ const Category = () => {
                         </Details>
                       </Options>
                       {/* property button section */}
-                      <PropertyBtns>
+                      {/* <PropertyBtns>
                         <OptionCreateButtons>
                           {editableCategoryId.includes(category.ID) ? (
                             <button
@@ -712,7 +741,7 @@ const Category = () => {
                             </button>
                           )}
                         </OptionCreateButtons>
-                      </PropertyBtns>
+                      </PropertyBtns> */}
                     </CategoryProperties>
                     {/* category property end */}
                   </AccordionDetails>

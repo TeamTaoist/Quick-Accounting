@@ -139,10 +139,9 @@ export const Options = styled.div`
 export const PropertyOptions = styled.div`
   border-right: 1px solid var(--clr-gray-200);
   width: 50%;
-  height: 326px;
+  height: 328px;
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 14px;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -150,6 +149,15 @@ export const PropertyOptions = styled.div`
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+export const PropertyOption = styled.div`
+  margin-bottom: 10px;
+  /* height: 65px; */
+  flex: 1;
+  /* height: calc(100% - 390px); */
 `;
 export const Option = styled.div`
   display: flex;
@@ -169,13 +177,14 @@ export const Option = styled.div`
   }
 `;
 export const PropertyBtns = styled.div`
-  display: flex;
-  justify-content: space-between;
-  /* border: 1px solid var(--border-table); */
+  position: sticky;
+  bottom: 0;
+  background: var(--clr-white);
+  height: 70px;
 `;
 export const OptionCreateButtons = styled.div`
-  width: 50%;
-  border-right: 1px solid var(--clr-gray-200);
+  /* width: 50%; */
+  /* border-right: 1px solid var(--clr-gray-200); */
 
   button {
     display: flex;
@@ -221,7 +230,6 @@ export const Details = styled.div`
   width: 50%;
   height: 326px;
   overflow-y: auto;
-  padding-bottom: 14px;
   &::-webkit-scrollbar {
     display: none;
   }

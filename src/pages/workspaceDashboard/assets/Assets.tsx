@@ -285,7 +285,7 @@ const Assets = () => {
                               },
                               "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track":
                                 {
-                                  background: "#111",
+                                  backgroundColor: "#0F172A",
                                   opacity: 1,
                                 },
                               "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase":
