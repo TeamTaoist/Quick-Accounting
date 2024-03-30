@@ -262,9 +262,41 @@ const Assets = () => {
                       </Cell>
                       <Cell>
                         <RowCell>
-                          <AssetsSwitch
+                          {/* <AssetsSwitch
                             checked={data.hidden}
                             onChange={(e) => handleAsset(e, data)}
+                          /> */}
+                          <Switch
+                            checked={data.hidden}
+                            onChange={(e) => handleAsset(e, data)}
+                            sx={{
+                              padding: 1,
+                              "& .MuiSwitch-track": {
+                                borderRadius: "20px",
+                              },
+                              "& .MuiSwitch-thumb": {
+                                boxShadow: "none",
+                                width: 20,
+                                height: 20,
+                              },
+                              "& .css-1yjjitx-MuiSwitch-track": {
+                                background: "var(--clr-gray-300)",
+                                opacity: 1,
+                              },
+                              "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track":
+                                {
+                                  background: "#111",
+                                  opacity: 1,
+                                },
+                              "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase":
+                                {
+                                  color: "white",
+                                },
+                              "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked":
+                                {
+                                  color: "white",
+                                },
+                            }}
                           />
                         </RowCell>
                       </Cell>
