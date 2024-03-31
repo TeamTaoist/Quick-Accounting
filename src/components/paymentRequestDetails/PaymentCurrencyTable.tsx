@@ -24,7 +24,6 @@ const PaymentCurrencyTable = () => {
   const { pathname } = useLocation();
 
   return (
-    // <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>
     <Table aria-label="simple table">
       <TableHead>
         <TableRow>
@@ -46,6 +45,7 @@ const PaymentCurrencyTable = () => {
               sx={{
                 "& input": {
                   padding: 0,
+                  fontSize: "14px",
                 },
                 "& fieldset": { border: "none" },
               }}
@@ -71,6 +71,7 @@ const PaymentCurrencyTable = () => {
               sx={{
                 "& input": {
                   padding: 0,
+                  fontSize: "14px",
                 },
                 "& fieldset": { border: "none" },
               }}
@@ -110,6 +111,10 @@ const PaymentCurrencyTable = () => {
                 height: "36px",
                 marginRight: "8px",
                 // .css-q8hpuo-MuiFormControl-root
+                "& .MuiSelect-select": {
+                  display: "block",
+                  fontSize: "14px",
+                },
                 "&.MuiOutlinedInput-root": {
                   "& fieldset": {
                     borderColor: "var(--clr-gray-200)",

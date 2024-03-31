@@ -344,6 +344,7 @@ const PaymentRequestGroupDetails = ({
                           sx={{
                             "& input": {
                               padding: 0,
+                              fontSize: "14px",
                             },
                             "& fieldset": { border: "none" },
                           }}
@@ -368,6 +369,7 @@ const PaymentRequestGroupDetails = ({
                           sx={{
                             "& input": {
                               padding: 0,
+                              fontSize: "14px",
                             },
                             "& fieldset": { border: "none" },
                           }}
@@ -404,6 +406,10 @@ const PaymentRequestGroupDetails = ({
                             minWidth: "100%",
                             height: "36px",
                             marginRight: "8px",
+                            "& .MuiSelect-select": {
+                              display: "block",
+                              fontSize: "14px",
+                            },
                             "&.MuiOutlinedInput-root": {
                               "& fieldset": {
                                 borderColor: "var(--clr-gray-200)",
@@ -490,6 +496,7 @@ const PaymentRequestGroupDetails = ({
                                 paddingInline: "1px",
                                 "& .MuiSelect-select": {
                                   display: "block",
+                                  fontSize: "14px",
                                 },
                                 "&.MuiOutlinedInput-root": {
                                   border: "1px solid var(--clr-gray-200)",
@@ -524,6 +531,7 @@ const PaymentRequestGroupDetails = ({
                                     );
                                   }}
                                   sx={{
+                                    fontSize: "14px",
                                     "&:hover": {
                                       backgroundColor: "var(--clr-gray-100)",
                                     },

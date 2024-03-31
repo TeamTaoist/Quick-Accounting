@@ -12,7 +12,7 @@ export const customStyles: any = {
     border: "1px solid var(--clr-gray-200)",
     borderRadius: "6px",
     margin: "4px 0",
-    padding: "2px 4px",
+    padding: "2px 8px",
     height: "40px",
     boxShadow: state.isFocused ? null : null,
     backgroundColor: state.isDisabled
@@ -29,10 +29,14 @@ export const customStyles: any = {
     ...provided,
     backgroundColor: state.isFocused && "#E2E8F0",
     color: "#0F172A",
+    fontSize: "14px",
+    fontFamily: "Inter",
   }),
   singleValue: (provided: any) => ({
     ...provided,
     color: "#0F172A",
+    fontSize: "14px",
+    fontFamily: "Inter",
   }),
   multiValue: (provided: any) => ({
     ...provided,
@@ -40,11 +44,15 @@ export const customStyles: any = {
     color: "#0F172A",
     border: "1px solid #E2E8F0",
     borderRadius: "6px",
+    fontSize: "14px",
+    fontFamily: "Inter",
   }),
   multiValueLabel: (provided: any) => ({
     ...provided,
     // color: "#333",
     color: "#0F172A",
+    fontSize: "14px",
+    fontFamily: "Inter",
   }),
   multiValueRemove: (provided: any) => ({
     ...provided,
@@ -84,6 +92,7 @@ const RemoveIcon = ({ innerProps }: any) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        marginRight: "3px",
       }}
     >
       <img

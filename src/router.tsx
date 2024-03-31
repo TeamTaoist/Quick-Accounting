@@ -31,6 +31,8 @@ const Toast = styled(ToastContainer)`
     font-weight: 500;
     color: #000000;
     padding-left: 16px;
+    text-align: center;
+    box-shadow: none;
   }
   .Toastify__close-button {
     display: none;
@@ -41,7 +43,7 @@ const RouterLink = () => {
   return (
     <Router>
       <Toast
-        position="top-right"
+        position="top-center"
         autoClose={5000}
         hideProgressBar={true}
         newestOnTop={false}

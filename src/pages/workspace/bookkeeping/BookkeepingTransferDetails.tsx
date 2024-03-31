@@ -485,6 +485,7 @@ const BookkeepingTransferDetails = ({
                             paddingInline: "1px",
                             "& .MuiSelect-select": {
                               display: "block",
+                              fontSize: "14px",
                             },
                             "&.MuiOutlinedInput-root": {
                               border: "1px solid var(--clr-gray-200)",
@@ -512,6 +513,7 @@ const BookkeepingTransferDetails = ({
                               // onBlur={handleUpdateCategory}
                               onClick={() => handleCategory(category)}
                               sx={{
+                                fontSize: "14px",
                                 "&:hover": {
                                   backgroundColor: "var(--clr-gray-100)",
                                 },

@@ -12,7 +12,7 @@ const UpdateLoading = ({ isUpdating, isSuccess }: UpdateLoadingProps) => {
     <UpdateLoadingToast>
       {isUpdating && (
         <PendingLoading>
-          <CircularProgress size="15px" sx={{ color: "gray" }} />
+          <CircularProgress size="14px" sx={{ color: "gray" }} />
           <p>Updating</p>
         </PendingLoading>
       )}
@@ -29,8 +29,8 @@ export default UpdateLoading;
 
 const UpdateLoadingToast = styled.form`
   p {
-    font-size: 18px;
-    color: var(--text-secondary);
+    font-size: 12px;
+    color: var(--clr-gray-400);
     margin-left: 7px;
   }
 `;
@@ -42,6 +42,6 @@ const SuccessLoading = styled.form`
   display: flex;
   align-items: center;
   img {
-    width: 15px;
+    width: 14px;
   }
 `;

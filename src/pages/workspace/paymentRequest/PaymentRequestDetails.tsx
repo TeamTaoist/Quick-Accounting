@@ -471,7 +471,9 @@ const PaymentRequestDetails = ({
                             paddingInline: "1px",
                             "& .MuiSelect-select": {
                               display: "block",
+                              fontSize: "14px",
                             },
+                            // .css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select
                             "&.MuiOutlinedInput-root": {
                               border: "1px solid var(--clr-gray-200)",
                               "& fieldset": {
@@ -498,6 +500,7 @@ const PaymentRequestDetails = ({
                               // onBlur={handleUpdateCategory}
                               onClick={() => handleCategory(category)}
                               sx={{
+                                fontSize: "14px",
                                 "&:hover": {
                                   backgroundColor: "var(--clr-gray-100)",
                                 },
