@@ -9,6 +9,9 @@ import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
 import unarchive from "../../../assets/workspace/unarchive.svg";
 import cancel from "../../../assets/auth/cancel.svg";
+import checkedActiveIcon from "../../../assets/checkbox-active.svg";
+import checkboxIcon from "../../../assets/checkbox.svg";
+import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
 import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
 import { checkboxClasses } from "@mui/material/Checkbox";
@@ -17,22 +20,20 @@ import Button from "../../button";
 
 export const CheckBoxStyle = {
   marginRight: "25px",
-  overflow: "hidden",
-  [`&, &.${checkboxClasses.colorPrimary}`]: {
-    color: "#cbd5e1",
-  },
-  [`&, &.${checkboxClasses.checked}`]: {
-    color: "#0f172a",
-  },
-  [`&, &.${checkboxClasses.indeterminate}`]: {
-    color: "#0f172a",
-  },
-  "& .MuiSvgIcon-root": {
-    // fontSize: 30,
-    borderRadius: 6,
-    // backgroundColor: "#fff",
-    // overflow: "hidden",
-  },
+  // overflow: "hidden",
+  // [`&, &.${checkboxClasses.colorPrimary}`]: {
+  //   color: "#cbd5e1",
+  // },
+  // [`&, &.${checkboxClasses.checked}`]: {
+  //   color: "#0f172a",
+  // },
+  // [`&, &.${checkboxClasses.indeterminate}`]: {
+  //   color: "#0f172a",
+  // },
+  // "& .MuiSvgIcon-root": {
+  //   width: "20px",
+  //   height: "20px",
+  // },
 };
 
 const CategoryArchivedList = ({ setOpen }: any) => {
@@ -153,6 +154,11 @@ const CategoryArchivedList = ({ setOpen }: any) => {
                           }
                           onChange={handleSelectAllClick}
                           sx={CheckBoxStyle}
+                          checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                          icon={<img src={checkboxIcon} alt="" />}
+                          indeterminateIcon={
+                            <img src={checkboxIndeterminate} alt="" />
+                          }
                         />
                         Category
                       </TableCell>
@@ -177,6 +183,8 @@ const CategoryArchivedList = ({ setOpen }: any) => {
                               handleCheckboxClick(event, category.ID)
                             }
                             sx={CheckBoxStyle}
+                            checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                            icon={<img src={checkboxIcon} alt="" />}
                           />
                           {category.name}
                         </TableCell>

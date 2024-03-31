@@ -21,6 +21,9 @@ import { Tooltip } from "@mui/material";
 import details from "../../../assets/details.svg";
 import { CheckBoxStyle } from "../category/CategoryArchivedList";
 import { Cell } from "../../table";
+import checkedActiveIcon from "../../../assets/checkbox-active.svg";
+import checkboxIcon from "../../../assets/checkbox.svg";
+import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
 
 interface PaymentRequestTableListProps {
   items: IPaymentRequest[];
@@ -98,6 +101,8 @@ const PaymentRequestTableList = ({
                 handleCheckboxClick(event, Number(paymentId))
               }
               sx={CheckBoxStyle}
+              checkedIcon={<img src={checkedActiveIcon} alt="" />}
+              icon={<img src={checkboxIcon} alt="" />}
             />
             {items.length} payment requests
             <IconButton
@@ -164,6 +169,8 @@ const PaymentRequestTableList = ({
                     handleCheckboxClick(event, payment.payment_request_id)
                   }
                   sx={CheckBoxStyle}
+                  checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                  icon={<img src={checkboxIcon} alt="" />}
                 />
                 {formatAddressToDomain(
                   payment.counterparty,

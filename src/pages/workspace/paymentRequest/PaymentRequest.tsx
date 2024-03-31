@@ -43,6 +43,9 @@ import ActionButton from "../../../components/workspace/paymentRequest/ActionBut
 import { CheckBoxStyle } from "../../../components/workspace/category/CategoryArchivedList";
 import Button from "../../../components/button";
 import { HeaderCell } from "../../../components/table";
+import checkedActiveIcon from "../../../assets/checkbox-active.svg";
+import checkboxIcon from "../../../assets/checkbox.svg";
+import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
 
 const PaymentRequest = () => {
   const { id } = useParams();
@@ -342,6 +345,11 @@ const PaymentRequest = () => {
                             }
                             sx={CheckBoxStyle}
                             onChange={handleSelectAllClick}
+                            checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                            icon={<img src={checkboxIcon} alt="" />}
+                            indeterminateIcon={
+                              <img src={checkboxIndeterminate} alt="" />
+                            }
                           />
                           Recipient
                         </HeaderCell>

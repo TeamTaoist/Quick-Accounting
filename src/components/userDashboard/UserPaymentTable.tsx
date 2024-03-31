@@ -46,7 +46,7 @@ const UserPaymentTable = ({
             <HeaderCell width="286px">Workspace</HeaderCell>
             <HeaderCell width="154px">Recipient</HeaderCell>
             <HeaderCell width="286px">Amount</HeaderCell>
-            <HeaderCell width="237px">Status</HeaderCell>
+            <HeaderCell width="137px">Status</HeaderCell>
             <HeaderCell width="176px">Date</HeaderCell>
             <HeaderCell width="96px"></HeaderCell>
           </TableRow>

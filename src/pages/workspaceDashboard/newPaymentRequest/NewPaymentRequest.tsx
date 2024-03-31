@@ -507,6 +507,9 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           sx={{
                             minWidth: "100%",
                             height: "40px",
+                            ".Mui-selected": {
+                              fontSize: "14px", // Adjust the font size of the selected item
+                            },
                             // .css-q8hpuo-MuiFormControl-root
                             "&.MuiOutlinedInput-root": {
                               "& fieldset": {
@@ -529,6 +532,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                   key={i}
                                   value={item.tokenInfo.address}
                                   sx={{
+                                    fontSize: "14px",
                                     "&:hover": {
                                       backgroundColor: "var(--clr-gray-100)",
                                     },
@@ -657,14 +661,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                     {selectedCategory?.properties?.map((property) => (
                       <>
                         {property.type === "single-select" && (
-                          <TableRow
-                            sx={{
-                              td: {
-                                padding: 0,
-                                paddingInline: "16px",
-                              },
-                            }}
-                          >
+                          <TableRow>
                             <Cell>
                               <NoteInfo>
                                 <Image src={selectIcon} alt="" />{" "}

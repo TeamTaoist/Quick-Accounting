@@ -18,6 +18,9 @@ import { getShortAddress } from "../../../utils";
 import { useWorkspace } from "../../../store/useWorkspace";
 import rightArrow from "../../../assets/workspace/right-arrow.svg";
 import details from "../../../assets/details.svg";
+import checkedActiveIcon from "../../../assets/checkbox-active.svg";
+import checkboxIcon from "../../../assets/checkbox.svg";
+import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
 import { formatNumber } from "../../../utils/number";
 import { CategoryCell } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import { getPaymentUpdateTime } from "../../../utils/payment";
@@ -94,6 +97,9 @@ const BookkeepingTable = ({
                 checked={selected.length === bookkeepingList.length}
                 onChange={handleSelectAllClick}
                 sx={CheckBoxStyle}
+                checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                icon={<img src={checkboxIcon} alt="" />}
+                indeterminateIcon={<img src={checkboxIndeterminate} alt="" />}
               />
               Safe
             </HeaderCell>
@@ -117,6 +123,8 @@ const BookkeepingTable = ({
                           handleCheckboxClick(event, bookkeeping.ID)
                         }
                         sx={CheckBoxStyle}
+                        checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                        icon={<img src={checkboxIcon} alt="" />}
                       />
                       {getShortAddress(workspace?.vault_wallet)}
                     </div>

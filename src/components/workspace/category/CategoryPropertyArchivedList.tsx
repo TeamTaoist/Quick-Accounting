@@ -9,6 +9,9 @@ import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
 import archive from "../../../assets/workspace/archive.svg";
 import cancel from "../../../assets/auth/cancel.svg";
+import checkedActiveIcon from "../../../assets/checkbox-active.svg";
+import checkboxIcon from "../../../assets/checkbox.svg";
+import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
 import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
@@ -146,6 +149,11 @@ const CategoryPropertyArchivedList = ({
                           }
                           onChange={handleSelectAllClick}
                           sx={CheckBoxStyle}
+                          checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                          icon={<img src={checkboxIcon} alt="" />}
+                          indeterminateIcon={
+                            <img src={checkboxIndeterminate} alt="" />
+                          }
                         />
                         Properties
                       </TableCell>
@@ -170,6 +178,8 @@ const CategoryPropertyArchivedList = ({
                               handleCheckboxClick(event, property.ID)
                             }
                             sx={CheckBoxStyle}
+                            checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                            icon={<img src={checkboxIcon} alt="" />}
                           />
                           {property.name}
                         </TableCell>

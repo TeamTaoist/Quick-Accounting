@@ -1,11 +1,9 @@
 import {
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Button,
   Checkbox,
   Tooltip,
 } from "@mui/material";
@@ -19,45 +17,29 @@ import rightArrow from "../../../assets/workspace/right-arrow.svg";
 import hide from "../../../assets/workspace/hide.svg";
 import back from "../../../assets/workspace/back.svg";
 import details from "../../../assets/details.svg";
+import checkedActiveIcon from "../../../assets/checkbox-active.svg";
+import checkboxIcon from "../../../assets/checkbox.svg";
+import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
 import styled from "@emotion/styled";
 import { useBookkeeping } from "../../../store/useBookkeeping";
 import { getShortAddress } from "../../../utils";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
 import {
-  ActionBtn,
   Filter,
   Header,
   Image,
-  Option,
   PaymentPagination,
   TableSection,
   ViewReject,
 } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import Pagination from "../../Pagination";
-import {
-  FormControl,
-  InputAdornment,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
-import searchIcon from "../../../assets/workspace/search-icon.svg";
-import filterIcon from "../../../assets/workspace/filtering.svg";
 import { useTranslation } from "react-i18next";
 import { getPaymentUpdateTime } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
 import SearchInput from "../SearchInput";
 import FilterCategorySelect from "../FilterCategorySelect";
-
-const HeaderStyles = {
-  fontSize: "14px",
-  fontWeight: "500",
-  fontFamily: "Inter",
-  color: "var(--clr-primary-900)",
-  background: "var(--clr-gray-200)",
-  padding: "0 16px",
-};
+import { Cell, HeaderCell } from "../../table";
 interface RejectTableProps {
   workspaceId: number;
   paymentRequest: boolean;
@@ -227,11 +209,9 @@ const BookkeepingRejectTable = ({
               }}
             >
               <Table>
-                <TableHead
-                  style={{ background: "var(--clr-gray-200)", height: "55px" }}
-                >
+                <TableHead>
                   <TableRow>
-                    <TableCell sx={HeaderStyles}>
+                    <HeaderCell width="220px">
                       <Checkbox
                         indeterminate={
                           selected.length > 0 &&
@@ -241,39 +221,26 @@ const BookkeepingRejectTable = ({
                           selected.length === bookkeepingHiddenList.length
                         }
                         onChange={handleSelectAllClick}
+                        checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                        icon={<img src={checkboxIcon} alt="" />}
+                        indeterminateIcon={
+                          <img src={checkboxIndeterminate} alt="" />
+                        }
                       />
                       Safe
-                    </TableCell>
-                    <TableCell sx={HeaderStyles}>Counterparty</TableCell>
-                    <TableCell
-                      sx={{
-                        width: "30%",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                        fontFamily: "Inter",
-                        color: "var(--clr-primary-900)",
-                        background: "var(--clr-gray-200)",
-                      }}
-                    >
-                      Amount
-                    </TableCell>
-                    <TableCell sx={HeaderStyles}>Category</TableCell>
-                    <TableCell sx={HeaderStyles}>Date</TableCell>
-                    <TableCell sx={HeaderStyles}></TableCell>
+                    </HeaderCell>
+                    <HeaderCell width="154px">Counterparty</HeaderCell>
+                    <HeaderCell width="328px">Amount</HeaderCell>
+                    <HeaderCell width="180px">Category</HeaderCell>
+                    <HeaderCell width="176px">Date</HeaderCell>
+                    <HeaderCell width="96px"></HeaderCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filterData.map((bookkeeping) => (
                     <>
                       <TableRow>
-                        <TableCell
-                          style={{
-                            // padding: 0,
-                            padding: "0 16px",
-                            borderBottom: "none",
-                            borderTop: "1px solid var(--clr-gray-200)",
-                          }}
-                        >
+                        <Cell>
                           <SafeSection>
                             <div>
                               <Checkbox
@@ -281,6 +248,13 @@ const BookkeepingRejectTable = ({
                                 onChange={(event) =>
                                   handleCheckboxClick(event, bookkeeping.ID)
                                 }
+                                sx={{
+                                  marginRight: "10px",
+                                }}
+                                checkedIcon={
+                                  <img src={checkedActiveIcon} alt="" />
+                                }
+                                icon={<img src={checkboxIcon} alt="" />}
                               />
                               {getShortAddress(workspace.vault_wallet)}
                             </div>
@@ -288,52 +262,25 @@ const BookkeepingRejectTable = ({
                               <img src={rightArrow} alt="" />
                             </Logo>
                           </SafeSection>
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            borderBottom: "none",
-                            borderTop: "1px solid var(--clr-gray-200)",
-                          }}
-                        >
+                        </Cell>
+                        <Cell style={{ paddingLeft: "20px" }}>
                           {formatAddressToDomain(
                             bookkeeping.counterparty,
                             workspace.chain_id,
                             workspace.name_service === "sns"
                           )}
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            borderBottom: "none",
-                            borderTop: "1px solid var(--clr-gray-200)",
-                          }}
-                        >
+                        </Cell>
+                        <Cell>
                           {formatNumber(Number(bookkeeping.amount))}{" "}
                           {bookkeeping.currency_name}
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            borderBottom: "none",
-                            borderTop: "1px solid var(--clr-gray-200)",
-                          }}
-                        >
+                        </Cell>
+                        <Cell>
                           <CategoryCell>
                             {bookkeeping.category_name}
                           </CategoryCell>
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            borderBottom: "none",
-                            borderTop: "1px solid var(--clr-gray-200)",
-                          }}
-                        >
-                          {getPaymentUpdateTime(bookkeeping)}
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            borderBottom: "none",
-                            borderTop: "1px solid var(--clr-gray-200)",
-                          }}
-                        >
+                        </Cell>
+                        <Cell>{getPaymentUpdateTime(bookkeeping)}</Cell>
+                        <Cell>
                           <Tooltip
                             title="View details"
                             placement="top"
@@ -358,7 +305,7 @@ const BookkeepingRejectTable = ({
                               }
                             />
                           </Tooltip>
-                        </TableCell>
+                        </Cell>
                       </TableRow>
                     </>
                   ))}
