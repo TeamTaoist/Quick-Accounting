@@ -48,8 +48,8 @@ export const CreateSafe = styled.div`
   align-items: center;
   padding: 30px 0 20px 0;
   p {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 400;
   }
   a {
     font-size: 12px;

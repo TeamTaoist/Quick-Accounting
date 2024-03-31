@@ -82,6 +82,7 @@ export const CategoryCell = styled.div`
   background: var(--clr-gray-100);
   padding: 2px 10px;
   height: 40px;
+  display: block;
   font-size: 14px;
   display: grid;
   justify-content: center;

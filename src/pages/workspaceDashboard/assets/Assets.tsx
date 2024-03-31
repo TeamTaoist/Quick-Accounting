@@ -5,13 +5,14 @@ import {
   AssetTable,
   AssetValue,
   EmptyAsset,
+  EmptyAssetBtn,
   RowCell,
   RowLink,
 } from "./assets.style";
 import { InputAdornment, Switch, SwitchProps, TextField } from "@mui/material";
 import searchIcon from "../../../assets/workspace/search-icon.svg";
 import linkIcon from "../../../assets/workspace/link-icon.svg";
-import rightArrow from "../../../assets/workspace/arrow-right.svg";
+import rightArrow from "../../../assets/asset-right-arrow.svg";
 import {
   Table,
   TableBody,
@@ -171,12 +172,12 @@ const Assets = () => {
         <EmptyAsset>
           <h3>There are no assets in this wallet address yet.</h3>
           <p>All assets in that wallet address will be displayed here.</p>
-          <button>
+          <EmptyAssetBtn>
             <h6>Check in Safe</h6>
             <span>
               <img src={rightArrow} alt="" />
             </span>
-          </button>
+          </EmptyAssetBtn>
         </EmptyAsset>
       ) : (
         <>

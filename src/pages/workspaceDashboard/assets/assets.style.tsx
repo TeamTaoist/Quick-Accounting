@@ -18,22 +18,25 @@ export const EmptyAsset = styled.div`
     font-size: 14px;
     color: var(--clr-gray-700);
   }
-  button {
-    border: 1px solid var(--clr-gray-300);
-    outline: none;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 500;
-    margin-top: 14px;
-
-    img {
-      width: 16px;
-    }
+`;
+export const EmptyAssetBtn = styled.button`
+  border: none;
+  outline: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 6px;
+  margin-top: 14px;
+  color: var(--clr-gray-600);
+  font-family: "Inter";
+  h6 {
+    font-size: 12px;
+    font-weight: 400;
+  }
+  img {
+    width: 16px;
   }
 `;
 export const AssetHeader = styled.div`

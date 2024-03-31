@@ -11,7 +11,7 @@ import { createSiweMessage } from "../../../utils";
 import { useAuthStore } from "../../../store/useAuthStore";
 import metamask from "../../../assets/auth/metamask.svg";
 import cancelIcon from "../../../assets/auth/x.svg";
-import arrowRight from "../../../assets/auth/arrow-right.svg";
+import arrowRight from "../../../assets/asset-right-arrow.svg";
 import { toast } from "react-toastify";
 
 interface IProps {

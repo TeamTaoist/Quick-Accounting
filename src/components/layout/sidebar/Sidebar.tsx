@@ -113,8 +113,8 @@ const Logo = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-right: 110px;
-  h6 {
+  margin-right: 80px;
+  h5 {
     font-size: 16px;
     font-weight: 700;
   }

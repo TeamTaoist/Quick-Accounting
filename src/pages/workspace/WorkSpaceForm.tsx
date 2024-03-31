@@ -29,7 +29,7 @@ import Loading from "../../utils/Loading";
 import { useAccount } from "wagmi";
 import cancelBtn from "../../assets/auth/x.svg";
 import CheckIcon from "@mui/icons-material/Check";
-import rightArrow from "../../assets/workspace/right-direction.svg";
+import rightArrow from "../../assets/asset-right-arrow.svg";
 
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
