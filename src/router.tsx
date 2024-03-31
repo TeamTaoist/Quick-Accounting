@@ -33,6 +33,7 @@ const Toast = styled(ToastContainer)`
     padding-left: 16px;
     text-align: center;
     box-shadow: none;
+    background-color: #f1f5f9;
   }
   .Toastify__close-button {
     display: none;

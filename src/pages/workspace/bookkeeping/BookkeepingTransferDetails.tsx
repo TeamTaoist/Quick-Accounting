@@ -94,8 +94,12 @@ const BookkeepingTransferDetails = ({
   );
 
   const { updatePaymentRequestCategory } = usePaymentsStore();
-  const { bookkeepingDetails, getBookkeepingList, updateBookkeepingCategory } =
-    useBookkeeping();
+  const {
+    bookkeepingDetails,
+    getBookkeepingList,
+    updateBookkeepingCategory,
+    bookkeepingList,
+  } = useBookkeeping();
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
 
@@ -199,6 +203,9 @@ const BookkeepingTransferDetails = ({
       setSelectedCategory({});
     }
   }, [selectedCategoryID, workspaceCategoryProperties]);
+
+  const details = bookkeepingList.filter((f) => f.ID === bookkeepingDetails.ID);
+  console.log("details", details);
 
   const handleCategory = async (category: CategoryProperties) => {
     setSelectedCategoryID(category.ID);
@@ -424,44 +431,11 @@ const BookkeepingTransferDetails = ({
                         fullWidth
                         disabled={bookkeepingDetails?.status === 2}
                       >
-                        {/* <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={bookkeepingDetails?.category_name}
-                          label="Age"
-                          size="small"
-                          IconComponent={() => (
-                            <InputAdornment position="start">
-                              <img
-                                src={arrowBottom}
-                                alt="Custom Arrow Icon"
-                                style={{ marginRight: "20px" }}
-                              />
-                            </InputAdornment>
-                          )}
-                          sx={{
-                            minWidth: "100%",
-                            "& fieldset": { border: "none" },
-                          }}
-                        >
-                          <MenuItem disabled value="Category">
-                            {selectedCategory?.name}
-                          </MenuItem>
-                          {workspaceCategoryProperties?.map((category) => (
-                            <MenuItem
-                              key={category.ID}
-                              value={category.name}
-                              // onBlur={handleUpdateCategory}
-                              onClick={() => handleCategory(category)}
-                            >
-                              {category.name}
-                            </MenuItem>
-                          ))}
-                        </Select> */}
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          value={bookkeepingDetails?.category_name}
+                          // value={bookkeepingDetails?.category_name}
+                          value={details?.[0].category_name}
                           label="Age"
                           // onChange={handleCategoryChange}
                           size="small"

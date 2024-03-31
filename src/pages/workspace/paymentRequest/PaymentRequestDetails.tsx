@@ -77,6 +77,7 @@ const PaymentRequestDetails = ({
     getPaymentRequestList,
     updatePaymentRequestCategory,
     paymentRequestDetails,
+    paymentRequestList,
   } = usePaymentsStore();
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { userWorkspaces } = useWorkspace();
@@ -85,6 +86,16 @@ const PaymentRequestDetails = ({
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
   };
+  // const [paymentDetails, setPaymentDetails] = useState<any>({});
+  // const paymentDetailsId = paymentRequestDetails.ID
+  const details = paymentRequestList.find(
+    (f) => f.ID === paymentRequestDetails.ID
+  );
+
+  // useEffect(() => {
+  //   setPaymentDetails(paymentRequestDetails);
+  // }, [paymentDetails]);
+  console.log("details", details);
 
   // handle react select
   const [selectedValues, setSelectedValues] = useState<ReactSelectOption[]>([]);
@@ -407,47 +418,11 @@ const PaymentRequestDetails = ({
                         fullWidth
                         disabled={paymentRequestDetails?.status === 2}
                       >
-                        {/* <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={paymentRequestDetails?.category_name}
-                          label="Age"
-                          size="small"
-                          IconComponent={() => (
-                            <InputAdornment position="start">
-                              <img
-                                src={arrowBottom}
-                                alt="Custom Arrow Icon"
-                                style={{ marginRight: "20px" }}
-                              />
-                            </InputAdornment>
-                          )}
-                          sx={{
-                            minWidth: "100%",
-                            "& fieldset": { border: "none" },
-                          }}
-                        >
-                          <MenuItem disabled value="Category">
-                            {selectedCategory?.name}
-                          </MenuItem>
-                          {workspaceCategoryProperties?.map((category) => (
-                            <MenuItem
-                              key={category.ID}
-                              value={category.name}
-                              // onBlur={handleUpdateCategory}
-                              onClick={() => handleCategory(category)}
-                            >
-                              {category.name}
-                            </MenuItem>
-                          ))}
-                        </Select> */}
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          value={
-                            paymentRequestDetails?.category_id &&
-                            paymentRequestDetails?.category_name
-                          }
+                          value={details?.category_name}
+                          // value={paymentDetails.category_name}
                           label="Age"
                           // onChange={handleCategoryChange}
                           size="small"

@@ -507,9 +507,13 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                           sx={{
                             minWidth: "100%",
                             height: "40px",
-                            ".Mui-selected": {
-                              fontSize: "14px", // Adjust the font size of the selected item
+                            "& .MuiSelect-select": {
+                              display: "block",
+                              fontSize: "14px",
                             },
+                            // ".Mui-selected": {
+                            //   fontSize: "14px",
+                            // },
                             // .css-q8hpuo-MuiFormControl-root
                             "&.MuiOutlinedInput-root": {
                               "& fieldset": {
@@ -616,6 +620,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               height: "40px",
                               "& .MuiSelect-select": {
                                 display: "block",
+                                fontSize: "14px",
                               },
                               "&.MuiOutlinedInput-root": {
                                 border: "1px solid var(--clr-gray-200)",
@@ -643,6 +648,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 }
                                 value={property.name}
                                 sx={{
+                                  fontSize: "14px",
                                   "&:hover": {
                                     backgroundColor: "var(--clr-gray-100)",
                                   },

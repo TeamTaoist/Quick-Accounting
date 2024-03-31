@@ -109,11 +109,11 @@ const HeaderDescription = styled.div`
     font-weight: 600;
     margin-bottom: 10px;
   }
-  P {
+  /* P {
     font-size: 14px;
     font-weight: 500;
-    /* margin-top: 6px; */
-  }
+    color: var(--clr-gray-500)
+  } */
 `;
 const WorkspaceInfo = styled.div`
   padding: 8px 0;
@@ -129,7 +129,7 @@ const WorkspaceDetails = styled.div`
   p {
     font-size: 12px;
     font-weight: 400;
-    color: var(--text-secondary);
+    color: var(--clr-gray-500);
   }
 `;
 const WorkspaceLogo = styled.div`
@@ -144,7 +144,7 @@ const WorkspaceLogo = styled.div`
   justify-content: center;
   align-items: center;
   p {
-    font-weight: 600;
+    font-weight: 400;
     text-transform: uppercase;
   }
 `;

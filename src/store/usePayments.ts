@@ -362,6 +362,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
               : payment
           );
           set({ paymentRequestList: updatedList });
+          set({ filterData: updatedList });
 
           return true;
         }

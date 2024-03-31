@@ -81,7 +81,7 @@ const PaymentRequestTableList = ({
             "& > .MuiTableCell-root": {
               // borderBottom: "none",
             },
-            background: "var(--clr-gray-100)",
+            background: "var(--clr-gray-50)",
             height: "55px",
           }}
         >
@@ -234,7 +234,7 @@ const PaymentRequestTableList = ({
                 {items.map((payments) => (
                   <TableRow
                     key={payments.ID}
-                    sx={{ background: "var(--clr-gray-100)", height: "55px" }}
+                    sx={{ background: "var(--clr-gray-50)", height: "55px" }}
                   >
                     <TableCell
                       // colSpan={1}

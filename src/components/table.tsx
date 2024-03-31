@@ -38,6 +38,8 @@ export const Cell = ({ children, width, ...props }: CustomTableCellProps) => (
       paddingInline: 2,
       height: "56px",
       minWidth: width ? width : "100%",
+      fontSize: "14px",
+      fontWeight: 400,
     }}
     {...props}
   >
