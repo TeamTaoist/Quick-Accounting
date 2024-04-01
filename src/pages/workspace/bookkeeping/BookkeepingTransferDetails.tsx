@@ -352,6 +352,8 @@ const BookkeepingTransferDetails = ({
       workspaceName={workspace.name}
       workspaceAvatar={workspace.avatar}
       address={workspace.vault_wallet}
+      isUpdating={isUpdating}
+      isSuccess={isSuccess}
     >
       <RequestDetails>
         <TransferTable>
@@ -415,7 +417,7 @@ const BookkeepingTransferDetails = ({
             <NoteInformation>
               <NoteHeader>
                 <h3>Note Information</h3>
-                <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} />
+                {/* <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} /> */}
               </NoteHeader>
 
               {/* <TableContainer> */}

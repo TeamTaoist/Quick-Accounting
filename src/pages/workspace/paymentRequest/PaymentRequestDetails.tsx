@@ -381,6 +381,8 @@ const PaymentRequestDetails = ({
         workspaceName={selectedWorkspaceName}
         workspaceAvatar={selectedWorkspaceAvatar}
         address={selectedWorkspaceSafeAddress}
+        isUpdating={isUpdating}
+        isSuccess={isSuccess}
       >
         <RequestDetails>
           <TableContainer
@@ -397,7 +399,7 @@ const PaymentRequestDetails = ({
             <NoteInformation>
               <NoteHeader>
                 <h3>Note Information</h3>
-                <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} />
+                {/* <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} /> */}
               </NoteHeader>
               {/* <TableContainer> */}
               <Table aria-label="simple table">

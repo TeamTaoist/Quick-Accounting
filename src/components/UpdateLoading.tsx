@@ -3,8 +3,8 @@ import { CircularProgress } from "@mui/material";
 import successIcon from "../assets/success.svg";
 
 interface UpdateLoadingProps {
-  isUpdating: boolean;
-  isSuccess: boolean;
+  isUpdating?: boolean;
+  isSuccess?: boolean;
 }
 
 const UpdateLoading = ({ isUpdating, isSuccess }: UpdateLoadingProps) => {

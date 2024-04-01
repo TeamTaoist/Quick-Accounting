@@ -310,12 +310,13 @@ const PaymentRequestGroupDetails = ({
         workspaceName={selectedWorkspaceName}
         workspaceAvatar={selectedWorkspaceAvatar}
         address={selectedWorkspaceSafeAddress}
+        isUpdating={isUpdating}
+        isSuccess={isSuccess}
       >
         <RequestDetails>
           {sharePaymentRequestForm.map((payment: any, index: number) => (
             <React.Fragment key={payment.id}>
               <TableContainer
-                // sx={{ paddingInline: "40px", paddingTop: "30px" }}
                 sx={{
                   boxShadow: "none",
                   border: "1px solid var(--clr-gray-200)",
@@ -441,12 +442,12 @@ const PaymentRequestGroupDetails = ({
                 <NoteInformation>
                   <NoteHeader>
                     <h3>Note Information</h3>
-                    {updatingPaymentId === payment.id && (
+                    {/* {updatingPaymentId === payment.id && (
                       <UpdateLoading
                         isUpdating={isUpdating}
                         isSuccess={isSuccess}
                       />
-                    )}
+                    )} */}
                   </NoteHeader>
                   {/* {paymentRequestGroupDetails.map((payment) => ( */}
                   {/* <TableContainer> */}

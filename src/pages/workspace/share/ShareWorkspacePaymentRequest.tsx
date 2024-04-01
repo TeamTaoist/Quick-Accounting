@@ -22,6 +22,7 @@ import useLogin from "../../../hooks/useLogin";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useDomainStore } from "../../../store/useDomain";
 import { NoteHeader } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
+import UpdateLoading from "../../../components/UpdateLoading";
 
 const ShareWorkspacePaymentRequest = () => {
   const { shareId } = useParams();
@@ -433,7 +434,7 @@ const ShareWorkspacePaymentRequest = () => {
       <Header>
         <SharePaymentContainer>
           <SharePaymentForm>
-            <ShareHeader>
+            {/* <ShareHeader>
               <h3>New payment request</h3>
               {workspace && (
                 <WorkspaceInfo>
@@ -450,7 +451,33 @@ const ShareWorkspacePaymentRequest = () => {
                   </WorkspaceDetails>
                 </WorkspaceInfo>
               )}
-            </ShareHeader>
+            </ShareHeader> */}
+            <RequestHeader>
+              <HeaderTitle>
+                <h1>New payment request</h1>
+              </HeaderTitle>
+              <WorkspaceInfo>
+                <WorkspaceItem>
+                  <WorkspaceLogo>
+                    {workspace.avatar === "" ? (
+                      <p>{workspace.name.slice(0, 1)}</p>
+                    ) : (
+                      <img src={workspace.avatar} alt={workspace.name} />
+                    )}
+                  </WorkspaceLogo>
+                  <WorkspaceDetails>
+                    <h6>{workspace.name}</h6>
+                    <p>{workspace.vault_wallet}</p>
+                  </WorkspaceDetails>
+                </WorkspaceItem>
+                {/* <UpdateInfo>
+                  <UpdateLoading
+                    isUpdating={isUpdating}
+                    isSuccess={isSuccess}
+                  />
+                </UpdateInfo> */}
+              </WorkspaceInfo>
+            </RequestHeader>
             <Request>
               {sharePaymentRequestForm.map((value, index) => (
                 <RequestDetails key={index}>
@@ -559,34 +586,56 @@ const SharePaymentForm = styled.div`
   -ms-overflow-style: none;
   scrollbar-width: none;
 `;
-const ShareHeader = styled.div`
-  padding: 40px;
-  line-height: 20px;
-  height: 152px;
+export const RequestHeader = styled.div`
+  height: 126px;
   background: var(--clr-gray-100);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-inline: 40px;
+  gap: 20px;
   position: sticky;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1;
-  h3 {
-    font-size: 24px;
+`;
+const Request = styled.div`
+  margin-top: 20px;
+  padding-inline: 40px;
+`;
+export const HeaderTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  /* padding: 22px 26px; */
+
+  h1 {
+    font-size: 20px;
     font-weight: 600;
-    margin-bottom: 10px;
   }
-  P {
+  p {
     font-size: 14px;
     font-weight: 500;
-    /* margin-top: 6px; */
+    color: var(--clr-gray-500);
+  }
+  img {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
   }
 `;
 const WorkspaceInfo = styled.div`
-  padding: 8px 0;
   display: flex;
-  align-items: center;
-  gap: 6px;
+  gap: 7px;
+  justify-content: space-between;
+  /* align-items: flex-end; */
 `;
-const WorkspaceLogo = styled.div`
+export const WorkspaceItem = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+`;
+export const WorkspaceLogo = styled.div`
   /* margin-top: 20px; */
   padding: 14px 0;
   width: 40px;
@@ -598,25 +647,38 @@ const WorkspaceLogo = styled.div`
   justify-content: center;
   align-items: center;
   p {
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 500;
     text-transform: uppercase;
   }
 `;
-const WorkspaceDetails = styled.div`
+export const WorkspaceDetails = styled.div`
+  line-height: 18px;
   h6 {
     font-size: 14px;
     font-weight: 500;
   }
   p {
     font-size: 12px;
-    font-weight: 400;
-    color: var(--text-secondary);
+    font-weight: 500;
+    color: var(--clr-gray-500);
   }
 `;
-const Request = styled.div`
-  margin-top: 20px;
-  padding-inline: 40px;
+export const UpdateInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 11px;
+  img {
+    width: 16px;
+  }
+  p {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--clr-gray-500);
+  }
 `;
+
 const RequestDetails = styled.div`
   /* padding: 40px 30px; */
   /* padding: 16px 0; */

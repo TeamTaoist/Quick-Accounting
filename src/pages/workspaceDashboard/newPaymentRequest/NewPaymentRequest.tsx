@@ -22,7 +22,7 @@ import {
   PaymentRequestDateInput,
   // Table,
 } from "./newPaymentRequest.style";
-import cancel from "../../../assets/auth/cancel.svg";
+import cancel from "../../../assets/x.svg";
 import trash from "../../../assets/workspace/trash.svg";
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import add from "../../../assets/workspace/add.svg";
@@ -35,20 +35,10 @@ import checkCircle from "../../../assets/workspace/check-circle.svg";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import {
-  Box,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { FormControl, InputAdornment, MenuItem, Select } from "@mui/material";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -295,7 +285,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
           };
     }),
   };
-  console.log("body", paymentRequestBody);
 
   const checkAllFields = async () => {
     if (!paymentRequestBody.rows.length) {
@@ -401,7 +390,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
       }
     });
   };
-  console.log(paymentRequestBody);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const handleInputClick = () => {

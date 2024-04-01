@@ -15,7 +15,7 @@ export const FullScreenDialog = styled.div`
 export const CreateRequest = styled.div`
   background: #fff;
   width: 800px;
-  height: 480px;
+  height: 550px;
   /* height: 30vh; */
   z-index: 100;
   border-radius: 6px;
@@ -28,7 +28,7 @@ export const CreateRequest = styled.div`
   scrollbar-width: none;
 `;
 export const RequestHeader = styled.div`
-  height: 152px;
+  height: 126px;
   background: var(--clr-gray-100);
   display: flex;
   flex-direction: column;
@@ -57,11 +57,12 @@ export const HeaderTitle = styled.div`
   /* padding: 22px 26px; */
 
   h1 {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
   }
   img {
-    width: 16px;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
   }
 `;
@@ -86,7 +87,8 @@ export const UpdateInfo = styled.div`
   }
   p {
     font-size: 12px;
-    color: #64748b;
+    font-weight: 400;
+    color: var(--clr-gray-500);
   }
 `;
 export const WorkspaceLogo = styled.div`
@@ -109,7 +111,7 @@ export const WorkspaceLogo = styled.div`
 export const WorkspaceDetails = styled.div`
   line-height: 18px;
   h6 {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
   }
   p {
@@ -175,8 +177,9 @@ export const NoteHeader = styled.div`
   border-top: 1px solid var(--clr-gray-200);
   height: 56px;
   h3 {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
+    color: #475569;
   }
   .note {
     padding-bottom: 8px;
@@ -190,7 +193,7 @@ export const NoteInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   input {
     /* border: 1px solid var(-clr-gray-200); */
@@ -226,12 +229,13 @@ export const RequestSubmit = styled.button`
 export const PaymentRequestInput = styled.input`
   border: 1px solid var(--clr-gray-200);
   outline: none;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-radius: 6px;
   margin: 4px 0;
   height: 40px;
   width: 100%;
   font-size: 14px;
+  color: var(--clr-primary-900);
   &::placeholder {
     opacity: 0.5;
   }
@@ -239,13 +243,13 @@ export const PaymentRequestInput = styled.input`
 export const PaymentRequestDateInput = styled.input<any>`
   border: 1px solid var(--clr-gray-200);
   outline: none;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-radius: 6px;
   font-size: 14px;
   margin: 4px 0;
   height: 40px;
   width: 100%;
-  color: ${(props) => (props.isActive ? "#111" : "gray")};
+  color: ${(props) => (props.isActive ? "var(--clr-primary-900)" : "gray")};
   &::placeholder {
     opacity: 0.5;
   }

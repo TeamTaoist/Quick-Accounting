@@ -7,6 +7,12 @@ import removeIcon from "../assets/x-circle.svg";
 const animatedComponents = makeAnimated();
 
 export const customStyles: any = {
+  placeholder: (defaultStyles: any) => ({
+    ...defaultStyles,
+    color: "var(--clr-gray-400)",
+    fontSize: "14px",
+    fontFamily: "Inter",
+  }),
   control: (provided: any, state: any) => ({
     ...provided,
     border: "1px solid var(--clr-gray-200)",

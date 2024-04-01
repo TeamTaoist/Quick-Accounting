@@ -15,7 +15,7 @@ export const HeaderCell = ({
     sx={{
       background: "var(--clr-gray-100)",
       fontWeight: "500",
-      color: "var(--clr-primary-900)",
+      color: "#475569",
       height: "56px",
       padding: 0,
       paddingInline: 2,
