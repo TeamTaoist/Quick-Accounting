@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FormControl,
   InputAdornment,
@@ -9,18 +9,12 @@ import {
   SelectChangeEvent,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableRow,
-  TextField,
 } from "@mui/material";
 
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
-import multiSelect from "../../../assets/workspace/multi-select.svg";
-import selectIcon from "../../../assets/workspace/select.svg";
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
-import optionsIcon from "../../../assets/workspace/option.svg";
-import statusIcon from "../../../assets/workspace/status.svg";
 import {
   Image,
   NoteHeader,
@@ -42,6 +36,7 @@ import { getPaymentStatus } from "../../../utils/payment";
 import { formatTimestamp } from "../../../utils/time";
 import UpdateLoading from "../../../components/UpdateLoading";
 import { Cell } from "../../../components/table";
+import CategoryDropdown from "../../../components/categoryDropdown";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -418,76 +413,11 @@ const PaymentRequestDetails = ({
                         fullWidth
                         disabled={paymentRequestDetails?.status === 2}
                       >
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
+                        <CategoryDropdown
+                          data={workspaceCategoryProperties}
                           value={details?.category_name}
-                          // value={paymentDetails.category_name}
-                          label="Age"
-                          // onChange={handleCategoryChange}
-                          size="small"
-                          IconComponent={() => (
-                            <InputAdornment position="start">
-                              <img
-                                src={arrowBottom}
-                                alt="Custom Arrow Icon"
-                                style={{ marginRight: "20px" }}
-                              />
-                            </InputAdornment>
-                          )}
-                          // sx={{
-                          //   minWidth: "100%",
-                          //   "& fieldset": { border: "none" },
-                          // }}
-                          sx={{
-                            minWidth: "100%",
-                            height: "42px",
-                            padding: 0,
-                            paddingInline: "1px",
-                            "& .MuiSelect-select": {
-                              display: "block",
-                              fontSize: "14px",
-                            },
-                            // .css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select
-                            "&.MuiOutlinedInput-root": {
-                              border: "1px solid var(--clr-gray-200)",
-                              "& fieldset": {
-                                border: "none",
-                              },
-                              "&:hover fieldset": {
-                                border: "none",
-                              },
-                              "&.Mui-focused fieldset": {
-                                border: "none",
-                              },
-                            },
-                            // "& fieldset": { border: "none" },
-                            "& .MuiInputLabel-root": { display: "none" },
-                          }}
-                        >
-                          <MenuItem disabled value="Category">
-                            Category name
-                          </MenuItem>
-                          {workspaceCategoryProperties?.map((category) => (
-                            <MenuItem
-                              key={category.ID}
-                              value={category.name}
-                              // onBlur={handleUpdateCategory}
-                              onClick={() => handleCategory(category)}
-                              sx={{
-                                fontSize: "14px",
-                                "&:hover": {
-                                  backgroundColor: "var(--clr-gray-100)",
-                                },
-                                "&.Mui-selected": {
-                                  backgroundColor: "var(--clr-gray-200)",
-                                },
-                              }}
-                            >
-                              {category.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
+                          onClick={handleCategory}
+                        />
                       </FormControl>
                     </Cell>
                   </TableRow>

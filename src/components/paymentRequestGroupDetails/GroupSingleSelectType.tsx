@@ -42,13 +42,7 @@ const GroupSingleSelectType = ({
             <Image src={selectIcon} alt="" /> {properties.name}
           </NoteInfo>
         </Cell>
-        <Cell
-          sx={{
-            borderBottom: "none",
-            borderTop: "1px solid var(--clr-gray-200)",
-          }}
-          onBlur={() => handleUpdatePaymentRequest(payment.id)}
-        >
+        <Cell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
           <ReactSelect
             value={selectedValues}
             isMulti={false}

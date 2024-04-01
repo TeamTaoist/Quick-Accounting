@@ -8,38 +8,28 @@ import {
   SelectChangeEvent,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
   TableRow,
   TextField,
-  Typography,
 } from "@mui/material";
 
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
-import multiSelect from "../../../assets/workspace/multi-select.svg";
-import selectIcon from "../../../assets/workspace/select.svg";
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
-import optionsIcon from "../../../assets/workspace/option.svg";
-import statusIcon from "../../../assets/workspace/status.svg";
 import styled from "@emotion/styled";
 import usePaymentsStore from "../../../store/usePayments";
 import { useLoading } from "../../../store/useLoading";
 import {
-  DeleteIcon,
   Image,
   NoteHeader,
   NoteInfo,
   NoteInformation,
-  RequestSubmit,
 } from "../../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
-import ReactSelect from "../../ReactSelect";
 import WorkspaceItemDetailsLayout from "../../layout/WorkspaceItemDetailsLayout";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import {
   ReactSelectOption,
   Status,
-  StatusBtn,
   SubmissionTime,
 } from "../../../pages/workspace/paymentRequest/PaymentRequestDetails";
 import GroupTextType from "../../paymentRequestGroupDetails/GroupTextType";
@@ -52,6 +42,9 @@ import { useDomainStore } from "../../../store/useDomain";
 import UpdateLoading from "../../UpdateLoading";
 import GroupDatePickerType from "../../paymentRequestGroupDetails/GroupDatePickerType";
 import { Cell, HeaderCell } from "../../table";
+import MultipleCategoryDropdown from "../../paymentRequestGroupDetails/MultipleCategoryDropdown";
+import CheckIcon from "@mui/icons-material/Check";
+import { Item } from "../../categoryDropdown";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -174,6 +167,13 @@ const PaymentRequestGroupDetails = ({
     setSharePaymentRequestForm(updatedRequests);
   };
 
+  // updating loading state
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [updatingPaymentId, setUpdatingPaymentId] = useState<number | null>(
+    null
+  );
+
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<any>([]);
 
@@ -183,6 +183,8 @@ const PaymentRequestGroupDetails = ({
     index: number,
     paymentId: number
   ) => {
+    setIsUpdating(true);
+    setUpdatingPaymentId(paymentId);
     const updatedCategoryIDs = [...selectedCategoryIDs];
     updatedCategoryIDs[index] = categoryId;
     setSelectedCategoryIDs(updatedCategoryIDs);
@@ -257,13 +259,6 @@ const PaymentRequestGroupDetails = ({
   useEffect(() => {
     setDefaultValue(sharePaymentRequestForm);
   }, []);
-
-  // updating loading state
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [updatingPaymentId, setUpdatingPaymentId] = useState<number | null>(
-    null
-  );
 
   const handleUpdatePaymentRequest = async (paymentId: number) => {
     setUpdatingPaymentId(paymentId);
@@ -388,6 +383,7 @@ const PaymentRequestGroupDetails = ({
                       <Cell>
                         <Select
                           // disabled={paymentRequestDetails.status === 1}
+                          readOnly={true}
                           labelId="demo-select-small-label"
                           id="demo-select-small"
                           value={selectedValue}
@@ -421,9 +417,6 @@ const PaymentRequestGroupDetails = ({
                                 borderColor: "var(--clr-gray-200)",
                               },
                             },
-                          }}
-                          inputProps={{
-                            readOnly: true,
                           }}
                         >
                           <MenuItem
@@ -489,6 +482,33 @@ const PaymentRequestGroupDetails = ({
                                   />
                                 </InputAdornment>
                               )}
+                              renderValue={(selectedValue) => (
+                                <div
+                                  style={{
+                                    overflow: "hidden",
+                                    fontSize: "14px",
+                                  }}
+                                >
+                                  {selectedValue}
+                                </div>
+                              )}
+                              MenuProps={{
+                                sx: {
+                                  "& .MuiMenuItem-root": {
+                                    marginInline: "10px",
+                                    borderRadius: "6px",
+                                    fontSize: "14px",
+                                    fontWeight: "500",
+                                    margin: "5px 8px",
+                                    "&:hover": {
+                                      bgcolor: "var(--clr-gray-100)",
+                                    },
+                                    "&.Mui-selected": {
+                                      bgcolor: "var(--clr-gray-100)",
+                                    },
+                                  },
+                                },
+                              }}
                               sx={{
                                 minWidth: "100%",
                                 height: "42px",
@@ -517,7 +537,6 @@ const PaymentRequestGroupDetails = ({
                               <MenuItem disabled value="Category">
                                 {sharePaymentRequestForm[index].category_name}
                               </MenuItem>
-                              {/* dynamic category */}
                               {workspaceCategoryProperties?.map((category) => (
                                 <MenuItem
                                   key={category.ID}
@@ -540,7 +559,28 @@ const PaymentRequestGroupDetails = ({
                                     },
                                   }}
                                 >
-                                  {category.name}
+                                  <Item>
+                                    <div
+                                      style={{
+                                        width: "14px",
+                                        marginRight: "10px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      {sharePaymentRequestForm[index]
+                                        .category_id === category.ID && (
+                                        <CheckIcon
+                                          style={{
+                                            color: "#334155",
+                                            width: "16px",
+                                          }}
+                                        />
+                                      )}
+                                    </div>
+
+                                    {category.name}
+                                  </Item>
                                 </MenuItem>
                               ))}
                             </Select>

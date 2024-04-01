@@ -21,7 +21,7 @@ export const PaymentRequestBody = styled.div``;
 export const ActionBtn = styled.div`
   display: flex;
   gap: 15px;
-  width: 100%;
+  /* width: 100%; */
   /* margin: 20px 0; */
   margin-left: 15px;
   /* margin-top: 60px; */
@@ -82,9 +82,9 @@ export const CategoryCell = styled.div`
   background: var(--clr-gray-100);
   padding: 2px 10px;
   height: 40px;
-  display: block;
   font-size: 14px;
-  display: grid;
+  display: inline-block;
+  display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;

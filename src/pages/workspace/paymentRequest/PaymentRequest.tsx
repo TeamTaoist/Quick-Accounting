@@ -320,7 +320,7 @@ const PaymentRequest = () => {
                   sx={{
                     border: "1px solid var(--clr-gray-200)",
                     borderRadius: "6px",
-                    maxHeight: "100%",
+                    // maxHeight: "100%",
                     overflow: "auto",
                     minWidth: "1100px",
                     "&::-webkit-scrollbar": {
@@ -379,9 +379,12 @@ const PaymentRequest = () => {
                   </Table>
                 </TableContainer>
                 {/* no search result msg */}
-                <EmptySearchResult>
-                  {filterData.length === 0 && <p>No results found.</p>}
-                </EmptySearchResult>
+
+                {filterData.length === 0 && (
+                  <EmptySearchResult>
+                    <p>No results found.</p>
+                  </EmptySearchResult>
+                )}
 
                 {totalItem > 10 && (
                   <Pagination

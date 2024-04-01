@@ -66,7 +66,7 @@ const FilterCategorySelect = ({
         sx={{
           minWidth: "100%",
           height: "40px",
-          padding: 0,
+          // margin: "4px",
           paddingInline: "1px",
           "& .MuiSelect-select": {
             display: "block",
@@ -95,6 +95,9 @@ const FilterCategorySelect = ({
               marginInline: "10px",
               borderRadius: "6px",
               fontFamily: "Inter",
+              fontSize: "14px",
+              fontWeight: "500",
+              margin: "5px",
               // border: "1px solid var(--clr-gray-300)",
               "&:hover": {
                 bgcolor: "var(--clr-gray-100)",

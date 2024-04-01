@@ -88,7 +88,7 @@ const PaymentCurrencyTable = () => {
           </Cell>
           <Cell>
             <Select
-              readOnly={paymentRequestDetails?.status === 2}
+              readOnly={true}
               labelId=""
               variant="outlined"
               id={`dropdown`}

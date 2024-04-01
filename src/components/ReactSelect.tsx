@@ -103,6 +103,19 @@ const RemoveIcon = ({ innerProps }: any) => {
     </div>
   );
 };
+// option icon
+// const OptionWithIcon = ({ ...props }: any) => (
+//   <div {...props} style={{ display: "flex", alignItems: "center" }}>
+//     {props.isSelected && (
+//       <img
+//         src={removeIcon}
+//         alt="Option Icon"
+//         style={{ width: 20, height: 20, marginRight: 10 }}
+//       />
+//     )}
+//     <div>{props.label}</div>
+//   </div>
+// );
 
 export default function ReactSelect({
   value,
@@ -122,6 +135,8 @@ export default function ReactSelect({
         DropdownIndicator: ArrowIcon,
         IndicatorSeparator: () => null,
         MultiValueRemove: RemoveIcon,
+        // Option: OptionWithIcon,
+        // SingleValue: OptionWithIcon,
       }}
       isMulti={isMulti}
       options={options}

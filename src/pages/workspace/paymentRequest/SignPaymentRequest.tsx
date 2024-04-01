@@ -21,6 +21,7 @@ import { formatNumber, getShortDisplay } from "../../../utils/number";
 import { getShortAddress } from "../../../utils";
 import BigNumber from "bignumber.js";
 import { useDomainStore } from "../../../store/useDomain";
+import { Cell, HeaderCell } from "../../../components/table";
 
 const HeaderStyles = {
   padding: "10px 15px",
@@ -135,30 +136,30 @@ const SignPaymentRequest = ({ setOpen, selectedItem, workSpaceId }: any) => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell sx={HeaderStyles}>Recipient</TableCell>
-                <TableCell sx={HeaderStyles}>Amount</TableCell>
-                <TableCell sx={HeaderStyles}>Category</TableCell>
-                <TableCell sx={HeaderStyles}>Date</TableCell>
+                <HeaderCell width="160px">Recipient</HeaderCell>
+                <HeaderCell width="200px">Amount</HeaderCell>
+                <HeaderCell width="180px">Category</HeaderCell>
+                <HeaderCell width="180px">Date</HeaderCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {signItems.map((payment) => (
                 <TableRow key={payment.ID}>
-                  <TableCell>
+                  <Cell>
                     {formatAddressToDomain(
                       payment.counterparty,
                       workspace.chain_id,
                       workspace.name_service === "sns"
                     )}
-                  </TableCell>
-                  <TableCell>
+                  </Cell>
+                  <Cell>
                     {formatNumber(Number(payment.amount))}{" "}
                     {payment.currency_name}
-                  </TableCell>
-                  <TableCell>
+                  </Cell>
+                  <Cell>
                     <CategoryCell>{payment.category_name}</CategoryCell>
-                  </TableCell>
-                  <TableCell>{payment.CreatedAt.slice(0, 10)}</TableCell>
+                  </Cell>
+                  <Cell>{payment.CreatedAt.slice(0, 10)}</Cell>
                 </TableRow>
               ))}
             </TableBody>
@@ -221,8 +222,13 @@ export const SignToChain = styled.button`
   }
 `;
 const CategoryCell = styled.div`
-  background: var(--clr-gray-200);
-  padding: 6px 10px;
-  text-align: center;
+  background: var(--clr-gray-100);
+  padding: 2px 10px;
+  height: 40px;
+  display: block;
+  font-size: 14px;
+  display: grid;
+  justify-content: center;
+  align-items: center;
   border-radius: 5px;
 `;

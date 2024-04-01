@@ -291,10 +291,14 @@ const Bookkeeping = () => {
                   )} */}
                 {/* </ViewReject> */}
                 {paymentRequest && (
-                  <ViewHidden onClick={handleViewHiddenList}>
-                    <Image src={view} alt="" />
+                  <Button
+                    icon={view}
+                    bg="#F8FAFC"
+                    // width="174px"
+                    onClick={handleViewHiddenList}
+                  >
                     <p>{t("bookkeeping.ViewHidden")}</p>
-                  </ViewHidden>
+                  </Button>
                 )}
               </BookkeepingAction>
             </Header>
@@ -390,6 +394,7 @@ export const HideBtn = styled.button<any>`
 export const BookkeepingAction = styled.div`
   display: flex;
   align-items: center;
+  gap: 14px;
 `;
 const ViewHidden = styled.button`
   border: none;

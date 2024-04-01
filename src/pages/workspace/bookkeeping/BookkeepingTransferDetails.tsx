@@ -59,6 +59,7 @@ import { getPaymentStatus } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
 import UpdateLoading from "../../../components/UpdateLoading";
 import { Cell, HeaderCell } from "../../../components/table";
+import CategoryDropdown from "../../../components/categoryDropdown";
 
 const HeaderStyles = {
   padding: "10px 15px",
@@ -431,75 +432,11 @@ const BookkeepingTransferDetails = ({
                         fullWidth
                         disabled={bookkeepingDetails?.status === 2}
                       >
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          // value={bookkeepingDetails?.category_name}
+                        <CategoryDropdown
+                          data={workspaceCategoryProperties}
                           value={details?.[0].category_name}
-                          label="Age"
-                          // onChange={handleCategoryChange}
-                          size="small"
-                          IconComponent={() => (
-                            <InputAdornment position="start">
-                              <img
-                                src={arrowBottom}
-                                alt="Custom Arrow Icon"
-                                style={{ marginRight: "20px" }}
-                              />
-                            </InputAdornment>
-                          )}
-                          // sx={{
-                          //   minWidth: "100%",
-                          //   "& fieldset": { border: "none" },
-                          // }}
-                          sx={{
-                            minWidth: "100%",
-                            height: "42px",
-                            padding: 0,
-                            paddingInline: "1px",
-                            "& .MuiSelect-select": {
-                              display: "block",
-                              fontSize: "14px",
-                            },
-                            "&.MuiOutlinedInput-root": {
-                              border: "1px solid var(--clr-gray-200)",
-                              "& fieldset": {
-                                border: "none",
-                              },
-                              "&:hover fieldset": {
-                                border: "none",
-                              },
-                              "&.Mui-focused fieldset": {
-                                border: "none",
-                              },
-                            },
-                            // "& fieldset": { border: "none" },
-                            "& .MuiInputLabel-root": { display: "none" },
-                          }}
-                        >
-                          <MenuItem disabled value="Category">
-                            Category name
-                          </MenuItem>
-                          {workspaceCategoryProperties?.map((category) => (
-                            <MenuItem
-                              key={category.ID}
-                              value={category.name}
-                              // onBlur={handleUpdateCategory}
-                              onClick={() => handleCategory(category)}
-                              sx={{
-                                fontSize: "14px",
-                                "&:hover": {
-                                  backgroundColor: "var(--clr-gray-100)",
-                                },
-                                "&.Mui-selected": {
-                                  backgroundColor: "var(--clr-gray-200)",
-                                },
-                              }}
-                            >
-                              {category.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
+                          onClick={handleCategory}
+                        />
                       </FormControl>
                     </Cell>
                   </TableRow>

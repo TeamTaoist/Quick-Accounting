@@ -619,7 +619,10 @@ const Request = styled.div`
 `;
 const RequestDetails = styled.div`
   /* padding: 40px 30px; */
-  padding: 16px 0;
+  /* padding: 16px 0; */
+  border: 1px solid var(--clr-gray-200);
+  border-radius: 6px;
+  overflow: hidden;
 `;
 
 export const NoteInformation = styled.div`
@@ -660,12 +663,13 @@ const DeleteBtn = styled.button`
   gap: 6px;
   font-size: 16px;
   width: 100%;
-  border: 1px solid var(--clr-gray-200);
+  /* border: 1px solid var(--clr-gray-200); */
   background: transparent;
-  border-top: none;
+  border-top: 1px solid var(--clr-gray-200);
   padding: 12px 0;
-  border-radius: 0 0 7px 7px;
+  border: none;
   cursor: pointer;
+  border-top: 1px solid var(--clr-gray-200);
   img {
     width: 14px;
   }
@@ -686,8 +690,8 @@ const AddBtn = styled.button`
   border-style: dotted;
   border-radius: 7px;
   cursor: pointer;
-  margin-bottom: 30px;
-  margin-top: 6px;
+  margin: 16px 0;
+  /* margin-top: 6px; */
 `;
 const ViewProgressBtn = styled.button`
   background: var(--bg-primary);
