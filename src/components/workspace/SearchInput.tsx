@@ -30,6 +30,7 @@ const SearchInput = ({
           "& fieldset.MuiOutlinedInput-notchedOutline": {
             borderColor: "var(--clr-gray-300)",
             borderRadius: "6px",
+            backgroundColor: "#fff",
           },
           "& .MuiInputBase-input": {
             height: "23px",

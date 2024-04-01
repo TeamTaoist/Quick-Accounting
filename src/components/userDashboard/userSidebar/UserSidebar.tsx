@@ -38,27 +38,29 @@ const UserSidebar = () => {
   return (
     <UserSidebarSection hideSidebar={hideSidebar}>
       {/* user address */}
-      <Address hideSidebar={hideSidebar}>
-        {!hideSidebar && (
-          <h5>
-            {address &&
-              chainId &&
-              formatAddressToDomain(address, chainId, false)}
-          </h5>
-        )}
+      <AuthDetails>
+        <Address hideSidebar={hideSidebar}>
+          {!hideSidebar && (
+            <h5>
+              {address &&
+                chainId &&
+                formatAddressToDomain(address, chainId, false)}
+            </h5>
+          )}
 
-        <img
-          onClick={handleSidebar}
-          className="arrow-icon"
-          src={arrow}
-          alt=""
-        />
-      </Address>
-      {!hideSidebar && (
-        <Disconnect>
-          <button onClick={handleLogout}>{t("user.Disconnect")}</button>
-        </Disconnect>
-      )}
+          <img
+            onClick={handleSidebar}
+            className="arrow-icon"
+            src={arrow}
+            alt=""
+          />
+        </Address>
+        {!hideSidebar && (
+          <Disconnect>
+            <button onClick={handleLogout}>{t("user.Disconnect")}</button>
+          </Disconnect>
+        )}
+      </AuthDetails>
 
       {/* user payment request */}
       <SidebarLinkList hideSidebar={hideSidebar}>
@@ -107,8 +109,13 @@ const UserSidebarSection = styled.div<SidebarProps>`
   -ms-overflow-style: none;
   scrollbar-width: none;
 `;
+const AuthDetails = styled.div`
+  background-color: var(--clr-gray-100);
+  padding: 12px;
+  border-radius: 6px;
+  height: 80px;
+`;
 const Address = styled.div<SidebarProps>`
-  margin-top: 6px;
   display: flex;
   /* justify-content: space-between; */
   align-items: center;
@@ -123,28 +130,29 @@ const Address = styled.div<SidebarProps>`
   h5 {
     font-size: 16px;
     overflow: hidden;
+    font-weight: 500;
     &:hover {
-      color: var(--clr-gray-600);
+      color: var(--clr-primary-900);
     }
   }
 `;
 const Disconnect = styled.div`
   overflow: hidden;
-  margin: 16px 0;
+  margin-top: 6px;
   button {
     border: 1px solid var(--clr-gray-300);
     outline: none;
-    background: transparent;
-    font-size: 14px;
+    background: var(--clr-white);
+    font-size: 12px;
     font-weight: 500;
-    height: 40px;
+    height: 24px;
+    width: 89px;
     border-radius: 6px;
     cursor: pointer;
-    width: 100%;
   }
 `;
 const SidebarLinkList = styled.div<SidebarProps>`
-  margin-top: ${({ hideSidebar }) => (hideSidebar ? "38px" : "26px")};
+  margin-top: ${({ hideSidebar }) => (hideSidebar ? "38px" : "16px")};
 `;
 export const BuildVersion = styled.div`
   position: fixed;

@@ -1,6 +1,8 @@
 import {
+  ArrowImg,
   PaymentRequest,
   RequestBtn,
+  SafeAddress,
   SidebarContainer,
   SidebarLinkList,
   WorkspaceInfo,
@@ -144,7 +146,12 @@ const WorkspaceSidebar = () => {
             </div>
           )}
           {/* arrow btn for hide the sidebar */}
-          <img onClick={handleSidebar} src={arrow} alt="" />
+          <ArrowImg
+            hideSidebar={hideSidebar}
+            onClick={handleSidebar}
+            src={arrow}
+            alt=""
+          />
         </WorkspaceInfo>
         {/* payment request btn and share btn */}
         <PaymentRequest>
@@ -219,12 +226,3 @@ const WorkspaceSidebar = () => {
 };
 
 export default WorkspaceSidebar;
-
-const SafeAddress = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  img {
-    width: 18px;
-  }
-`;

@@ -122,7 +122,7 @@ const UserPaymentRequest = () => {
 export default UserPaymentRequest;
 
 const UserPaymentContainer = styled.div`
-  padding: 30px;
+  padding: 24px;
   flex: 1;
 `;
 const PaymentLIst = styled.div`

@@ -31,7 +31,7 @@ const SingleWorkspace = ({ workspace }: SingleWorkspaceProps) => {
         )}
         <ChainLogo src={getChainLogo(workspace.chain_id)} alt="" />
       </Logo>
-      <h5>{workspace.name}</h5>
+      <h6>{workspace.name}</h6>
       <p>{getShortAddress(workspace.vault_wallet)}</p>
     </SingleWorkspaceSection>
   );
@@ -51,9 +51,10 @@ const SingleWorkspaceSection = styled.div`
   border-radius: 6px;
   padding: 16px;
   cursor: pointer;
-  h5 {
+  background-color: #fff;
+  h6 {
     font-size: 16px;
-    font-weight: 700px;
+    font-weight: 500;
     color: var(--clr-primary-900);
     padding-top: 6px;
     padding-bottom: 4px;
@@ -61,6 +62,7 @@ const SingleWorkspaceSection = styled.div`
   p {
     font-size: 14px;
     font-weight: 400;
+    color: var(--clr-gray-600);
   }
 `;
 const Logo = styled.div`

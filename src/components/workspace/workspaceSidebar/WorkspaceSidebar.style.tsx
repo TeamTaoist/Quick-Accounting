@@ -23,25 +23,48 @@ export const WorkspaceInfo = styled.div<SidebarProps>`
   display: flex;
   justify-content: ${({ hideSidebar }) =>
     hideSidebar ? "center" : "space-between"};
-  align-items: center;
-  img {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-    transform: ${({ hideSidebar }) => hideSidebar && "rotate(180deg)"};
-  }
+  /* align-items: center; */
+  background-color: var(--clr-gray-100);
+  padding: 12px;
+  border-radius: 6px;
+  height: ${({ hideSidebar }) => (hideSidebar ? "" : "80")};
+  /* img {
+
+    /* padding-top: 10px; */
+
   h5 {
     font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 8px;
+    font-weight: 500;
+    margin-bottom: 12px;
   }
-  p {
+  /* p {
     font-size: 14px;
     color: var(--clr-gray-500);
+  } */
+`;
+export const ArrowImg = styled.img<SidebarProps>`
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transform: ${({ hideSidebar }) => hideSidebar && "rotate(180deg)"};
+  /* margin-top: 2px; */
+`;
+export const SafeAddress = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fff;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: var(--clr-gray-600);
+  img {
+    width: 12px;
+    height: 12px;
   }
 `;
 export const PaymentRequest = styled.div`
-  margin-top: 30px;
+  margin-top: 20px;
   width: 100%;
 `;
 export const RequestBtn = styled.button<SidebarProps>`

@@ -28,4 +28,5 @@ const Details = styled.div`
   overflow-y: auto;
   overflow-x: auto;
   max-height: 100vh;
+  background: var(--clr-gray-50);
 `;

@@ -33,6 +33,8 @@ const UserPaymentTable = ({
         maxHeight: "100%",
         overflow: "auto",
         minWidth: "1136px",
+        backgroundColor: "#fff",
+
         "&::-webkit-scrollbar": {
           display: "none",
         },

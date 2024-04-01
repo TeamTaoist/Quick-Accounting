@@ -28,7 +28,7 @@ const WorkspaceList = () => {
 export default WorkspaceList;
 
 const WorkspaceListContainer = styled.div`
-  padding: 30px;
+  padding: 24px;
   width: 1136px;
 `;
 const Workspaces = styled.div`
@@ -51,6 +51,7 @@ const CreateWorkspaceBtn = styled.div`
   border-radius: 6px;
   cursor: pointer;
   color: var(--clr-primary-900);
+  background-color: #fff;
   p {
     font-size: 16px;
     font-weight: 400;
