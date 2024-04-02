@@ -22,11 +22,14 @@ export const EmptyAsset = styled.div`
 export const EmptyAssetBtn = styled.button`
   border: none;
   outline: none;
-  background: transparent;
+  background: var(--clr-white);
+  width: 165px;
+  height: 32px;
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 6px;
-  padding: 8px 18px;
+  padding: 8px 16px;
   border-radius: 6px;
   margin-top: 14px;
   color: var(--clr-gray-600);
@@ -43,10 +46,19 @@ export const AssetHeader = styled.div`
   /* margin-bottom: 40px; */
 `;
 export const AssetValue = styled.h3`
-  font-size: 20px;
-  font-weight: 600;
-  margin-top: 24px;
-  margin-bottom: 16px;
+  margin-top: 8px;
+  margin-bottom: 18px;
+  text-align: center;
+  h3 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  p {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--clr-gray-400);
+    margin-top: 6px;
+  }
 `;
 export const AssetTable = styled.div`
   -ms-overflow-style: none;

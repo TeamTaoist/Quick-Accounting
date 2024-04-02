@@ -33,7 +33,7 @@ import SearchInput from "../SearchInput";
 import FilterCategorySelect from "../FilterCategorySelect";
 import back from "../../../assets/workspace/back.svg";
 import Button from "../../button";
-import { Cell, HeaderCell } from "../../table";
+import { Cell, HeaderCell, TableContainerSection } from "../../table";
 
 interface RejectDataTableProps {
   searchTerm?: string | undefined;
@@ -185,20 +185,7 @@ const RejectPaymentRequestTable = ({
         </Button>
       </RejectHeader>
       <TableSection>
-        <TableContainer
-          sx={{
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-            maxHeight: "100%",
-            overflow: "auto",
-            minWidth: "1100px",
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            "-ms-overflow-style": "none",
-            scrollbarWidth: "none",
-          }}
-        >
+        <TableContainerSection>
           <Table stickyHeader size="small">
             <TableHead>
               <TableRow>
@@ -267,7 +254,7 @@ const RejectPaymentRequestTable = ({
               ))}
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainerSection>
         {total > 10 && (
           <PaymentPagination>
             <Pagination

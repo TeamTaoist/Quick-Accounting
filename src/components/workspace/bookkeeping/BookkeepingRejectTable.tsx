@@ -39,7 +39,7 @@ import { getPaymentUpdateTime } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
 import SearchInput from "../SearchInput";
 import FilterCategorySelect from "../FilterCategorySelect";
-import { Cell, HeaderCell } from "../../table";
+import { Cell, HeaderCell, TableContainerSection } from "../../table";
 interface RejectTableProps {
   workspaceId: number;
   paymentRequest: boolean;
@@ -194,20 +194,7 @@ const BookkeepingRejectTable = ({
       {bookkeepingHiddenList.length > 0 && (
         <>
           <TableSection>
-            <TableContainer
-              sx={{
-                border: "1px solid var(--clr-gray-200)",
-                borderRadius: "6px",
-                maxHeight: "100%",
-                overflow: "auto",
-                minWidth: "1100px",
-                "&::-webkit-scrollbar": {
-                  display: "none",
-                },
-                "-ms-overflow-style": "none",
-                scrollbarWidth: "none",
-              }}
-            >
+            <TableContainerSection>
               <Table>
                 <TableHead>
                   <TableRow>
@@ -311,7 +298,7 @@ const BookkeepingRejectTable = ({
                   ))}
                 </TableBody>
               </Table>
-            </TableContainer>
+            </TableContainerSection>
             {/* pagination */}
             {totalItem > 10 && (
               <PaymentPagination>

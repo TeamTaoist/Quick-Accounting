@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import add from "../../../assets/workspace/add.svg";
 import archive from "../../../assets/workspace/archive.svg";
 import edit from "../../../assets/workspace/edit.svg";
-import property1 from "../../../assets/workspace/property1.svg";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -20,7 +19,6 @@ import {
   CategoryTitle,
   CreateBtn,
   CreateCategory,
-  CreateCategoryBtn,
   CreateOptionButton,
   Details,
   Header,
@@ -30,7 +28,6 @@ import {
   OptionCreateButtons,
   Options,
   PropertyBtns,
-  PropertyCreateButtons,
   PropertyOption,
   PropertyOptions,
   PropertyTitle,
@@ -68,16 +65,12 @@ const Category = () => {
   const {
     getWorkspaceCategories,
     createWorkspaceCategory,
-    updateCategoryName,
     updateCategoryArchive,
   } = useCategory();
 
   const {
     getWorkspaceCategoryProperties,
     workspaceCategoryProperties,
-    createWorkspaceCategoryProperties,
-    categoryProperty,
-    updateWorkspaceCategoryProperties,
     archiveWorkspaceCategoryProperties,
     getCategoryPropertyByCategoryId,
     editCategoryNameAndProperties,

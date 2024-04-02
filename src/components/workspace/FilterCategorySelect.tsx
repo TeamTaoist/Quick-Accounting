@@ -66,10 +66,12 @@ const FilterCategorySelect = ({
         sx={{
           minWidth: "100%",
           height: "40px",
+          backgroundColor: "var(--clr-white)",
           // margin: "4px",
           paddingInline: "1px",
           "& .MuiSelect-select": {
             display: "block",
+            fontSize: "14px",
           },
           "&.MuiOutlinedInput-root": {
             border: "1px solid var(--clr-gray-200)",

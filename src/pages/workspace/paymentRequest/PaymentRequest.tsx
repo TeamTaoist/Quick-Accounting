@@ -42,7 +42,7 @@ import FilterCategorySelect from "../../../components/workspace/FilterCategorySe
 import ActionButton from "../../../components/workspace/paymentRequest/ActionButton";
 import { CheckBoxStyle } from "../../../components/workspace/category/CategoryArchivedList";
 import Button from "../../../components/button";
-import { HeaderCell } from "../../../components/table";
+import { HeaderCell, TableContainerSection } from "../../../components/table";
 import checkedActiveIcon from "../../../assets/checkbox-active.svg";
 import checkboxIcon from "../../../assets/checkbox.svg";
 import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
@@ -303,7 +303,7 @@ const PaymentRequest = () => {
               <Button
                 onClick={handleRejectedPayments}
                 icon={reject}
-                bg="#F8FAFC"
+                bg="#e2e8f0"
               >
                 {t("paymentRequest.ViewRejection")}
               </Button>
@@ -316,21 +316,7 @@ const PaymentRequest = () => {
 
               <TableSection>
                 {/* table */}
-                <TableContainer
-                  sx={{
-                    border: "1px solid var(--clr-gray-200)",
-                    borderRadius: "6px",
-                    // maxHeight: "100%",
-                    overflow: "auto",
-                    minWidth: "1100px",
-                    "&::-webkit-scrollbar": {
-                      display: "none",
-                    },
-                    "-ms-overflow-style": "none",
-                    scrollbarWidth: "none",
-                    // fontFamily: "Inter",
-                  }}
-                >
+                <TableContainerSection>
                   <Table size="small">
                     <TableHead>
                       <TableRow>
@@ -377,7 +363,7 @@ const PaymentRequest = () => {
                       </TableBody>
                     )}
                   </Table>
-                </TableContainer>
+                </TableContainerSection>
                 {/* no search result msg */}
 
                 {filterData.length === 0 && (

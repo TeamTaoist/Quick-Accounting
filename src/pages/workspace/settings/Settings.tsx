@@ -199,6 +199,7 @@ const MultiSigner = styled.div`
   }
   p {
     font-size: 14px;
+    font-weight: 400;
     color: var(--clr-gray-600);
     margin-bottom: 8px;
   }

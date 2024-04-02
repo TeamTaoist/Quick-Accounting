@@ -20,7 +20,7 @@ const Button = ({ icon, children, bg, width, onClick }: ButtonProps) => {
 export default Button;
 
 export const Btn = styled.button<any>`
-  background: ${(props) => props.bg || "transparent"};
+  background: ${(props) => props.bg || "var(--clr-white)"};
   outline: none;
   border: ${(props) => (props.bg ? "none" : "1px solid var(--clr-gray-300)")};
   padding: 8px 16px;

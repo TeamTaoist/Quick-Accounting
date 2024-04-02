@@ -30,10 +30,13 @@ const SearchInput = ({
           "& fieldset.MuiOutlinedInput-notchedOutline": {
             borderColor: "var(--clr-gray-300)",
             borderRadius: "6px",
-            backgroundColor: "#fff",
           },
           "& .MuiInputBase-input": {
             height: "23px",
+            backgroundColor: "#fff",
+          },
+          "& .css-u104dj-MuiInputBase-root-MuiOutlinedInput-root": {
+            background: "#fff",
           },
         }}
         size="small"

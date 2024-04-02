@@ -30,6 +30,7 @@ const MyPaymentTable = ({
         maxHeight: "100%",
         overflow: "auto",
         minWidth: "1100px",
+        backgroundColor: "var(--clr-white)",
         "&::-webkit-scrollbar": {
           display: "none",
         },

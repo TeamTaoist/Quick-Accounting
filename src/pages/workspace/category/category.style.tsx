@@ -29,7 +29,7 @@ export const CreateOptionButton = styled.div`
   margin-bottom: 24px;
 `;
 export const CreateBtn = styled.button<any>`
-  background: ${(props) => props.bg || "transparent"};
+  background: ${(props) => props.bg || "var(--clr-white)"};
   outline: none;
   border: 1px solid var(--clr-gray-300);
   padding: 8px 16px;

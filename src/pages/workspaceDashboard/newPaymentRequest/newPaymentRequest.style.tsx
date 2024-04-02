@@ -116,7 +116,7 @@ export const WorkspaceDetails = styled.div`
   }
   p {
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--clr-gray-500);
   }
 `;
@@ -173,13 +173,12 @@ export const NoteHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
-  background: var(--clr-gray-100);
+  background: var(--clr-gray-200);
   border-top: 1px solid var(--clr-gray-200);
   height: 56px;
   h3 {
     font-size: 14px;
     font-weight: 500;
-    color: #475569;
   }
   .note {
     padding-bottom: 8px;

@@ -4,39 +4,24 @@ import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItem
 import { useEffect, useState } from "react";
 import {
   FormControl,
-  InputAdornment,
-  MenuItem,
-  Select,
   SelectChangeEvent,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
 } from "@mui/material";
 
-import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
-import multiSelect from "../../../assets/workspace/multi-select.svg";
-import selectIcon from "../../../assets/workspace/select.svg";
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
-import optionsIcon from "../../../assets/workspace/option.svg";
-import linkIcon from "../../../assets/workspace/link-icon.svg";
 import transferArrow from "../../../assets/workspace/transfer-arrow.svg";
 import {
-  DeleteIcon,
   Image,
   NoteHeader,
   NoteInfo,
   NoteInformation,
-  RequestSubmit,
 } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
-
-import ReactSelect from "../../../components/ReactSelect";
-import data from "../../../data/tableData";
 import usePaymentsStore from "../../../store/usePayments";
 import { useLoading } from "../../../store/useLoading";
 import CHAINS from "../../../utils/chain";
@@ -52,12 +37,10 @@ import PaymentRequestCategoryProperties from "../../../components/paymentRequest
 import { formatTimestamp } from "../../../utils/time";
 import {
   Status,
-  StatusBtn,
   SubmissionTime,
 } from "../paymentRequest/PaymentRequestDetails";
 import { getPaymentStatus } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
-import UpdateLoading from "../../../components/UpdateLoading";
 import { Cell, HeaderCell } from "../../../components/table";
 import CategoryDropdown from "../../../components/categoryDropdown";
 
@@ -374,18 +357,10 @@ const BookkeepingTransferDetails = ({
             <Table>
               <TableHead>
                 <TableRow>
-                  <HeaderCell width="160px" fontSize="16px">
-                    Safe
-                  </HeaderCell>
-                  <HeaderCell width="160px" fontSize="16px">
-                    Counterparty
-                  </HeaderCell>
-                  <HeaderCell width="200px" fontSize="16px">
-                    Amount
-                  </HeaderCell>
-                  <HeaderCell width="200px" fontSize="16px">
-                    Currency
-                  </HeaderCell>
+                  <HeaderCell width="160px">Safe</HeaderCell>
+                  <HeaderCell width="160px">Counterparty</HeaderCell>
+                  <HeaderCell width="200px">Amount</HeaderCell>
+                  <HeaderCell width="200px">Currency</HeaderCell>
                 </TableRow>
               </TableHead>
               <TableBody>

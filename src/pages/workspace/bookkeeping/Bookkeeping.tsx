@@ -293,7 +293,7 @@ const Bookkeeping = () => {
                 {paymentRequest && (
                   <Button
                     icon={view}
-                    bg="#F8FAFC"
+                    bg="#e2e8f0"
                     // width="174px"
                     onClick={handleViewHiddenList}
                   >

@@ -1,4 +1,4 @@
-import { TableCell, TableCellProps } from "@mui/material";
+import { TableCell, TableCellProps, TableContainer } from "@mui/material";
 
 interface CustomTableCellProps extends TableCellProps {
   width?: string;
@@ -13,9 +13,9 @@ export const HeaderCell = ({
 }: CustomTableCellProps) => (
   <TableCell
     sx={{
-      background: "var(--clr-gray-100)",
+      background: "var(--clr-gray-200)",
       fontWeight: "500",
-      color: "#475569",
+      color: "var(--clr-primary-900)",
       height: "56px",
       padding: 0,
       paddingInline: 2,
@@ -45,4 +45,24 @@ export const Cell = ({ children, width, ...props }: CustomTableCellProps) => (
   >
     {children}
   </TableCell>
+);
+
+export const TableContainerSection = ({ children }: CustomTableCellProps) => (
+  <TableContainer
+    sx={{
+      border: "1px solid var(--clr-gray-200)",
+      borderRadius: "6px",
+      maxHeight: "100%",
+      overflow: "auto",
+      minWidth: "1100px",
+      backgroundColor: "var(--clr-white)",
+      "&::-webkit-scrollbar": {
+        display: "none",
+      },
+      "-ms-overflow-style": "none",
+      scrollbarWidth: "none",
+    }}
+  >
+    {children}
+  </TableContainer>
 );

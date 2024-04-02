@@ -28,7 +28,11 @@ import { useWorkspace } from "../../../store/useWorkspace";
 import CHAINS from "../../../utils/chain";
 import styled from "@emotion/styled";
 import Pagination from "../../../components/Pagination";
-import { Cell, HeaderCell } from "../../../components/table";
+import {
+  Cell,
+  HeaderCell,
+  TableContainerSection,
+} from "../../../components/table";
 
 type AssetType = {
   name: string;
@@ -110,7 +114,6 @@ const Assets = () => {
       .filter((data) =>
         data.name.toLowerCase().includes(searchTerm.toLowerCase())
       ) || [];
-
   //switch style
   const AssetsSwitch = styled(Switch)(() => ({
     padding: 7,
@@ -198,6 +201,10 @@ const Assets = () => {
                 },
                 "& .MuiInputBase-input": {
                   height: "19px",
+                  backgroundColor: "#fff",
+                },
+                "& .css-u104dj-MuiInputBase-root-MuiOutlinedInput-root": {
+                  background: "#fff",
                 },
               }}
               InputProps={{
@@ -209,22 +216,12 @@ const Assets = () => {
               }}
             />
           </AssetHeader>
-          <AssetValue>Value: ${totalAssetsValue}</AssetValue>
+          <AssetValue>
+            <h3>${totalAssetsValue}</h3>
+            <p>Total value</p>
+          </AssetValue>
           <AssetTable>
-            <TableContainer
-              sx={{
-                border: "1px solid var(--clr-gray-200)",
-                borderRadius: "6px",
-                maxHeight: "100%",
-                overflow: "auto",
-                minWidth: "1100px",
-                "&::-webkit-scrollbar": {
-                  display: "none",
-                },
-                "-ms-overflow-style": "none",
-                scrollbarWidth: "none",
-              }}
-            >
+            <TableContainerSection>
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
@@ -329,7 +326,7 @@ const Assets = () => {
                   ))}
                 </TableBody>
               </Table>
-            </TableContainer>
+            </TableContainerSection>
           </AssetTable>
         </>
       )}

@@ -25,7 +25,7 @@ import { formatNumber } from "../../../utils/number";
 import { CategoryCell } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
 import { getPaymentUpdateTime } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
-import { Cell, HeaderCell } from "../../table";
+import { Cell, HeaderCell, TableContainerSection } from "../../table";
 import { CheckBoxStyle } from "../category/CategoryArchivedList";
 
 interface BookkeepingTableProps {
@@ -69,20 +69,7 @@ const BookkeepingTable = ({
   };
 
   return (
-    <TableContainer
-      sx={{
-        border: "1px solid var(--clr-gray-200)",
-        borderRadius: "6px",
-        maxHeight: "100%",
-        overflow: "auto",
-        minWidth: "1100px",
-        "&::-webkit-scrollbar": {
-          display: "none",
-        },
-        "-ms-overflow-style": "none",
-        scrollbarWidth: "none",
-      }}
-    >
+    <TableContainerSection>
       <Table stickyHeader>
         <TableHead
           style={{ background: "var(--clr-gray-200)", height: "55px" }}
@@ -177,7 +164,7 @@ const BookkeepingTable = ({
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </TableContainerSection>
   );
 };
 
