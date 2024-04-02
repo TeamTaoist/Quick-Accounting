@@ -228,7 +228,7 @@ export const RequestSubmit = styled.button`
 export const PaymentRequestInput = styled.input`
   border: 1px solid var(--clr-gray-200);
   outline: none;
-  padding: 10px 14px;
+  padding: 10px 16px;
   border-radius: 6px;
   margin: 4px 0;
   height: 40px;
@@ -242,7 +242,7 @@ export const PaymentRequestInput = styled.input`
 export const PaymentRequestDateInput = styled.input<any>`
   border: 1px solid var(--clr-gray-200);
   outline: none;
-  padding: 10px 14px;
+  padding: 10px 16px;
   border-radius: 6px;
   font-size: 14px;
   margin: 4px 0;

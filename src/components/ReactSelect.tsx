@@ -37,6 +37,9 @@ export const customStyles: any = {
     color: "#0F172A",
     fontSize: "14px",
     fontFamily: "Inter",
+    margin: "4px",
+    maxWidth: "calc(100% - 16px)",
+    borderRadius: "6px",
   }),
   singleValue: (provided: any) => ({
     ...provided,
