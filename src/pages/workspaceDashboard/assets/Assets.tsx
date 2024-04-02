@@ -114,35 +114,6 @@ const Assets = () => {
       .filter((data) =>
         data.name.toLowerCase().includes(searchTerm.toLowerCase())
       ) || [];
-  //switch style
-  const AssetsSwitch = styled(Switch)(() => ({
-    padding: 7,
-    "& .MuiSwitch-track": {
-      // borderRadius: 22 / 2,
-      borderRadius: "20px",
-    },
-    "& .MuiSwitch-thumb": {
-      boxShadow: "none",
-      width: 20,
-      height: 20,
-      // margin: 2,
-    },
-    "& .css-1yjjitx-MuiSwitch-track": {
-      background: "var(--clr-gray-300)",
-      opacity: 1,
-    },
-    "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track":
-      {
-        background: "#111",
-        opacity: 1,
-      },
-    "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase": {
-      color: "white",
-    },
-    "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked": {
-      color: "white",
-    },
-  }));
 
   // const [checked, setChecked] = useState(false);
   const handleAsset = async (event: any, data: AssetType) => {
@@ -269,31 +240,44 @@ const Assets = () => {
                             onChange={(e) => handleAsset(e, data)}
                             sx={{
                               padding: 1,
+                              "& .MuiSwitch-switchBase": {
+                                transitionDuration: "300ms",
+                                "&.Mui-checked": {
+                                  transform: "translateX(16px)",
+                                  color: "#fff",
+                                  width: "44px",
+                                  "& + .MuiSwitch-track": {
+                                    backgroundColor: "var(--clr-primary-900)",
+                                    width: "100%",
+                                    opacity: 1,
+                                    border: 0,
+                                    borderRadius: "20px",
+                                  },
+                                  "&.Mui-disabled + .MuiSwitch-track": {
+                                    opacity: 0.5,
+                                  },
+                                },
+                                "&.Mui-focusVisible .MuiSwitch-thumb": {
+                                  color: "var(--clr-gray-200)",
+                                },
+                                "&.Mui-disabled .MuiSwitch-thumb": {
+                                  color: "var(--clr-gray-200)",
+                                },
+                                "&.Mui-disabled + .MuiSwitch-track": {
+                                  opacity: 0.7,
+                                },
+                              },
                               "& .MuiSwitch-track": {
                                 borderRadius: "20px",
+                                width: "44px",
+                                opacity: 1,
+                                backgroundColor: "var(--clr-gray-200)",
                               },
                               "& .MuiSwitch-thumb": {
                                 boxShadow: "none",
                                 width: 20,
                                 height: 20,
                               },
-                              "& .css-1yjjitx-MuiSwitch-track": {
-                                background: "var(--clr-gray-300)",
-                                opacity: 1,
-                              },
-                              "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track":
-                                {
-                                  backgroundColor: "#0F172A",
-                                  opacity: 1,
-                                },
-                              "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase":
-                                {
-                                  color: "white",
-                                },
-                              "& .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked":
-                                {
-                                  color: "white",
-                                },
                             }}
                           />
                         </RowCell>

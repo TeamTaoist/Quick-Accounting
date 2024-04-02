@@ -77,7 +77,7 @@ const QueueFailedTable = ({
       <BackBtn>
         <Button
           icon={back}
-          bg="#F8FAFC"
+          bg="#e2e8f0"
           onClick={() => setPaymentRequest(!paymentRequest)}
         >
           Back
