@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 export const AssetSection = styled.div`
-  padding: 30px;
+  padding: 24px;
 `;
 export const EmptyAsset = styled.div`
   display: flex;

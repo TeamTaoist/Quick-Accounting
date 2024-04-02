@@ -106,7 +106,7 @@ const Queue = () => {
               {paymentRequest && (
                 <Button
                   icon={failedIcon}
-                  bg="#F8FAFC"
+                  bg="#e2e8f0"
                   onClick={() => setPaymentRequest(!paymentRequest)}
                 >
                   {t("queue.ViewFailed")}
@@ -158,8 +158,7 @@ const QueueContainer = styled.div`
 `;
 
 const QueueSection = styled.div`
-  padding-top: 40px;
-  margin-inline: 40px;
+  padding: 24px;
 `;
 const QueHeader = styled.div`
   display: flex;

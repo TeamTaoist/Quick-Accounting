@@ -137,7 +137,7 @@ const Settings = () => {
 export default Settings;
 
 const SettingsContainer = styled.div`
-  padding: 30px;
+  padding: 24px;
 `;
 const WorkspaceForm = styled.form`
   width: 600px;

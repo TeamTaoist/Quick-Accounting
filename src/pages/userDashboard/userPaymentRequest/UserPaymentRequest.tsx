@@ -126,7 +126,7 @@ const UserPaymentContainer = styled.div`
   flex: 1;
 `;
 const PaymentLIst = styled.div`
-  margin-top: 20px;
+  margin-top: 16px;
 `;
 export const Details = styled.div`
   display: flex;

@@ -101,11 +101,11 @@ const MyPayment = () => {
 export default MyPayment;
 
 const UserPaymentContainer = styled.div`
-  padding: 30px;
+  padding: 24px;
   flex: 1;
 `;
 const PaymentLIst = styled.div`
-  margin-top: 20px;
+  margin-top: 16px;
 `;
 export const Details = styled.div`
   display: flex;

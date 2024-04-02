@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 export const CreateCategory = styled.div`
-  padding: 30px;
+  padding: 24px;
   min-width: 700px;
 `;
 export const CategoryTitle = styled.div`
@@ -26,7 +26,7 @@ export const CreateOptionButton = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 `;
 export const CreateBtn = styled.button<any>`
   background: ${(props) => props.bg || "var(--clr-white)"};

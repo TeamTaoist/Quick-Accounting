@@ -4,7 +4,7 @@ export const PaymentRequestContainer = styled.div`
   /* padding-top: 3%;
   margin-inline: 40px; */
   /* height: 90vh; */
-  padding: 40px;
+  padding: 24px;
 `;
 export const Header = styled.div`
   display: flex;
@@ -73,7 +73,7 @@ export const TableSection = styled.div`
   height: 100%;
   height: 70vh;
   width: 100%;
-  margin-top: 30px;
+  margin-top: 16px;
 `;
 export const PaymentPagination = styled.div`
   padding: 20px 0;
