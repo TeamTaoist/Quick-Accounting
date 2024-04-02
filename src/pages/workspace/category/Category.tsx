@@ -520,11 +520,7 @@ const Category = () => {
                     id="panel1a-header"
                     sx={{
                       fontFamily: "Inter",
-                      // borderRadius: expandedCategories.includes(category.ID)
-                      //   ? "6px 6px 0 0"
-                      //   : "6px",
-                      backgroundColor: "var(--clr-gray-100)",
-                      // border: "1px solid var(--clr-gray-200)",
+                      backgroundColor: "var(--clr-gray-200)",
                       height: "56px",
                       "&:before": {
                         borderRadius: "6px",

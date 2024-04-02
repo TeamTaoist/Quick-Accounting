@@ -357,10 +357,18 @@ const BookkeepingTransferDetails = ({
             <Table>
               <TableHead>
                 <TableRow>
-                  <HeaderCell width="160px">Safe</HeaderCell>
-                  <HeaderCell width="160px">Counterparty</HeaderCell>
-                  <HeaderCell width="200px">Amount</HeaderCell>
-                  <HeaderCell width="200px">Currency</HeaderCell>
+                  <HeaderCell width="160px" color="#0f172a">
+                    Safe
+                  </HeaderCell>
+                  <HeaderCell width="160px" color="#0f172a">
+                    Counterparty
+                  </HeaderCell>
+                  <HeaderCell width="200px" color="#0f172a">
+                    Amount
+                  </HeaderCell>
+                  <HeaderCell width="200px" color="#0f172a">
+                    Currency
+                  </HeaderCell>
                 </TableRow>
               </TableHead>
               <TableBody>

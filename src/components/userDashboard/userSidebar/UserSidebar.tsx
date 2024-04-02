@@ -38,7 +38,7 @@ const UserSidebar = () => {
   return (
     <UserSidebarSection hideSidebar={hideSidebar}>
       {/* user address */}
-      <AuthDetails>
+      <AuthDetails hideSidebar={hideSidebar}>
         <Address hideSidebar={hideSidebar}>
           {!hideSidebar && (
             <h5>
@@ -100,20 +100,17 @@ const UserSidebarSection = styled.div<SidebarProps>`
   position: relative;
   padding: 23.5px;
   transition: width 0.3s ease-in-out;
-  /* display: flex;
-  flex-direction: column;
-  align-items: center; */
   &::-webkit-scrollbar {
     display: none;
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
 `;
-const AuthDetails = styled.div`
+const AuthDetails = styled.div<SidebarProps>`
   background-color: var(--clr-gray-100);
   padding: 12px;
   border-radius: 6px;
-  height: 80px;
+  height: ${({ hideSidebar }) => (hideSidebar ? "" : "80")};
 `;
 const Address = styled.div<SidebarProps>`
   display: flex;
@@ -157,5 +154,5 @@ const SidebarLinkList = styled.div<SidebarProps>`
 export const BuildVersion = styled.div`
   position: fixed;
   bottom: 20px;
-  left: 10px;
+  left: 22px;
 `;

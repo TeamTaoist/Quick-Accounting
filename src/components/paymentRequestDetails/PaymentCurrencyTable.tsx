@@ -27,9 +27,15 @@ const PaymentCurrencyTable = () => {
     <Table aria-label="simple table">
       <TableHead>
         <TableRow>
-          <HeaderCell width="280px">Recipient</HeaderCell>
-          <HeaderCell width="220px">Amount</HeaderCell>
-          <HeaderCell width="220px">Currency</HeaderCell>
+          <HeaderCell width="280px" color="#0f172a">
+            Recipient
+          </HeaderCell>
+          <HeaderCell width="220px" color="#0f172a">
+            Amount
+          </HeaderCell>
+          <HeaderCell width="220px" color="#0f172a">
+            Currency
+          </HeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>

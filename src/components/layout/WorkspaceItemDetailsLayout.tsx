@@ -35,7 +35,7 @@ const WorkspaceItemDetailsLayout = ({
         <RequestHeader>
           <HeaderTitle>
             <div>
-              <h1>New payment request</h1>
+              <h1>{title}</h1>
               <p>{subtitle}</p>
             </div>
             <img onClick={() => setOpen(false)} src={cancel} alt="" />
@@ -88,7 +88,7 @@ export const Request = styled.div`
 `;
 export const RequestHeader = styled.div`
   height: 126px;
-  background: var(--clr-gray-100);
+  background: var(--clr-gray-200);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -137,7 +137,7 @@ export const WorkspaceLogo = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--clr-gray-200);
+  background: var(--clr-gray-300);
   cursor: pointer;
   display: flex;
   justify-content: center;

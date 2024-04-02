@@ -79,7 +79,7 @@ export const PaymentPagination = styled.div`
   padding: 20px 0;
 `;
 export const CategoryCell = styled.div`
-  background: var(--clr-gray-100);
+  background: var(--clr-gray-200);
   padding: 2px 10px;
   height: 40px;
   font-size: 14px;

@@ -434,24 +434,6 @@ const ShareWorkspacePaymentRequest = () => {
       <Header>
         <SharePaymentContainer>
           <SharePaymentForm>
-            {/* <ShareHeader>
-              <h3>New payment request</h3>
-              {workspace && (
-                <WorkspaceInfo>
-                  <WorkspaceLogo>
-                    {workspace.avatar === "" ? (
-                      <p>{workspace?.name?.slice(0, 1)}</p>
-                    ) : (
-                      <img src={workspace.avatar} alt={workspace.name} />
-                    )}
-                  </WorkspaceLogo>
-                  <WorkspaceDetails>
-                    <h6>{workspace?.name}</h6>
-                    <p>{workspace.vault_wallet}</p>
-                  </WorkspaceDetails>
-                </WorkspaceInfo>
-              )}
-            </ShareHeader> */}
             <RequestHeader>
               <HeaderTitle>
                 <h1>New payment request</h1>
@@ -588,7 +570,7 @@ const SharePaymentForm = styled.div`
 `;
 export const RequestHeader = styled.div`
   height: 126px;
-  background: var(--clr-gray-100);
+  background: var(--clr-gray-200);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -641,7 +623,7 @@ export const WorkspaceLogo = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--clr-gray-200);
+  background: var(--clr-gray-300);
   cursor: pointer;
   display: flex;
   justify-content: center;

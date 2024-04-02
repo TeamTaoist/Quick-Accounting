@@ -26,6 +26,7 @@ import { getShortAddress } from "../../../utils";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
 import {
+  CategoryCell,
   Filter,
   Header,
   Image,
@@ -40,6 +41,7 @@ import { useDomainStore } from "../../../store/useDomain";
 import SearchInput from "../SearchInput";
 import FilterCategorySelect from "../FilterCategorySelect";
 import { Cell, HeaderCell, TableContainerSection } from "../../table";
+import Button from "../../button";
 interface RejectTableProps {
   workspaceId: number;
   paymentRequest: boolean;
@@ -175,18 +177,20 @@ const BookkeepingRejectTable = ({
               uniqueCategoryNames={uniqueCategoryNames}
             />
             <UnhideBtn>
-              <Btn onClick={handleUnHideBookkeepingList}>
-                <img src={hide} alt="" />
+              <Button
+                icon={hide}
+                width="104px"
+                onClick={handleUnHideBookkeepingList}
+              >
                 <p>Unhide</p>
-              </Btn>
+              </Button>
             </UnhideBtn>
           </Filter>
           <ViewReject>
             {bookkeepingHiddenList.length > 0 && !paymentRequest && (
-              <div onClick={handleBackBtn}>
-                <Image src={back} alt="" />
+              <Button icon={back} bg="#e2e8f0" onClick={handleBackBtn}>
                 <p>{t("paymentRequest.Back")}</p>
-              </div>
+              </Button>
             )}
           </ViewReject>
         </Header>
@@ -317,13 +321,13 @@ const BookkeepingRejectTable = ({
 
 export default BookkeepingRejectTable;
 
-const CategoryCell = styled.div`
-  background: var(--bg-primary);
-  padding: 4px;
-  font-size: 14px;
-  text-align: center;
-  border-radius: 5px;
-`;
+// const CategoryCell = styled.div`
+//   background: var(--bg-primary);
+//   padding: 4px;
+//   font-size: 14px;
+//   text-align: center;
+//   border-radius: 5px;
+// `;
 const UnhideBtn = styled.div`
   padding-left: 14px;
 `;

@@ -442,12 +442,18 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
               }}
             >
               <Table sx={{ width: "100%" }} aria-label="simple table">
-                <TableHead style={{ backgroundColor: "var(--clr-gray-200)" }}>
+                <TableHead>
                   <TableRow>
-                    <HeaderCell width="260px">Recipient</HeaderCell>
-                    <HeaderCell width="202px">Amount</HeaderCell>
-                    <HeaderCell width="202px">Currency</HeaderCell>
-                    <HeaderCell width="56px"></HeaderCell>
+                    <HeaderCell width="260px" color="#0f172a">
+                      Recipient
+                    </HeaderCell>
+                    <HeaderCell width="202px" color="#0f172a">
+                      Amount
+                    </HeaderCell>
+                    <HeaderCell width="202px" color="#0f172a">
+                      Currency
+                    </HeaderCell>
+                    <HeaderCell width="56px" color="#0f172a"></HeaderCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

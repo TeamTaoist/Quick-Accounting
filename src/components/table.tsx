@@ -3,10 +3,12 @@ import { TableCell, TableCellProps, TableContainer } from "@mui/material";
 interface CustomTableCellProps extends TableCellProps {
   width?: string;
   fontSize?: string;
+  color?: string;
 }
 
 export const HeaderCell = ({
   width,
+  color,
   children,
   fontSize,
   ...props
@@ -15,7 +17,7 @@ export const HeaderCell = ({
     sx={{
       background: "var(--clr-gray-200)",
       fontWeight: "500",
-      color: "var(--clr-primary-900)",
+      color: color ? color : "#475569",
       height: "56px",
       padding: 0,
       paddingInline: 2,

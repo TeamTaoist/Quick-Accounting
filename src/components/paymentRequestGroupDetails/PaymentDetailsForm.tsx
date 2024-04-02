@@ -54,9 +54,15 @@ const PaymentDetailsForm = ({
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
       <TableHead>
         <TableRow>
-          <HeaderCell width="260px">Recipient</HeaderCell>
-          <HeaderCell width="230px">Amount</HeaderCell>
-          <HeaderCell width="230px">Currency</HeaderCell>
+          <HeaderCell width="260px" color="#0f172a">
+            Recipient
+          </HeaderCell>
+          <HeaderCell width="230px" color="#0f172a">
+            Amount
+          </HeaderCell>
+          <HeaderCell width="230px" color="#0f172a">
+            Currency
+          </HeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
