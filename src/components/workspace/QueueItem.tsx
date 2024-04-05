@@ -36,6 +36,7 @@ import { UpdateEvent } from "../../pages/workspace/paymentRequest/PaymentRequest
 import { useDomainStore } from "../../store/useDomain";
 import details from "../../assets/details.svg";
 import { Cell, HeaderCell } from "../table";
+import { CategoryCell } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 
 export const isArrayParameter = (parameter: string): boolean =>
   /(\[\d*?])+$/.test(parameter);
@@ -435,7 +436,9 @@ const QueueTransactionItem = ({
                       {queueItem.amount} {queueItem.currency_name}
                     </Cell>
                     <Cell>
-                      <CategoryCell>{queueItem.category_name}</CategoryCell>
+                      <CategoryCell>
+                        <p>{queueItem.category_name}</p>
+                      </CategoryCell>
                     </Cell>
                     <Cell>
                       {formatTime(
@@ -617,14 +620,4 @@ const TotalValue = styled.div`
   display: grid;
   align-items: center;
   /* margin-top: 20px; */
-`;
-const CategoryCell = styled.div`
-  background: var(--clr-gray-200);
-  padding: 2px 10px;
-  font-size: 14px;
-  border-radius: 5px;
-  height: 40px;
-  display: grid;
-  justify-content: center;
-  align-items: center;
 `;

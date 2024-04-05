@@ -217,7 +217,9 @@ const RejectPaymentRequestTable = ({
                     {payment.currency_name}
                   </Cell>
                   <Cell>
-                    <CategoryCell>{payment.category_name}</CategoryCell>
+                    <CategoryCell>
+                      <p>{payment.category_name}</p>
+                    </CategoryCell>
                   </Cell>
                   <Cell>
                     <Status status={getPaymentStatus(payment.status)}>

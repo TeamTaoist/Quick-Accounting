@@ -30,7 +30,6 @@ const Toast = styled(ToastContainer)`
     border: 1px solid #e2e8f0;
     font-weight: 500;
     color: #000000;
-    padding-left: 16px;
     text-align: center;
     box-shadow: none;
     background-color: #f1f5f9;

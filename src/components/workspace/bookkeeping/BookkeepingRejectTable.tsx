@@ -267,7 +267,7 @@ const BookkeepingRejectTable = ({
                         </Cell>
                         <Cell>
                           <CategoryCell>
-                            {bookkeeping.category_name}
+                            <p>{bookkeeping.category_name}</p>
                           </CategoryCell>
                         </Cell>
                         <Cell>{getPaymentUpdateTime(bookkeeping)}</Cell>

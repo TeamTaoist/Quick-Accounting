@@ -183,7 +183,9 @@ const PaymentRequestTableList = ({
               </Cell>
               <Cell>
                 {payment.category_name && (
-                  <CategoryCell>{payment.category_name}</CategoryCell>
+                  <CategoryCell>
+                    <p>{payment.category_name}</p>
+                  </CategoryCell>
                 )}
               </Cell>
               <Cell>{getPaymentUpdateTime(payment)}</Cell>

@@ -79,15 +79,23 @@ export const PaymentPagination = styled.div`
   padding: 20px 0;
 `;
 export const CategoryCell = styled.div`
-  background: var(--clr-gray-200);
-  padding: 2px 10px;
-  height: 40px;
-  font-size: 14px;
-  display: inline-block;
+  /* background: var(--clr-gray-200); */
+  /* padding: 2px 10px; */
+  /* display: inline-block; */
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  border-radius: 5px;
+  p {
+    font-size: 14px;
+    background: var(--clr-gray-200);
+    padding: 2px 10px;
+    height: 30px;
+    min-width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+  }
 `;
 export const EmptySearchResult = styled.div`
   display: flex;

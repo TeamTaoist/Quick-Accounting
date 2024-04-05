@@ -134,7 +134,9 @@ const QueueFailedTable = ({
                     {bookkeeping.currency_name}
                   </Cell>
                   <Cell>
-                    <CategoryCell>{bookkeeping.category_name}</CategoryCell>
+                    <CategoryCell>
+                      <p>{bookkeeping.category_name}</p>
+                    </CategoryCell>
                   </Cell>
                   <Cell>{getPaymentUpdateTime(bookkeeping)}</Cell>
                   <Cell>

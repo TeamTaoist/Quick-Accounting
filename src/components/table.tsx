@@ -4,6 +4,7 @@ interface CustomTableCellProps extends TableCellProps {
   width?: string;
   fontSize?: string;
   color?: string;
+  position?: string;
 }
 
 export const HeaderCell = ({
@@ -11,6 +12,7 @@ export const HeaderCell = ({
   color,
   children,
   fontSize,
+  position,
   ...props
 }: CustomTableCellProps) => (
   <TableCell
@@ -24,6 +26,7 @@ export const HeaderCell = ({
       minWidth: width ? width : "auto",
       fontSize: fontSize ? fontSize : "14px",
       borderBottom: "none",
+      textAlign: position ? position : "",
     }}
     {...props}
   >
