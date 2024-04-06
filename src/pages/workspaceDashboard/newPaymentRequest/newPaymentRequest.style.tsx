@@ -226,6 +226,7 @@ export const RequestSubmit = styled.button`
   }
 `;
 export const PaymentRequestInput = styled.input`
+  font-family: "Inter";
   border: 1px solid var(--clr-gray-200);
   outline: none;
   padding: 10px 16px;
@@ -240,6 +241,7 @@ export const PaymentRequestInput = styled.input`
   }
 `;
 export const PaymentRequestDateInput = styled.input<any>`
+  font-family: "Inter";
   border: 1px solid var(--clr-gray-200);
   outline: none;
   padding: 10px 16px;

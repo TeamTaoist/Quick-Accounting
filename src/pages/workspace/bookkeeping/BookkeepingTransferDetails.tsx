@@ -419,7 +419,7 @@ const BookkeepingTransferDetails = ({
                       >
                         <CategoryDropdown
                           data={workspaceCategoryProperties}
-                          value={details?.[0].category_name}
+                          value={details?.[0]}
                           onClick={handleCategory}
                         />
                       </FormControl>

@@ -9,7 +9,7 @@ const CategoryDropdown = ({ value, data, onClick }: any) => {
       <Select
         fullWidth
         size="small"
-        value={value}
+        value={value?.category_name}
         IconComponent={() => (
           <InputAdornment position="start">
             <img
@@ -24,23 +24,6 @@ const CategoryDropdown = ({ value, data, onClick }: any) => {
             {selectedValue}
           </div>
         )}
-        MenuProps={{
-          sx: {
-            "& .MuiMenuItem-root": {
-              marginInline: "10px",
-              borderRadius: "6px",
-              fontSize: "14px",
-              fontWeight: "500",
-              margin: "5px 8px",
-              "&:hover": {
-                bgcolor: "var(--clr-gray-100)",
-              },
-              "&.Mui-selected": {
-                bgcolor: "var(--clr-gray-100)",
-              },
-            },
-          },
-        }}
         sx={{
           overflow: "hidden",
           minWidth: "100%",
@@ -74,11 +57,17 @@ const CategoryDropdown = ({ value, data, onClick }: any) => {
             sx={{
               paddingInline: "5px",
               fontSize: "14px",
+              marginInline: "10px",
+              borderRadius: "6px",
+              margin: "5px 8px",
               "&:hover": {
                 backgroundColor: "var(--clr-gray-100)",
               },
               "&.Mui-selected": {
-                backgroundColor: "var(--clr-gray-200)",
+                backgroundColor:
+                  value?.category_id === item.ID
+                    ? "var(--clr-gray-200)"
+                    : "transparent",
               },
             }}
           >
@@ -91,7 +80,7 @@ const CategoryDropdown = ({ value, data, onClick }: any) => {
                   alignItems: "center",
                 }}
               >
-                {value === item.name && (
+                {value?.category_id === item.ID && (
                   <CheckIcon style={{ color: "#334155", width: "16px" }} />
                 )}
               </div>

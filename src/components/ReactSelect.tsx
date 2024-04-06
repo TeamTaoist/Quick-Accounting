@@ -3,6 +3,7 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import arrowBottom from "../assets/workspace/arrow-bottom.svg";
 import removeIcon from "../assets/x-circle.svg";
+import checkIcon from "../assets/dropdown-check.svg";
 
 const animatedComponents = makeAnimated();
 
@@ -113,18 +114,41 @@ const RemoveIcon = ({ innerProps }: any) => {
   );
 };
 // option icon
-// const OptionWithIcon = ({ ...props }: any) => (
-//   <div {...props} style={{ display: "flex", alignItems: "center" }}>
-//     {props.isSelected && (
-//       <img
-//         src={removeIcon}
-//         alt="Option Icon"
-//         style={{ width: 20, height: 20, marginRight: 10 }}
-//       />
-//     )}
-//     <div>{props.label}</div>
-//   </div>
-// );
+const OptionWithIcon = ({ label, isSelected, innerProps }: any) => (
+  <div
+    {...innerProps}
+    style={{
+      display: "flex",
+      alignItems: "center",
+      backgroundColor: isSelected ? "#E2E8F0" : "inherit",
+      color: isSelected ? "#0F172A" : "inherit",
+      fontSize: "14px",
+      fontFamily: "Inter",
+      margin: "4px",
+      maxWidth: "calc(100% - 16px)",
+      borderRadius: "6px",
+      padding: "6px",
+      ":hover": {
+        backgroundColor: "#CDD6E0",
+      },
+    }}
+  >
+    {isSelected && (
+      <img
+        src={checkIcon}
+        alt="Option Icon"
+        style={{ width: 16, height: 16, marginRight: 6 }}
+      />
+    )}
+    <div
+      style={{
+        marginLeft: isSelected ? 0 : "22px",
+      }}
+    >
+      {label}
+    </div>
+  </div>
+);
 
 export default function ReactSelect({
   value,
@@ -144,7 +168,7 @@ export default function ReactSelect({
         DropdownIndicator: ArrowIcon,
         IndicatorSeparator: () => null,
         MultiValueRemove: RemoveIcon,
-        // Option: OptionWithIcon,
+        Option: OptionWithIcon,
         // SingleValue: OptionWithIcon,
       }}
       isMulti={isMulti}

@@ -105,26 +105,9 @@ const GroupPaymentCategoryProperties = ({
                         fontSize: "14px",
                       }}
                     >
-                      {selectedValue}
+                      {selectedValue ? selectedValue : <p>Select category</p>}
                     </div>
                   )}
-                  MenuProps={{
-                    sx: {
-                      "& .MuiMenuItem-root": {
-                        marginInline: "10px",
-                        borderRadius: "6px",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                        margin: "5px 8px",
-                        "&:hover": {
-                          bgcolor: "var(--clr-gray-100)",
-                        },
-                        "&.Mui-selected": {
-                          bgcolor: "var(--clr-gray-100)",
-                        },
-                      },
-                    },
-                  }}
                   sx={{
                     minWidth: "100%",
                     height: "40px",
@@ -150,9 +133,9 @@ const GroupPaymentCategoryProperties = ({
                     readOnly: isEditable,
                   }}
                 >
-                  <MenuItem disabled value="">
-                    {sharePaymentRequestForm[index].category_name}
-                  </MenuItem>
+                  {/* <MenuItem disabled value="">
+                    Select category
+                  </MenuItem> */}
                   {shareData?.category_and_properties?.map((category) => (
                     <MenuItem
                       key={category.ID}
@@ -165,12 +148,20 @@ const GroupPaymentCategoryProperties = ({
                         );
                       }}
                       sx={{
+                        paddingInline: "5px",
                         fontSize: "14px",
+                        marginInline: "10px",
+                        borderRadius: "6px",
+                        margin: "5px 8px",
                         "&:hover": {
                           backgroundColor: "var(--clr-gray-100)",
                         },
                         "&.Mui-selected": {
-                          backgroundColor: "var(--clr-gray-200)",
+                          backgroundColor:
+                            sharePaymentRequestForm[index].category_id ===
+                            category.ID
+                              ? "var(--clr-gray-200)"
+                              : "transparent",
                         },
                       }}
                     >

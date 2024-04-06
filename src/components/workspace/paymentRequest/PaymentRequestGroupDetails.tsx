@@ -493,23 +493,6 @@ const PaymentRequestGroupDetails = ({
                                   {selectedValue}
                                 </div>
                               )}
-                              MenuProps={{
-                                sx: {
-                                  "& .MuiMenuItem-root": {
-                                    marginInline: "10px",
-                                    borderRadius: "6px",
-                                    fontSize: "14px",
-                                    fontWeight: "500",
-                                    margin: "5px 8px",
-                                    "&:hover": {
-                                      bgcolor: "var(--clr-gray-100)",
-                                    },
-                                    "&.Mui-selected": {
-                                      bgcolor: "var(--clr-gray-100)",
-                                    },
-                                  },
-                                },
-                              }}
                               sx={{
                                 minWidth: "100%",
                                 height: "42px",
@@ -551,12 +534,20 @@ const PaymentRequestGroupDetails = ({
                                     );
                                   }}
                                   sx={{
+                                    paddingInline: "5px",
                                     fontSize: "14px",
+                                    marginInline: "10px",
+                                    borderRadius: "6px",
+                                    margin: "5px 8px",
                                     "&:hover": {
                                       backgroundColor: "var(--clr-gray-100)",
                                     },
                                     "&.Mui-selected": {
-                                      backgroundColor: "var(--clr-gray-200)",
+                                      backgroundColor:
+                                        sharePaymentRequestForm[index]
+                                          .category_id === category.ID
+                                          ? "var(--clr-gray-200)"
+                                          : "transparent",
                                     },
                                   }}
                                 >

@@ -417,7 +417,7 @@ const PaymentRequestDetails = ({
                       >
                         <CategoryDropdown
                           data={workspaceCategoryProperties}
-                          value={details?.category_name}
+                          value={details}
                           onClick={handleCategory}
                         />
                       </FormControl>

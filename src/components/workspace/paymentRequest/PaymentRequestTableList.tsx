@@ -256,7 +256,9 @@ const PaymentRequestTableList = ({
                       {payments.amount} {payments.currency_name}
                     </Cell>
                     <Cell width="180px">
-                      <CategoryCell>{payments.category_name}</CategoryCell>
+                      <CategoryCell>
+                        <p>{payments.category_name}</p>
+                      </CategoryCell>
                     </Cell>
                     <Cell width="176px">{getPaymentUpdateTime(payments)}</Cell>
                     <Cell width="96px"></Cell>
