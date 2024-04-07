@@ -27,7 +27,7 @@ import { ReactSelectOption } from "../../pages/workspaceDashboard/newPaymentRequ
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import optionsIcon from "../../assets/workspace/option.svg";
 import { Cell } from "../table";
-import { Item } from "../categoryDropdown";
+import { CategoryDropdownStyle, Item } from "../categoryDropdown";
 import CheckIcon from "@mui/icons-material/Check";
 
 interface GroupPaymentCategoryPropertiesProps {
@@ -98,6 +98,7 @@ const GroupPaymentCategoryProperties = ({
                       />
                     </InputAdornment>
                   )}
+                  displayEmpty
                   renderValue={(selectedValue) => (
                     <div
                       style={{
@@ -105,30 +106,16 @@ const GroupPaymentCategoryProperties = ({
                         fontSize: "14px",
                       }}
                     >
-                      {selectedValue ? selectedValue : <p>Select category</p>}
+                      {selectedValue ? (
+                        selectedValue
+                      ) : (
+                        <p style={{ color: "var(--clr-gray-400)" }}>
+                          Select category
+                        </p>
+                      )}
                     </div>
                   )}
-                  sx={{
-                    minWidth: "100%",
-                    height: "40px",
-                    "& .MuiSelect-select": {
-                      display: "block",
-                    },
-                    "&.MuiOutlinedInput-root": {
-                      border: "1px solid var(--clr-gray-200)",
-                      "& fieldset": {
-                        border: "none",
-                      },
-                      "&:hover fieldset": {
-                        border: "none",
-                      },
-                      "&.Mui-focused fieldset": {
-                        border: "none",
-                      },
-                    },
-                    // "& fieldset": { border: "none" },
-                    "& .MuiInputLabel-root": { display: "none" },
-                  }}
+                  sx={CategoryDropdownStyle}
                   inputProps={{
                     readOnly: isEditable,
                   }}

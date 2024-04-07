@@ -46,6 +46,22 @@ interface CategoryPropertyDetailsProps {
   isEditable: boolean;
 }
 
+const MenuItemStyle = {
+  paddingInline: "5px",
+  fontSize: "14px",
+  fontWeight: "500",
+  marginInline: "10px",
+  borderRadius: "6px",
+  margin: "5px 8px",
+  height: "32px",
+  "&:hover": {
+    backgroundColor: "var(--clr-gray-100)",
+  },
+  "&.Mui-selected": {
+    backgroundColor: "var(--clr-gray-200)",
+  },
+};
+
 const CategoryPropertyDetails = ({
   showProperty,
   property,
@@ -111,61 +127,62 @@ const CategoryPropertyDetails = ({
               </InputAdornment>
             )}
             sx={{
+              overflow: "hidden",
               minWidth: "100%",
               height: "36px",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "var(--clr-gray-300)",
+              padding: 0,
+              // paddingInline: "1px",
+              "& .MuiSelect-select": {
+                display: "block",
+                fontSize: "14px",
               },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "var(--clr-gray-300)",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "var(--clr-gray-300)",
-              },
-            }}
-            MenuProps={{
-              sx: {
-                "& .MuiMenuItem-root": {
-                  marginInline: "10px",
-                  borderRadius: "6px",
-                  margin: "4px 6px",
-                  "&:hover": {
-                    bgcolor: "var(--clr-gray-100)",
-                  },
-                  "&.Mui-selected": {
-                    bgcolor: "var(--clr-gray-100)",
-                  },
+              "&.MuiOutlinedInput-root": {
+                border: "1px solid var(--clr-gray-200)",
+                "& fieldset": {
+                  border: "none",
+                },
+                "&:hover fieldset": {
+                  border: "none",
+                },
+                "&.Mui-focused fieldset": {
+                  border: "none",
                 },
               },
+              "& .MuiInputLabel-root": { display: "none" },
             }}
+            // MenuProps={{
+            //   sx: {
+            //     "& .MuiMenuItem-root": {
+            //       marginInline: "10px",
+            //       borderRadius: "6px",
+            //       margin: "4px 6px",
+            //       "&:hover": {
+            //         bgcolor: "var(--clr-gray-100)",
+            //       },
+            //       "&.Mui-selected": {
+            //         bgcolor: "var(--clr-gray-100)",
+            //       },
+            //     },
+            //   },
+            // }}
           >
-            <MenuItem
-              value="Text"
-              sx={{
-                "&:hover": {
-                  backgroundColor: "var(--hover-bg)",
-                },
-                "&.Mui-selected": {
-                  backgroundColor: "var(--hover-bg)",
-                },
-              }}
-            >
+            <MenuItem value="Text" sx={MenuItemStyle}>
               <DropdownOption>
                 <img src={option} alt="" /> Text
               </DropdownOption>
             </MenuItem>
-            <MenuItem value="single-select">
+            <MenuItem value="single-select" sx={MenuItemStyle}>
               <DropdownOption>
                 <img src={select} alt="" /> Single-select
               </DropdownOption>
             </MenuItem>
-            <MenuItem value="multi-select">
+            <MenuItem value="multi-select" sx={MenuItemStyle}>
               <DropdownOption>
                 <img src={multiSelect} alt="" />
                 Multi-select
               </DropdownOption>
             </MenuItem>
-            <MenuItem value="date-picker">
+            <MenuItem value="date-picker" sx={MenuItemStyle}>
               <DropdownOption>
                 <img src={calendar} alt="" />
                 Datepicker

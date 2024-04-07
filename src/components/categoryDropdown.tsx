@@ -3,6 +3,31 @@ import { InputAdornment, MenuItem, Select } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import arrowBottom from "../assets/workspace/arrow-bottom.svg";
 
+export const CategoryDropdownStyle = {
+  overflow: "hidden",
+  minWidth: "100%",
+  height: "42px",
+  padding: 0,
+  paddingInline: "1px",
+  "& .MuiSelect-select": {
+    display: "block",
+    fontSize: "14px",
+  },
+  "&.MuiOutlinedInput-root": {
+    border: "1px solid var(--clr-gray-200)",
+    "& fieldset": {
+      border: "none",
+    },
+    "&:hover fieldset": {
+      border: "none",
+    },
+    "&.Mui-focused fieldset": {
+      border: "none",
+    },
+  },
+  "& .MuiInputLabel-root": { display: "none" },
+};
+
 const CategoryDropdown = ({ value, data, onClick }: any) => {
   return (
     <div>
@@ -19,35 +44,17 @@ const CategoryDropdown = ({ value, data, onClick }: any) => {
             />
           </InputAdornment>
         )}
+        displayEmpty
         renderValue={(selectedValue) => (
           <div style={{ overflow: "hidden", fontSize: "14px" }}>
-            {selectedValue}
+            {selectedValue ? (
+              selectedValue
+            ) : (
+              <p style={{ color: "var(--clr-gray-400)" }}>Select category</p>
+            )}
           </div>
         )}
-        sx={{
-          overflow: "hidden",
-          minWidth: "100%",
-          height: "42px",
-          padding: 0,
-          paddingInline: "1px",
-          "& .MuiSelect-select": {
-            display: "block",
-            fontSize: "14px",
-          },
-          "&.MuiOutlinedInput-root": {
-            border: "1px solid var(--clr-gray-200)",
-            "& fieldset": {
-              border: "none",
-            },
-            "&:hover fieldset": {
-              border: "none",
-            },
-            "&.Mui-focused fieldset": {
-              border: "none",
-            },
-          },
-          "& .MuiInputLabel-root": { display: "none" },
-        }}
+        sx={CategoryDropdownStyle}
       >
         {data.map((item: any) => (
           <MenuItem

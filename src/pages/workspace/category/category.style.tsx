@@ -294,7 +294,7 @@ export const PropertyInputValue = styled.input`
 `;
 export const DropdownOption = styled.div`
   display: flex;
-  gap: 14px;
+  gap: 10px;
   img {
     width: 16px;
   }

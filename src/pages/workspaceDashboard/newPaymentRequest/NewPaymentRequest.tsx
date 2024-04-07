@@ -59,6 +59,11 @@ import { useDomainStore } from "../../../store/useDomain";
 import { useLoading } from "../../../store/useLoading";
 import { formatTime } from "../../../utils/time";
 import { Cell, HeaderCell } from "../../../components/table";
+import {
+  CategoryDropdownStyle,
+  Item,
+} from "../../../components/categoryDropdown";
+import CheckIcon from "@mui/icons-material/Check";
 
 interface SubmitRowData {
   recipient: string;
@@ -444,13 +449,13 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
               <Table sx={{ width: "100%" }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <HeaderCell width="260px" color="#0f172a">
+                    <HeaderCell width="250px" color="#0f172a">
                       Recipient
                     </HeaderCell>
-                    <HeaderCell width="202px" color="#0f172a">
+                    <HeaderCell width="180px" color="#0f172a">
                       Amount
                     </HeaderCell>
-                    <HeaderCell width="202px" color="#0f172a">
+                    <HeaderCell width="180px" color="#0f172a">
                       Currency
                     </HeaderCell>
                     <HeaderCell width="56px" color="#0f172a"></HeaderCell>
@@ -498,30 +503,27 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               />
                             </InputAdornment>
                           )}
-                          sx={{
-                            minWidth: "100%",
-                            height: "40px",
-                            "& .MuiSelect-select": {
-                              display: "block",
-                              fontSize: "14px",
-                            },
-                            // ".Mui-selected": {
-                            //   fontSize: "14px",
-                            // },
-                            // .css-q8hpuo-MuiFormControl-root
-                            "&.MuiOutlinedInput-root": {
-                              "& fieldset": {
-                                borderColor: "var(--clr-gray-200)",
-                              },
-                              "&:hover fieldset": {
-                                borderColor: "var(--clr-gray-200)",
-                              },
-                              "&.Mui-focused fieldset": {
-                                borderColor: "var(--clr-gray-200)",
-                              },
-                            },
-                            // "& fieldset": { border: "1px solid red" },
-                          }}
+                          displayEmpty
+                          // renderValue={(selectedValue) => (
+                          //   <div
+                          //     style={{ overflow: "hidden", fontSize: "14px" }}
+                          //   >
+                          //     {selectedValue ? (
+                          //       // row.currency
+                          //       {item.tokenInfo.symbol}(
+                          //         {formatBalance(
+                          //           item.balance,
+                          //           item.tokenInfo.decimals
+                          //         )}
+                          //         )
+                          //     ) : (
+                          //       <p style={{ color: "var(--clr-gray-400)" }}>
+                          //         currency
+                          //       </p>
+                          //     )}
+                          //   </div>
+                          // )}
+                          sx={CategoryDropdownStyle}
                         >
                           {assetsList?.map(
                             (item, i) =>
@@ -530,7 +532,11 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                   key={i}
                                   value={item.tokenInfo.address}
                                   sx={{
+                                    paddingInline: "5px",
                                     fontSize: "14px",
+                                    marginInline: "10px",
+                                    borderRadius: "6px",
+                                    margin: "5px 8px",
                                     "&:hover": {
                                       backgroundColor: "var(--clr-gray-100)",
                                     },
@@ -595,6 +601,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                             value={category}
                             label={category}
                             onChange={handleCategoryChange}
+                            displayEmpty
                             size="small"
                             IconComponent={() => (
                               <InputAdornment position="start">
@@ -605,36 +612,19 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 />
                               </InputAdornment>
                             )}
-                            // sx={{
-                            //   minWidth: "100%",
-                            //   "& fieldset": { border: "none" },
-                            // }}
-                            sx={{
-                              minWidth: "100%",
-                              height: "40px",
-                              "& .MuiSelect-select": {
-                                display: "block",
-                                fontSize: "14px",
-                              },
-                              "&.MuiOutlinedInput-root": {
-                                border: "1px solid var(--clr-gray-200)",
-                                "& fieldset": {
-                                  border: "none",
-                                },
-                                "&:hover fieldset": {
-                                  border: "none",
-                                },
-                                "&.Mui-focused fieldset": {
-                                  border: "none",
-                                },
-                              },
-                              // "& fieldset": { border: "none" },
-                              "& .MuiInputLabel-root": { display: "none" },
-                            }}
+                            renderValue={(selectedValue) => (
+                              <div
+                                style={{ overflow: "hidden", fontSize: "14px" }}
+                              >
+                                {selectedValue ? (
+                                  selectedValue
+                                ) : (
+                                  <p style={{ margin: 0 }}>Select category</p>
+                                )}
+                              </div>
+                            )}
+                            sx={CategoryDropdownStyle}
                           >
-                            <MenuItem disabled value="Category">
-                              Category name
-                            </MenuItem>
                             {workspaceCategoryProperties?.map((property) => (
                               <MenuItem
                                 onClick={() =>
@@ -642,16 +632,43 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 }
                                 value={property.name}
                                 sx={{
+                                  paddingInline: "5px",
                                   fontSize: "14px",
+                                  marginInline: "10px",
+                                  borderRadius: "6px",
+                                  margin: "5px 8px",
                                   "&:hover": {
                                     backgroundColor: "var(--clr-gray-100)",
                                   },
                                   "&.Mui-selected": {
-                                    backgroundColor: "var(--clr-gray-200)",
+                                    backgroundColor:
+                                      selectedCategoryID === property.ID
+                                        ? "var(--clr-gray-200)"
+                                        : "transparent",
                                   },
                                 }}
                               >
-                                {property.name}
+                                <Item>
+                                  <div
+                                    style={{
+                                      width: "14px",
+                                      marginRight: "10px",
+                                      display: "flex",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    {selectedCategoryID === property.ID && (
+                                      <CheckIcon
+                                        style={{
+                                          color: "#334155",
+                                          width: "16px",
+                                        }}
+                                      />
+                                    )}
+                                  </div>
+
+                                  {property.name}
+                                </Item>
                               </MenuItem>
                             ))}
                           </Select>

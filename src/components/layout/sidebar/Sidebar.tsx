@@ -2,7 +2,7 @@ import logo from "../../../assets/navbar/logo.svg";
 // import plus from "../../../assets/dashboard/plus.svg";
 import plus from "../../../assets/workspace/add.svg";
 import avatar from "../../../assets/dashboard/avatar.svg";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useEffect } from "react";
 import { useLoading } from "../../../store/useLoading";
@@ -17,6 +17,8 @@ import { getChainLogo } from "../../../utils/chain";
 const Sidebar = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { pathname } = useLocation();
+
   const { address } = useAccount();
   const { user } = useAuthStore();
   const { getUserWorkspace, userWorkspaces, getWorkspaceDetails, workspace } =
@@ -82,7 +84,15 @@ const Sidebar = () => {
         </LeftSide>
         <UserBox>
           <Link to="/user/payment-request">
-            <img src={avatar} alt="" />
+            <img
+              src={avatar}
+              alt=""
+              style={
+                pathname.startsWith("/user")
+                  ? { border: "2px solid var(--clr-primary-900)" }
+                  : undefined
+              }
+            />
           </Link>
           {/* <Version /> */}
         </UserBox>
@@ -113,7 +123,7 @@ const Logo = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-right: 80px;
+  margin-right: 73px;
   h5 {
     font-size: 16px;
     font-weight: 700;
@@ -178,6 +188,8 @@ const AddIcon = styled.div`
 const UserBox = styled.div`
   img {
     width: 40px;
+    height: 40px;
+    border-radius: 50%;
   }
   text-align: center;
   a {
