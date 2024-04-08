@@ -53,14 +53,14 @@ const SingleWorkspaceSection = styled.div`
   cursor: pointer;
   background-color: #fff;
   h6 {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     color: var(--clr-primary-900);
     padding-top: 6px;
     padding-bottom: 4px;
   }
   p {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     color: var(--clr-gray-600);
   }

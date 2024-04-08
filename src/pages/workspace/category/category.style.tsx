@@ -53,7 +53,7 @@ export const CategoryForm = styled.div`
 `;
 export const CategoryOption = styled.div`
   min-width: 900px;
-  margin: 20px 0;
+  margin: 16px 0;
 `;
 export const Header = styled.div`
   width: 100%;
@@ -74,6 +74,7 @@ export const Header = styled.div`
 export const HeaderRight = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 10px;
 `;
 export const HeaderOptions = styled.div`
@@ -123,7 +124,6 @@ export const CategoryProperties = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  max-height: 400px;
 `;
 export const Options = styled.div`
   display: flex;
@@ -137,9 +137,7 @@ export const Options = styled.div`
   }
 `;
 export const PropertyOptions = styled.div`
-  border-right: 1px solid var(--clr-gray-200);
   width: 50%;
-  height: 328px;
   flex: 1;
   overflow-y: auto;
   &::-webkit-scrollbar {
@@ -228,7 +226,7 @@ export const PropertyTitle = styled.div`
 `;
 export const Details = styled.div`
   width: 50%;
-  height: 326px;
+  max-height: 455px;
   overflow-y: auto;
   &::-webkit-scrollbar {
     display: none;
@@ -257,7 +255,7 @@ export const PropertyOptionsValue = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 8px;
 `;
 export const ValueIcon = styled.img`
   width: 24px;
@@ -332,6 +330,4 @@ export const CancelBtn = styled.button`
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
-  margin-right: 20px;
-  cursor: pointer;
 `;

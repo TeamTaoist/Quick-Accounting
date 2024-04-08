@@ -13,6 +13,7 @@ import metamask from "../../../assets/auth/metamask.svg";
 import cancelIcon from "../../../assets/auth/x.svg";
 import arrowRight from "../../../assets/asset-right-arrow.svg";
 import { toast } from "react-toastify";
+import { Link } from "@mui/material";
 
 interface IProps {
   handleClose: () => void;
@@ -103,8 +104,9 @@ export default function LoginContent({ handleClose, loginCallback }: IProps) {
             </button>
           </div>
           <div className="wallet-link">
-            <p>Get your first wallet</p>
-            <img src={arrowRight} alt="" />
+            <Link href="https://metamask.io/download/" target="_blank">
+              Get your first wallet
+            </Link>
           </div>
         </div>
       </div>

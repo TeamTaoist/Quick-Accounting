@@ -46,6 +46,12 @@ const SearchInput = ({
               <img style={{ width: "16px" }} src={searchIcon} alt="" />
             </InputAdornment>
           ),
+          sx: {
+            fontSize: "14px",
+            "&::placeholder": {
+              fontSize: "14px",
+            },
+          },
         }}
       />
     </form>

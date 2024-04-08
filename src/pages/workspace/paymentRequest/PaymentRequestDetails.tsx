@@ -502,6 +502,7 @@ export const Status = styled.div<any>`
     display: flex;
     align-items: center;
     gap: 5px;
+    font-size: 14px;
     p {
       width: 8px;
       height: 8px;

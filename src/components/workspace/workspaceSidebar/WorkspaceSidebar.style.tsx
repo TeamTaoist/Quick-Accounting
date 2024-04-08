@@ -19,28 +19,21 @@ export const SidebarContainer = styled.div<SidebarProps>`
   scrollbar-width: none;
 `;
 export const WorkspaceInfo = styled.div<SidebarProps>`
-  background-color: white;
   display: flex;
-  justify-content: ${({ hideSidebar }) =>
-    hideSidebar ? "center" : "space-between"};
+  justify-content: ${({ hideSidebar }) => (hideSidebar ? "center" : "start")};
+  gap: 12px;
   /* align-items: center; */
-  background-color: var(--clr-gray-100);
-  padding: 12px;
+  background-color: ${({ hideSidebar }) =>
+    hideSidebar ? "white" : "var(--clr-gray-100)"};
+  padding: ${({ hideSidebar }) =>
+    hideSidebar ? "0" : "12px"};
   border-radius: 6px;
   height: ${({ hideSidebar }) => (hideSidebar ? "" : "80")};
-  /* img {
-
-    /* padding-top: 10px; */
 
   h5 {
     font-size: 16px;
     font-weight: 500;
-    margin-bottom: 12px;
   }
-  /* p {
-    font-size: 14px;
-    color: var(--clr-gray-500);
-  } */
 `;
 export const ArrowImg = styled.img<SidebarProps>`
   width: 16px;
@@ -49,15 +42,16 @@ export const ArrowImg = styled.img<SidebarProps>`
   transform: ${({ hideSidebar }) => hideSidebar && "rotate(180deg)"};
   /* margin-top: 2px; */
 `;
+
 export const SafeAddress = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #fff;
-  padding: 4px 12px;
+  padding: 4px 12px 4px 0;
   border-radius: 3px;
   font-size: 12px;
-  color: var(--clr-gray-600);
+  color: var(--clr-gray-400);
+  font-weight: 400;
   img {
     width: 12px;
     height: 12px;
@@ -76,7 +70,7 @@ export const RequestBtn = styled.button<SidebarProps>`
   gap: 8px;
   padding: ${({ hideSidebar }) => (hideSidebar ? "10px" : "10px")};
   border-radius: 5px;
-  margin: 18px 0;
+  margin: 1rem 0;
   cursor: pointer;
   width: 100%;
   height: 40px;

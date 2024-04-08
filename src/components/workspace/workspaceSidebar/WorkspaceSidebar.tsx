@@ -40,6 +40,8 @@ import CopyIcon from "../../../assets/copy.svg";
 import styled from "@emotion/styled";
 import { BuildVersion } from "../../userDashboard/userSidebar/UserSidebar";
 import Version from "../../version";
+import { IconButton, Typography } from "@mui/material";
+import { getChainLogo } from "../../../utils/chain";
 
 export interface SidebarProps {
   hideSidebar: boolean;
@@ -133,25 +135,43 @@ const WorkspaceSidebar = () => {
   return (
     <>
       <SidebarContainer hideSidebar={hideSidebar}>
+        <SidebarHeader hideSidebar={hideSidebar}>
+          <Typography color="#64748B" fontSize="14px" fontWeight={400}>
+            WORKSPACE
+          </Typography>
+
+          <IconButton onClick={handleSidebar}>
+            <ArrowImg
+              hideSidebar={hideSidebar}
+              onClick={handleSidebar}
+              src={arrow}
+              alt=""
+            />
+          </IconButton>
+        </SidebarHeader>
+
         <WorkspaceInfo hideSidebar={hideSidebar}>
+          <Workspace key={workspace.ID}>
+            {workspace.avatar === "" ? (
+              <p>{workspace.name.slice(0, 1)}</p>
+            ) : (
+              <img src={workspace.avatar} alt={workspace.name} />
+            )}
+            <ChainLogo src={getChainLogo(workspace.chain_id)} alt="" />
+          </Workspace>
+
           {!hideSidebar && (
             <div>
               <h5>{workspace.name}</h5>
               <SafeAddress>
-                <span>{recipientFormate(workspace.vault_wallet)}</span>
                 <CopyBox text={workspace.vault_wallet}>
+                  <span>{recipientFormate(workspace.vault_wallet)}</span>
                   <img src={CopyIcon} alt="" />
                 </CopyBox>
               </SafeAddress>
             </div>
           )}
           {/* arrow btn for hide the sidebar */}
-          <ArrowImg
-            hideSidebar={hideSidebar}
-            onClick={handleSidebar}
-            src={arrow}
-            alt=""
-          />
         </WorkspaceInfo>
         {/* payment request btn and share btn */}
         <PaymentRequest>
@@ -226,3 +246,46 @@ const WorkspaceSidebar = () => {
 };
 
 export default WorkspaceSidebar;
+
+const SidebarHeader = styled.div<SidebarProps>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  img {
+    width: 16px;
+    transform: ${({ hideSidebar }) => hideSidebar && "rotate(180deg)"};
+    cursor: pointer;
+  }
+  p {
+    display: ${({ hideSidebar }) => (hideSidebar ? "none" : "flex")};
+  }
+`;
+
+const Workspace = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--clr-gray-200);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  p {
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+`;
+
+const ChainLogo = styled.img`
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(40%, 10%);
+  border-radius: 50%;
+`;

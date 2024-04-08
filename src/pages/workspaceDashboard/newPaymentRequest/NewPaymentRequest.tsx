@@ -38,7 +38,13 @@ import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { FormControl, InputAdornment, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  InputAdornment,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -449,16 +455,16 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
               <Table sx={{ width: "100%" }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <HeaderCell width="250px" color="#0f172a">
+                    <HeaderCell width="250px" color="#475569">
                       Recipient
                     </HeaderCell>
-                    <HeaderCell width="180px" color="#0f172a">
+                    <HeaderCell width="180px" color="#475569">
                       Amount
                     </HeaderCell>
-                    <HeaderCell width="180px" color="#0f172a">
+                    <HeaderCell width="180px" color="#475569">
                       Currency
                     </HeaderCell>
-                    <HeaderCell width="56px" color="#0f172a"></HeaderCell>
+                    <HeaderCell width="56px" color="#475569"></HeaderCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -581,7 +587,9 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
               {/* note info */}
               <NoteInformation>
                 <NoteHeader>
-                  <h3>Note Information</h3>
+                  <Typography color="#475569" fontSize={14} fontWeight={500}>
+                    Note Information
+                  </Typography>
                 </NoteHeader>
 
                 {/* <TableContainer> */}

@@ -45,19 +45,13 @@ export const EmptyAssetBtn = styled.button`
 export const AssetHeader = styled.div`
   /* margin-bottom: 40px; */
 `;
-export const AssetValue = styled.h3`
-  margin-top: 8px;
-  margin-bottom: 18px;
-  text-align: center;
-  h3 {
-    font-size: 24px;
+export const AssetValue = styled.div`
+  margin-top: 24px;
+  margin-bottom: 16px;
+  h4 {
+    font-size: 20px;
     font-weight: 600;
-  }
-  p {
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--clr-gray-400);
-    margin-top: 6px;
+    color: var(--clr-gray-900);
   }
 `;
 export const AssetTable = styled.div`

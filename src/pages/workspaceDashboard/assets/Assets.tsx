@@ -188,8 +188,7 @@ const Assets = () => {
             />
           </AssetHeader>
           <AssetValue>
-            <h3>${totalAssetsValue}</h3>
-            <p>Total value</p>
+            <h4>Value: ${totalAssetsValue}</h4>
           </AssetValue>
           <AssetTable>
             <TableContainerSection>

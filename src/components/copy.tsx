@@ -52,6 +52,10 @@ const rightStyle = css`
 const CopyContent = styled.div<{ dir: string }>`
   cursor: pointer;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+
   .tooltip-content {
     position: absolute;
     padding: 5px 12px;

@@ -42,7 +42,7 @@ import {
 import CategoryPropertyDetails from "../../../components/workspace/category/CategoryPropertyDetails";
 import CategoryArchivedList from "../../../components/workspace/category/CategoryArchivedList";
 import CategoryPropertyArchivedList from "../../../components/workspace/category/CategoryPropertyArchivedList";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Divider } from "@mui/material";
 import { getPropertyIconByType } from "../../../utils/payment";
 
 export interface CategoryPropertyBody {
@@ -509,13 +509,7 @@ const Category = () => {
                 >
                   <AccordionSummary
                     onClick={() => handleCategoryCollapse(category.ID)}
-                    expandIcon={
-                      !editableCategoryId.includes(category.ID) ? (
-                        <ExpandMoreIcon style={{ color: "#94A3B8" }} />
-                      ) : (
-                        ""
-                      )
-                    }
+                    expandIcon={<ExpandMoreIcon style={{ color: "#94A3B8" }} />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     sx={{
@@ -525,6 +519,11 @@ const Category = () => {
                       "&:before": {
                         borderRadius: "6px",
                       },
+                      "& .Mui-expanded": {
+                        margin: 0,
+                      },
+                      paddingTop: "8px",
+                      paddingBottom: "8px",
                     }}
                   >
                     <Header>
@@ -607,7 +606,6 @@ const Category = () => {
                   <AccordionDetails
                     sx={{
                       p: 0,
-                      maxHeight: "500px",
                       // border: "1px solid var(--clr-gray-200)",
                     }}
                   >
@@ -678,6 +676,14 @@ const Category = () => {
                             </OptionCreateButtons>
                           </PropertyBtns>
                         </PropertyOptions>
+                        <Divider
+                          dir="vertical"
+                          sx={{
+                            borderWidth: "1px",
+                            borderColor: "var(--clr-gray-200)",
+                            borderRight: "none",
+                          }}
+                        />
                         {/* property input section */}
                         <Details>
                           <>

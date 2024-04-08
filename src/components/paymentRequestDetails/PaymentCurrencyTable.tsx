@@ -87,67 +87,24 @@ const PaymentCurrencyTable = () => {
             />
           </Cell>
           <Cell>
-            <Select
-              readOnly={true}
-              labelId=""
-              variant="outlined"
-              id={`dropdown`}
-              value={paymentRequestDetails?.currency_name}
-              // onChange={(e) =>
-              //   handleServiceChange(e, index, "currency")
-              // }
-              size="small"
-              IconComponent={() => (
-                <InputAdornment position="start">
-                  <img
-                    src={arrowBottom}
-                    alt="Custom Arrow Icon"
-                    style={{ marginRight: "8px", width: "16px" }}
-                  />
-                </InputAdornment>
-              )}
+            <TextField
               sx={{
-                minWidth: "100%",
-                height: "36px",
-                marginRight: "8px",
-                // .css-q8hpuo-MuiFormControl-root
-                "& .MuiSelect-select": {
-                  display: "block",
+                "& input": {
+                  padding: 0,
                   fontSize: "14px",
                 },
-                "&.MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "var(--clr-gray-200)",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "var(--clr-gray-200)",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "var(--clr-gray-200)",
-                  },
-                },
+                "& fieldset": { border: "none" },
               }}
-            >
-              {/* {assetsList?.map(
-                            (item, i) =>
-                              !item.hidden && ( */}
-              <MenuItem
-                // key={i}
-                value={paymentRequestDetails?.currency_name}
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "var(--clr-gray-100)",
-                  },
-                  "&.Mui-selected": {
-                    backgroundColor: "var(--clr-gray-200)",
-                  },
-                }}
-              >
-                {paymentRequestDetails?.currency_name}
-              </MenuItem>
-              {/* )
-                          )} */}
-            </Select>
+              size="small"
+              value={paymentRequestDetails?.category_name}
+              fullWidth
+              // id="fullWidth"
+              placeholder="Enter wallet address"
+              InputProps={{
+                style: { padding: 0 },
+                readOnly: true,
+              }}
+            />
           </Cell>
         </TableRow>
       </TableBody>

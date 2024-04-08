@@ -10,6 +10,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
@@ -357,16 +358,16 @@ const BookkeepingTransferDetails = ({
             <Table>
               <TableHead>
                 <TableRow>
-                  <HeaderCell width="160px" color="#0f172a">
+                  <HeaderCell width="160px" color="#475569">
                     Safe
                   </HeaderCell>
-                  <HeaderCell width="160px" color="#0f172a">
+                  <HeaderCell width="160px" color="#475569">
                     Counterparty
                   </HeaderCell>
-                  <HeaderCell width="200px" color="#0f172a">
+                  <HeaderCell width="200px" color="#475569">
                     Amount
                   </HeaderCell>
-                  <HeaderCell width="200px" color="#0f172a">
+                  <HeaderCell width="200px" color="#475569">
                     Currency
                   </HeaderCell>
                 </TableRow>
@@ -399,7 +400,9 @@ const BookkeepingTransferDetails = ({
             {/* note info */}
             <NoteInformation>
               <NoteHeader>
-                <h3>Note Information</h3>
+                <Typography color="#475569" fontSize={14} fontWeight={500}>
+                  Note Information
+                </Typography>
                 {/* <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} /> */}
               </NoteHeader>
 

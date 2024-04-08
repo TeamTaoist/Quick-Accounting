@@ -335,7 +335,8 @@ const QueueTransactionItem = ({
               <p>{formatTime(approveTransaction.timestamp)}</p>
             </HeaderTitle>
             <h5>
-              {approveTransaction.actionCount || 1} {t("queue.Action")}
+              {approveTransaction.actionCount || 1} {t("queue.Action")}{" "}
+              {approveTransaction.actionCount > 1 ? "s" : ""}
             </h5>
           </Header>
         </AccordionSummary>
@@ -380,9 +381,12 @@ const QueueTransactionItem = ({
                   approveTransaction.confirmationsRequired ||
                   threshold}
               </h4>
-              {filterRejectSigners?.map((owner) => (
-                <p key={owner}>{getShortAddress(owner)}</p>
-              ))}
+              <Owners>
+                {filterConfirmSigners?.map((owner) => (
+                  // <p key={owner}>{getShortAddress(owner)}</p>
+                  <p key={owner}>{getShortAddress(owner)}</p>
+                ))}
+              </Owners>
               <ExecuteBtn disabled={hasRejected} onClick={handleReject}>
                 Reject
               </ExecuteBtn>
@@ -508,9 +512,10 @@ export default function QueueItem({
 }
 
 const QueueLabelItemStyle = styled.h1`
-  font-size: 20px;
+  font-size: 16px;
   margin-block: 10px;
   font-weight: 400;
+  color: var(--clr-gray-600);
 `;
 
 const QueueNotice = styled.div`
@@ -524,7 +529,7 @@ const Header = styled.div`
   align-items: center;
   h5 {
     margin-right: 20px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
   }
   /* {
@@ -533,7 +538,7 @@ const Header = styled.div`
 `;
 const HeaderTitle = styled.div`
   h6 {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     padding-bottom: 7px;
   }
@@ -590,7 +595,6 @@ const ApproveBtn = styled.button`
   width: 90px;
   border-radius: 7px;
   font-size: 14px;
-  margin-right: 10px;
   margin-top: 12px;
   cursor: pointer;
   &:disabled:hover {
@@ -614,8 +618,8 @@ const TotalValue = styled.div`
   text-align: center;
   background: var(--clr-gray-100);
   overflow: hidden;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 500;
   border-top: 1px solid var(--clr-gray-200);
   display: grid;
   align-items: center;
