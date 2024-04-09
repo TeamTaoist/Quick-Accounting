@@ -128,7 +128,7 @@ const Settings = () => {
           </p>
         ))}
       </MultiSigner>
-      <Link href="https://app.safe.global/" target="_blank">
+      <Link href="https://app.safe.global/" target="_blank" fontSize="14px">
         Manage in Safe
       </Link>
     </SettingsContainer>

@@ -29,6 +29,7 @@ export const WorkspaceInfo = styled.div<SidebarProps>`
     hideSidebar ? "0" : "12px"};
   border-radius: 6px;
   height: ${({ hideSidebar }) => (hideSidebar ? "" : "80")};
+  transition: all 200ms;
 
   h5 {
     font-size: 14px;

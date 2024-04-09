@@ -94,7 +94,6 @@ const Bookkeeping = () => {
 
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
-  console.log(selected);
 
   const handleBookkeepingDetails = (bookkeeping: IPaymentRequest) => {
     setCurrentBookkeepingDetail(bookkeeping);
@@ -135,7 +134,7 @@ const Bookkeeping = () => {
         }
       );
     }
-  }, [searchTerm]);
+  }, [getBookkeepingList, isSearch, pageNumbers, searchTerm, workspaceId]);
   // filter table data
   // const filterData = bookkeepingList.filter((bookkeeping) => {
   //   const searchItem = bookkeeping.counterparty

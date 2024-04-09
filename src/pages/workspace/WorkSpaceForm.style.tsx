@@ -23,7 +23,7 @@ export const FormHeader = styled.div`
     justify-content: space-between;
     align-items: center;
     h3 {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 600;
     }
     img {
@@ -50,13 +50,12 @@ export const CreateSafe = styled.div`
   p {
     font-size: 12px;
     font-weight: 400;
+    color: var(--clr-primary-900);
   }
   a {
     font-size: 12px;
     font-weight: 400;
-    text-decoration: none;
     border-radius: 6px;
-    color: var(--clr-primary-900);
     display: flex;
     align-items: center;
     gap: 5px;

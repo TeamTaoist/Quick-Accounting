@@ -110,6 +110,14 @@ const WorkSpaceForm = () => {
                   height: "19px",
                 },
               }}
+              inputProps={{
+                sx: {
+                  fontSize: "14px",
+                  "&::placeholder": {
+                    fontSize: "14px",
+                  },
+                },
+              }}
               value={workspaceName}
               onChange={(e) => setWorkspaceName(e.target.value)}
             />
@@ -150,6 +158,14 @@ const WorkSpaceForm = () => {
                       "&.Mui-selected": {
                         bgcolor: "var(--clr-gray-100)",
                       },
+                    },
+                  },
+                }}
+                inputProps={{
+                  sx: {
+                    fontSize: "14px",
+                    "&::placeholder": {
+                      fontSize: "14px",
                     },
                   },
                 }}

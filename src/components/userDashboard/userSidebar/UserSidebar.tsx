@@ -128,15 +128,16 @@ const Address = styled.div<SidebarProps>`
   align-items: center;
   justify-content: ${({ hideSidebar }) =>
     hideSidebar ? "center" : "space-between"};
+  gap: 8px;
   img {
-    width: 16px;
+    width: 10px;
     transform: ${({ hideSidebar }) => hideSidebar && "rotate(180deg)"};
     cursor: pointer;
   }
   h5 {
     font-size: 12px;
     overflow: hidden;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--clr-gray-400);
   }
 `;
@@ -161,7 +162,7 @@ const SidebarLinkList = styled.div<SidebarProps>`
 export const BuildVersion = styled.div`
   position: fixed;
   bottom: 20px;
-  left: 22px;
+  left: 23.5px;
 `;
 
 const SidebarHeader = styled.div<SidebarProps>`

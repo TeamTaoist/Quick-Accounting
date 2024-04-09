@@ -27,12 +27,11 @@ import styled from "@emotion/styled";
 
 const Toast = styled(ToastContainer)`
   .Toastify__toast {
-    border: 1px solid #e2e8f0;
     font-weight: 500;
-    color: #000000;
+    color: white;
     text-align: center;
     box-shadow: none;
-    background-color: #f1f5f9;
+    background-color: var(--clr-gray-800);
   }
   .Toastify__close-button {
     display: none;

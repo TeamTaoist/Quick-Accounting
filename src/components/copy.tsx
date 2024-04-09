@@ -74,7 +74,7 @@ const CopyContent = styled.div<{ dir: string }>`
     position: absolute;
     border: 5px solid transparent;
     border-bottom-color: #000;
-    top: 10px;
+    top: 8px;
     right: -6px;
     transform: translateX(50%) rotate(90deg);
   }
