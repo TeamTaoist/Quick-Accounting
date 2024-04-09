@@ -136,14 +136,14 @@ const Bookkeeping = () => {
     }
   }, [getBookkeepingList, isSearch, pageNumbers, searchTerm, workspaceId]);
   // filter table data
-  // const filterData = bookkeepingList.filter((bookkeeping) => {
-  //   const searchItem = bookkeeping.counterparty
-  //     .toLowerCase()
-  //     .includes(searchTerm.toLowerCase());
-  //   const filterByCategory =
-  //     selectedValue === "" || bookkeeping.category_name === selectedValue;
-  //   return searchItem && filterByCategory;
-  // });
+  const filterData = bookkeepingList.filter((bookkeeping) => {
+    const searchItem = bookkeeping.counterparty
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const filterByCategory =
+      selectedValue === "" || bookkeeping.category_name === selectedValue;
+    return searchItem && filterByCategory;
+  });
 
   // export
   const paymentRequestIds = selected.join(",");
@@ -208,7 +208,7 @@ const Bookkeeping = () => {
         setOpen={setOpenModal}
         component={BookkeepingTransferDetails}
       />
-      {bookkeepingList.length === 0 && paymentRequest && (
+      {filterData.length === 0 && paymentRequest && (
         <BookkeepingTitle>
           <h3>You don't have any transactions.</h3>
           <p style={{ width: "509px", textAlign: "center" }}>
@@ -225,7 +225,7 @@ const Bookkeeping = () => {
         
       )} */}
 
-      {bookkeepingList.length > 0 && paymentRequest && (
+      {filterData.length > 0 && paymentRequest && (
         <>
           <PaymentRequestBody>
             <Header>
@@ -305,7 +305,7 @@ const Bookkeeping = () => {
               <BookkeepingTable
                 selected={selected}
                 setSelected={setSelected}
-                filterData={bookkeepingFilterList}
+                filterData={filterData}
                 handleBookkeepingDetails={handleBookkeepingDetails}
               />
 

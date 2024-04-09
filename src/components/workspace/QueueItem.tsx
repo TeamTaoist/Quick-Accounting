@@ -382,8 +382,7 @@ const QueueTransactionItem = ({
                   threshold}
               </h4>
               <Owners>
-                {filterConfirmSigners?.map((owner) => (
-                  // <p key={owner}>{getShortAddress(owner)}</p>
+                {filterRejectSigners?.map((owner) => (
                   <p key={owner}>{owner}</p>
                 ))}
               </Owners>
