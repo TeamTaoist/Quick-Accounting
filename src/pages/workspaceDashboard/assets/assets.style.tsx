@@ -48,10 +48,20 @@ export const AssetHeader = styled.div`
 export const AssetValue = styled.div`
   margin-top: 24px;
   margin-bottom: 16px;
-  h4 {
-    font-size: 20px;
+  text-align: center;
+  background-color: var(--clr-gray-200);
+  padding: 12px;
+  border-radius: 8px;
+
+  h3 {
+    font-size: 24px;
     font-weight: 600;
-    color: var(--clr-gray-900);
+  }
+  p {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--clr-gray-400);
+    margin-top: 6px;
   }
 `;
 export const AssetTable = styled.div`

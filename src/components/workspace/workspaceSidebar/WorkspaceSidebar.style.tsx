@@ -31,7 +31,7 @@ export const WorkspaceInfo = styled.div<SidebarProps>`
   height: ${({ hideSidebar }) => (hideSidebar ? "" : "80")};
 
   h5 {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
   }
 `;

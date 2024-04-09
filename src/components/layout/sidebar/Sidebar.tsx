@@ -57,7 +57,7 @@ const Sidebar = () => {
             {/* user workspaces */}
             {userWorkspaces.data.rows.map((workspace) => (
               <Workspace
-                size="large"
+                active={Number(id) === workspace.ID}
                 key={workspace.ID}
                 onClick={() => handleFetchWorkspaceDetails(workspace.ID)}
                 style={
@@ -148,9 +148,11 @@ const WorkspaceList = styled.div`
   }
 `;
 
-const Workspace = styled.div<{ size?: "large" | "base" }>`
-  width: ${({ size }) => (size === "large" ? "44px" : "40px")};
-  height: ${({ size }) => (size === "large" ? "44px" : "40px")};
+const Workspace = styled.div<{ size?: "large" | "base"; active?: boolean }>`
+  width: ${({ size, active }) =>
+    size === "large" || active ? "44px" : "40px"};
+  height: ${({ size, active }) =>
+    size === "large" || active ? "44px" : "40px"};
   border-radius: 50%;
   background: var(--clr-gray-200);
   cursor: pointer;

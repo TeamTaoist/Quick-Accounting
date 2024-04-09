@@ -96,7 +96,7 @@ const PaymentCurrencyTable = () => {
                 "& fieldset": { border: "none" },
               }}
               size="small"
-              value={paymentRequestDetails?.category_name}
+              value={paymentRequestDetails?.currency_name}
               fullWidth
               // id="fullWidth"
               placeholder="Enter wallet address"

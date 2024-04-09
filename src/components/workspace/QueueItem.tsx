@@ -384,7 +384,7 @@ const QueueTransactionItem = ({
               <Owners>
                 {filterConfirmSigners?.map((owner) => (
                   // <p key={owner}>{getShortAddress(owner)}</p>
-                  <p key={owner}>{getShortAddress(owner)}</p>
+                  <p key={owner}>{owner}</p>
                 ))}
               </Owners>
               <ExecuteBtn disabled={hasRejected} onClick={handleReject}>

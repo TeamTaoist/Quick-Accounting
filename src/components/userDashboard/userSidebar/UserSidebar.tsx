@@ -15,6 +15,10 @@ import { useDomainStore } from "../../../store/useDomain";
 import styled from "@emotion/styled";
 import { SidebarProps } from "../../workspace/workspaceSidebar/WorkspaceSidebar";
 import Version from "../../version";
+import { IconButton, Typography } from "@mui/material";
+import { ArrowImg } from "../../workspace/workspaceSidebar/WorkspaceSidebar.style";
+import CopyBox from "../../copy";
+import CopyIcon from "../../../assets/copy.svg";
 
 const UserSidebar = () => {
   const { t } = useTranslation();
@@ -37,29 +41,40 @@ const UserSidebar = () => {
   }, [address, chainId]);
   return (
     <UserSidebarSection hideSidebar={hideSidebar}>
-      {/* user address */}
-      <AuthDetails hideSidebar={hideSidebar}>
-        <Address hideSidebar={hideSidebar}>
-          {!hideSidebar && (
-            <h5>
-              {address &&
-                chainId &&
-                formatAddressToDomain(address, chainId, false)}
-            </h5>
-          )}
+      <SidebarHeader hideSidebar={hideSidebar}>
+        <Typography color="#64748B" fontSize="14px" fontWeight={400}>
+          MY ACCOUNT
+        </Typography>
 
+        <IconButton onClick={handleSidebar}>
           <img
             onClick={handleSidebar}
             className="arrow-icon"
             src={arrow}
             alt=""
           />
-        </Address>
+        </IconButton>
+      </SidebarHeader>
+
+      {/* user address */}
+      <AuthDetails hideSidebar={hideSidebar}>
         {!hideSidebar && (
+          <Address hideSidebar={hideSidebar}>
+            <CopyBox text={address as string}>
+              <h5>
+                {address &&
+                  chainId &&
+                  formatAddressToDomain(address, chainId, false)}
+              </h5>
+              <img src={CopyIcon} alt="" />
+            </CopyBox>
+          </Address>
+        )}
+        {/* {!hideSidebar && (
           <Disconnect>
             <button onClick={handleLogout}>{t("user.Disconnect")}</button>
           </Disconnect>
-        )}
+        )} */}
       </AuthDetails>
 
       {/* user payment request */}
@@ -106,17 +121,11 @@ const UserSidebarSection = styled.div<SidebarProps>`
   -ms-overflow-style: none;
   scrollbar-width: none;
 `;
-const AuthDetails = styled.div<SidebarProps>`
-  background-color: var(--clr-gray-100);
-  padding: 12px;
-  border-radius: 6px;
-  height: ${({ hideSidebar }) => (hideSidebar ? "" : "80")};
-`;
+const AuthDetails = styled.div<SidebarProps>``;
 const Address = styled.div<SidebarProps>`
   display: flex;
   /* justify-content: space-between; */
   align-items: center;
-  height: 24px;
   justify-content: ${({ hideSidebar }) =>
     hideSidebar ? "center" : "space-between"};
   img {
@@ -125,12 +134,10 @@ const Address = styled.div<SidebarProps>`
     cursor: pointer;
   }
   h5 {
-    font-size: 16px;
+    font-size: 12px;
     overflow: hidden;
     font-weight: 500;
-    &:hover {
-      color: var(--clr-primary-900);
-    }
+    color: var(--clr-gray-400);
   }
 `;
 const Disconnect = styled.div`
@@ -155,4 +162,19 @@ export const BuildVersion = styled.div`
   position: fixed;
   bottom: 20px;
   left: 22px;
+`;
+
+const SidebarHeader = styled.div<SidebarProps>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  img {
+    width: 16px;
+    transform: ${({ hideSidebar }) => hideSidebar && "rotate(180deg)"};
+    cursor: pointer;
+  }
+  p {
+    display: ${({ hideSidebar }) => (hideSidebar ? "none" : "flex")};
+  }
 `;

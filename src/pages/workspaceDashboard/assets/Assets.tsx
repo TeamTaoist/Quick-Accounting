@@ -9,7 +9,13 @@ import {
   RowCell,
   RowLink,
 } from "./assets.style";
-import { InputAdornment, Switch, SwitchProps, TextField } from "@mui/material";
+import {
+  InputAdornment,
+  Link,
+  Switch,
+  SwitchProps,
+  TextField,
+} from "@mui/material";
 import searchIcon from "../../../assets/workspace/search-icon.svg";
 import linkIcon from "../../../assets/workspace/link-icon.svg";
 import rightArrow from "../../../assets/asset-right-arrow.svg";
@@ -86,10 +92,13 @@ const Assets = () => {
   //   workspace?.vault_wallet && getHideAssets();
   // }, [workspace?.vault_wallet]);
 
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchAssetsList = async () => {
+      setIsLoading(true);
       workspace?.vault_wallet && (await getAssets());
       workspace?.vault_wallet && (await getHideAssets());
+      setIsLoading(false);
     };
     fetchAssetsList();
   }, [workspace?.vault_wallet]);
@@ -128,7 +137,7 @@ const Assets = () => {
       console.log("hide");
     }
   };
-  console.log("assetsList", assetsList);
+
   // pagination
   const [pageNumbers, setPageNumbers] = useState(0);
   const pageSize = 10;
@@ -139,7 +148,11 @@ const Assets = () => {
   const handlePageClick = (event: any) => {
     setPageNumbers(event.selected);
   };
-  console.log("page", pageCount);
+
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <AssetSection>
       {!assetsList.length ? (
@@ -147,7 +160,9 @@ const Assets = () => {
           <h3>There are no assets in this wallet address yet.</h3>
           <p>All assets in that wallet address will be displayed here.</p>
           <EmptyAssetBtn>
-            <h6>Check in Safe</h6>
+            <Link href="https://app.safe.global/" target="_blank">
+              Check in Safe
+            </Link>
             <span>
               <img src={rightArrow} alt="" />
             </span>
@@ -184,11 +199,18 @@ const Assets = () => {
                     <img src={searchIcon} alt="" />
                   </InputAdornment>
                 ),
+                sx: {
+                  fontSize: "14px",
+                  "&::placeholder": {
+                    fontSize: "14px",
+                  },
+                },
               }}
             />
           </AssetHeader>
           <AssetValue>
-            <h4>Value: ${totalAssetsValue}</h4>
+            <h3>${totalAssetsValue}</h3>
+            <p>Total value</p>
           </AssetValue>
           <AssetTable>
             <TableContainerSection>

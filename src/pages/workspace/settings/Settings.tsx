@@ -16,6 +16,7 @@ import CopyIcon from "../../../assets/copy.svg";
 import CopyBox from "../../../components/copy";
 import UpdateLoading from "../../../components/UpdateLoading";
 import arrowRight from "../../../assets/workspace/arrow-right.svg";
+import { Link } from "@mui/material";
 
 const formatSafeAddress = (address: string, chainId: number) => {
   const short = CHAINS.find((chain) => chain.chainId === chainId)?.short;
@@ -127,9 +128,9 @@ const Settings = () => {
           </p>
         ))}
       </MultiSigner>
-      <ManageSafe href="https://safe.global/" target="_blank">
-        <h6>Manage in Safe</h6> <img src={arrowRight} alt="" />
-      </ManageSafe>
+      <Link href="https://app.safe.global/" target="_blank">
+        Manage in Safe
+      </Link>
     </SettingsContainer>
   );
 };

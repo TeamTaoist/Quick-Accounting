@@ -3,7 +3,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react";
-import { InputLabel, TextField } from "@mui/material";
+import { InputLabel, Link, TextField } from "@mui/material";
 import {
   Button,
   CreateSafe,
@@ -115,9 +115,16 @@ const WorkSpaceForm = () => {
             />
             <CreateSafe>
               <p>{t("workspaceForm.AddASafe")}</p>
-              <a href="https://safe.global/" target="_blank" rel="noreferrer">
-                {t("workspaceForm.CreateASafe")} <img src={rightArrow} alt="" />
-              </a>
+              <Link
+                href="https://app.safe.global/"
+                target="_blank"
+                rel="noreferrer"
+                sx={{
+                  color: "#1976d2",
+                }}
+              >
+                {t("workspaceForm.CreateASafe")}
+              </Link>
             </CreateSafe>
             {/* select */}
             <SelectBox>

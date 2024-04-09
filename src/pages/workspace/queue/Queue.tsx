@@ -35,6 +35,7 @@ const Queue = () => {
   const [paymentRequest, setPaymentRequest] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [list, setList] = useState<IQueueGroupItemProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -42,8 +43,10 @@ const Queue = () => {
   const workspaceId = Number(id);
 
   const getQueueList = async () => {
+    setIsLoading(true);
     const data = await getQueueTx(workspace.chain_id, workspace.vault_wallet);
     data && setList(data);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -85,6 +88,11 @@ const Queue = () => {
   useEffect(() => {
     getWorkspaceCategoryProperties(Number(id), true);
   }, []);
+
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <QueueSection>
       {list.length === 0 && paymentRequest ? (
@@ -114,7 +122,6 @@ const Queue = () => {
               )}
             </ViewReject>
           </QueHeader>
-          {/*  */}
           {paymentRequest && (
             <>
               {list.map((item, index) => (
@@ -137,11 +144,6 @@ const Queue = () => {
       )}
       {!paymentRequest && (
         <RejectSection>
-          {/* <RejectDataTable
-          isInQueue
-            paymentRequest={paymentRequest}
-            setPaymentRequest={setPaymentRequest}
-          /> */}
           <QueueFailedTable
             paymentRequest={paymentRequest}
             setPaymentRequest={setPaymentRequest}
