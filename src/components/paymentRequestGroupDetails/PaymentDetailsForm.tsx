@@ -15,6 +15,8 @@ import {
 import arrowBottom from "../../assets/workspace/arrow-bottom.svg";
 import { useWorkspace } from "../../store/useWorkspace";
 import { formatBalance } from "../../utils/number";
+import { PaymentRequestInput } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
+import { Cell, HeaderCell } from "../table";
 
 interface PaymentDetailsFormProps {
   value: SharePaymentRequestBody;
@@ -30,6 +32,30 @@ interface PaymentDetailsFormProps {
   isEditable: boolean;
   sharePaymentRequestForm: SharePaymentRequestBody[];
 }
+const CategoryDropdownStyle = {
+  overflow: "hidden",
+  width: "190px",
+  height: "42px",
+  padding: 0,
+  paddingInline: "1px",
+  "& .MuiSelect-select": {
+    display: "block",
+    fontSize: "14px",
+  },
+  "&.MuiOutlinedInput-root": {
+    border: "1px solid var(--clr-gray-200)",
+    "& fieldset": {
+      border: "none",
+    },
+    "&:hover fieldset": {
+      border: "none",
+    },
+    "&.Mui-focused fieldset": {
+      border: "none",
+    },
+  },
+  "& .MuiInputLabel-root": { display: "none" },
+};
 
 const PaymentDetailsForm = ({
   handleFormChange,
@@ -40,171 +66,103 @@ const PaymentDetailsForm = ({
 }: PaymentDetailsFormProps) => {
   const { assetsList } = useWorkspace();
   return (
-    <TableContainer
-      sx={{
-        boxShadow: "none",
-        border: "1px solid var(--border-table)",
-        borderTopRightRadius: "6px",
-        borderTopLeftRadius: "6px",
-      }}
-    >
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead sx={{ background: "var(--bg-secondary)" }}>
-          <TableRow>
-            <TableCell
-              sx={{
-                width: "30%",
-                borderRight: "1px solid var(--border-table)",
-                // paddingInline: 0,
-                fontSize: "18px",
-                fontWeight: "500",
-              }}
+    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <TableHead>
+        <TableRow>
+          <HeaderCell width="260px" color="#0f172a">
+            Recipient
+          </HeaderCell>
+          <HeaderCell width="230px" color="#0f172a">
+            Amount
+          </HeaderCell>
+          <HeaderCell width="230px" color="#0f172a">
+            Currency
+          </HeaderCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          <Cell>
+            <PaymentRequestInput
+              placeholder="Enter wallet address"
+              value={value.recipient}
+              onChange={(e) =>
+                handleFormChange(index, "recipient", e.target.value)
+              }
+            />
+          </Cell>
+          <Cell>
+            <PaymentRequestInput
+              placeholder="0.00"
+              value={value.amount}
+              onChange={(e) =>
+                handleFormChange(index, "amount", e.target.value)
+              }
+            />
+          </Cell>
+          <Cell>
+            <Select
+              labelId={`dropdown-${index}-label`}
+              variant="outlined"
+              id={`dropdown-${index}`}
+              value={sharePaymentRequestForm[index].currency_contract_address}
+              onChange={(e) =>
+                handleFormChange(index, "currency_address", e.target.value)
+              }
+              size="small"
+              IconComponent={() => (
+                <InputAdornment position="start">
+                  <img
+                    src={arrowBottom}
+                    alt="Custom Arrow Icon"
+                    style={{ marginRight: "20px", width: "10px" }}
+                  />
+                </InputAdornment>
+              )}
+              // displayEmpty
+              // renderValue={(selectedValue) => (
+              //   <div style={{ overflow: "hidden", fontSize: "14px" }}>
+              //     {selectedValue ? (
+              //       selectedValue
+              //     ) : (
+              //       <p style={{ color: "var(--clr-gray-400)" }}>currency</p>
+              //     )}
+              //   </div>
+              // )}
+              sx={CategoryDropdownStyle}
             >
-              Recipient
-            </TableCell>
-            <TableCell
-              sx={{
-                width: "23%",
-                borderRight: "1px solid var(--border-table)",
-                fontSize: "18px",
-                fontWeight: "500",
-              }}
-            >
-              Amount
-            </TableCell>
-            <TableCell
-              sx={{
-                width: "37%",
-                fontSize: "18px",
-                fontWeight: "500",
-              }}
-            >
-              Currency
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow
-            sx={{
-              height: "30px",
-            }}
-          >
-            <TableCell
-              // size="small"
-              sx={{
-                borderRight: "1px solid var(--border-table)",
-                padding: 0,
-                // paddingInline: "16px",
-              }}
-            >
-              <TextField
-                sx={{
-                  "& fieldset": { border: "none" },
-                }}
-                size="small"
-                fullWidth
-                autoComplete="off"
-                // id="fullWidth"
-                placeholder="Enter wallet address"
-                value={value.recipient}
-                onChange={(e) =>
-                  handleFormChange(index, "recipient", e.target.value)
-                }
-                InputProps={{
-                  style: { padding: 0 },
-                  readOnly: isEditable,
-                }}
-              />
-            </TableCell>
-            <TableCell
-              sx={{
-                borderRight: "1px solid var(--border-table)",
-                borderRadius: "5px",
-                padding: 0,
-                paddingLeft: "10px",
-                // minHeight: "40px",
-              }}
-            >
-              <TextField
-                sx={{
-                  "& fieldset": { border: "none" },
-                }}
-                size="small"
-                fullWidth
-                autoComplete="off"
-                value={value.amount}
-                // id="fullWidth"
-                placeholder="amount"
-                onChange={(e) =>
-                  handleFormChange(index, "amount", e.target.value)
-                }
-                InputProps={{
-                  style: { padding: 0 },
-                  readOnly: isEditable,
-                }}
-              />
-            </TableCell>
-            <TableCell
-              sx={{
-                padding: 0,
-                // minHeight: "40px",
-              }}
-            >
-              <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small"
-                value={sharePaymentRequestForm[index].currency_contract_address}
-                // onChange={handleChange}
-                size="small"
-                onChange={(e) =>
-                  handleFormChange(index, "currency_address", e.target.value)
-                }
-                IconComponent={() => (
-                  <InputAdornment position="start">
-                    <img
-                      src={arrowBottom}
-                      alt="Custom Arrow Icon"
-                      style={{ marginRight: "50px" }}
-                    />
-                  </InputAdornment>
-                )}
-                sx={{
-                  width: "100%",
-                  "& fieldset": { border: "none" },
-                }}
-                inputProps={{
-                  readOnly: isEditable,
-                }}
-              >
-                {assetsList.map(
-                  (asset, i) =>
-                    !asset.hidden && (
-                      <MenuItem
-                        key={i}
-                        value={asset.tokenInfo.address}
-                        disabled={asset.hidden}
-                        sx={{
-                          "&:hover": {
-                            backgroundColor: "var(--hover-bg)",
-                          },
-                          "&.Mui-selected": {
-                            backgroundColor: "var(--hover-bg)",
-                          },
-                        }}
-                      >
-                        {asset.tokenInfo.symbol}(
-                        {formatBalance(asset.balance, asset.tokenInfo.decimals)}
-                        )
-                      </MenuItem>
-                    )
-                )}
-              </Select>
-            </TableCell>
-          </TableRow>
-          {/* ))} */}
-        </TableBody>
-      </Table>
-    </TableContainer>
+              {assetsList?.map(
+                (item, i) =>
+                  !item.hidden && (
+                    <MenuItem
+                      key={i}
+                      value={item.tokenInfo.address}
+                      sx={{
+                        paddingInline: "5px",
+                        fontSize: "14px",
+                        marginInline: "10px",
+                        borderRadius: "6px",
+                        margin: "5px 8px",
+                        "&:hover": {
+                          backgroundColor: "var(--clr-gray-100)",
+                        },
+                        "&.Mui-selected": {
+                          backgroundColor: "var(--clr-gray-200)",
+                        },
+                      }}
+                    >
+                      {item.tokenInfo.symbol}(
+                      {formatBalance(item.balance, item.tokenInfo.decimals)})
+                    </MenuItem>
+                  )
+              )}
+            </Select>
+          </Cell>
+        </TableRow>
+        {/* ))} */}
+      </TableBody>
+    </Table>
+    // </TableContainer>
   );
 };
 

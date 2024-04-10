@@ -4,59 +4,55 @@ import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItem
 import { useEffect, useState } from "react";
 import {
   FormControl,
-  InputAdornment,
-  MenuItem,
-  Paper,
-  Select,
   SelectChangeEvent,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
+  Typography,
 } from "@mui/material";
 
-import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
-import multiSelect from "../../../assets/workspace/multi-select.svg";
-import selectIcon from "../../../assets/workspace/select.svg";
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
-import optionsIcon from "../../../assets/workspace/option.svg";
-import linkIcon from "../../../assets/workspace/link-icon.svg";
 import transferArrow from "../../../assets/workspace/transfer-arrow.svg";
 import {
-  DeleteIcon,
   Image,
   NoteHeader,
   NoteInfo,
   NoteInformation,
-  RequestSubmit,
 } from "../../workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
-
-import ReactSelect from "../../../components/ReactSelect";
-import data from "../../../data/tableData";
 import usePaymentsStore from "../../../store/usePayments";
 import { useLoading } from "../../../store/useLoading";
 import CHAINS from "../../../utils/chain";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { formatNumber } from "../../../utils/number";
 import { getShortAddress } from "../../../utils";
-import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import {
+  CategoryProperties,
+  useCategoryProperty,
+} from "../../../store/useCategoryProperty";
 import { useBookkeeping } from "../../../store/useBookkeeping";
 import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
 import { formatTimestamp } from "../../../utils/time";
 import {
   Status,
-  StatusBtn,
   SubmissionTime,
 } from "../paymentRequest/PaymentRequestDetails";
 import { getPaymentStatus } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
-import UpdateLoading from "../../../components/UpdateLoading";
+import { Cell, HeaderCell } from "../../../components/table";
+import CategoryDropdown from "../../../components/categoryDropdown";
 
+const HeaderStyles = {
+  padding: "10px 15px",
+  fontFamily: "Inter",
+  fontSize: "16px",
+  fontWeight: "500",
+  color: "#0F172A",
+  width: "33%",
+};
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
 }
@@ -83,8 +79,12 @@ const BookkeepingTransferDetails = ({
   );
 
   const { updatePaymentRequestCategory } = usePaymentsStore();
-  const { bookkeepingDetails, getBookkeepingList, updateBookkeepingCategory } =
-    useBookkeeping();
+  const {
+    bookkeepingDetails,
+    getBookkeepingList,
+    updateBookkeepingCategory,
+    bookkeepingList,
+  } = useBookkeeping();
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { isLoading } = useLoading();
 
@@ -170,19 +170,7 @@ const BookkeepingTransferDetails = ({
     });
   };
 
-  const [age, setAge] = useState("Category");
-
-  const handleCategoryChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
-  };
-
-  // const handleSelectChange = (selectedOptions: any) => {
-  //   setSelectedValues(selectedOptions);
-  // };
-
   // get the selected category list
-  const [categoryProperties, setCategoryProperties] = useState<any>([]);
-
   const [selectedCategoryID, setSelectedCategoryID] = useState<number>(
     bookkeepingDetails?.category_id
   );
@@ -194,19 +182,42 @@ const BookkeepingTransferDetails = ({
     const selectedCategory = workspaceCategoryProperties?.find(
       (f) => f?.ID === selectedCategoryID
     );
-    setSelectedCategory(selectedCategory);
     if (selectedCategory) {
-      setCategoryProperties(selectedCategory?.properties);
+      setSelectedCategory(selectedCategory);
+    } else {
+      setSelectedCategory({});
     }
   }, [selectedCategoryID, workspaceCategoryProperties]);
 
-  const handleCategory = async (categoryId: number) => {
-    setSelectedCategoryID(categoryId);
+  const details = bookkeepingList.filter((f) => f.ID === bookkeepingDetails.ID);
+  console.log("details", details);
+
+  const handleCategory = async (category: CategoryProperties) => {
+    setSelectedCategoryID(category.ID);
     setPropertyValues({});
     setPropertyMultiValues({});
     setPropertyTextValue({});
     setPropertyContent("");
     setDatePicker({});
+    const updatedPaymentBody = {
+      category_id: category.ID,
+      category_name: category.name,
+      category_properties: [],
+    };
+    setIsUpdating(true);
+    await updateBookkeepingCategory(
+      id,
+      bookkeepingDetails.ID.toString(),
+      updatedPaymentBody
+    ).then((res) => {
+      if (res) {
+        setIsUpdating(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 3000);
+      }
+    });
   };
   // form data
   const updatedPaymentBody = {
@@ -296,16 +307,6 @@ const BookkeepingTransferDetails = ({
     setDatePicker(initialPropertyDateValue);
   }, []);
 
-  useEffect(() => {
-    const initialSelectedCategory = workspaceCategoryProperties?.find(
-      (f) => f?.ID === selectedCategoryID
-    );
-    setSelectedCategory(initialSelectedCategory);
-    if (initialSelectedCategory) {
-      setCategoryProperties(initialSelectedCategory?.properties);
-    }
-  }, []);
-
   // updating loading state
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
@@ -335,107 +336,61 @@ const BookkeepingTransferDetails = ({
       workspaceName={workspace.name}
       workspaceAvatar={workspace.avatar}
       address={workspace.vault_wallet}
+      isUpdating={isUpdating}
+      isSuccess={isSuccess}
     >
       <RequestDetails>
         <TransferTable>
           <TableContainer
-            // component={Paper}
-            // sx={{ boxShadow: "none", border: "1px solid var(--border)" }}
-            // sx={{ boxShadow: "none" }}
             sx={{
               boxShadow: "none",
-              border: "1px solid var(--border-table)",
-              borderRadius: "10px",
+              border: "1px solid var(--clr-gray-200)",
+              borderRadius: "6px",
+              minWidth: "722px",
+              overflowX: "hidden",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              "-ms-overflow-style": "none",
+              scrollbarWidth: "none",
             }}
           >
             <Table>
-              <TableHead sx={{ backgroundColor: "var(--bg-secondary)" }}>
+              <TableHead>
                 <TableRow>
-                  <TableCell
-                    style={{
-                      padding: "10px 15px",
-                      fontFamily: "PingFangHK",
-                      fontSize: "18px",
-                    }}
-                  >
+                  <HeaderCell width="160px" color="#475569">
                     Safe
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      padding: "10px 15px",
-                      fontFamily: "PingFangHK",
-                      fontSize: "18px",
-                    }}
-                  >
+                  </HeaderCell>
+                  <HeaderCell width="160px" color="#475569">
                     Counterparty
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      padding: "10px 15px",
-                      fontFamily: "PingFangHK",
-                      fontSize: "18px",
-                    }}
-                  >
+                  </HeaderCell>
+                  <HeaderCell width="200px" color="#475569">
                     Amount
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      padding: "10px 15px",
-                      fontFamily: "PingFangHK",
-                      fontSize: "18px",
-                    }}
-                  >
+                  </HeaderCell>
+                  <HeaderCell width="200px" color="#475569">
                     Currency
-                  </TableCell>
+                  </HeaderCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell
-                    sx={{
-                      borderRight: "1px solid var(--border-table)",
-                      padding: 0,
-                      paddingLeft: "12px",
-                    }}
-                  >
+                  <Cell>
                     <SafeSection>
                       <div>{getShortAddress(workspace.vault_wallet)}</div>
                       <Logo $dir={bookkeepingDetails.direction}>
                         <img src={transferArrow} alt="" />
                       </Logo>
                     </SafeSection>
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      borderRight: "1px solid var(--border-table)",
-                      padding: 0,
-                      paddingLeft: "12px",
-                    }}
-                  >
+                  </Cell>
+                  <Cell>
                     {formatAddressToDomain(
                       bookkeepingDetails.counterparty,
                       workspace.chain_id,
                       workspace.name_service === "sns"
                     )}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      borderRight: "1px solid var(--border-table)",
-                      padding: 0,
-                      paddingLeft: "12px",
-                    }}
-                  >
-                    {formatNumber(Number(bookkeepingDetails.amount))}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      borderRight: 0,
-                      padding: 0,
-                      paddingLeft: "12px",
-                    }}
-                  >
-                    {bookkeepingDetails.currency_name}
-                  </TableCell>
+                  </Cell>
+                  <Cell>{formatNumber(Number(bookkeepingDetails.amount))}</Cell>
+                  <Cell>{bookkeepingDetails.currency_name}</Cell>
                 </TableRow>
                 {/* ))} */}
               </TableBody>
@@ -445,71 +400,33 @@ const BookkeepingTransferDetails = ({
             {/* note info */}
             <NoteInformation>
               <NoteHeader>
-                <h3>Note Information</h3>
-                <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} />
+                <Typography color="#475569" fontSize={14} fontWeight={500}>
+                  Note Information
+                </Typography>
+                {/* <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} /> */}
               </NoteHeader>
 
               {/* <TableContainer> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
-                  <TableRow
-                    sx={{
-                      td: {
-                        border: "1px solid var(--border-table)",
-                        padding: 0,
-                        paddingInline: 1,
-                      },
-                    }}
-                  >
-                    <TableCell sx={{ height: 1, width: 200 }}>
+                  <TableRow>
+                    <Cell width="220px">
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
-                    </TableCell>
-                    <TableCell>
+                    </Cell>
+                    <Cell width="500px">
                       <FormControl
                         fullWidth
-                        disabled={bookkeepingDetails.status === 2}
+                        disabled={bookkeepingDetails?.status === 2}
                       >
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={age}
-                          label="Age"
-                          size="small"
-                          onChange={handleCategoryChange}
-                          onBlur={handleUpdateCategory}
-                          IconComponent={() => (
-                            <InputAdornment position="start">
-                              <img
-                                src={arrowBottom}
-                                alt="Custom Arrow Icon"
-                                style={{ marginRight: "20px" }}
-                              />
-                            </InputAdornment>
-                          )}
-                          sx={{
-                            minWidth: "100%",
-                            "& fieldset": { border: "none" },
-                          }}
-                        >
-                          <MenuItem disabled value="Category">
-                            {/* {paymentRequestDetails.category_name} */}
-                            {selectedCategory?.name}
-                          </MenuItem>
-                          {workspaceCategoryProperties?.map((category) => (
-                            <MenuItem
-                              key={category.ID}
-                              value={category.name}
-                              // onBlur={handleUpdateCategory}
-                              onClick={() => handleCategory(category.ID)}
-                            >
-                              {category.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
+                        <CategoryDropdown
+                          data={workspaceCategoryProperties}
+                          value={details?.[0]}
+                          onClick={handleCategory}
+                        />
                       </FormControl>
-                    </TableCell>
+                    </Cell>
                   </TableRow>
                   {selectedCategory && (
                     <>
@@ -553,13 +470,16 @@ const BookkeepingTransferDetails = ({
                 target="_blank"
                 rel="noreferrer"
               >
-                <img src={linkIcon} alt="" />
+                {/* <img src={linkIcon} alt="" /> */}
               </a>
             </div>
           </TransactionHash>
-          <Status>
-            <p>Status</p>
-            <StatusBtn>{getPaymentStatus(bookkeepingDetails.status)}</StatusBtn>
+          <Status status={getPaymentStatus(bookkeepingDetails.status)}>
+            <h6>Status</h6>
+            <div>
+              <p></p>
+              {getPaymentStatus(bookkeepingDetails.status)}
+            </div>
           </Status>
         </TransferTable>
       </RequestDetails>

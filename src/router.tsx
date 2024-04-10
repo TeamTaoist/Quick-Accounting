@@ -22,14 +22,29 @@ import AuthChecker from "./components/authChecker";
 import UserDashboardIndex from "./pages/userDashboard";
 import UserPaymentRequest from "./pages/userDashboard/userPaymentRequest/UserPaymentRequest";
 import MyPayment from "./pages/userDashboard/MyPayment";
+import WorkspaceList from "./pages/userDashboard/WorkspaceList";
+import styled from "@emotion/styled";
+
+const Toast = styled(ToastContainer)`
+  .Toastify__toast {
+    font-weight: 500;
+    color: white;
+    text-align: center;
+    box-shadow: none;
+    background-color: var(--clr-gray-800);
+  }
+  .Toastify__close-button {
+    display: none;
+  }
+`;
 
 const RouterLink = () => {
   return (
     <Router>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
+      <Toast
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={true}
         newestOnTop={false}
         closeOnClick
         rtl={false}
@@ -46,6 +61,7 @@ const RouterLink = () => {
         <Route path="/user" element={<UserDashboardIndex />}>
           <Route path="payment-request" element={<UserPaymentRequest />} />
           <Route path="my-payments" element={<MyPayment />} />
+          <Route path="workspaces" element={<WorkspaceList />} />
         </Route>
         <Route path="/workspace/:id" element={<WorkspaceIndex />}>
           <Route path="assets" element={<Assets />} />

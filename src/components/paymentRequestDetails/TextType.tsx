@@ -1,8 +1,12 @@
 import { TableCell, TableRow, TextField } from "@mui/material";
-import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
+import {
+  NoteInfo,
+  PaymentRequestInput,
+} from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import optionsIcon from "../../assets/workspace/option.svg";
 import { CategoryProperties } from "../../store/useCategoryProperty";
+import { Cell } from "../table";
 
 interface TextTypeProps {
   property: any;
@@ -25,46 +29,23 @@ const TextType = ({
 }: TextTypeProps) => {
   if (!!defaultPropertyValue || !property.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            padding: 1,
-            paddingInline: 1,
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            borderRight: "1px solid var(--border-table)",
-          }}
-        >
+      <TableRow>
+        <Cell width="220">
           <NoteInfo>
             <Image src={optionsIcon} alt="" /> {property.name}
           </NoteInfo>
-        </TableCell>
+        </Cell>
 
-        <TableCell onBlur={handleUpdateCategory}>
-          <TextField
+        <Cell width="500" onBlur={handleUpdateCategory}>
+          <PaymentRequestInput
             disabled={status === 2}
-            sx={{
-              "& fieldset": { border: "none" },
-            }}
-            size="small"
-            fullWidth
-            // value={propertyContent}
             value={proPertyTextValue[property.name]?.values || ""}
-            // id="fullWidth"
             placeholder="Enter content"
-            onChange={(e) =>
+            onChange={(e: any) =>
               handlePropertyText(e, property.name, property.type)
             }
-            InputProps={{
-              style: { padding: 0 },
-            }}
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

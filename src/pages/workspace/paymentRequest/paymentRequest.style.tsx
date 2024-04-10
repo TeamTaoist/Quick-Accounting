@@ -1,40 +1,48 @@
 import styled from "@emotion/styled";
 
 export const PaymentRequestContainer = styled.div`
-  padding-top: 3%;
-  margin-inline: 40px;
+  /* padding-top: 3%;
+  margin-inline: 40px; */
   /* height: 90vh; */
+  padding: 24px;
 `;
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  min-width: 940px;
+  align-items: center;
+  min-width: 1100px;
+`;
+export const Filter = styled.div`
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
 `;
 export const PaymentRequestBody = styled.div``;
 export const ActionBtn = styled.div`
   display: flex;
-  justify-content: end;
-  gap: 20px;
-  width: 100%;
-  margin: 20px 0;
-  margin-top: 60px;
+  gap: 15px;
+  /* width: 100%; */
+  /* margin: 20px 0; */
+  margin-left: 15px;
+  /* margin-top: 60px; */
   img {
-    width: 20px;
+    width: 14px;
   }
 `;
 export const Btn = styled.div`
   display: flex;
   gap: 8px;
-  border: 1px solid var(--border);
-  padding: 6px 10px;
+  border: 1px solid var(--clr-gray-300);
+  padding: 10px 12px;
   border-radius: 5px;
   p {
-    font-size: 20px;
+    font-size: 14px;
+    font-weight: 500;
   }
   cursor: pointer;
 `;
 export const Image = styled.img`
-  width: 20px;
+  width: 16px;
 `;
 export const Option = styled.div`
   display: flex;
@@ -46,16 +54,17 @@ export const ViewReject = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-    background: var(--bg-primary);
-    padding: 6px 10px;
-    border-radius: 5px;
+    background: var(--clr-gray-50);
+    padding: 11px 14px;
+    border-radius: 6px;
     p {
-      font-size: 20px;
+      font-size: 14px;
+      font-weight: 600;
     }
   }
 `;
 export const RejectSection = styled.div`
-  margin-top: 90px;
+  /* margin-top: 20px; */
 `;
 export const BookkeepingRejectSection = styled.div`
   /* margin-top: 8px; */
@@ -64,14 +73,34 @@ export const TableSection = styled.div`
   height: 100%;
   height: 70vh;
   width: 100%;
+  margin-top: 16px;
 `;
 export const PaymentPagination = styled.div`
   padding: 20px 0;
 `;
 export const CategoryCell = styled.div`
-  background: var(--bg-primary);
-  padding: 4px;
+  /* background: var(--clr-gray-200); */
+  /* padding: 2px 10px; */
+  /* display: inline-block; */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  p {
+    font-size: 14px;
+    background: var(--clr-gray-200);
+    padding: 2px 10px;
+    height: 30px;
+    min-width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+  }
+`;
+export const EmptySearchResult = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 85%;
   font-size: 14px;
-  text-align: center;
-  border-radius: 5px;
 `;

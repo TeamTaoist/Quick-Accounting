@@ -1,38 +1,21 @@
 import React, { useEffect, useState } from "react";
-import {
-  CategoryTitle,
-  CreateBtn,
-  CreateOptionButton,
-} from "../category/category.style";
-import add from "../../../assets/workspace/add.svg";
-import archive from "../../../assets/workspace/archive.svg";
-import searchIcon from "../../../assets/workspace/search-icon.svg";
-import approve from "../../../assets/workspace/select.svg";
-import download from "../../../assets/workspace/download.svg";
 import reject from "../../../assets/workspace/reject.svg";
 import back from "../../../assets/workspace/back.svg";
-import filterIcon from "../../../assets/workspace/filtering.svg";
 import {
   Checkbox,
-  FormControl,
-  InputAdornment,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
-  ActionBtn,
-  Btn,
+  EmptySearchResult,
+  Filter,
   Header,
   Image,
-  Option,
   PaymentPagination,
   PaymentRequestBody,
   PaymentRequestContainer,
@@ -47,27 +30,34 @@ import SignPaymentRequest from "./SignPaymentRequest";
 import usePaymentsStore from "../../../store/usePayments";
 import PaymentRequestGroupDetails from "../../../components/workspace/paymentRequest/PaymentRequestGroupDetails";
 import NewPaymentRequest from "../../workspaceDashboard/newPaymentRequest/NewPaymentRequest";
-import ReactPaginate from "react-paginate";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import PaymentRequestTableList from "../../../components/workspace/paymentRequest/PaymentRequestTableList";
 import Pagination from "../../../components/Pagination";
 import RejectPaymentRequestTable from "../../../components/workspace/paymentRequest/RejectPaymentRequestTable";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useDomainStore } from "../../../store/useDomain";
+import SearchInput from "../../../components/workspace/SearchInput";
+import NoPaymentFoundMessage from "../../../components/workspace/paymentRequest/NoPaymentFoundMessage";
+import FilterCategorySelect from "../../../components/workspace/FilterCategorySelect";
+import ActionButton from "../../../components/workspace/paymentRequest/ActionButton";
+import { CheckBoxStyle } from "../../../components/workspace/category/CategoryArchivedList";
+import Button from "../../../components/button";
+import { HeaderCell, TableContainerSection } from "../../../components/table";
+import checkedActiveIcon from "../../../assets/checkbox-active.svg";
+import checkboxIcon from "../../../assets/checkbox.svg";
+import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
 
 const PaymentRequest = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
   const { t } = useTranslation();
 
   const {
     getPaymentRequestList,
     paymentRequestList,
-    getPaymentRequestDetails,
     rejectPaymentRequest,
-    getPaymentRequestGroupDetails,
     exportPaymentList,
     setCurrentPaymentRequestDetail,
+    filterData,
   } = usePaymentsStore();
   const { workspace } = useWorkspace();
   const { queryNameService } = useDomainStore();
@@ -112,23 +102,39 @@ const PaymentRequest = () => {
   // modal end
   // search payments
   const [searchTerm, setSearchTerm] = useState("");
-  const handleChange = (event: any) => {
-    setSearchTerm(event.target.value);
+  const [isSearch, setIsSearch] = useState(false);
+  const handleChange = (e: any) => {
+    setSearchTerm(e.target.value);
   };
+  const handleSearchPayment = (e: any) => {
+    e.preventDefault();
+    getPaymentRequestList(workspaceId, false, pageNumbers, 10, searchTerm).then(
+      (res) => {
+        setTotalItem(res);
+        setIsSearch(true);
+      }
+    );
+  };
+  useEffect(() => {
+    if (!searchTerm && isSearch) {
+      getPaymentRequestList(
+        workspaceId,
+        false,
+        pageNumbers,
+        10,
+        searchTerm
+      ).then((res) => {
+        setTotalItem(res);
+        setIsSearch(false);
+      });
+    }
+  }, [searchTerm]);
+
   const [selectedValue, setSelectedValue] = useState<string>("");
 
   const handleDropdownChange = (event: any) => {
     setSelectedValue(event.target.value);
   };
-  // filter table data
-  const filterData = paymentRequestList.filter((data) => {
-    const searchItem = data.counterparty
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const filterByCategory =
-      selectedValue === "" || data.category_name === selectedValue;
-    return searchItem && filterByCategory;
-  });
   // fetch payment request
   const [rejectPaymentLoading, setRejectPaymentLoading] =
     useState<boolean>(false);
@@ -145,9 +151,11 @@ const PaymentRequest = () => {
 
   const workspaceId = Number(id);
   useEffect(() => {
-    getPaymentRequestList(workspaceId, false, pageNumbers).then((res) => {
-      setTotalItem(res);
-    });
+    getPaymentRequestList(workspaceId, false, pageNumbers, 10, searchTerm).then(
+      (res) => {
+        setTotalItem(res);
+      }
+    );
   }, [
     getPaymentRequestList,
     workspaceId,
@@ -237,23 +245,10 @@ const PaymentRequest = () => {
   return (
     <PaymentRequestContainer>
       {paymentRequestList.length === 0 && paymentRequest ? (
-        <CategoryTitle>
-          <h3>No payment request yet.</h3>
-          <p style={{ width: "509px", textAlign: "center" }}>
-            Payments requests are requested by share link or drafted directly by
-            multi-signer will show up here.
-          </p>
-          <CreateOptionButton>
-            <CreateBtn onClick={() => setNewPaymentsVisible(true)}>
-              <img src={add} alt="" />
-              <span>Create request</span>
-            </CreateBtn>
-            <CreateBtn onClick={handleRejectedPayments}>
-              <img src={archive} alt="" />
-              <span>View rejection</span>
-            </CreateBtn>
-          </CreateOptionButton>
-        </CategoryTitle>
+        <NoPaymentFoundMessage
+          setNewPaymentsVisible={setNewPaymentsVisible}
+          handleRejectedPayments={handleRejectedPayments}
+        />
       ) : (
         <>
           {/* payment request details modal */}
@@ -279,94 +274,53 @@ const PaymentRequest = () => {
               selectedItem: selected,
             }}
           />
-          <Header>
-            <div>
-              <TextField
-                id="search"
-                type="search"
-                autoComplete="off"
-                placeholder={t("paymentRequest.Search")}
-                value={searchTerm}
-                onChange={handleChange}
-                sx={{ width: 350 }}
-                size="small"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <img src={searchIcon} alt="" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <FormControl sx={{ marginLeft: "25px", minWidth: 100 }}>
-                <Select
-                  value={selectedValue}
-                  onChange={handleDropdownChange}
-                  displayEmpty
-                  inputProps={{ "aria-label": "Select a value" }}
-                  size="small"
-                >
-                  <MenuItem value="" disabled>
-                    <Option>
-                      <Image src={filterIcon} alt="" />
-                      {t("paymentRequest.Filter")}
-                    </Option>
-                  </MenuItem>
-                  {uniqueCategoryNames.map(
-                    (categoryName) =>
-                      categoryName.trim() !== "" && (
-                        <MenuItem value={categoryName} key={categoryName}>
-                          {categoryName}
-                        </MenuItem>
-                      )
-                  )}
-                </Select>
-              </FormControl>
-            </div>
-            <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
-              {paymentRequest ? (
-                <div onClick={handleRejectedPayments}>
-                  <Image src={reject} alt="" />
-                  <p>{t("paymentRequest.ViewRejection")}</p>
-                </div>
-              ) : (
-                <div onClick={handleBackBtn}>
-                  <Image src={back} alt="" />
-                  <p>{t("paymentRequest.Back")}</p>
-                </div>
-              )}
-            </ViewReject>
-          </Header>
+          {/* header component */}
+          {paymentRequest && (
+            <Header>
+              <Filter>
+                <SearchInput
+                  handleSearchPayment={handleSearchPayment}
+                  placeholder="Search token"
+                  searchTerm={searchTerm}
+                  handleChange={handleChange}
+                  width="240px"
+                />
+                <FilterCategorySelect
+                  selectedValue={selectedValue}
+                  handleDropdownChange={handleDropdownChange}
+                  uniqueCategoryNames={uniqueCategoryNames}
+                />
+                {/* action */}
+                <ActionButton
+                  handleExportPaymentRequestList={
+                    handleExportPaymentRequestList
+                  }
+                  handleRejectPaymentRequest={handleRejectPaymentRequest}
+                  handlePaymentRequestChaiModal={handlePaymentRequestChaiModal}
+                />
+              </Filter>
+              {/* <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}> */}
+              <Button
+                onClick={handleRejectedPayments}
+                icon={reject}
+                bg="#e2e8f0"
+              >
+                {t("paymentRequest.ViewRejection")}
+              </Button>
+              {/* </ViewReject> */}
+            </Header>
+          )}
           {paymentRequest && (
             <PaymentRequestBody>
-              <ActionBtn>
-                <Btn onClick={handleExportPaymentRequestList}>
-                  <img src={download} alt="" />
-                  <p>{t("paymentRequest.Download")}</p>
-                </Btn>
-                <Btn onClick={handleRejectPaymentRequest}>
-                  <img src={reject} alt="" />
-                  <p>{t("paymentRequest.Reject")}</p>
-                </Btn>
-                <Btn onClick={() => handlePaymentRequestChaiModal()}>
-                  <img src={approve} alt="" />
-                  <p>{t("paymentRequest.Approve")}</p>
-                </Btn>
-              </ActionBtn>
+              {/* TODO: no result found msg */}
+
               <TableSection>
                 {/* table */}
-                <TableContainer
-                  style={{
-                    border: "1px solid #ddd",
-                    borderRadius: "8px",
-                    maxHeight: "100%",
-                    overflow: "auto",
-                  }}
-                >
+                <TableContainerSection>
                   <Table size="small">
-                    <TableHead style={{ backgroundColor: "#f0f0f0" }}>
+                    <TableHead>
                       <TableRow>
-                        <TableCell sx={{ width: "30%" }}>
+                        <HeaderCell width="287px">
                           <Checkbox
                             indeterminate={
                               selected.length > 0 &&
@@ -375,38 +329,55 @@ const PaymentRequest = () => {
                             checked={
                               selected.length === paymentRequestList.length
                             }
+                            sx={CheckBoxStyle}
                             onChange={handleSelectAllClick}
+                            checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                            icon={<img src={checkboxIcon} alt="" />}
+                            indeterminateIcon={
+                              <img src={checkboxIndeterminate} alt="" />
+                            }
                           />
                           Recipient
-                        </TableCell>
-                        <TableCell sx={{ width: "20%" }}>Amount</TableCell>
-                        <TableCell sx={{ width: "20%" }}>Category</TableCell>
-                        <TableCell>Date</TableCell>
-                        <TableCell></TableCell>
+                        </HeaderCell>
+                        <HeaderCell width="397px">Amount</HeaderCell>
+                        <HeaderCell width="180px">Category</HeaderCell>
+                        <HeaderCell width="176px">Date</HeaderCell>
+                        <HeaderCell width="96px"></HeaderCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody>
-                      {sortedPayment.map(([id, items], index) => (
-                        <PaymentRequestTableList
-                          items={items}
-                          index={index}
-                          selected={selected}
-                          setSelected={setSelected}
-                          handleGroupPaymentDetails={handleGroupPaymentDetails}
-                          handleOpenModal={handleOpenModal}
-                          paymentId={id}
-                        />
-                      ))}
-                    </TableBody>
+                    {!(filterData.length === 0) && (
+                      <TableBody>
+                        {sortedPayment.map(([id, items], index) => (
+                          <PaymentRequestTableList
+                            items={items}
+                            index={index}
+                            selected={selected}
+                            setSelected={setSelected}
+                            handleGroupPaymentDetails={
+                              handleGroupPaymentDetails
+                            }
+                            handleOpenModal={handleOpenModal}
+                            paymentId={id}
+                          />
+                        ))}
+                      </TableBody>
+                    )}
                   </Table>
-                </TableContainer>
+                </TableContainerSection>
+                {/* no search result msg */}
+
+                {filterData.length === 0 && (
+                  <EmptySearchResult>
+                    <p>No results found.</p>
+                  </EmptySearchResult>
+                )}
+
                 {totalItem > 10 && (
-                  <PaymentPagination>
-                    <Pagination
-                      handlePageClick={handlePageClick}
-                      pageCount={pageCount}
-                    />
-                  </PaymentPagination>
+                  <Pagination
+                    handlePageClick={handlePageClick}
+                    pageCount={pageCount}
+                    pageNumbers={pageNumbers}
+                  />
                 )}
               </TableSection>
             </PaymentRequestBody>
@@ -418,6 +389,8 @@ const PaymentRequest = () => {
           <RejectPaymentRequestTable
             searchTerm={searchTerm}
             selectedValue={selectedValue}
+            paymentRequest={paymentRequest}
+            setPaymentRequest={setPaymentRequest}
           />
         </RejectSection>
       )}

@@ -10,6 +10,7 @@ import usePaymentsStore from "../../store/usePayments";
 import { formatNumber } from "../../utils/number";
 import MyPaymentTable from "../../components/userDashboard/MyPaymentTable";
 import Pagination from "../../components/Pagination";
+import SearchInput from "../../components/workspace/SearchInput";
 
 const MyPayment = () => {
   const { id } = useParams();
@@ -51,6 +52,9 @@ const MyPayment = () => {
   useEffect(() => {
     getMyPayment(pageNumbers);
   }, [getMyPayment, pageNumbers]);
+  const handleSearchPayment = async (e: any) => {
+    e.preventDefault();
+  };
 
   return (
     <UserPaymentContainer>
@@ -62,27 +66,16 @@ const MyPayment = () => {
       />
       {myPayment.rows.length === 0 ? (
         <Details>
-          <h2>
-            You don't have any payment <br /> request
-          </h2>
+          <h2>You don't have any payment request</h2>
         </Details>
       ) : (
         <PaymentTable>
-          <TextField
-            id="search"
-            type="search"
-            autoComplete="off"
-            placeholder="Search workspace name"
-            value={searchTerm}
-            onChange={handleChange}
-            sx={{ width: 350 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <img src={searchIcon} alt="" />
-                </InputAdornment>
-              ),
-            }}
+          <SearchInput
+            handleSearchPayment={handleSearchPayment}
+            placeholder="Search workspace / recipient / token"
+            searchTerm={searchTerm}
+            handleChange={handleChange}
+            width="350px"
           />
           <PaymentLIst>
             <MyPaymentTable
@@ -95,6 +88,7 @@ const MyPayment = () => {
               <Pagination
                 handlePageClick={handlePageClick}
                 pageCount={pageCount}
+                pageNumbers={pageNumbers}
               />
             </PaymentPagination>
           )}
@@ -107,22 +101,21 @@ const MyPayment = () => {
 export default MyPayment;
 
 const UserPaymentContainer = styled.div`
-  padding-inline: 30px;
-  margin-top: 47px;
+  padding: 24px;
   flex: 1;
 `;
 const PaymentLIst = styled.div`
-  margin-top: 60px;
+  margin-top: 16px;
 `;
 export const Details = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   min-width: 500px;
-  height: 90vh;
+  height: 70vh;
   h2 {
-    font-size: 30px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
     text-align: center;
   }
 `;

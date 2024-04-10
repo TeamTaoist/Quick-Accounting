@@ -6,12 +6,16 @@ import { useWorkspace } from "./useWorkspace";
 
 interface UseBookkeeping {
   bookkeepingList: IPaymentRequest[];
+  bookkeepingFilterList: IPaymentRequest[];
   bookkeepingHiddenList: IPaymentRequest[];
   bookkeepingDetails: any;
   getBookkeepingList: (
     workspaceId: number,
     visibility: boolean,
-    page?: number
+    page?: number,
+    size?: number,
+    searchKeyWords?: string,
+    categoryId?: number
   ) => Promise<number>;
   exportBookkeepingList: (
     workspaceId: number,
@@ -41,19 +45,30 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
   const { setLoading } = useLoading.getState();
   return {
     bookkeepingList: [],
+    bookkeepingFilterList: [],
     bookkeepingHiddenList: [],
     bookkeepingDetails: {},
     // fetch bookkeeping list
-    getBookkeepingList: async (workspaceId, visibility, page = 0) => {
+    getBookkeepingList: async (
+      workspaceId,
+      visibility,
+      page = 0,
+      size = 10,
+      searchKeyWords = "",
+      categoryId
+    ) => {
       try {
         setLoading(true);
         const { data } = await axiosClient.get(
-          `/bookkeeping/${workspaceId}?hided=${visibility}&page=${page}&sort_field=tx_timestamp&sort_order=desc`
+          `/bookkeeping/${workspaceId}?hided=${visibility}&page=${page}&size=${size}&sort_field=tx_timestamp&sort_order=desc&search_words=${searchKeyWords}` +
+            (categoryId !== undefined ? `&filter_category=${categoryId}` : "")
         );
         if (visibility) {
           set({ bookkeepingHiddenList: data.data.rows });
+          // set({ bookkeepingFilterList: data.data.rows });
         } else {
           set({ bookkeepingList: data.data.rows });
+          set({ bookkeepingFilterList: data.data.rows });
         }
         if (data?.msg === "success" && data?.code === 200) {
           return data.data.total;
@@ -102,11 +117,11 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
         );
         console.log(response);
         if (response.data.code === 200) {
-          toast.success("Success! Data imported.");
+          toast("Success! Data imported.");
         }
       } catch (error: any) {
         console.log(error);
-        toast.error("Failed to import bookkeeping list.");
+        toast("Failed to import bookkeeping list.");
       } finally {
         setLoading(false);
       }
@@ -120,7 +135,7 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
         );
         console.log(response);
         if (response.data.code === 200) {
-          toast.success("Selected items hidden successfully");
+          toast("Selected items hidden successfully");
         }
       } catch (error: any) {
         console.log(error);
@@ -137,7 +152,7 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
         );
         console.log(response);
         if (response.data.code === 200) {
-          toast.success("Selected items unhide successfully");
+          toast("Selected items unhide successfully");
         }
       } catch (error: any) {
         console.log(error);
@@ -178,7 +193,7 @@ export const useBookkeeping = create<UseBookkeeping>((set, get) => {
           return true;
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         // setLoading(false);

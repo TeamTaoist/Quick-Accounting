@@ -1,8 +1,13 @@
 import { TableCell, TableRow, TextField } from "@mui/material";
-import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
+import {
+  NoteInfo,
+  PaymentRequestDateInput,
+} from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import { paymentRequestBody } from "../workspace/paymentRequest/PaymentRequestGroupDetails";
+import { useRef } from "react";
+import { Cell } from "../table";
 
 interface GroupTextTypeProps {
   properties: any;
@@ -30,31 +35,27 @@ const GroupDatePickerType = ({
   handleFormChange,
   defaultPropertyValue,
 }: GroupTextTypeProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleInputClick = () => {
+    inputRef.current?.showPicker();
+  };
+
   if (!!defaultPropertyValue || !properties.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            padding: 1,
-            paddingInline: 1,
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            borderRight: "1px solid var(--border-table)",
-          }}
-        >
+      <TableRow>
+        <Cell>
           <NoteInfo>
             <Image src={multiSelect} alt="" /> {properties.name}
           </NoteInfo>
-        </TableCell>
-        <TableCell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
-          <TextField
+        </Cell>
+        <Cell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
+          {/* <TextField
+            inputRef={inputRef}
             sx={{
               "& fieldset": { border: "none" },
+              "& input": {
+                paddingInline: "10px",
+              },
             }}
             size="small"
             fullWidth
@@ -76,12 +77,48 @@ const GroupDatePickerType = ({
                 properties.type
               )
             }
+            onClick={handleInputClick}
             InputProps={{
-              style: { padding: 0 },
-              // readOnly: isEditable,
+              style: {
+                padding: 0,
+                color: sharePaymentRequestForm[index].category_properties.find(
+                  (p: any) =>
+                    p.type === "date-picker" && p.name === properties.name
+                )?.values
+                  ? "black"
+                  : "gray",
+              },
             }}
+          /> */}
+          <PaymentRequestDateInput
+            inputRef={inputRef}
+            isActive={
+              sharePaymentRequestForm[index].category_properties?.find(
+                (p: any) =>
+                  p.type === "date-picker" && p.name === properties.name
+              )?.values
+            }
+            type="date"
+            value={
+              sharePaymentRequestForm[index].category_properties.find(
+                (p: any) =>
+                  p.type === "date-picker" && p.name === properties.name
+              )?.values || ""
+            }
+            // id="fullWidth"
+            placeholder="Enter content"
+            onChange={(e: any) =>
+              handleFormChange(
+                index,
+                "categoryProperties",
+                e.target.value,
+                properties.name,
+                properties.type
+              )
+            }
+            onClick={handleInputClick}
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

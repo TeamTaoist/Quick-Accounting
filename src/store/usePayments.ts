@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 interface IPaymentsStore {
   paymentRequestList: IPaymentRequest[];
+  filterData: IPaymentRequest[];
   paymentRequestDetails: IPaymentRequest;
   paymentRequestGroupDetails: IPaymentRequest[];
   paymentRquestMap: Map<string, IPaymentRequest[]>;
@@ -13,7 +14,9 @@ interface IPaymentsStore {
     workspaceId: number,
     isRejected?: boolean,
     page?: number,
-    size?: number
+    size?: number,
+    searchKeyWords?: string,
+    categoryId?: number
   ) => Promise<number>;
   createPaymentRequest: (
     workspaceId: number,
@@ -78,6 +81,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
 
   return {
     paymentRequestList: [],
+    filterData: [],
     paymentRequestDetails: {
       ID: 0,
       CreatedAt: "",
@@ -116,19 +120,25 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
       workspaceId,
       isRejected = false,
       page = 0,
-      size = 10
+      size = 10,
+      searchKeyWords,
+      categoryId
     ) => {
       setLoading(true);
       try {
         const { data } = await axiosClient.get(
-          `/payment_request/${workspaceId}?rejected=${isRejected}&page=${page}&size=${size}&sort_field=created_at&sort_order=desc`
+          `/payment_request/${workspaceId}?rejected=${isRejected}&page=${page}&size=${size}&sort_field=created_at&sort_order=desc&search_words=${searchKeyWords}` +
+            (categoryId !== undefined ? `&filter_category=${categoryId}` : "")
         );
-        set({ paymentRequestList: data.data.rows });
+        if (searchKeyWords === "") {
+          set({ paymentRequestList: data.data.rows });
+        }
+        set({ filterData: data.data.rows });
         if (data.msg === "success" && data.code === 200) {
           return data.data.total;
         }
       } catch (error: any) {
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -146,7 +156,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           return true;
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -166,7 +176,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         set({ paymentRequestDetails: data.data });
         return true;
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -182,7 +192,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         set({ paymentRequestGroupDetails: data.data });
         return true;
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -205,7 +215,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           navigate(`/workspace/${workspaceId}/queue`);
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -222,7 +232,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
           toast.success("Payment request rejected successfully");
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         setLoading(false);
@@ -252,7 +262,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
             set({ paymentRquestMap: new Map(paymentRquestMap) });
           })
           .catch((error) => {
-            toast.error(error?.data?.msg || error?.status || error);
+            toast(error?.data?.msg || error?.status || error);
             console.error(error);
           })
           .finally(() => {
@@ -291,7 +301,7 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
         }
         throw Error(data.msg);
       } catch (error: any) {
-        toast.error(`Nonce ${nonce}: created payment request failed ${error}`);
+        toast(`Nonce ${nonce}: created payment request failed ${error}`);
         console.error(error);
       }
     },
@@ -352,11 +362,12 @@ const usePaymentsStore = create<IPaymentsStore>((set, get) => {
               : payment
           );
           set({ paymentRequestList: updatedList });
+          set({ filterData: updatedList });
 
           return true;
         }
       } catch (error: any) {
-        toast.error(error?.data.msg || error?.status || error);
+        toast(error?.data.msg || error?.status || error);
         console.error(error);
       } finally {
         // setLoading(false);

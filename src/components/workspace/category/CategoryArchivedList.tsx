@@ -7,10 +7,34 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
-import archive from "../../../assets/workspace/archive.svg";
-import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
+import unarchive from "../../../assets/workspace/unarchive.svg";
+import cancel from "../../../assets/auth/cancel.svg";
+import checkedActiveIcon from "../../../assets/checkbox-active.svg";
+import checkboxIcon from "../../../assets/checkbox.svg";
+import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
 import { useParams } from "react-router-dom";
 import { useCategory } from "../../../store/useCategory";
+import { checkboxClasses } from "@mui/material/Checkbox";
+import { CreateBtn } from "../../../pages/workspace/category/category.style";
+import Button from "../../button";
+
+export const CheckBoxStyle = {
+  marginRight: "25px",
+  // overflow: "hidden",
+  // [`&, &.${checkboxClasses.colorPrimary}`]: {
+  //   color: "#cbd5e1",
+  // },
+  // [`&, &.${checkboxClasses.checked}`]: {
+  //   color: "#0f172a",
+  // },
+  // [`&, &.${checkboxClasses.indeterminate}`]: {
+  //   color: "#0f172a",
+  // },
+  // "& .MuiSvgIcon-root": {
+  //   width: "20px",
+  //   height: "20px",
+  // },
+};
 
 const CategoryArchivedList = ({ setOpen }: any) => {
   const { id } = useParams();
@@ -63,34 +87,61 @@ const CategoryArchivedList = ({ setOpen }: any) => {
   console.log(selected);
 
   return (
-    <>
-      <WorkspaceItemDetailsLayout
-        title="Archived categories"
-        subtitle="These categories will continue to be applied to historical transfers."
-        setOpen={setOpen}
-      >
+    <ArchivedContainer>
+      <ArchivedList>
+        <Header>
+          <div>
+            <HeaderTitle>
+              <h1>Archived categories</h1>
+              <img onClick={() => setOpen(false)} src={cancel} alt="" />
+            </HeaderTitle>
+            <p>
+              These categories will continue to be applied to historical
+              transfers.
+            </p>
+          </div>
+        </Header>
         {workspaceCategories.data.total === 0 ? (
           <Archivemsg>Archive list is empty</Archivemsg>
         ) : (
           <>
             <Unarchive>
-              <div onClick={handleUnArchive}>
-                <img src={archive} alt="" />
-                <p>Unarchive</p>
-              </div>
+              <Button onClick={handleUnArchive} icon={unarchive}>
+                Unarchive
+              </Button>
             </Unarchive>
             <ArchiveTable>
               <TableContainer
-                sx={{ border: "1px solid var(--border)", borderRadius: "10px" }}
+                sx={{
+                  boxShadow: "none",
+                  border: "1px solid var(--clr-gray-200)",
+                  borderRadius: "6px",
+                  maxHeight: "100%",
+                  overflow: "auto",
+                  width: "100%",
+                  "&::-webkit-scrollbar": {
+                    display: "none",
+                  },
+                  "-ms-overflow-style": "none",
+                  scrollbarWidth: "none",
+                }}
               >
                 <Table>
                   <TableHead
                     style={{
-                      background: "var(--bg-secondary)",
+                      background: "var(--clr-gray-100)",
                     }}
                   >
                     <TableRow>
-                      <TableCell>
+                      <TableCell
+                        sx={{
+                          fontWeight: 500,
+                          fontSize: "14px",
+                          padding: "0 10px",
+                          height: "56px",
+                          borderBottom: "none",
+                        }}
+                      >
                         <Checkbox
                           indeterminate={
                             selected.length > 0 &&
@@ -102,24 +153,40 @@ const CategoryArchivedList = ({ setOpen }: any) => {
                             workspaceCategories.data.rows.length
                           }
                           onChange={handleSelectAllClick}
+                          sx={CheckBoxStyle}
+                          checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                          icon={<img src={checkboxIcon} alt="" />}
+                          indeterminateIcon={
+                            <img src={checkboxIndeterminate} alt="" />
+                          }
                         />
                         Category
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {workspaceCategories.data.rows.map((category) => (
+                    {workspaceCategories.data.rows.map((category, i) => (
                       <TableRow key={category.ID}>
                         <TableCell
-                          sx={{ display: "flex", alignItems: "center" }}
+                          sx={{
+                            padding: "0 10px",
+                            display: "flex",
+                            alignItems: "center",
+                            borderBottom: "none",
+                            borderTop: "1px solid var(--clr-gray-200)",
+                            height: "56px",
+                          }}
                         >
                           <Checkbox
                             checked={isSelected(category.ID)}
                             onChange={(event) =>
                               handleCheckboxClick(event, category.ID)
                             }
+                            sx={CheckBoxStyle}
+                            checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                            icon={<img src={checkboxIcon} alt="" />}
                           />
-                          <CellValue>{category.name}</CellValue>
+                          {category.name}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -129,40 +196,73 @@ const CategoryArchivedList = ({ setOpen }: any) => {
             </ArchiveTable>
           </>
         )}
-      </WorkspaceItemDetailsLayout>
-    </>
+      </ArchivedList>
+      {/* </WorkspaceItemDetailsLayout> */}
+    </ArchivedContainer>
   );
 };
 
 export default CategoryArchivedList;
+const ArchivedContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+`;
+const ArchivedList = styled.div`
+  width: 800px;
+  height: 480px;
+  border: 1px solid var(--border-table);
+  border-radius: 10px;
+  overflow: scroll;
+  background: #fff;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
 
+const Header = styled.div`
+  display: grid;
+  align-items: center;
+  height: 126px;
+  background: var(--clr-gray-100);
+  padding-inline: 40px;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  p {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 16px;
+  }
+`;
+const HeaderTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  /* padding: 22px 26px; */
+
+  h1 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  img {
+    width: 16px;
+    cursor: pointer;
+  }
+`;
 const Unarchive = styled.div`
   display: flex;
   justify-content: end;
   padding-right: 30px;
-  margin-top: 20px;
-
-  div {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background: var(--bg-primary);
-    font-size: 20px;
-    cursor: pointer;
-    img {
-      width: 20px;
-    }
-  }
+  margin-top: 30px;
 `;
 const ArchiveTable = styled.div`
-  padding: 30px;
-`;
-const CellValue = styled.div`
-  background: var(--bg-primary);
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 22px 30px;
 `;
 const Archivemsg = styled.div`
   font-size: 20px;

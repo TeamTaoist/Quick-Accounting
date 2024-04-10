@@ -16,7 +16,7 @@ const VersionStyle = styled.p`
 `;
 
 export const VersionAtRight = styled(Version)`
-  position: fixed;
+  margin-top: auto;
   right: 30px;
   bottom: 30px;
   color: #888;

@@ -37,6 +37,7 @@ import PaymentCurrencyTable from "../../../components/paymentRequestDetails/Paym
 import { Status, StatusBtn, SubmissionTime } from "./PaymentRequestDetails";
 import { useDomainStore } from "../../../store/useDomain";
 import { useLocation } from "react-router-dom";
+import { Cell, HeaderCell } from "../../../components/table";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -133,18 +134,16 @@ const NotTransferTop = ({
   );
 };
 
-const Cell = ({ children }: { children: React.ReactNode }) => (
-  <TableCell
-    sx={{
-      border: "1px solid var(--border-table)",
-      borderRadius: "5px",
-      padding: 0,
-      paddingLeft: "10px",
-    }}
-  >
-    {children}
-  </TableCell>
-);
+// const Cell = ({ children }: { children: React.ReactNode }) => (
+//   <TableCell
+//     sx={{
+//       padding: 1,
+//       paddingLeft: "17px",
+//     }}
+//   >
+//     {children}
+//   </TableCell>
+// );
 
 const TransferTop = ({
   data: paymentRequestDetails,
@@ -154,61 +153,21 @@ const TransferTop = ({
   const { formatAddressToDomain } = useDomainStore();
   const { workspace } = useWorkspace();
   const { pathname } = useLocation();
-
   return (
     <>
-      <TableHead sx={{ background: "var(--bg-secondary)" }}>
+      <TableHead>
         <TableRow>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Safe
-          </TableCell>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Counterparty
-          </TableCell>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Amount
-          </TableCell>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
-            Currency
-          </TableCell>
+          <HeaderCell fontSize="16px">Safe</HeaderCell>
+          <HeaderCell fontSize="16px">Counterparty</HeaderCell>
+          <HeaderCell fontSize="16px">Amount</HeaderCell>
+          <HeaderCell fontSize="16px">Currency</HeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        <TableRow
-          sx={{
-            height: "30px",
-            borderRadius: "10px",
-          }}
-        >
-          <TableCell
+        <TableRow>
+          <Cell
             sx={{
-              border: "1px solid var(--border-table)",
-              padding: 0,
-              paddingLeft: "10px",
+              padding: 1,
             }}
           >
             <SafeSection>
@@ -217,7 +176,7 @@ const TransferTop = ({
                 <img src={transferArrow} alt="" />
               </Logo>
             </SafeSection>
-          </TableCell>
+          </Cell>
           <Cell>
             {formatAddressToDomain(
               paymentRequestDetails?.counterparty,
@@ -297,8 +256,15 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
           <TableContainer
             sx={{
               boxShadow: "none",
-              border: "1px solid var(--border-table)",
-              borderRadius: "10px",
+              border: "1px solid var(--clr-gray-200)",
+              borderRadius: "6px",
+              minWidth: "722px",
+              overflowX: "hidden",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              "-ms-overflow-style": "none",
+              scrollbarWidth: "none",
             }}
           >
             <Table aria-label="simple table">
@@ -319,41 +285,19 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
               {/* <TableContainer sx={{ borderRadius: "7px" }}> */}
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
-                  <TableRow
-                    sx={{
-                      td: {
-                        padding: 1,
-                        paddingInline: 1,
-                        paddingLeft: "12px",
-                      },
-                    }}
-                  >
-                    <TableCell
-                      sx={{
-                        height: 1,
-                        width: 208,
-                        borderRight: "1px solid var(--border-table)",
-                      }}
-                    >
+                  <TableRow>
+                    <Cell width="220px">
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
-                    </TableCell>
-                    <TableCell>
+                    </Cell>
+                    <Cell width="500px">
                       {paymentRequestDetails?.category_name}
-                    </TableCell>
+                    </Cell>
                   </TableRow>
                   {categoryProperties?.map((property: any) => (
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 1,
-                          paddingLeft: "12px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 200 }}>
+                    <TableRow>
+                      <Cell width="220px">
                         <NoteInfo>
                           <Image
                             src={getPropertyIconByType(property.type)}
@@ -361,8 +305,8 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                           />{" "}
                           {property.name}
                         </NoteInfo>
-                      </TableCell>
-                      <TableCell>
+                      </Cell>
+                      <Cell width="500px">
                         {property.type === "multi-select"
                           ? property?.values
                               .split(";")
@@ -370,7 +314,7 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                                 <MultiOption key={idx}>{v}</MultiOption>
                               ))
                           : property.values}
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -411,17 +355,18 @@ const PaymentRequestDetails = ({ setOpen }: PaymentRequestDetailsProps) => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <img src={linkIcon} alt="" />
+                  {/* <img src={linkIcon} alt="" /> */}
                 </a>
               </div>
             </TransactionHash>
           )}
 
-          <Status>
-            <p>Status</p>
-            <StatusBtn>
+          <Status status={getPaymentStatus(paymentRequestDetails.status)}>
+            <h6>Status</h6>
+            <div>
+              <p></p>
               {getPaymentStatus(paymentRequestDetails.status)}
-            </StatusBtn>
+            </div>
           </Status>
         </RequestDetails>
       </WorkspaceItemDetailsLayout>
@@ -467,7 +412,7 @@ export const SafeSection = styled.div`
 
 const TransactionHash = styled(SubmissionTime)`
   div {
-    color: #888;
+    color: var(--clr-gray-400);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -491,14 +436,16 @@ const Logo = styled.div<{ $dir?: string }>`
   }
 `;
 const RejectTime = styled.div`
-  padding-top: 14px;
+  padding-top: 18px;
   p {
-    font-size: 18px;
-    padding-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 8px;
   }
   div {
-    border: 1px solid var(--border-table);
-    padding: 10px 7px;
+    border: 1px solid var(--clr-gray-200);
+    padding: 8.5px 10px;
+    font-size: 14px;
     border-radius: 8px;
   }
 `;

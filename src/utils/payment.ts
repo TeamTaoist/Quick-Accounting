@@ -1,6 +1,7 @@
 import multiSelect from "../assets/workspace/multi-select.svg";
 import selectIcon from "../assets/workspace/select.svg";
 import textIcon from "../assets/workspace/option.svg";
+import calendar from "../assets/workspace/calendar.svg";
 import { formatTime } from "./time";
 
 export enum PAYMENT_REQUEST_STATUS {
@@ -37,6 +38,8 @@ export const getPropertyIconByType = (type: string) => {
       return selectIcon;
     case "multi-select":
       return multiSelect;
+    case "date-picker":
+      return calendar;
   }
 };
 

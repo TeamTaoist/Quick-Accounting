@@ -1,4 +1,7 @@
 import {
+  InputAdornment,
+  MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -11,7 +14,8 @@ import usePaymentsStore from "../../store/usePayments";
 import { useDomainStore } from "../../store/useDomain";
 import { useWorkspace } from "../../store/useWorkspace";
 import { useLocation } from "react-router-dom";
-import styled from "@emotion/styled";
+import arrowBottom from "../../assets/workspace/arrow-bottom.svg";
+import { Cell, HeaderCell } from "../table";
 
 const PaymentCurrencyTable = () => {
   const { paymentRequestDetails } = usePaymentsStore();
@@ -20,55 +24,31 @@ const PaymentCurrencyTable = () => {
   const { pathname } = useLocation();
 
   return (
-    // <TableContainer sx={{ paddingInline: "40px", paddingTop: "30px" }}>
-    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-      <TableHead sx={{ backgroundColor: "var(--bg-secondary)" }}>
-        <TableRow>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
+    <Table aria-label="simple table">
+      <TableHead>
+        <TableRow
+          sx={{ "& .MuiTableCell-root": { background: "var(--clr-gray-100)" } }}
+        >
+          <HeaderCell width="280px" color="#0f172a">
             Recipient
-          </TableCell>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
+          </HeaderCell>
+          <HeaderCell width="220px" color="#0f172a">
             Amount
-          </TableCell>
-          <TableCell
-            style={{
-              padding: "10px 15px",
-              fontFamily: "PingFangHK",
-              fontSize: "18px",
-            }}
-          >
+          </HeaderCell>
+          <HeaderCell width="220px" color="#0f172a">
             Currency
-          </TableCell>
+          </HeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        <TableRow
-          sx={{
-            height: "30px",
-          }}
-        >
-          <TableCell
-            // size="small"
-            sx={{
-              border: "1px solid var(--border-table)",
-              padding: 0,
-              borderLeft: 0,
-            }}
-          >
+        <TableRow>
+          <Cell>
             <TextField
               sx={{
+                "& input": {
+                  padding: 0,
+                  fontSize: "14px",
+                },
                 "& fieldset": { border: "none" },
               }}
               size="small"
@@ -87,17 +67,14 @@ const PaymentCurrencyTable = () => {
                 readOnly: true,
               }}
             />
-          </TableCell>
-          <TableCell
-            sx={{
-              border: "1px solid var(--border-table)",
-              padding: 0,
-              paddingLeft: "10px",
-              // minHeight: "40px",
-            }}
-          >
+          </Cell>
+          <Cell>
             <TextField
               sx={{
+                "& input": {
+                  padding: 0,
+                  fontSize: "14px",
+                },
                 "& fieldset": { border: "none" },
               }}
               size="small"
@@ -110,16 +87,14 @@ const PaymentCurrencyTable = () => {
                 readOnly: true,
               }}
             />
-          </TableCell>
-          <TableCell
-            sx={{
-              border: "1px solid var(--border-table)",
-              borderRight: 0,
-              padding: 0,
-            }}
-          >
+          </Cell>
+          <Cell>
             <TextField
               sx={{
+                "& input": {
+                  padding: 0,
+                  fontSize: "14px",
+                },
                 "& fieldset": { border: "none" },
               }}
               size="small"
@@ -132,7 +107,7 @@ const PaymentCurrencyTable = () => {
                 readOnly: true,
               }}
             />
-          </TableCell>
+          </Cell>
         </TableRow>
       </TableBody>
     </Table>

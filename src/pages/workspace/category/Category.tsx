@@ -1,8 +1,7 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import add from "../../../assets/workspace/add.svg";
 import archive from "../../../assets/workspace/archive.svg";
 import edit from "../../../assets/workspace/edit.svg";
-import property1 from "../../../assets/workspace/property1.svg";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -20,16 +19,16 @@ import {
   CategoryTitle,
   CreateBtn,
   CreateCategory,
-  CreateCategoryBtn,
   CreateOptionButton,
   Details,
   Header,
   HeaderOptions,
+  HeaderRight,
   Option,
   OptionCreateButtons,
   Options,
   PropertyBtns,
-  PropertyCreateButtons,
+  PropertyOption,
   PropertyOptions,
   PropertyTitle,
   UpdateBtn,
@@ -43,7 +42,8 @@ import {
 import CategoryPropertyDetails from "../../../components/workspace/category/CategoryPropertyDetails";
 import CategoryArchivedList from "../../../components/workspace/category/CategoryArchivedList";
 import CategoryPropertyArchivedList from "../../../components/workspace/category/CategoryPropertyArchivedList";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Divider } from "@mui/material";
+import { getPropertyIconByType } from "../../../utils/payment";
 
 export interface CategoryPropertyBody {
   name: string;
@@ -65,16 +65,12 @@ const Category = () => {
   const {
     getWorkspaceCategories,
     createWorkspaceCategory,
-    updateCategoryName,
     updateCategoryArchive,
   } = useCategory();
 
   const {
     getWorkspaceCategoryProperties,
     workspaceCategoryProperties,
-    createWorkspaceCategoryProperties,
-    categoryProperty,
-    updateWorkspaceCategoryProperties,
     archiveWorkspaceCategoryProperties,
     getCategoryPropertyByCategoryId,
     editCategoryNameAndProperties,
@@ -347,23 +343,47 @@ const Category = () => {
     });
   };
 
+  // category collapse & expand
+  const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
+
+  const handleCategoryCollapse = (
+    categoryId: number,
+    isEditAction?: boolean
+  ) => {
+    const isExpanded = expandedCategories.includes(categoryId);
+
+    if (!isEditAction && isExpanded) {
+      const category = expandedCategories.filter((id) => id !== categoryId);
+      setExpandedCategories(category);
+    } else if (!isExpanded) {
+      setExpandedCategories([...expandedCategories, categoryId]);
+    }
+    // default selected property
+    const selectedCategory = workspaceCategoryProperties.find(
+      (c) => c.ID === categoryId
+    );
+    setShowProperty(selectedCategory?.properties?.[0].ID);
+  };
+
   // edit category
-  // const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
   const [editableCategoryId, setEditableCategoryId] = useState<number[]>([]);
+
   const handleEditCategory = (e: any, categoryId: number) => {
     e.stopPropagation();
     const isSelected = editableCategoryId.includes(categoryId);
-
     if (isSelected) {
       const updatedIds = editableCategoryId.filter((id) => id !== categoryId);
       setEditableCategoryId(updatedIds);
     } else {
       setEditableCategoryId([...editableCategoryId, categoryId]);
     }
+    handleCategoryCollapse(categoryId, true);
   };
-
-  const handleCategoryCollapse = (categoryId: number) => {};
-
+  const handleCancelEdit = (e: any, categoryId: number) => {
+    e.stopPropagation();
+    const updatedIds = editableCategoryId.filter((id) => id !== categoryId);
+    setEditableCategoryId(updatedIds);
+  };
   // update category name & properties
   const [updateLoading, setUpdateLoading] = useState(false);
   const handleUpdatedCategoryProperty = (categoryId: number, e: any) => {
@@ -423,6 +443,11 @@ const Category = () => {
       // setCategoryList(workspaceCategoryProperties);
     }
   }, [workspaceCategoryProperties]);
+  // const AccordionStyle = {
+  //   "&:before": {
+  //     backgroundColor: "transparent !important",
+  //   },
+  // };
 
   return (
     <CreateCategory>
@@ -470,19 +495,36 @@ const Category = () => {
             {/* category option */}
             {categoryList?.map((category, index) => (
               <CategoryOption key={category.ID}>
-                <Accordion>
+                <Accordion
+                  expanded={expandedCategories.includes(category.ID)}
+                  // elevation={0}
+                  sx={{
+                    boxShadow: "none",
+                    fontFamily: "Inter",
+                    border: "1px solid var(--clr-gray-200)",
+                    "&:before": {
+                      borderRadius: "6px",
+                    },
+                  }}
+                >
                   <AccordionSummary
                     onClick={() => handleCategoryCollapse(category.ID)}
-                    expandIcon={
-                      !editableCategoryId.includes(category.ID) ? (
-                        <ExpandMoreIcon />
-                      ) : (
-                        ""
-                      )
-                    }
+                    expandIcon={<ExpandMoreIcon style={{ color: "#94A3B8" }} />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
-                    sx={{ backgroundColor: "var(--hover-bg)" }}
+                    sx={{
+                      fontFamily: "Inter",
+                      backgroundColor: "var(--clr-gray-200)",
+                      height: "56px",
+                      "&:before": {
+                        borderRadius: "6px",
+                      },
+                      "& .Mui-expanded": {
+                        margin: 0,
+                      },
+                      paddingTop: "8px",
+                      paddingBottom: "8px",
+                    }}
                   >
                     <Header>
                       <div>
@@ -501,8 +543,8 @@ const Category = () => {
                           <Typography
                             sx={{
                               padding: 1,
-                              fontSize: "20px",
-                              fontWeight: "500",
+                              fontSize: "16px",
+                              fontWeight: "400",
                             }}
                           >
                             {category.name}
@@ -511,7 +553,7 @@ const Category = () => {
                       </div>
                       {/* {editableCategoryId === category.ID ? ( */}
                       {editableCategoryId.includes(category.ID) ? (
-                        <>
+                        <HeaderRight>
                           {updateLoading ? (
                             <UpdateLoadingBtn>
                               <CircularProgress
@@ -521,16 +563,21 @@ const Category = () => {
                               <p>Updating</p>
                             </UpdateLoadingBtn>
                           ) : (
-                            <UpdateBtn
-                              // onClick={(e) => handleEditCategory(e, category.ID)}
-                              onClick={(e) =>
-                                handleUpdatedCategoryProperty(category.ID, e)
-                              }
+                            <CancelBtn
+                              onClick={(e) => handleCancelEdit(e, category.ID)}
                             >
-                              Update
-                            </UpdateBtn>
+                              Cancel
+                            </CancelBtn>
                           )}
-                        </>
+                          <UpdateBtn
+                            onClick={(e) =>
+                              handleUpdatedCategoryProperty(category.ID, e)
+                            }
+                          >
+                            Update
+                          </UpdateBtn>
+                          {/* )} */}
+                        </HeaderRight>
                       ) : (
                         <HeaderOptions>
                           <div
@@ -556,37 +603,87 @@ const Category = () => {
                       )}
                     </Header>
                   </AccordionSummary>
-                  <AccordionDetails sx={{ p: 0, maxHeight: "500px" }}>
+                  <AccordionDetails
+                    sx={{
+                      p: 0,
+                      // border: "1px solid var(--clr-gray-200)",
+                    }}
+                  >
                     {/* category property */}
                     <CategoryProperties>
                       <Options>
                         <PropertyOptions>
-                          <h4>ADD PROPERTIES</h4>
-                          {category.properties?.map((property, index) => (
-                            <div
-                              key={index}
-                              onClick={() =>
-                                handleSelectedProperty(property, index)
-                              }
-                            >
-                              <Option>
-                                <PropertyTitle>
-                                  <img src={property1} alt="" />
-                                  <p>{property.name}</p>
-                                </PropertyTitle>
-                                {!editableCategoryId.includes(category.ID) && (
-                                  <img
-                                    onClick={() =>
-                                      handleArchiveCategoryProperty(property)
-                                    }
-                                    src={archive}
-                                    alt=""
-                                  />
-                                )}
-                              </Option>
-                            </div>
-                          ))}
+                          <PropertyOption>
+                            <h4>PROPERTIES</h4>
+                            {category.properties?.map((property, index) => (
+                              <div
+                                key={index}
+                                onClick={() =>
+                                  handleSelectedProperty(property, index)
+                                }
+                              >
+                                <Option
+                                  style={
+                                    showProperty === property.ID
+                                      ? { background: "#F1F5F9" }
+                                      : { background: "transparent" }
+                                  }
+                                >
+                                  <PropertyTitle>
+                                    <img
+                                      src={getPropertyIconByType(property.type)}
+                                      alt=""
+                                    />
+                                    <p>{property.name}</p>
+                                  </PropertyTitle>
+                                  {!editableCategoryId.includes(
+                                    category.ID
+                                  ) && (
+                                    <img
+                                      onClick={() =>
+                                        handleArchiveCategoryProperty(property)
+                                      }
+                                      src={archive}
+                                      alt=""
+                                    />
+                                  )}
+                                </Option>
+                              </div>
+                            ))}
+                          </PropertyOption>
+                          {/* property button section */}
+                          <PropertyBtns>
+                            <OptionCreateButtons>
+                              {editableCategoryId.includes(category.ID) ? (
+                                <button
+                                  onClick={() => handleAddProperty(category.ID)}
+                                >
+                                  <img src={add} alt="" />
+                                  <span>Add property</span>
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() =>
+                                    handleCategoryPropertyArchivedList(
+                                      category.ID
+                                    )
+                                  }
+                                >
+                                  <img src={archive} alt="" />
+                                  <span>View archive</span>
+                                </button>
+                              )}
+                            </OptionCreateButtons>
+                          </PropertyBtns>
                         </PropertyOptions>
+                        <Divider
+                          dir="vertical"
+                          sx={{
+                            borderWidth: "1px",
+                            borderColor: "var(--clr-gray-200)",
+                            borderRight: "none",
+                          }}
+                        />
                         {/* property input section */}
                         <Details>
                           <>
@@ -619,7 +716,7 @@ const Category = () => {
                         </Details>
                       </Options>
                       {/* property button section */}
-                      <PropertyBtns>
+                      {/* <PropertyBtns>
                         <OptionCreateButtons>
                           {editableCategoryId.includes(category.ID) ? (
                             <button
@@ -639,7 +736,7 @@ const Category = () => {
                             </button>
                           )}
                         </OptionCreateButtons>
-                      </PropertyBtns>
+                      </PropertyBtns> */}
                     </CategoryProperties>
                     {/* category property end */}
                   </AccordionDetails>

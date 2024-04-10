@@ -17,6 +17,13 @@ import { formatDate } from "../../../utils/time";
 import { getPaymentUpdateTime } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
 import { useWorkspace } from "../../../store/useWorkspace";
+import { Tooltip } from "@mui/material";
+import details from "../../../assets/details.svg";
+import { CheckBoxStyle } from "../category/CategoryArchivedList";
+import { Cell } from "../../table";
+import checkedActiveIcon from "../../../assets/checkbox-active.svg";
+import checkboxIcon from "../../../assets/checkbox.svg";
+import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
 
 interface PaymentRequestTableListProps {
   items: IPaymentRequest[];
@@ -70,15 +77,22 @@ const PaymentRequestTableList = ({
         <TableRow
           onClick={() => handleRowToggle(Number(id))}
           style={{ cursor: "pointer" }}
+          sx={{
+            "& > .MuiTableCell-root": {
+              // borderBottom: "none",
+            },
+            background: "var(--clr-gray-50)",
+            height: "55px",
+          }}
         >
           <TableCell
             colSpan={4}
             style={{
               padding: 0,
               paddingLeft: "16px",
-              borderBottom: "1px solid #ddd",
-              borderTop: "none",
               position: "relative",
+              borderBottom: "none",
+              borderTop: "1px solid var(--clr-gray-200)",
             }}
           >
             <Checkbox
@@ -86,6 +100,9 @@ const PaymentRequestTableList = ({
               onChange={(event) =>
                 handleCheckboxClick(event, Number(paymentId))
               }
+              sx={CheckBoxStyle}
+              checkedIcon={<img src={checkedActiveIcon} alt="" />}
+              icon={<img src={checkboxIcon} alt="" />}
             />
             {items.length} payment requests
             <IconButton
@@ -93,7 +110,7 @@ const PaymentRequestTableList = ({
               size="small"
               style={{
                 position: "absolute",
-                left: "200px",
+                left: "240px",
               }}
             >
               {openRows.includes(Number(id)) ? (
@@ -103,67 +120,99 @@ const PaymentRequestTableList = ({
               )}
             </IconButton>
           </TableCell>
-          <TableCell>
-            <Button
-              variant="outlined"
-              sx={{
-                borderColor: "black",
-                color: "black",
-                textTransform: "lowercase",
+          <TableCell
+            sx={{
+              borderBottom: "none",
+              borderTop: "1px solid var(--clr-gray-200)",
+            }}
+          >
+            <Tooltip
+              title="View details"
+              placement="top"
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    background: "var(--clr-white)",
+                    color: "#111",
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                  },
+                },
               }}
-              onClick={() => handleGroupPaymentDetails(items)}
             >
-              view more
-            </Button>
+              <img
+                src={details}
+                alt=""
+                style={{ width: "16px" }}
+                onClick={() => handleGroupPaymentDetails(items)}
+              />
+            </Tooltip>
           </TableCell>
         </TableRow>
       ) : (
         // )}
         <>
           {items.map((payment) => (
-            <TableRow key={payment.ID}>
-              <TableCell
-                style={{
-                  padding: 0,
-                  paddingLeft: "16px",
-                  borderBottom: "1px solid #ddd",
-                  borderTop: "none",
-                }}
-              >
+            <TableRow
+              key={payment.ID}
+              sx={{
+                "& > .MuiTableCell-root": {
+                  borderBottom: "none",
+                },
+                height: "55px",
+              }}
+            >
+              <Cell width="287px">
                 <Checkbox
                   checked={isSelected(payment.payment_request_id)}
                   onChange={(event) =>
                     handleCheckboxClick(event, payment.payment_request_id)
                   }
+                  sx={CheckBoxStyle}
+                  checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                  icon={<img src={checkboxIcon} alt="" />}
                 />
                 {formatAddressToDomain(
                   payment.counterparty,
                   workspace.chain_id,
                   workspace.name_service === "sns"
                 )}
-              </TableCell>
-              <TableCell>
+              </Cell>
+              <Cell>
                 {formatNumber(Number(payment.amount))} {payment.currency_name}
-              </TableCell>
-              <TableCell>
+              </Cell>
+              <Cell>
                 {payment.category_name && (
-                  <CategoryCell>{payment.category_name}</CategoryCell>
+                  <CategoryCell>
+                    <p>{payment.category_name}</p>
+                  </CategoryCell>
                 )}
-              </TableCell>
-              <TableCell>{getPaymentUpdateTime(payment)}</TableCell>
-              <TableCell>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderColor: "black",
-                    color: "black",
-                    textTransform: "lowercase",
+              </Cell>
+              <Cell>{getPaymentUpdateTime(payment)}</Cell>
+              <Cell>
+                <Tooltip
+                  title="View details"
+                  placement="top"
+                  componentsProps={{
+                    tooltip: {
+                      sx: {
+                        background: "var(--clr-white)",
+                        color: "#111",
+                        border: "1px solid var(--clr-gray-200)",
+                        padding: "8px 16px",
+                        fontSize: "12px",
+                      },
+                    },
                   }}
-                  onClick={() => handleOpenModal(payment)}
                 >
-                  view more
-                </Button>
-              </TableCell>
+                  <img
+                    src={details}
+                    alt=""
+                    style={{ width: "16px" }}
+                    onClick={() => handleOpenModal(payment)}
+                  />
+                </Tooltip>
+              </Cell>
             </TableRow>
           ))}
         </>
@@ -173,8 +222,8 @@ const PaymentRequestTableList = ({
           colSpan={5}
           sx={{
             padding: 0,
-            paddingLeft: "16px",
-            borderTop: "1px solid #ddd",
+            // paddingLeft: "16px",
+            // borderTop: "1px solid #ddd",
           }}
         >
           <Collapse
@@ -185,12 +234,17 @@ const PaymentRequestTableList = ({
             <Table size="small">
               <TableBody>
                 {items.map((payments) => (
-                  <TableRow key={payments.ID}>
+                  <TableRow
+                    key={payments.ID}
+                    sx={{ background: "var(--clr-gray-50)", height: "55px" }}
+                  >
                     <TableCell
                       // colSpan={1}
                       sx={{
-                        paddingLeft: "42px",
-                        width: "29%",
+                        paddingLeft: "90px",
+                        minWidth: "287px",
+                        borderBottom: "none",
+                        borderTop: "1px solid var(--clr-gray-200)",
                       }}
                     >
                       {formatAddressToDomain(
@@ -198,34 +252,16 @@ const PaymentRequestTableList = ({
                         workspace.chain_id
                       )}
                     </TableCell>
-                    <TableCell
-                      sx={{
-                        width: "20.5%",
-                      }}
-                    >
+                    <Cell width="397px">
                       {payments.amount} {payments.currency_name}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: "20%",
-                      }}
-                    >
-                      <CategoryCell>{payments.category_name}</CategoryCell>
-                    </TableCell>
-                    <TableCell>{getPaymentUpdateTime(payments)}</TableCell>
-                    <TableCell sx={{ visibility: "hidden" }}>
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          borderColor: "black",
-                          color: "black",
-                          textTransform: "lowercase",
-                        }}
-                        // onClick={() => handleOpenModal(payment)}
-                      >
-                        view more
-                      </Button>
-                    </TableCell>
+                    </Cell>
+                    <Cell width="180px">
+                      <CategoryCell>
+                        <p>{payments.category_name}</p>
+                      </CategoryCell>
+                    </Cell>
+                    <Cell width="176px">{getPaymentUpdateTime(payments)}</Cell>
+                    <Cell width="96px"></Cell>
                   </TableRow>
                 ))}
               </TableBody>

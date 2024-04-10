@@ -5,6 +5,7 @@ import ReactSelect from "../ReactSelect";
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import { ReactSelectOption } from "../../pages/workspace/paymentRequest/PaymentRequestDetails";
 import { CategoryProperties } from "../../store/useCategoryProperty";
+import { Cell } from "../table";
 
 interface MultiSelectTypeProps {
   property: any;
@@ -31,27 +32,14 @@ const MultiSelectType = ({
 }: MultiSelectTypeProps) => {
   if (!!defaultPropertyValue || !property.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            padding: 1,
-            paddingInline: 1,
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            borderRight: "1px solid var(--border-table)",
-          }}
-        >
+      <TableRow>
+        <Cell width="220">
           <NoteInfo>
             <Image src={multiSelect} alt="" /> {property.name}
           </NoteInfo>
-        </TableCell>
+        </Cell>
 
-        <TableCell onBlur={handleUpdateCategory}>
+        <Cell width="500" onBlur={handleUpdateCategory}>
           <ReactSelect
             isDisabled={status === 2}
             value={selectedValues}
@@ -75,7 +63,7 @@ const MultiSelectType = ({
               )
               .flat()}
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

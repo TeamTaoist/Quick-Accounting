@@ -1,10 +1,9 @@
 import Header from "../../components/layout/header/Header";
-// import "./workSpaceForm.scss";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react";
-import { InputLabel, TextField } from "@mui/material";
+import { InputLabel, Link, TextField } from "@mui/material";
 import {
   Button,
   CreateSafe,
@@ -13,6 +12,8 @@ import {
   WorkspaceForm,
   ChainMenuItem,
   SelectBox,
+  FormHeader,
+  Item,
 } from "./WorkSpaceForm.style";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -26,6 +27,9 @@ import { useWorkspace } from "../../store/useWorkspace";
 import { useLoading } from "../../store/useLoading";
 import Loading from "../../utils/Loading";
 import { useAccount } from "wagmi";
+import cancelBtn from "../../assets/auth/x.svg";
+import CheckIcon from "@mui/icons-material/Check";
+import rightArrow from "../../assets/asset-right-arrow.svg";
 
 const WorkSpaceForm = () => {
   const navigate = useNavigate();
@@ -65,69 +69,182 @@ const WorkSpaceForm = () => {
   const onSelectChain = (e: any) => {
     setSelectChanId(e.target.value);
   };
-  console.log(formData);
+  console.log(safe);
 
   return (
     <>
       {isLoading && <Loading />}
-      <Header>
-        <WorkspaceContainer>
-          <WorkspaceForm>
-            <h3>{t("workspaceForm.FormTitle")}</h3>
+      <WorkspaceContainer>
+        <WorkspaceForm>
+          <FormHeader>
+            <div>
+              <h3>{t("workspaceForm.FormTitle")}</h3>
+              <img src={cancelBtn} alt="" onClick={() => navigate(-1)} />
+            </div>
             <p>{t("workspaceForm.FormDescription")}</p>
-
-            <Safe className="safe">
-              <InputLabel
-                htmlFor="Workspace name"
-                sx={{ pb: 1, color: "#111", fontSize: "18px" }}
+          </FormHeader>
+          <Safe className="safe">
+            <InputLabel
+              htmlFor="Workspace name"
+              sx={{
+                pb: 1,
+                fontSize: "14px",
+                fontWeight: "500",
+                color: "var(--clr-primary-900)",
+              }}
+            >
+              {t("workspaceForm.WorkspaceName")}
+            </InputLabel>
+            <TextField
+              id="outlined-basic"
+              variant="outlined"
+              placeholder="Enter your workspace name"
+              size="small"
+              sx={{
+                width: "100%",
+                "& fieldset.MuiOutlinedInput-notchedOutline": {
+                  borderColor: "var(--clr-gray-300)",
+                  borderRadius: "6px",
+                },
+                "& .MuiInputBase-input": {
+                  height: "19px",
+                },
+              }}
+              inputProps={{
+                sx: {
+                  fontSize: "14px",
+                  "&::placeholder": {
+                    fontSize: "14px",
+                  },
+                },
+              }}
+              value={workspaceName}
+              onChange={(e) => setWorkspaceName(e.target.value)}
+            />
+            <CreateSafe>
+              <p>{t("workspaceForm.AddASafe")}</p>
+              <Link
+                href="https://app.safe.global/"
+                target="_blank"
+                rel="noreferrer"
+                sx={{
+                  color: "#1976d2",
+                }}
               >
-                {t("workspaceForm.WorkspaceName")}
-              </InputLabel>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                placeholder="Eenter your workspace name"
+                {t("workspaceForm.CreateASafe")}
+              </Link>
+            </CreateSafe>
+            {/* select */}
+            <SelectBox>
+              <Select
+                value={selectChainId}
+                onChange={onSelectChain}
                 size="small"
-                sx={{ minWidth: "100%" }}
-                value={workspaceName}
-                onChange={(e) => setWorkspaceName(e.target.value)}
-              />
-              <CreateSafe>
-                <p>{t("workspaceForm.AddASafe")}</p>
-                <a href="https://safe.global/" target="_blank" rel="noreferrer">
-                  {t("workspaceForm.CreateASafe")} &gt;&gt;
-                </a>
-              </CreateSafe>
-              {/* select */}
-              <SelectBox>
-                <Select value={selectChainId} onChange={onSelectChain}>
-                  {CHAINS.map((item) => (
-                    <MenuItem value={item.chainId} key={item.chainId}>
-                      <ChainMenuItem>
-                        <img src={item.logoPath} alt="" />
-                        {item.chainName}
-                      </ChainMenuItem>
-                    </MenuItem>
-                  ))}
-                </Select>
-                <Select fullWidth value={safe} onChange={handleChange}>
-                  {safeList.map((item) => (
-                    <MenuItem value={item} key={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </SelectBox>
-              <Button
-                onClick={handleCreateWorkspace}
-                disabled={!workspaceName || !safe || !workspaceName.trim()}
+                sx={{
+                  width: "395px",
+                  height: "42px",
+                }}
+                MenuProps={{
+                  sx: {
+                    "& .MuiMenuItem-root": {
+                      marginInline: "10px",
+                      borderRadius: "6px",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      margin: "5px",
+                      "&:hover": {
+                        bgcolor: "var(--clr-gray-100)",
+                      },
+                      "&.Mui-selected": {
+                        bgcolor: "var(--clr-gray-100)",
+                      },
+                    },
+                  },
+                }}
+                inputProps={{
+                  sx: {
+                    fontSize: "14px",
+                    "&::placeholder": {
+                      fontSize: "14px",
+                    },
+                  },
+                }}
               >
-                {t("workspaceForm.FormSubmitBtn")}
-              </Button>
-            </Safe>
-          </WorkspaceForm>
-        </WorkspaceContainer>
-      </Header>
+                {CHAINS.map((item) => (
+                  <MenuItem value={item.chainId} key={item.chainId}>
+                    <ChainMenuItem>
+                      <img src={item.logoPath} alt="" />
+                      {item.chainName}
+                    </ChainMenuItem>
+                  </MenuItem>
+                ))}
+              </Select>
+              <Select
+                fullWidth
+                size="small"
+                value={safe}
+                onChange={handleChange}
+                sx={{ overflow: "hidden" }}
+                renderValue={(selectedValue) => (
+                  <div style={{ overflow: "hidden", fontSize: "14px" }}>
+                    {selectedValue}
+                  </div>
+                )}
+                MenuProps={{
+                  sx: {
+                    "& .MuiMenuItem-root": {
+                      marginInline: "10px",
+                      borderRadius: "6px",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      margin: "5px 8px",
+                      "&:hover": {
+                        bgcolor: "var(--clr-gray-100)",
+                      },
+                      "&.Mui-selected": {
+                        bgcolor: "var(--clr-gray-100)",
+                      },
+                    },
+                  },
+                }}
+              >
+                {safeList.map((item) => (
+                  <MenuItem
+                    value={item}
+                    key={item}
+                    sx={{ paddingInline: "5px" }}
+                  >
+                    <Item>
+                      <div
+                        style={{
+                          width: "14px",
+                          marginRight: "10px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {safe === item && (
+                          <CheckIcon
+                            style={{ color: "#334155", width: "16px" }}
+                          />
+                        )}
+                      </div>
+
+                      {item}
+                    </Item>
+                  </MenuItem>
+                ))}
+              </Select>
+            </SelectBox>
+            <Button
+              onClick={handleCreateWorkspace}
+              disabled={!workspaceName || !safe || !workspaceName.trim()}
+            >
+              {t("workspaceForm.FormSubmitBtn")}
+            </Button>
+          </Safe>
+        </WorkspaceForm>
+      </WorkspaceContainer>
     </>
   );
 };

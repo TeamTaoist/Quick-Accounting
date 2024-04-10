@@ -12,34 +12,40 @@ import {
   RequestSubmit,
   TableSection,
   NoteHeader,
+  HeaderTitle,
+  WorkspaceInfo,
+  WorkspaceLogo,
+  WorkspaceDetails,
+  WorkspaceItem,
+  UpdateInfo,
+  PaymentRequestInput,
+  PaymentRequestDateInput,
   // Table,
 } from "./newPaymentRequest.style";
-import cancel from "../../../assets/auth/cancel.svg";
+import cancel from "../../../assets/x.svg";
 import trash from "../../../assets/workspace/trash.svg";
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import add from "../../../assets/workspace/add.svg";
+import addIcon from "../../../assets/workspace/plus-white.svg";
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
 import selectIcon from "../../../assets/workspace/select.svg";
 import multiSelect from "../../../assets/workspace/multi-select.svg";
 import optionsIcon from "../../../assets/workspace/option.svg";
+import checkCircle from "../../../assets/workspace/check-circle.svg";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import {
-  Box,
   FormControl,
-  IconButton,
   InputAdornment,
-  InputLabel,
   MenuItem,
   Select,
-  TextField,
+  Typography,
 } from "@mui/material";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactSelect from "../../../components/ReactSelect";
@@ -57,6 +63,13 @@ import { isAddress, zeroAddress } from "viem";
 import { parseUnits } from "ethers";
 import { useDomainStore } from "../../../store/useDomain";
 import { useLoading } from "../../../store/useLoading";
+import { formatTime } from "../../../utils/time";
+import { Cell, HeaderCell } from "../../../components/table";
+import {
+  CategoryDropdownStyle,
+  Item,
+} from "../../../components/categoryDropdown";
+import CheckIcon from "@mui/icons-material/Check";
 
 interface SubmitRowData {
   recipient: string;
@@ -283,7 +296,6 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
           };
     }),
   };
-  console.log("body", paymentRequestBody);
 
   const checkAllFields = async () => {
     if (!paymentRequestBody.rows.length) {
@@ -389,145 +401,99 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
       }
     });
   };
-  console.log(paymentRequestBody);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleInputClick = () => {
+    inputRef.current?.showPicker();
+  };
 
   return (
     <FullScreenDialog>
       <CreateRequest>
-        <Request>
-          <RequestHeader>
+        <RequestHeader>
+          <HeaderTitle>
             <h1>New payment request</h1>
             <img onClick={onClose} src={cancel} alt="" />
-          </RequestHeader>
+          </HeaderTitle>
+          <WorkspaceInfo>
+            <WorkspaceItem>
+              <WorkspaceLogo>
+                {workspace.avatar === "" ? (
+                  <p>{workspace.name.slice(0, 1)}</p>
+                ) : (
+                  <img src={workspace.avatar} alt={workspace.name} />
+                )}
+              </WorkspaceLogo>
+              <WorkspaceDetails>
+                <h6>{workspace.name}</h6>
+                <p>{workspace.vault_wallet}</p>
+              </WorkspaceDetails>
+            </WorkspaceItem>
+            <UpdateInfo>
+              <img src={checkCircle} alt="" />
+              <p>Last updated at {formatTime(workspace.UpdatedAt)}</p>
+            </UpdateInfo>
+          </WorkspaceInfo>
+        </RequestHeader>
+        <Request>
           <TableSection>
             <TableContainer
               sx={{
                 boxShadow: "none",
-                border: "1px solid var(--border-table)",
-                borderRadius: "10px",
-                // maxWidth: 680,
-                // margin: "26px auto",
+                border: "1px solid var(--clr-gray-200)",
+                borderRadius: "6px",
+                maxHeight: "100%",
+                overflow: "auto",
+                width: "100%",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                "-ms-overflow-style": "none",
+                scrollbarWidth: "none",
               }}
             >
               <Table sx={{ width: "100%" }} aria-label="simple table">
-                <TableHead style={{ backgroundColor: "var(--bg-secondary)" }}>
+                <TableHead>
                   <TableRow>
-                    <TableCell
-                      sx={{
-                        width: 200,
-                        borderRight: "1px solid var(--border-table)",
-                        fontWeight: 500,
-                        fontSize: "16px",
-                      }}
-                    >
+                    <HeaderCell width="250px" color="#475569">
                       Recipient
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: 150,
-                        borderRight: "1px solid var(--border-table)",
-                        fontWeight: 500,
-                        fontSize: "16px",
-                      }}
-                    >
+                    </HeaderCell>
+                    <HeaderCell width="180px" color="#475569">
                       Amount
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: 200,
-                        border: 0,
-                        fontWeight: 500,
-                        fontSize: "16px",
-                      }}
-                    >
+                    </HeaderCell>
+                    <HeaderCell width="180px" color="#475569">
                       Currency
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: 50,
-                        border: 0,
-                        fontWeight: 500,
-                        fontSize: "16px",
-                      }}
-                    ></TableCell>
+                    </HeaderCell>
+                    <HeaderCell width="56px" color="#475569"></HeaderCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {/* <TableRow sx={{ td: { border: 1, padding: 0 } }}> */}
                   {rows?.map((row, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        height: "30px",
-                      }}
-                    >
-                      <TableCell
-                        sx={{
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          borderLeft: 0,
-                        }}
-                      >
-                        <TextField
-                          sx={{
-                            "& fieldset": { border: "none" },
-                          }}
-                          size="small"
-                          fullWidth
-                          // id="fullWidth"
-                          placeholder="Enter wallet address"
-                          InputProps={{
-                            style: { padding: 0 },
-                          }}
-                          name={`service-${index}`}
-                          type="text"
-                          id={`service-${index}`}
+                    <TableRow key={index}>
+                      <Cell>
+                        <PaymentRequestInput
+                          placeholder="Enter content"
                           value={row.recipient}
-                          onChange={(e) =>
+                          onChange={(e: any) =>
                             handleServiceChange(e, index, "recipient")
                           }
                         />
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          border: "1px solid var(--border-table)",
-                          borderRadius: "5px",
-                          padding: 0,
-                          paddingLeft: "10px",
-                        }}
-                      >
-                        <TextField
-                          sx={{
-                            "& fieldset": { border: "none" },
-                          }}
-                          size="small"
-                          fullWidth
-                          autoComplete="off"
-                          // id="fullWidth"
+                      </Cell>
+                      <Cell>
+                        <PaymentRequestInput
+                          type="text"
                           placeholder="0.00"
-                          InputProps={{
-                            style: { padding: 0 },
-                          }}
-                          name={`service-${index}`}
-                          type="number"
-                          id={`service-${index}`}
                           value={row.amount}
-                          onChange={(e) =>
+                          onChange={(e: any) =>
                             handleServiceChange(e, index, "amount")
                           }
                         />
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          border: "1px solid var(--border-table)",
-                          borderRadius: "5px",
-                          padding: 0,
-                          paddingLeft: "10px",
-                          // minHeight: "40px",
-                        }}
-                      >
+                      </Cell>
+                      <Cell>
                         <Select
                           labelId={`dropdown-${index}-label`}
+                          variant="outlined"
                           id={`dropdown-${index}`}
                           value={row.currency}
                           onChange={(e) =>
@@ -539,14 +505,31 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               <img
                                 src={arrowBottom}
                                 alt="Custom Arrow Icon"
-                                style={{ marginRight: "50px" }}
+                                style={{ marginRight: "8px", width: "16px" }}
                               />
                             </InputAdornment>
                           )}
-                          sx={{
-                            minWidth: "100%",
-                            "& fieldset": { border: "none" },
-                          }}
+                          displayEmpty
+                          // renderValue={(selectedValue) => (
+                          //   <div
+                          //     style={{ overflow: "hidden", fontSize: "14px" }}
+                          //   >
+                          //     {selectedValue ? (
+                          //       // row.currency
+                          //       {item.tokenInfo.symbol}(
+                          //         {formatBalance(
+                          //           item.balance,
+                          //           item.tokenInfo.decimals
+                          //         )}
+                          //         )
+                          //     ) : (
+                          //       <p style={{ color: "var(--clr-gray-400)" }}>
+                          //         currency
+                          //       </p>
+                          //     )}
+                          //   </div>
+                          // )}
+                          sx={CategoryDropdownStyle}
                         >
                           {assetsList?.map(
                             (item, i) =>
@@ -555,11 +538,16 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                   key={i}
                                   value={item.tokenInfo.address}
                                   sx={{
+                                    paddingInline: "5px",
+                                    fontSize: "14px",
+                                    marginInline: "10px",
+                                    borderRadius: "6px",
+                                    margin: "5px 8px",
                                     "&:hover": {
-                                      backgroundColor: "var(--hover-bg)",
+                                      backgroundColor: "var(--clr-gray-100)",
                                     },
                                     "&.Mui-selected": {
-                                      backgroundColor: "var(--hover-bg)",
+                                      backgroundColor: "var(--clr-gray-200)",
                                     },
                                   }}
                                 >
@@ -572,84 +560,79 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 </MenuItem>
                               )
                           )}
-
-                          {/* <MenuItem value="Option2">Twenty</MenuItem> */}
                         </Select>
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          border: "none",
-                          padding: 0,
-                          // minHeight: "40px",
-                        }}
+                      </Cell>
+                      <Cell
+                      // sx={{
+                      //   paddingTop: 0,
+                      //   paddingBottom: 0,
+                      //   borderTop: "1px solid var(--clr-gray-200)",
+                      // }}
                       >
                         <DeleteIcon onClick={() => handleDeletePayment(index)}>
                           <img src={trash} alt="" />
                         </DeleteIcon>
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
-              <AddPayment onClick={handleAddPayment}>
-                <img src={add} alt="" />
-                <span>Add</span>
+              <AddPayment>
+                <button onClick={handleAddPayment}>
+                  <img src={add} alt="" />
+                  <span>Add</span>
+                </button>
               </AddPayment>
               {/* </TableContainer> */}
               {/* note info */}
-              <NoteInformation style={{ marginTop: "30px" }}>
+              <NoteInformation>
                 <NoteHeader>
-                  <h3>Note Information</h3>
+                  <Typography color="#475569" fontSize={14} fontWeight={500}>
+                    Note Information
+                  </Typography>
                 </NoteHeader>
 
                 {/* <TableContainer> */}
                 <Table sx={{ width: "100%" }} aria-label="simple table">
                   <TableBody>
-                    <TableRow
-                      sx={{
-                        td: {
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell
-                        sx={{
-                          height: 1,
-                          width: 200,
-                          borderRight: "1px solid var(--border-table)",
-                        }}
-                      >
+                    <TableRow>
+                      <Cell width="220px">
                         <NoteInfo>
                           <Image src={categoryIcon} alt="" /> Category
                         </NoteInfo>
-                      </TableCell>
-                      <TableCell>
+                      </Cell>
+                      <Cell width="500px">
                         <FormControl fullWidth>
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={category}
                             label={category}
-                            size="small"
                             onChange={handleCategoryChange}
+                            displayEmpty
+                            size="small"
                             IconComponent={() => (
                               <InputAdornment position="start">
                                 <img
                                   src={arrowBottom}
                                   alt="Custom Arrow Icon"
-                                  style={{ marginRight: "20px" }}
+                                  style={{ marginRight: "10px" }}
                                 />
                               </InputAdornment>
                             )}
-                            sx={{
-                              minWidth: "100%",
-                              "& fieldset": { border: "none" },
-                            }}
+                            renderValue={(selectedValue) => (
+                              <div
+                                style={{ overflow: "hidden", fontSize: "14px" }}
+                              >
+                                {selectedValue ? (
+                                  selectedValue
+                                ) : (
+                                  <p style={{ margin: 0 }}>Select category</p>
+                                )}
+                              </div>
+                            )}
+                            sx={CategoryDropdownStyle}
                           >
-                            <MenuItem disabled value="Category">
-                              Category name
-                            </MenuItem>
                             {workspaceCategoryProperties?.map((property) => (
                               <MenuItem
                                 onClick={() =>
@@ -657,48 +640,61 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 }
                                 value={property.name}
                                 sx={{
+                                  paddingInline: "5px",
+                                  fontSize: "14px",
+                                  marginInline: "10px",
+                                  borderRadius: "6px",
+                                  margin: "5px 8px",
                                   "&:hover": {
-                                    backgroundColor: "var(--hover-bg)",
+                                    backgroundColor: "var(--clr-gray-100)",
                                   },
                                   "&.Mui-selected": {
-                                    backgroundColor: "var(--hover-bg)",
+                                    backgroundColor:
+                                      selectedCategoryID === property.ID
+                                        ? "var(--clr-gray-200)"
+                                        : "transparent",
                                   },
                                 }}
                               >
-                                {property.name}
+                                <Item>
+                                  <div
+                                    style={{
+                                      width: "14px",
+                                      marginRight: "10px",
+                                      display: "flex",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    {selectedCategoryID === property.ID && (
+                                      <CheckIcon
+                                        style={{
+                                          color: "#334155",
+                                          width: "16px",
+                                        }}
+                                      />
+                                    )}
+                                  </div>
+
+                                  {property.name}
+                                </Item>
                               </MenuItem>
                             ))}
-
-                            {/* <MenuItem value={20}>Twenty</MenuItem> */}
                           </Select>
                         </FormControl>
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                     {selectedCategory?.properties?.map((property) => (
                       <>
                         {property.type === "single-select" && (
-                          <TableRow
-                            sx={{
-                              td: {
-                                padding: 0,
-                                paddingInline: "16px",
-                              },
-                            }}
-                          >
-                            <TableCell
-                              sx={{
-                                height: 1,
-                                width: 200,
-                                borderRight: "1px solid var(--border-table)",
-                              }}
-                            >
+                          <TableRow>
+                            <Cell>
                               <NoteInfo>
                                 <Image src={selectIcon} alt="" />{" "}
                                 {property.name}
                               </NoteInfo>
-                            </TableCell>
+                            </Cell>
                             {/* add multi select */}
-                            <TableCell>
+                            <Cell>
                               <ReactSelect
                                 // value={selectedValues}
                                 value={selectSingleValue}
@@ -721,7 +717,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 isMulti={false}
                                 // defaultValues={[options[1]]}
                               />
-                            </TableCell>
+                            </Cell>
                             {/* {propertyObjects.push({
                               type: property.type,
                               name: property.name,
@@ -742,21 +738,15 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               },
                             }}
                           >
-                            <TableCell
-                              sx={{
-                                height: 1,
-                                width: 200,
-                                borderRight: "1px solid var(--border-table)",
-                              }}
-                            >
+                            <Cell>
                               <NoteInfo>
                                 <Image src={multiSelect} alt="" />{" "}
                                 {property.name}
                               </NoteInfo>
-                            </TableCell>
+                            </Cell>
                             {}
                             {/* add multi select */}
-                            <TableCell>
+                            <Cell>
                               <ReactSelect
                                 value={selectedValues}
                                 onChange={(
@@ -776,7 +766,7 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                   }))}
                                 // defaultValues={[options[1], options[2]]}
                               />
-                            </TableCell>
+                            </Cell>
                           </TableRow>
                         )}
                       </>
@@ -795,20 +785,14 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               },
                             }}
                           >
-                            <TableCell
-                              sx={{
-                                height: 1,
-                                width: 200,
-                                borderRight: "1px solid var(--border-table)",
-                              }}
-                            >
+                            <Cell>
                               <NoteInfo>
                                 <Image src={optionsIcon} alt="" />{" "}
                                 {property.name}
                               </NoteInfo>
-                            </TableCell>
-                            <TableCell>
-                              <TextField
+                            </Cell>
+                            <Cell>
+                              {/* <TextField
                                 sx={{
                                   "& fieldset": { border: "none" },
                                 }}
@@ -826,8 +810,19 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 InputProps={{
                                   style: { padding: 0 },
                                 }}
+                              /> */}
+                              <PaymentRequestInput
+                                placeholder="Enter content"
+                                value={textPropertyValues[property.name] || ""}
+                                onChange={(e: any) =>
+                                  handlePropertyText(
+                                    e,
+                                    property.name,
+                                    property.type
+                                  )
+                                }
                               />
-                            </TableCell>
+                            </Cell>
                           </TableRow>
                         )}
                       </>
@@ -845,20 +840,14 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                               },
                             }}
                           >
-                            <TableCell
-                              sx={{
-                                height: 1,
-                                width: 200,
-                                borderRight: "1px solid var(--border-table)",
-                              }}
-                            >
+                            <Cell>
                               <NoteInfo>
                                 <Image src={multiSelect} alt="" />{" "}
                                 {property.name}
                               </NoteInfo>
-                            </TableCell>
-                            <TableCell>
-                              <TextField
+                            </Cell>
+                            <Cell>
+                              {/* <TextField
                                 sx={{
                                   "& fieldset": { border: "none" },
                                 }}
@@ -873,8 +862,18 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
                                 InputProps={{
                                   style: { padding: 0 },
                                 }}
+                              /> */}
+                              <PaymentRequestDateInput
+                                type="date"
+                                value={datePicker[property.name] || ""}
+                                onChange={(e: any) =>
+                                  handleDatePickerProperty(e, property.name)
+                                }
+                                isDatePicker={datePicker[property.name]}
+                                onClick={handleInputClick}
+                                inputRef={inputRef}
                               />
-                            </TableCell>
+                            </Cell>
                           </TableRow>
                         )}
                       </>
@@ -886,7 +885,8 @@ const NewPaymentRequest = ({ onClose }: { onClose: () => void }) => {
             </TableContainer>
             <Btn>
               <RequestSubmit onClick={handlePaymentRequestSubmit}>
-                Submit
+                <img src={addIcon} alt="" />
+                Create payment request
               </RequestSubmit>
             </Btn>
           </TableSection>

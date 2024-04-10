@@ -1,5 +1,4 @@
 import {
-  Button,
   Checkbox,
   Table,
   TableBody,
@@ -7,6 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import React from "react";
 import { useBookkeeping } from "../../../store/useBookkeeping";
@@ -17,11 +17,16 @@ import {
 import { getShortAddress } from "../../../utils";
 import { useWorkspace } from "../../../store/useWorkspace";
 import rightArrow from "../../../assets/workspace/right-arrow.svg";
+import details from "../../../assets/details.svg";
+import checkedActiveIcon from "../../../assets/checkbox-active.svg";
+import checkboxIcon from "../../../assets/checkbox.svg";
+import checkboxIndeterminate from "../../../assets/checkbox-select.svg";
 import { formatNumber } from "../../../utils/number";
 import { CategoryCell } from "../../../pages/workspace/paymentRequest/paymentRequest.style";
-import { formatDate } from "../../../utils/time";
 import { getPaymentUpdateTime } from "../../../utils/payment";
 import { useDomainStore } from "../../../store/useDomain";
+import { Cell, HeaderCell, TableContainerSection } from "../../table";
+import { CheckBoxStyle } from "../category/CategoryArchivedList";
 
 interface BookkeepingTableProps {
   selected: number[];
@@ -64,18 +69,13 @@ const BookkeepingTable = ({
   };
 
   return (
-    <TableContainer
-      sx={{
-        border: "1px solid var(--border)",
-        borderRadius: "10px",
-        maxHeight: "100%",
-        overflow: "auto",
-      }}
-    >
+    <TableContainerSection>
       <Table stickyHeader>
-        <TableHead style={{ backgroundColor: "#f0f0f0" }}>
+        <TableHead
+          style={{ background: "var(--clr-gray-200)", height: "55px" }}
+        >
           <TableRow>
-            <TableCell sx={{ background: "var(--bg-primary)" }}>
+            <HeaderCell width="230px">
               <Checkbox
                 indeterminate={
                   selected.length > 0 &&
@@ -83,34 +83,25 @@ const BookkeepingTable = ({
                 }
                 checked={selected.length === bookkeepingList.length}
                 onChange={handleSelectAllClick}
+                sx={CheckBoxStyle}
+                checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                icon={<img src={checkboxIcon} alt="" />}
+                indeterminateIcon={<img src={checkboxIndeterminate} alt="" />}
               />
               Safe
-            </TableCell>
-            <TableCell sx={{ background: "var(--bg-primary)" }}>
-              Counterparty
-            </TableCell>
-            <TableCell sx={{ background: "var(--bg-primary)" }}>
-              Amount
-            </TableCell>
-            <TableCell sx={{ background: "var(--bg-primary)" }}>
-              Category
-            </TableCell>
-            <TableCell sx={{ background: "var(--bg-primary)" }}>Date</TableCell>
-            <TableCell sx={{ background: "var(--bg-primary)" }}></TableCell>
+            </HeaderCell>
+            <HeaderCell width="154px">Counterparty</HeaderCell>
+            <HeaderCell width="290px">Amount</HeaderCell>
+            <HeaderCell width="180px">Category</HeaderCell>
+            <HeaderCell width="176px">Date</HeaderCell>
+            <HeaderCell width="96px"></HeaderCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {filterData.map((bookkeeping) => (
             <React.Fragment key={bookkeeping.ID}>
-              <TableRow>
-                <TableCell
-                  style={{
-                    padding: 0,
-                    paddingLeft: "16px",
-                    borderBottom: "1px solid #ddd",
-                    borderTop: "none",
-                  }}
-                >
+              <TableRow sx={{ height: "56px" }}>
+                <Cell>
                   <SafeSection>
                     <div>
                       <Checkbox
@@ -118,6 +109,9 @@ const BookkeepingTable = ({
                         onChange={(event) =>
                           handleCheckboxClick(event, bookkeeping.ID)
                         }
+                        sx={CheckBoxStyle}
+                        checkedIcon={<img src={checkedActiveIcon} alt="" />}
+                        icon={<img src={checkboxIcon} alt="" />}
                       />
                       {getShortAddress(workspace?.vault_wallet)}
                     </div>
@@ -125,41 +119,54 @@ const BookkeepingTable = ({
                       <img src={rightArrow} alt="" />
                     </Logo>
                   </SafeSection>
-                </TableCell>
-                <TableCell>
+                </Cell>
+                <Cell>
                   {formatAddressToDomain(
                     bookkeeping.counterparty,
                     workspace.chain_id,
                     workspace.name_service === "sns"
                   )}
-                </TableCell>
-                <TableCell>
+                </Cell>
+                <Cell>
                   {formatNumber(Number(bookkeeping.amount))}{" "}
                   {bookkeeping.currency_name}
-                </TableCell>
-                <TableCell>
-                  <CategoryCell>{bookkeeping.category_name}</CategoryCell>
-                </TableCell>
-                <TableCell>{getPaymentUpdateTime(bookkeeping)}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      borderColor: "black",
-                      color: "black",
-                      textTransform: "lowercase",
+                </Cell>
+                <Cell>
+                  <CategoryCell>
+                    <p>{bookkeeping.category_name}</p>
+                  </CategoryCell>
+                </Cell>
+                <Cell>{getPaymentUpdateTime(bookkeeping)}</Cell>
+                <Cell>
+                  <Tooltip
+                    title="View details"
+                    placement="top"
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          background: "var(--clr-white)",
+                          color: "#111",
+                          border: "1px solid var(--clr-gray-200)",
+                          padding: "8px 16px",
+                          fontSize: "12px",
+                        },
+                      },
                     }}
-                    onClick={() => handleBookkeepingDetails(bookkeeping)}
                   >
-                    view more
-                  </Button>
-                </TableCell>
+                    <img
+                      src={details}
+                      alt=""
+                      style={{ width: "16px" }}
+                      onClick={() => handleBookkeepingDetails(bookkeeping)}
+                    />
+                  </Tooltip>
+                </Cell>
               </TableRow>
             </React.Fragment>
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </TableContainerSection>
   );
 };
 

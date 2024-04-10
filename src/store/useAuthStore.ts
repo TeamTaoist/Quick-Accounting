@@ -42,10 +42,10 @@ export const useAuthStore = create<Auth>((set) => {
         console.log(data);
 
         localStorage.setItem("qa-user", JSON.stringify(data.data));
-        callback && callback(); 
+        callback && callback();
       } catch (error: any) {
         console.log(error);
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
         throw error;
       } finally {
         setLoading(false);
@@ -85,7 +85,7 @@ export const useAuthStore = create<Auth>((set) => {
         return data?.nonce;
       } catch (error: any) {
         console.error(error);
-        toast.error(error?.data?.msg || error?.status || error);
+        toast(error?.data?.msg || error?.status || error);
         throw error;
       } finally {
         setLoading(false);

@@ -51,26 +51,24 @@ const LoginPopup = () => {
     <>
       {isLoading && <Loading />}
       <Header>
-        {loginVidible ? (
+        {loginVidible && (
           <LoginContent
             handleClose={() => setLoginVisible(false)}
             loginCallback={handleLoginCallback}
           />
-        ) : (
-          <div className="home-container">
-            <div className="home">
-              <img src={logo} alt="" />
-              <h3 className="home-title">{t("home.HomeTitle")}</h3>
-              <p className="home-description">{t("home.HomeDescription")}</p>
-              <span
-                className="connect-btn"
-                onClick={() => setLoginVisible(true)}
-              >
-                {t("home.ConnectBtn")}
-              </span>
-            </div>
-          </div>
         )}
+        {/* : ( */}
+        <div className="home-container">
+          <div className="home">
+            <img src={logo} alt="" />
+            <h3 className="home-title">{t("home.HomeTitle")}</h3>
+            <p className="home-description">{t("home.HomeDescription")}</p>
+            <span className="connect-btn" onClick={() => setLoginVisible(true)}>
+              {t("home.ConnectBtn")}
+            </span>
+          </div>
+        </div>
+        {/* )} */}
       </Header>
     </>
   );

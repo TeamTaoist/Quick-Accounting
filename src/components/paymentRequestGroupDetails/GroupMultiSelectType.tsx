@@ -5,6 +5,7 @@ import multiSelect from "../../assets/workspace/multi-select.svg";
 import { paymentRequestBody } from "../workspace/paymentRequest/PaymentRequestGroupDetails";
 import ReactSelect from "../ReactSelect";
 import { ReactSelectOption } from "../../pages/workspace/bookkeeping/BookkeepingTransferDetails";
+import { Cell } from "../table";
 
 interface GroupMultiSelectTypeProps {
   properties: any;
@@ -36,26 +37,13 @@ const GroupMultiSelectType = ({
 }: GroupMultiSelectTypeProps) => {
   if (!!defaultPropertyValue || !properties.archived) {
     return (
-      <TableRow
-        sx={{
-          td: {
-            padding: 1,
-            paddingInline: 1,
-          },
-        }}
-      >
-        <TableCell
-          sx={{
-            height: 1,
-            width: 200,
-            borderRight: "1px solid var(--border-table)",
-          }}
-        >
+      <TableRow>
+        <Cell>
           <NoteInfo>
             <Image src={multiSelect} alt="" /> {properties.name}
           </NoteInfo>
-        </TableCell>
-        <TableCell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
+        </Cell>
+        <Cell onBlur={() => handleUpdatePaymentRequest(payment.id)}>
           <ReactSelect
             value={selectedValues}
             // isDisabled={isEditable}
@@ -86,7 +74,7 @@ const GroupMultiSelectType = ({
               )
               .flat()}
           />
-        </TableCell>
+        </Cell>
       </TableRow>
     );
   }

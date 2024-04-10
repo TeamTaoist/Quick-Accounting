@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import reject from "../../../assets/workspace/reject.svg";
 import back from "../../../assets/workspace/back.svg";
-import view from "../../../assets/workspace/view.svg";
+import failedIcon from "../../../assets/workspace/failed-icon.svg";
 import { CategoryTitle } from "../category/category.style";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,6 +18,8 @@ import QueueItem from "../../../components/workspace/QueueItem";
 import { BookkeepingTitle, HideBtn } from "../bookkeeping/Bookkeeping";
 import { useCategoryProperty } from "../../../store/useCategoryProperty";
 import { useDomainStore } from "../../../store/useDomain";
+import Button from "../../../components/button";
+import QueueFailedTable from "../../../components/workspace/QueueFailedTable";
 
 const Queue = () => {
   const { id } = useParams();
@@ -33,6 +35,7 @@ const Queue = () => {
   const [paymentRequest, setPaymentRequest] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [list, setList] = useState<IQueueGroupItemProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -40,8 +43,10 @@ const Queue = () => {
   const workspaceId = Number(id);
 
   const getQueueList = async () => {
+    setIsLoading(true);
     const data = await getQueueTx(workspace.chain_id, workspace.vault_wallet);
     data && setList(data);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -83,6 +88,11 @@ const Queue = () => {
   useEffect(() => {
     getWorkspaceCategoryProperties(Number(id), true);
   }, []);
+
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <QueueSection>
       {list.length === 0 && paymentRequest ? (
@@ -93,28 +103,25 @@ const Queue = () => {
             show up here.
           </p>
           <HideBtn onClick={() => setPaymentRequest(!paymentRequest)}>
-            <img src={view} alt="" style={{ width: "20px" }} />
-            <span>View rejection</span>
+            <img src={failedIcon} alt="" style={{ width: "20px" }} />
+            <span>View failed</span>
           </HideBtn>
         </BookkeepingTitle>
       ) : (
         <QueueContainer>
           <QueHeader>
-            <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
-              {paymentRequest ? (
-                <div>
-                  <Image src={reject} alt="" />
-                  <p>{t("paymentRequest.ViewRejection")}</p>
-                </div>
-              ) : (
-                <div>
-                  <Image src={back} alt="" />
-                  <p>{t("paymentRequest.Back")}</p>
-                </div>
+            <ViewReject>
+              {paymentRequest && (
+                <Button
+                  icon={failedIcon}
+                  bg="#e2e8f0"
+                  onClick={() => setPaymentRequest(!paymentRequest)}
+                >
+                  {t("queue.ViewFailed")}
+                </Button>
               )}
             </ViewReject>
           </QueHeader>
-          {/*  */}
           {paymentRequest && (
             <>
               {list.map((item, index) => (
@@ -137,7 +144,10 @@ const Queue = () => {
       )}
       {!paymentRequest && (
         <RejectSection>
-          <RejectDataTable isInQueue />
+          <QueueFailedTable
+            paymentRequest={paymentRequest}
+            setPaymentRequest={setPaymentRequest}
+          />
         </RejectSection>
       )}
     </QueueSection>
@@ -146,17 +156,16 @@ const Queue = () => {
 
 export default Queue;
 const QueueContainer = styled.div`
-  padding: 30px 0;
+  /* padding: 30px 0; */
 `;
 
 const QueueSection = styled.div`
-  padding-top: 40px;
-  margin-inline: 40px;
+  padding: 24px;
 `;
 const QueHeader = styled.div`
   display: flex;
   justify-content: end;
 `;
 export const RejectSection = styled.div`
-  margin-top: 50px;
+  /* margin-top: 10px; */
 `;

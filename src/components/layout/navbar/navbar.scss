@@ -1,8 +1,8 @@
 .navbar {
   display: flex;
   align-items: center;
-  height: 92px;
-  background: var(--bg-primary);
+  height: 72px;
+  background: #e2e8f0;
   padding-left: 38px;
   gap: 16px;
   position: fixed;
@@ -10,10 +10,11 @@
   right: 0;
   z-index: 1;
   img {
-    width: 70px;
+    width: 40px;
+    height: 40px;
   }
   h3 {
-    font-size: 30px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 700;
   }
 }

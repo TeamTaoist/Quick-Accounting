@@ -1,34 +1,23 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import React, { useEffect, useRef, useState } from "react";
-import searchIcon from "../../../assets/workspace/search-icon.svg";
-import download from "../../../assets/workspace/download.svg";
+import download from "../../../assets/workspace/download-icon.svg";
 import view from "../../../assets/workspace/view.svg";
-import importIcon from "../../../assets/workspace/import-icon.svg";
+import importIcon from "../../../assets/workspace/archive.svg";
 import hide from "../../../assets/workspace/hide.svg";
-import back from "../../../assets/workspace/back.svg";
-import filterIcon from "../../../assets/workspace/filtering.svg";
 
-import {
-  FormControl,
-  InputAdornment,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
 import { useParams } from "react-router-dom";
 import {
   ActionBtn,
   BookkeepingRejectSection,
   Btn,
+  Filter,
   Header,
   Image,
-  Option,
   PaymentPagination,
   PaymentRequestBody,
   PaymentRequestContainer,
   TableSection,
-  ViewReject,
 } from "../paymentRequest/paymentRequest.style";
 import BookkeepingRejectTable from "../../../components/workspace/bookkeeping/BookkeepingRejectTable";
 import { useTranslation } from "react-i18next";
@@ -41,6 +30,9 @@ import BookkeepingTable from "../../../components/workspace/bookkeeping/Bookkeep
 import Pagination from "../../../components/Pagination";
 import { useDomainStore } from "../../../store/useDomain";
 import { useWorkspace } from "../../../store/useWorkspace";
+import SearchInput from "../../../components/workspace/SearchInput";
+import FilterCategorySelect from "../../../components/workspace/FilterCategorySelect";
+import Button from "../../../components/button";
 
 const Bookkeeping = () => {
   const { id } = useParams();
@@ -54,6 +46,7 @@ const Bookkeeping = () => {
     hideBookkeepingList,
     setCurrentBookkeepingDetail,
     bookkeepingHiddenList,
+    bookkeepingFilterList,
   } = useBookkeeping();
   const { getWorkspaceCategoryProperties } = useCategoryProperty();
   const { queryNameService } = useDomainStore();
@@ -101,7 +94,6 @@ const Bookkeeping = () => {
 
   // table logic
   const [selected, setSelected] = useState<number[]>([]);
-  console.log(selected);
 
   const handleBookkeepingDetails = (bookkeeping: IPaymentRequest) => {
     setCurrentBookkeepingDetail(bookkeeping);
@@ -115,11 +107,34 @@ const Bookkeeping = () => {
     setSearchTerm(event.target.value);
   };
   const [selectedValue, setSelectedValue] = useState<string>("");
+  const [isSearch, setIsSearch] = useState(false);
 
   const handleDropdownChange = (event: any) => {
     setSelectedValue(event.target.value);
   };
-
+  const handleSearchPayment = (e: any) => {
+    e.preventDefault();
+    getBookkeepingList(workspaceId, false, pageNumbers, 10, searchTerm).then(
+      (res) => {
+        if (res) {
+          setTotalItem(res);
+          setIsSearch(true);
+        }
+      }
+    );
+  };
+  useEffect(() => {
+    if (!searchTerm && isSearch) {
+      getBookkeepingList(workspaceId, false, pageNumbers, 10, searchTerm).then(
+        (res) => {
+          if (res) {
+            setTotalItem(res);
+            setIsSearch(false);
+          }
+        }
+      );
+    }
+  }, [getBookkeepingList, isSearch, pageNumbers, searchTerm, workspaceId]);
   // filter table data
   const filterData = bookkeepingList.filter((bookkeeping) => {
     const searchItem = bookkeeping.counterparty
@@ -193,7 +208,7 @@ const Bookkeeping = () => {
         setOpen={setOpenModal}
         component={BookkeepingTransferDetails}
       />
-      {bookkeepingList.length === 0 && paymentRequest && (
+      {filterData.length === 0 && paymentRequest && (
         <BookkeepingTitle>
           <h3>You don't have any transactions.</h3>
           <p style={{ width: "509px", textAlign: "center" }}>
@@ -202,95 +217,90 @@ const Bookkeeping = () => {
           </p>
           <HideBtn onClick={handleViewHiddenList}>
             <img src={view} alt="" style={{ width: "20px" }} />
-            <span>View hidden</span>
+            <span>View failed</span>
           </HideBtn>
         </BookkeepingTitle>
       )}
-      {bookkeepingList.length > 0 && paymentRequest && (
-        <Header>
-          <TextField
-            id="search"
-            type="search"
-            autoComplete="off"
-            placeholder={t("paymentRequest.Search")}
-            value={searchTerm}
-            onChange={handleChange}
-            sx={{ width: 350 }}
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <img src={searchIcon} alt="" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <FormControl sx={{ minWidth: 100 }}>
-            <Select
-              value={selectedValue}
-              onChange={handleDropdownChange}
-              displayEmpty
-              inputProps={{ "aria-label": "Select a value" }}
-              size="small"
-            >
-              <MenuItem value="" disabled>
-                <Option>
-                  <Image src={filterIcon} alt="" />
-                  {t("paymentRequest.Filter")}
-                </Option>
-              </MenuItem>
-              {uniqueCategoryNames.map(
-                (categoryName) =>
-                  categoryName?.trim() !== "" && (
-                    <MenuItem value={categoryName} key={categoryName}>
-                      {categoryName}
-                    </MenuItem>
-                  )
-              )}
-            </Select>
-          </FormControl>
-          <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
-            {paymentRequest && (
-              <div onClick={handleViewHiddenList}>
-                <Image src={view} alt="" />
-                <p>{t("bookkeeping.ViewHidden")}</p>
-              </div>
-            )}
-            {bookkeepingHiddenList.length > 0 && !paymentRequest && (
-              <div onClick={handleBackBtn}>
-                <Image src={back} alt="" />
-                <p>{t("paymentRequest.Back")}</p>
-              </div>
-            )}
-          </ViewReject>
-        </Header>
-      )}
+      {/* {bookkeepingList.length > 0 && paymentRequest && (
+        
+      )} */}
 
-      {bookkeepingList.length > 0 && paymentRequest && (
+      {filterData.length > 0 && paymentRequest && (
         <>
           <PaymentRequestBody>
-            <ActionBtn>
-              <Btn onClick={() => inputFileRef.current!.click()}>
-                <img src={importIcon} alt="" />
-                <p>{t("bookkeeping.Import")}</p>
-                <input
-                  type="file"
-                  name=""
-                  id=""
-                  hidden
-                  ref={inputFileRef}
-                  onChange={handleImportBookkeepingList}
+            <Header>
+              <Filter>
+                <SearchInput
+                  handleSearchPayment={handleSearchPayment}
+                  placeholder="Search token"
+                  searchTerm={searchTerm}
+                  handleChange={handleChange}
+                  width="240px"
                 />
-              </Btn>
-              <Btn onClick={handleExportBookkeepingList}>
-                <img src={download} alt="" />
-                <p>{t("paymentRequest.Download")}</p>
-              </Btn>
-              <Btn onClick={handleHideBookkeepingList}>
-                <img src={hide} alt="" />
-                <p>{t("paymentRequest.Hide")}</p>
-              </Btn>
-            </ActionBtn>
+                <FilterCategorySelect
+                  selectedValue={selectedValue}
+                  handleDropdownChange={handleDropdownChange}
+                  uniqueCategoryNames={uniqueCategoryNames}
+                />
+              </Filter>
+              <BookkeepingAction>
+                <ActionBtn>
+                  <Button
+                    onClick={() => inputFileRef.current!.click()}
+                    icon={importIcon}
+                    width="101px"
+                  >
+                    {t("bookkeeping.Import")}
+                  </Button>
+                  <input
+                    type="file"
+                    name=""
+                    id=""
+                    hidden
+                    ref={inputFileRef}
+                    onChange={handleImportBookkeepingList}
+                  />
+                  <Button
+                    onClick={handleExportBookkeepingList}
+                    icon={download}
+                    width="123px"
+                  >
+                    {t("paymentRequest.Download")}
+                  </Button>
+                  <Button
+                    onClick={handleHideBookkeepingList}
+                    icon={hide}
+                    width="87px"
+                  >
+                    {t("paymentRequest.Hide")}
+                  </Button>
+                </ActionBtn>
+                {/* <ViewReject onClick={() => setPaymentRequest(!paymentRequest)}>
+                  {paymentRequest && (
+                    <div onClick={handleViewHiddenList}>
+                      <Image src={view} alt="" />
+                      <p>{t("bookkeeping.ViewHidden")}</p>
+                    </div>
+                  )} */}
+                {/* {bookkeepingHiddenList.length > 0 && !paymentRequest && (
+                    <div onClick={handleBackBtn}>
+                      <Image src={back} alt="" />
+                      <p>{t("paymentRequest.Back")}</p>
+                    </div>
+                  )} */}
+                {/* </ViewReject> */}
+                {paymentRequest && (
+                  <Button
+                    icon={view}
+                    bg="#e2e8f0"
+                    // width="174px"
+                    onClick={handleViewHiddenList}
+                  >
+                    <p>{t("bookkeeping.ViewHidden")}</p>
+                  </Button>
+                )}
+              </BookkeepingAction>
+            </Header>
             <TableSection>
               <BookkeepingTable
                 selected={selected}
@@ -301,12 +311,11 @@ const Bookkeeping = () => {
 
               {/* pagination */}
               {totalItem > 10 && (
-                <PaymentPagination>
-                  <Pagination
-                    handlePageClick={handlePageClick}
-                    pageCount={pageCount}
-                  />
-                </PaymentPagination>
+                <Pagination
+                  handlePageClick={handlePageClick}
+                  pageCount={pageCount}
+                  pageNumbers={pageNumbers}
+                />
               )}
             </TableSection>
           </PaymentRequestBody>
@@ -345,41 +354,64 @@ export const Logo = styled.div<{ $dir?: string }>`
   }
 `;
 export const BookkeepingTitle = styled.div`
-  height: 90vh;
+  height: 60vh;
   /* border: 1px solid var(--border); */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   h3 {
-    font-size: 30px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
   }
   p {
-    font-size: 18px;
-    padding: 30px 0;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    line-height: 20px;
+    width: 460px;
   }
 `;
-export const HideBtn = styled.button`
-  position: absolute;
-  top: 0;
-  right: 5%;
-  top: 20px;
-  background: var(--bg-primary);
+export const HideBtn = styled.button<any>`
+  background: ${(props) => props.bg || "transparent"};
   outline: none;
-  border: none;
-  font-size: 20px;
-  font-weight: 400;
-  padding: 10px 30px;
-  border-radius: 4px;
-  margin-top: 21px;
+  border: 1px solid var(--clr-gray-300);
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  color: var(--text-primary);
+  color: ${(props) => props.clr || "#0f172a"};
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
   img {
     width: 14px;
+  }
+`;
+export const BookkeepingAction = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+`;
+const ViewHidden = styled.button`
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  align-items: center;
+  gap: 10px;
+  background: var(--clr-gray-50);
+  padding: 12px 14px;
+  border-radius: 6px;
+  min-width: 165px;
+  margin-left: 20px;
+  /* min-width: 165px; */
+  p {
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
   }
 `;

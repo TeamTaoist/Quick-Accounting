@@ -15,6 +15,8 @@ import LinkIcon from "../../../assets/link.svg";
 import CopyIcon from "../../../assets/copy.svg";
 import CopyBox from "../../../components/copy";
 import UpdateLoading from "../../../components/UpdateLoading";
+import arrowRight from "../../../assets/workspace/arrow-right.svg";
+import { Link } from "@mui/material";
 
 const formatSafeAddress = (address: string, chainId: number) => {
   const short = CHAINS.find((chain) => chain.chainId === chainId)?.short;
@@ -126,6 +128,9 @@ const Settings = () => {
           </p>
         ))}
       </MultiSigner>
+      <Link href="https://app.safe.global/" target="_blank" fontSize="14px">
+        Manage in Safe
+      </Link>
     </SettingsContainer>
   );
 };
@@ -133,32 +138,14 @@ const Settings = () => {
 export default Settings;
 
 const SettingsContainer = styled.div`
-  margin-top: 135px;
-  margin-left: 63px;
+  padding: 24px;
 `;
 const WorkspaceForm = styled.form`
   width: 600px;
   position: relative;
   input {
     width: 60%;
-  }
-`;
-const UpdateLoadingToast = styled.form`
-  p {
-    font-size: 18px;
-    color: var(--text-secondary);
-    margin-left: 7px;
-  }
-`;
-const PendingLoading = styled.form`
-  display: flex;
-  align-items: center;
-`;
-const SuccessLoading = styled.form`
-  display: flex;
-  align-items: center;
-  img {
-    width: 15px;
+    border-radius: 6px;
   }
 `;
 const InputSection = styled.div`
@@ -166,12 +153,15 @@ const InputSection = styled.div`
   flex-direction: column;
   gap: 13px;
   label {
-    font-size: 20px;
+    font-size: 14px;
+    font-weight: 500;
   }
   input {
-    padding: 13px;
+    padding: 10px 13px;
     border: 1px solid var(--border-table);
     border-radius: 5px;
+    width: 371px;
+    height: 36px;
   }
 `;
 const Input = styled.div`
@@ -182,35 +172,36 @@ const Input = styled.div`
 const NetWork = styled.div`
   margin-top: 30px;
   h3 {
-    font-size: 20px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
     margin-bottom: 14px;
   }
   div {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     img {
-      width: 26px;
-      height: 26px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
     }
     p {
-      font-size: 18px;
-      color: var(--text-secondary);
+      font-size: 14px;
+      color: var(--clr-gray-600);
     }
   }
 `;
 const MultiSigner = styled.div`
   margin-top: 30px;
   h3 {
-    font-size: 20px;
-    font-weight: 400;
-    margin-bottom: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
   }
   p {
-    font-size: 18px;
-    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--clr-gray-600);
     margin-bottom: 8px;
   }
   p div,
@@ -218,10 +209,30 @@ const MultiSigner = styled.div`
     display: inline-flex;
     gap: 10px;
     align-items: center;
-    color: var(--text-secondary);
+    color: var(--clr-gray-600);
   }
   .icon {
-    width: 20px;
+    width: 16px;
+  }
+`;
+const ManageSafe = styled.a`
+  color: var(--clr-primary-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 165px;
+  padding: 10.5px 16px;
+  border-radius: 6px;
+  margin-top: 12px;
+  gap: 8px;
+  border: 1px solid var(--clr-gray-300);
+  cursor: pointer;
+  h6 {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  img {
+    width: 16px;
   }
 `;
 

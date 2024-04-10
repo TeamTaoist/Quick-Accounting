@@ -13,7 +13,11 @@ import {
   TextField,
 } from "@mui/material";
 import { useSharePaymentRequest } from "../../store/useSharePaymentRequest";
-import { NoteInfo } from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
+import {
+  NoteInfo,
+  PaymentRequestDateInput,
+  PaymentRequestInput,
+} from "../../pages/workspaceDashboard/newPaymentRequest/newPaymentRequest.style";
 import { Image } from "../../pages/workspace/paymentRequest/paymentRequest.style";
 import categoryIcon from "../../assets/workspace/category-icon.svg";
 import arrowBottom from "../../assets/workspace/arrow-bottom.svg";
@@ -22,6 +26,9 @@ import ReactSelect from "../ReactSelect";
 import { ReactSelectOption } from "../../pages/workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import multiSelect from "../../assets/workspace/multi-select.svg";
 import optionsIcon from "../../assets/workspace/option.svg";
+import { Cell } from "../table";
+import { CategoryDropdownStyle, Item } from "../categoryDropdown";
+import CheckIcon from "@mui/icons-material/Check";
 
 interface GroupPaymentCategoryPropertiesProps {
   sharePaymentRequestForm: SharePaymentRequestBody[];
@@ -57,22 +64,23 @@ const GroupPaymentCategoryProperties = ({
   return (
     <TableContainer>
       <Table sx={{ minWidth: 600 }} aria-label="simple table">
-        <TableBody>
-          <TableRow
-            sx={{
-              td: {
-                border: "1px solid var(--border-table)",
-                padding: 0,
-                paddingInline: "16px",
-              },
-            }}
-          >
-            <TableCell sx={{ height: 1, width: "33.5%" }}>
+        <TableBody
+          sx={
+            {
+              // boxShadow: "none",
+              // borderLeft: "1px solid var(--clr-gray-200)",
+              // borderRight: "1px solid var(--clr-gray-200)",
+              // overflow: "hidden",
+            }
+          }
+        >
+          <TableRow>
+            <Cell width="220px">
               <NoteInfo>
                 <Image src={categoryIcon} alt="" /> Category
               </NoteInfo>
-            </TableCell>
-            <TableCell>
+            </Cell>
+            <Cell width="490px">
               <FormControl fullWidth>
                 <Select
                   labelId="demo-simple-select-label"
@@ -90,17 +98,31 @@ const GroupPaymentCategoryProperties = ({
                       />
                     </InputAdornment>
                   )}
-                  sx={{
-                    minWidth: "100%",
-                    "& fieldset": { border: "none" },
-                  }}
+                  displayEmpty
+                  renderValue={(selectedValue) => (
+                    <div
+                      style={{
+                        overflow: "hidden",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {selectedValue ? (
+                        selectedValue
+                      ) : (
+                        <p style={{ color: "var(--clr-gray-400)" }}>
+                          Select category
+                        </p>
+                      )}
+                    </div>
+                  )}
+                  sx={CategoryDropdownStyle}
                   inputProps={{
                     readOnly: isEditable,
                   }}
                 >
-                  <MenuItem disabled value="">
-                    {sharePaymentRequestForm[index].category_name}
-                  </MenuItem>
+                  {/* <MenuItem disabled value="">
+                    Select category
+                  </MenuItem> */}
                   {shareData?.category_and_properties?.map((category) => (
                     <MenuItem
                       key={category.ID}
@@ -113,20 +135,51 @@ const GroupPaymentCategoryProperties = ({
                         );
                       }}
                       sx={{
+                        paddingInline: "5px",
+                        fontSize: "14px",
+                        marginInline: "10px",
+                        borderRadius: "6px",
+                        margin: "5px 8px",
                         "&:hover": {
-                          backgroundColor: "var(--hover-bg)",
+                          backgroundColor: "var(--clr-gray-100)",
                         },
                         "&.Mui-selected": {
-                          backgroundColor: "var(--hover-bg)",
+                          backgroundColor:
+                            sharePaymentRequestForm[index].category_id ===
+                            category.ID
+                              ? "var(--clr-gray-200)"
+                              : "transparent",
                         },
                       }}
                     >
-                      {category.name}
+                      {/* {category.name} */}
+                      <Item>
+                        <div
+                          style={{
+                            width: "14px",
+                            marginRight: "10px",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          {sharePaymentRequestForm[index].category_id ===
+                            category.ID && (
+                            <CheckIcon
+                              style={{
+                                color: "#334155",
+                                width: "16px",
+                              }}
+                            />
+                          )}
+                        </div>
+
+                        {category.name}
+                      </Item>
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-            </TableCell>
+            </Cell>
           </TableRow>
           {/* category property */}
           <>
@@ -134,22 +187,14 @@ const GroupPaymentCategoryProperties = ({
               (property: ICategoryProperties, i: number) => (
                 <React.Fragment key={i}>
                   {property.type === "single-select" && (
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 252 }}>
+                    <TableRow>
+                      <Cell>
                         <NoteInfo>
                           <Image src={selectIcon} alt="" /> {property.name}
                         </NoteInfo>
-                      </TableCell>
+                      </Cell>
                       {/* add multi select first */}
-                      <TableCell>
+                      <Cell>
                         <ReactSelect
                           value={selectedValues}
                           isMulti={false}
@@ -185,26 +230,18 @@ const GroupPaymentCategoryProperties = ({
                             )
                             .flat()}
                         />
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                   )}
                   {property.type === "multi-select" && (
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 252 }}>
+                    <TableRow>
+                      <Cell>
                         <NoteInfo>
                           <Image src={multiSelect} alt="" /> {property.name}
                         </NoteInfo>
-                      </TableCell>
+                      </Cell>
                       {/* add multi select */}
-                      <TableCell>
+                      <Cell>
                         <ReactSelect
                           value={selectedValues}
                           isDisabled={isEditable}
@@ -238,33 +275,19 @@ const GroupPaymentCategoryProperties = ({
                             )
                             .flat()}
                         />
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                   )}
                   {property.type === "Text" && (
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 252 }}>
+                    <TableRow>
+                      <Cell>
                         <NoteInfo>
                           <Image src={optionsIcon} alt="" /> {property.name}
                         </NoteInfo>
-                      </TableCell>
+                      </Cell>
                       {/* add multi select */}
-                      <TableCell>
-                        <TextField
-                          sx={{
-                            "& fieldset": { border: "none" },
-                          }}
-                          size="small"
-                          autoComplete="off"
-                          fullWidth
+                      <Cell>
+                        <PaymentRequestInput
                           value={
                             sharePaymentRequestForm[
                               index
@@ -274,7 +297,7 @@ const GroupPaymentCategoryProperties = ({
                             )?.values || ""
                           }
                           placeholder="Enter content"
-                          onChange={(e) =>
+                          onChange={(e: any) =>
                             handleFormChange(
                               index,
                               "categoryProperties",
@@ -283,32 +306,20 @@ const GroupPaymentCategoryProperties = ({
                               property.type
                             )
                           }
-                          InputProps={{
-                            style: { padding: 0 },
-                            readOnly: isEditable,
-                          }}
                         />
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                   )}
                   {property.type === "date-picker" && (
-                    <TableRow
-                      sx={{
-                        td: {
-                          border: "1px solid var(--border-table)",
-                          padding: 0,
-                          paddingInline: "16px",
-                        },
-                      }}
-                    >
-                      <TableCell sx={{ height: 1, width: 252 }}>
+                    <TableRow>
+                      <Cell>
                         <NoteInfo>
                           <Image src={multiSelect} alt="" /> {property.name}
                         </NoteInfo>
-                      </TableCell>
+                      </Cell>
                       {/* add multi select */}
-                      <TableCell>
-                        <TextField
+                      <Cell>
+                        {/* <TextField
                           sx={{
                             "& fieldset": { border: "none" },
                           }}
@@ -339,8 +350,37 @@ const GroupPaymentCategoryProperties = ({
                             style: { padding: 0 },
                             readOnly: isEditable,
                           }}
+                        /> */}
+                        <PaymentRequestDateInput
+                          type="date"
+                          value={
+                            sharePaymentRequestForm[
+                              index
+                            ].category_properties.find(
+                              (p) =>
+                                p.name === property.name &&
+                                p.type === "date-picker"
+                            )?.values || ""
+                          }
+                          placeholder="Enter content"
+                          isDatePicker={sharePaymentRequestForm[
+                            index
+                          ].category_properties.find(
+                            (p) =>
+                              p.name === property.name &&
+                              p.type === "date-picker"
+                          )}
+                          onChange={(e: any) =>
+                            handleFormChange(
+                              index,
+                              "categoryProperties",
+                              e.target.value,
+                              property.name,
+                              property.type
+                            )
+                          }
                         />
-                      </TableCell>
+                      </Cell>
                     </TableRow>
                   )}
                 </React.Fragment>

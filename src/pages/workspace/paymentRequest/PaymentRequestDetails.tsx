@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import WorkspaceItemDetailsLayout from "../../../components/layout/WorkspaceItemDetailsLayout";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FormControl,
   InputAdornment,
@@ -9,18 +9,12 @@ import {
   SelectChangeEvent,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableRow,
-  TextField,
 } from "@mui/material";
 
 import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
-import multiSelect from "../../../assets/workspace/multi-select.svg";
-import selectIcon from "../../../assets/workspace/select.svg";
 import categoryIcon from "../../../assets/workspace/category-icon.svg";
-import optionsIcon from "../../../assets/workspace/option.svg";
-import statusIcon from "../../../assets/workspace/status.svg";
 import {
   Image,
   NoteHeader,
@@ -31,13 +25,18 @@ import styled from "@emotion/styled";
 import ReactSelect from "../../../components/ReactSelect";
 import usePaymentsStore from "../../../store/usePayments";
 import { useLoading } from "../../../store/useLoading";
-import { useCategoryProperty } from "../../../store/useCategoryProperty";
+import {
+  CategoryProperties,
+  useCategoryProperty,
+} from "../../../store/useCategoryProperty";
 import PaymentCurrencyTable from "../../../components/paymentRequestDetails/PaymentCurrencyTable";
 import PaymentRequestCategoryProperties from "../../../components/paymentRequestDetails/PaymentRequestCategoryProperties";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { getPaymentStatus } from "../../../utils/payment";
 import { formatTimestamp } from "../../../utils/time";
 import UpdateLoading from "../../../components/UpdateLoading";
+import { Cell } from "../../../components/table";
+import CategoryDropdown from "../../../components/categoryDropdown";
 
 interface PaymentRequestDetailsProps {
   setOpen: (open: boolean) => void;
@@ -73,6 +72,7 @@ const PaymentRequestDetails = ({
     getPaymentRequestList,
     updatePaymentRequestCategory,
     paymentRequestDetails,
+    paymentRequestList,
   } = usePaymentsStore();
   const { workspaceCategoryProperties } = useCategoryProperty();
   const { userWorkspaces } = useWorkspace();
@@ -81,6 +81,16 @@ const PaymentRequestDetails = ({
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedValue(event.target.value);
   };
+  // const [paymentDetails, setPaymentDetails] = useState<any>({});
+  // const paymentDetailsId = paymentRequestDetails.ID
+  const details = paymentRequestList.find(
+    (f) => f.ID === paymentRequestDetails.ID
+  );
+
+  // useEffect(() => {
+  //   setPaymentDetails(paymentRequestDetails);
+  // }, [paymentDetails]);
+  console.log("details", details);
 
   // handle react select
   const [selectedValues, setSelectedValues] = useState<ReactSelectOption[]>([]);
@@ -99,8 +109,6 @@ const PaymentRequestDetails = ({
     type: string
   ) => {
     setSelectedValues(selectedOptions);
-    console.log(selectedOptions, name, type);
-    // const v = selectedOptions?.map((p) => p.value);
     setPropertyMultiValues({
       ...propertyMultiValues,
       [name]: {
@@ -126,6 +134,22 @@ const PaymentRequestDetails = ({
       },
     });
   };
+  // const handleSelectSingleChange = (
+  //   selectedOption: ReactSelectOption,
+  //   property: PropertyValues
+  // ) => {
+  //   setSelectSingleValue(selectedOption);
+  //   if (property && property.name) {
+  //     setPropertyValues({
+  //       ...propertyValues,
+  //       [property?.name]: {
+  //         name: property.name,
+  //         type: property.type,
+  //         values: selectedOption.value,
+  //       },
+  //     });
+  //   }
+  // };
 
   // property value input
   const [propertyContent, setPropertyContent] = useState<string>("");
@@ -158,13 +182,6 @@ const PaymentRequestDetails = ({
       },
     });
   };
-  const [age, setAge] = useState("Category");
-
-  const handleCategoryChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
-  };
-  // get the selected category list
-  const [categoryProperties, setCategoryProperties] = useState<any>([]);
 
   const [selectedCategoryID, setSelectedCategoryID] = useState<
     number | undefined
@@ -172,29 +189,46 @@ const PaymentRequestDetails = ({
   const [selectedCategory, setSelectedCategory] = useState<any>({});
   useEffect(() => {
     setSelectedCategoryID(paymentRequestDetails.category_id);
-  }, [setOpen]);
+  }, [setOpen, paymentRequestDetails.category_id]);
   useEffect(() => {
     const selectedCategory = workspaceCategoryProperties?.find(
       (f) => f?.ID === selectedCategoryID
     );
     if (selectedCategory) {
       setSelectedCategory(selectedCategory);
-      setCategoryProperties(selectedCategory?.properties);
     } else {
       setSelectedCategory({});
-      setCategoryProperties([]);
     }
   }, [selectedCategoryID, workspaceCategoryProperties]);
 
   // handle category
-  const handleCategory = async (categoryId: number) => {
-    setSelectedCategoryID(categoryId);
+  const handleCategory = async (category: CategoryProperties) => {
+    setSelectedCategoryID(category.ID);
     setPropertyValues({});
     setPropertyMultiValues({});
     setPropertyTextValue({});
     setPropertyContent("");
     parseCategoryProperties = {};
     setDatePicker({});
+    const updatedPaymentBody = {
+      category_id: category.ID,
+      category_name: category.name,
+      category_properties: [],
+    };
+    setIsUpdating(true);
+    await updatePaymentRequestCategory(
+      id,
+      paymentRequestDetails?.ID.toString(),
+      updatedPaymentBody
+    ).then((res) => {
+      if (res) {
+        setIsUpdating(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 3000);
+      }
+    });
   };
   // form data
   const updatedPaymentBody = {
@@ -285,21 +319,11 @@ const PaymentRequestDetails = ({
     setDatePicker(initialPropertyDateValue);
   }, []);
 
-  useEffect(() => {
-    const initialSelectedCategory = workspaceCategoryProperties?.find(
-      (f) => f?.ID === selectedCategoryID
-    );
-    setSelectedCategory(initialSelectedCategory);
-    if (initialSelectedCategory) {
-      setCategoryProperties(initialSelectedCategory?.properties);
-    }
-  }, []);
-
   // updating loading state
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
-  const handleUpdateCategory = async () => {
+  const handleUpdateCategory = async (category?: any) => {
     setIsUpdating(true);
     await updatePaymentRequestCategory(
       id,
@@ -357,13 +381,17 @@ const PaymentRequestDetails = ({
         workspaceName={selectedWorkspaceName}
         workspaceAvatar={selectedWorkspaceAvatar}
         address={selectedWorkspaceSafeAddress}
+        isUpdating={isUpdating}
+        isSuccess={isSuccess}
       >
         <RequestDetails>
           <TableContainer
             sx={{
               boxShadow: "none",
-              border: "1px solid var(--border-table)",
-              borderRadius: "10px",
+              border: "1px solid var(--clr-gray-200)",
+              borderRadius: "6px",
+              minWidth: "722px",
+              overflowX: "hidden",
             }}
           >
             <PaymentCurrencyTable />
@@ -371,75 +399,29 @@ const PaymentRequestDetails = ({
             <NoteInformation>
               <NoteHeader>
                 <h3>Note Information</h3>
-                <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} />
+                {/* <UpdateLoading isUpdating={isUpdating} isSuccess={isSuccess} /> */}
               </NoteHeader>
               {/* <TableContainer> */}
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <Table aria-label="simple table">
                 <TableBody>
-                  <TableRow
-                    sx={{
-                      td: {
-                        // border: "1px solid var(--border-table)",
-                        padding: 0,
-                        paddingInline: 1,
-                      },
-                    }}
-                  >
-                    <TableCell
-                      sx={{
-                        height: 1,
-                        width: 208,
-                        borderRight: "1px solid var(--border-table)",
-                      }}
-                    >
+                  <TableRow>
+                    <Cell width="220px">
                       <NoteInfo>
                         <Image src={categoryIcon} alt="" /> Category
                       </NoteInfo>
-                    </TableCell>
-                    <TableCell>
+                    </Cell>
+                    <Cell width="500px">
                       <FormControl
                         fullWidth
                         disabled={paymentRequestDetails?.status === 2}
                       >
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={age}
-                          label="Age"
-                          size="small"
-                          onChange={handleCategoryChange}
-                          onBlur={handleUpdateCategory}
-                          IconComponent={() => (
-                            <InputAdornment position="start">
-                              <img
-                                src={arrowBottom}
-                                alt="Custom Arrow Icon"
-                                style={{ marginRight: "20px" }}
-                              />
-                            </InputAdornment>
-                          )}
-                          sx={{
-                            minWidth: "100%",
-                            "& fieldset": { border: "none" },
-                          }}
-                        >
-                          <MenuItem disabled value="Category">
-                            {/* {paymentRequestDetails.category_name} */}
-                            {selectedCategory?.name}
-                          </MenuItem>
-                          {workspaceCategoryProperties?.map((category) => (
-                            <MenuItem
-                              key={category.ID}
-                              value={category.name}
-                              // onBlur={handleUpdateCategory}
-                              onClick={() => handleCategory(category.ID)}
-                            >
-                              {category.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
+                        <CategoryDropdown
+                          data={workspaceCategoryProperties}
+                          value={details}
+                          onClick={handleCategory}
+                        />
                       </FormControl>
-                    </TableCell>
+                    </Cell>
                   </TableRow>
                   {selectedCategory && (
                     <>
@@ -476,11 +458,12 @@ const PaymentRequestDetails = ({
             <p>Submission time</p>
             <div>{formatTimestamp(paymentRequestDetails.submit_ts)}</div>
           </SubmissionTime>
-          <Status>
-            <p>Status</p>
-            <StatusBtn>
+          <Status status={getPaymentStatus(paymentRequestDetails.status)}>
+            <h6>Status</h6>
+            <div>
+              <p></p>
               {getPaymentStatus(paymentRequestDetails.status)}
-            </StatusBtn>
+            </div>
           </Status>
         </RequestDetails>
       </WorkspaceItemDetailsLayout>
@@ -492,45 +475,64 @@ export default PaymentRequestDetails;
 
 const RequestDetails = styled.div`
   /* padding-bottom: 50px; */
-  margin: 30px;
-`;
-const PaymentStatus = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 20px;
-  img {
-    width: 20px;
-  }
-  p {
-    font-size: 20px;
-  }
+  margin: 30px 40px;
 `;
 export const SubmissionTime = styled.div`
-  padding-top: 14px;
+  padding-top: 18px;
   p {
-    font-size: 18px;
-    padding-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 8px;
   }
   div {
-    border: 1px solid var(--border-table);
-    padding: 10px 10px;
+    border: 1px solid var(--clr-gray-200);
+    padding: 8.5px 10px;
+    font-size: 14px;
     border-radius: 8px;
   }
 `;
-export const Status = styled.div`
+export const Status = styled.div<any>`
   padding-top: 14px;
-  p {
-    font-size: 18px;
-    padding-bottom: 6px;
+  h6 {
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 8px;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    p {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: ${({ status }) => {
+        switch (status) {
+          case "Submitted":
+            return "#16A34A";
+          case "Rejected":
+            return "#FACC15";
+          case "Pending":
+            return "#94A3B8";
+          case "Failed":
+            return "#DC2626";
+          case "Executed":
+            return "#2563EB";
+          default:
+            return "gray";
+        }
+      }};
+    }
+    img {
+      width: 7px;
+    }
   }
 `;
 export const StatusBtn = styled.button`
-  background: #7c7777;
+  background: transparent;
   border: none;
   outline: none;
   padding: 8px 14px;
   font-size: 16px;
-  border-radius: 7px;
-  color: #ffffff;
 `;

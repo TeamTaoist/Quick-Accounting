@@ -10,8 +10,10 @@ import {
 import { createSiweMessage } from "../../../utils";
 import { useAuthStore } from "../../../store/useAuthStore";
 import metamask from "../../../assets/auth/metamask.svg";
-import cancelIcon from "../../../assets/auth/cancel.svg";
+import cancelIcon from "../../../assets/auth/x.svg";
+import arrowRight from "../../../assets/asset-right-arrow.svg";
 import { toast } from "react-toastify";
+import { Link } from "@mui/material";
 
 interface IProps {
   handleClose: () => void;
@@ -88,14 +90,25 @@ export default function LoginContent({ handleClose, loginCallback }: IProps) {
   return (
     <div className="login">
       <div className="popup">
-        <span onClick={handleClose}>
-          <img className="close-btn" src={cancelIcon} alt="" />
-        </span>
-        <h3>{t("login.LoginTitle")}</h3>
-        <button className="btn" onClick={onClickConnect}>
-          <img src={metamask} alt="" />
-          <span>{t("login.MetaMask")}</span>
-        </button>
+        <div className="login-header">
+          <h3>{t("login.LoginTitle")}</h3>
+          <span onClick={handleClose}>
+            <img className="close-btn" src={cancelIcon} alt="" />
+          </span>
+        </div>
+        <div className="auth-provider">
+          <div className="meta-mask">
+            <button className="btn" onClick={onClickConnect}>
+              <img src={metamask} alt="" />
+              <span>{t("login.MetaMask")}</span>
+            </button>
+          </div>
+          <div className="wallet-link">
+            <Link href="https://metamask.io/download/" target="_blank">
+              Get your first wallet
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -2,15 +2,19 @@ import arrowBottom from "../../../assets/workspace/arrow-bottom.svg";
 import option from "../../../assets/workspace/option.svg";
 import select from "../../../assets/workspace/select.svg";
 import multiSelect from "../../../assets/workspace/multi-select.svg";
+import calendar from "../../../assets/workspace/calendar.svg";
 import propertyAdd from "../../../assets/workspace/property-add.svg";
 import propertyDelete from "../../../assets/workspace/property-delete.svg";
+import add from "../../../assets/workspace/add.svg";
 import {
+  DeleteValue,
   DetailsInput,
   DropdownOption,
   PropertyInput,
   PropertyInputValue,
   PropertyOptionsValue,
   PropertyOptionsValueBtn,
+  ValueIcon,
 } from "../../../pages/workspace/category/category.style";
 import { InputAdornment, MenuItem, Select } from "@mui/material";
 interface CategoryPropertyDetailsProps {
@@ -42,6 +46,22 @@ interface CategoryPropertyDetailsProps {
   isEditable: boolean;
 }
 
+const MenuItemStyle = {
+  paddingInline: "5px",
+  fontSize: "14px",
+  fontWeight: "500",
+  marginInline: "10px",
+  borderRadius: "6px",
+  margin: "5px 8px",
+  height: "32px",
+  "&:hover": {
+    backgroundColor: "var(--clr-gray-100)",
+  },
+  "&.Mui-selected": {
+    backgroundColor: "var(--clr-gray-200)",
+  },
+};
+
 const CategoryPropertyDetails = ({
   showProperty,
   property,
@@ -70,6 +90,11 @@ const CategoryPropertyDetails = ({
                 e.target.value
               )
             }
+            style={
+              isEditable
+                ? { background: "#F1F5F9" }
+                : { background: "transparent" }
+            }
           />
           <h3>Property Type</h3>
           <Select
@@ -84,57 +109,82 @@ const CategoryPropertyDetails = ({
                 e.target.value
               )
             }
-            // onBlur={() =>
-            //   handleUpdatedCategoryProperty(
-            //     property.workspace_id,
-            //     property.category_id,
-            //     property.ID
-            //   )
-            // }
+            style={
+              isEditable
+                ? {
+                    background: "#F1F5F9",
+                  }
+                : { background: "transparent" }
+            }
             size="small"
             IconComponent={() => (
               <InputAdornment position="start">
                 <img
                   src={arrowBottom}
                   alt="Custom Arrow Icon"
-                  style={{ marginRight: "20px" }}
+                  style={{ marginRight: "6px", width: "16px", height: "16px" }}
                 />
               </InputAdornment>
             )}
             sx={{
+              overflow: "hidden",
               minWidth: "100%",
-              "& fieldset": { border: 1 },
+              height: "36px",
+              padding: 0,
+              // paddingInline: "1px",
+              "& .MuiSelect-select": {
+                display: "block",
+                fontSize: "14px",
+              },
+              "&.MuiOutlinedInput-root": {
+                border: "1px solid var(--clr-gray-200)",
+                "& fieldset": {
+                  border: "none",
+                },
+                "&:hover fieldset": {
+                  border: "none",
+                },
+                "&.Mui-focused fieldset": {
+                  border: "none",
+                },
+              },
+              "& .MuiInputLabel-root": { display: "none" },
             }}
+            // MenuProps={{
+            //   sx: {
+            //     "& .MuiMenuItem-root": {
+            //       marginInline: "10px",
+            //       borderRadius: "6px",
+            //       margin: "4px 6px",
+            //       "&:hover": {
+            //         bgcolor: "var(--clr-gray-100)",
+            //       },
+            //       "&.Mui-selected": {
+            //         bgcolor: "var(--clr-gray-100)",
+            //       },
+            //     },
+            //   },
+            // }}
           >
-            <MenuItem
-              value="Text"
-              sx={{
-                "&:hover": {
-                  backgroundColor: "var(--hover-bg)",
-                },
-                "&.Mui-selected": {
-                  backgroundColor: "var(--hover-bg)",
-                },
-              }}
-            >
+            <MenuItem value="Text" sx={MenuItemStyle}>
               <DropdownOption>
                 <img src={option} alt="" /> Text
               </DropdownOption>
             </MenuItem>
-            <MenuItem value="single-select">
+            <MenuItem value="single-select" sx={MenuItemStyle}>
               <DropdownOption>
                 <img src={select} alt="" /> Single-select
               </DropdownOption>
             </MenuItem>
-            <MenuItem value="multi-select">
+            <MenuItem value="multi-select" sx={MenuItemStyle}>
               <DropdownOption>
                 <img src={multiSelect} alt="" />
                 Multi-select
               </DropdownOption>
             </MenuItem>
-            <MenuItem value="date-picker">
+            <MenuItem value="date-picker" sx={MenuItemStyle}>
               <DropdownOption>
-                <img src={multiSelect} alt="" />
+                <img src={calendar} alt="" />
                 Datepicker
               </DropdownOption>
             </MenuItem>
@@ -144,11 +194,12 @@ const CategoryPropertyDetails = ({
             <>
               {propertyValues.map((value, valueIndex) => (
                 <PropertyOptionsValue>
-                  <img src={propertyAdd} alt="" />
+                  <ValueIcon src={propertyAdd} alt="" />
                   <PropertyInputValue
                     key={valueIndex}
-                    placeholder=""
+                    placeholder={`Option ${valueIndex + 1}`}
                     value={value}
+                    disabled={isEditable}
                     onChange={(e) =>
                       handlePropertyValueChang(
                         property.category_id,
@@ -157,35 +208,39 @@ const CategoryPropertyDetails = ({
                         valueIndex
                       )
                     }
-                  />
-                  <img
-                    // onClick={() =>
-                    //   handleUpdateDeleteProperty(
-                    //     valueIndex,
-                    //     property.workspace_id,
-                    //     property.category_id,
-                    //     property.ID
-                    //   )
-                    // }
-                    onClick={() =>
-                      handleDeleteProperty(
-                        property.category_id,
-                        property.ID,
-                        valueIndex
-                      )
+                    style={
+                      isEditable
+                        ? { background: "#F1F5F9" }
+                        : { background: "transparent" }
                     }
-                    src={propertyDelete}
-                    alt=""
                   />
+                  {!isEditable && (
+                    <DeleteValue
+                      onClick={() =>
+                        handleDeleteProperty(
+                          property.category_id,
+                          property.ID,
+                          valueIndex
+                        )
+                      }
+                      src={propertyDelete}
+                      alt=""
+                    />
+                  )}
                 </PropertyOptionsValue>
               ))}
-              <PropertyOptionsValueBtn
-                onClick={() =>
-                  handleUpdateAddButtonClick(property.category_id, property.ID)
-                }
-              >
-                + Add option
-              </PropertyOptionsValueBtn>
+              {!isEditable && (
+                <PropertyOptionsValueBtn
+                  onClick={() =>
+                    handleUpdateAddButtonClick(
+                      property.category_id,
+                      property.ID
+                    )
+                  }
+                >
+                  <img src={add} alt="" /> Add option
+                </PropertyOptionsValueBtn>
+              )}
             </>
           )}
         </DetailsInput>

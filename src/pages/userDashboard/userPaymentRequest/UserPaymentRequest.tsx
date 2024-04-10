@@ -12,26 +12,22 @@ import UserPaymentTable from "../../../components/userDashboard/UserPaymentTable
 import Pagination from "../../../components/Pagination";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useDomainStore } from "../../../store/useDomain";
+import SearchInput from "../../../components/workspace/SearchInput";
 
 const UserPaymentRequest = () => {
   const { id } = useParams();
-  const { userPaymentRequest, getUserPaymentRequest } = useUserPayment();
+  const { userPaymentRequest, getUserPaymentRequest, userFilterList } =
+    useUserPayment();
   const { setCurrentPaymentRequestDetail } = usePaymentsStore();
   const { workspace } = useWorkspace();
   const { queryNameService } = useDomainStore();
 
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleChange = (event: any) => {
-    setSearchTerm(event.target.value);
-  };
-
   // filter table data
-  const filterData = userPaymentRequest.rows.filter(
-    (payment) =>
-      payment.workspace_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.vault_wallet.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filterData = userPaymentRequest.rows.filter(
+  //   (payment) =>
+  //     payment.workspace_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     payment.vault_wallet.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   // modal
   const [openModal, setOpenModal] = useState(false);
@@ -48,7 +44,7 @@ const UserPaymentRequest = () => {
 
   const pageCount = Math.ceil(totalItem / pageSize);
 
-  const handlePageClick = (event: any) => {
+  const handlePageClick = (event: { selected: number }) => {
     setPageNumbers(event.selected);
   };
   // get user payment request
@@ -62,6 +58,27 @@ const UserPaymentRequest = () => {
     }
   }, [userPaymentRequest, workspace.chain_id]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
+
+  const handleChange = (event: any) => {
+    setSearchTerm(event.target.value);
+  };
+  const handleSearchPayment = async (e: any) => {
+    e.preventDefault();
+    await getUserPaymentRequest(pageNumbers, 10, searchTerm);
+    setIsSearch(true);
+  };
+  useEffect(() => {
+    const fetchPaymentList = async () => {
+      if (!searchTerm && isSearch) {
+        await getUserPaymentRequest(pageNumbers, 10, searchTerm);
+        setIsSearch(true);
+      }
+    };
+    fetchPaymentList();
+  }, [searchTerm]);
+
   return (
     <UserPaymentContainer>
       {/* modal */}
@@ -72,41 +89,29 @@ const UserPaymentRequest = () => {
       />
       {userPaymentRequest.rows.length === 0 ? (
         <Details>
-          <h2>
-            You don't have any payment <br /> request
-          </h2>
+          <h2>You don't have any payment requests.</h2>
         </Details>
       ) : (
         <PaymentTable>
-          <TextField
-            id="search"
-            type="search"
-            autoComplete="off"
-            placeholder="Search workspace name"
-            value={searchTerm}
-            onChange={handleChange}
-            sx={{ width: 350 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <img src={searchIcon} alt="" />
-                </InputAdornment>
-              ),
-            }}
+          <SearchInput
+            handleSearchPayment={handleSearchPayment}
+            placeholder="Search workspace / recipient / token"
+            searchTerm={searchTerm}
+            handleChange={handleChange}
+            width="350px"
           />
           <PaymentLIst>
             <UserPaymentTable
-              filterData={filterData}
+              filterData={userFilterList}
               handleUserPaymentDetails={handleUserPaymentDetails}
             />
           </PaymentLIst>
           {totalItem >= 10 && (
-            <PaymentPagination>
-              <Pagination
-                handlePageClick={handlePageClick}
-                pageCount={pageCount}
-              />
-            </PaymentPagination>
+            <Pagination
+              handlePageClick={handlePageClick}
+              pageCount={pageCount}
+              pageNumbers={pageNumbers}
+            />
           )}
         </PaymentTable>
       )}
@@ -117,22 +122,21 @@ const UserPaymentRequest = () => {
 export default UserPaymentRequest;
 
 const UserPaymentContainer = styled.div`
-  padding-inline: 30px;
-  margin-top: 47px;
+  padding: 24px;
   flex: 1;
 `;
 const PaymentLIst = styled.div`
-  margin-top: 60px;
+  margin-top: 16px;
 `;
 export const Details = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   min-width: 500px;
-  height: 90vh;
+  height: 80vh;
   h2 {
-    font-size: 30px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
     text-align: center;
   }
 `;
@@ -140,6 +144,8 @@ export const PaymentTable = styled.div`
   flex: 1;
 `;
 export const PaymentPagination = styled.div`
-  /* display: flex; */
-  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0px;
 `;

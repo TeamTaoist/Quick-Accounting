@@ -29,12 +29,13 @@ const CustomModal = ({
             maxHeight: "100%",
             position: "fixed",
             inset: "0",
-            overflowY: "auto",
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            "-ms-overflow-style": "none",
-            scrollbarWidth: "none",
+            // overflowY: "auto",
+            // "&::-webkit-scrollbar": {
+            //   display: "none",
+            // },
+            background: "var(--clr-modal-mask)",
+            // "-ms-overflow-style": "none",
+            // scrollbarWidth: "none",
           }}
         >
           <Component setOpen={setOpen} {...additionalProps} />
