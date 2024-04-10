@@ -219,6 +219,11 @@ export const PropertyTitle = styled.div`
   display: flex;
   align-items: center;
   gap: 14px;
+
+  p {
+    font-size: 14px;
+  }
+
   img {
     width: 16px;
     height: 16px;

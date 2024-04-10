@@ -41,6 +41,9 @@ export const customStyles: any = {
     margin: "4px",
     maxWidth: "calc(100% - 16px)",
     borderRadius: "6px",
+    "&:hover": {
+      backgroundColor: "#E2E8F0",
+    },
   }),
   singleValue: (provided: any) => ({
     ...provided,

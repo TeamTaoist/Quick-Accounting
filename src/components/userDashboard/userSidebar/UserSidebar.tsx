@@ -15,10 +15,11 @@ import { useDomainStore } from "../../../store/useDomain";
 import styled from "@emotion/styled";
 import { SidebarProps } from "../../workspace/workspaceSidebar/WorkspaceSidebar";
 import Version from "../../version";
-import { IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { ArrowImg } from "../../workspace/workspaceSidebar/WorkspaceSidebar.style";
 import CopyBox from "../../copy";
 import CopyIcon from "../../../assets/copy.svg";
+import AvatarIcon from "../../../assets/dashboard/avatar.svg";
 
 const UserSidebar = () => {
   const { t } = useTranslation();
@@ -79,6 +80,18 @@ const UserSidebar = () => {
 
       {/* user payment request */}
       <SidebarLinkList hideSidebar={hideSidebar}>
+        <Box
+          sx={{
+            display: hideSidebar ? "flex" : "none",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "6px 8px",
+            marginBottom: "10px",
+          }}
+        >
+          <Avatar src={AvatarIcon} alt="" />
+        </Box>
+
         <SidebarLink
           icon={workspaceIcon}
           name="Workspace"
@@ -106,6 +119,11 @@ const UserSidebar = () => {
 };
 
 export default UserSidebar;
+
+const Avatar = styled.img`
+  width: 14px;
+  height: 14px;
+`;
 
 const UserSidebarSection = styled.div<SidebarProps>`
   border-right: 1px solid var(--clr-gray-300);

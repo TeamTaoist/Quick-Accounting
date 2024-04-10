@@ -222,11 +222,14 @@ export const SignToChain = styled.button`
   }
 `;
 const CategoryCell = styled.div`
-  height: 40px;
+  background: var(--clr-gray-100);
+  padding: 2px 10px;
+  border: 1px solid var(--clr-gray-200);
+  height: 30px;
   display: block;
   font-size: 14px;
   display: grid;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   border-radius: 5px;
 `;

@@ -173,8 +173,8 @@ export const NoteHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
-  background: var(--clr-gray-200);
-  border-top: 1px solid var(--clr-gray-200);
+  background: var(--clr-gray-100);
+  border-top: 1px solid var(--clr-gray-100);
   height: 56px;
   h3 {
     font-size: 14px;

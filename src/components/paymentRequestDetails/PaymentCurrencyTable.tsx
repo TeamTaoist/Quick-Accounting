@@ -26,7 +26,9 @@ const PaymentCurrencyTable = () => {
   return (
     <Table aria-label="simple table">
       <TableHead>
-        <TableRow>
+        <TableRow
+          sx={{ "& .MuiTableCell-root": { background: "var(--clr-gray-100)" } }}
+        >
           <HeaderCell width="280px" color="#0f172a">
             Recipient
           </HeaderCell>
