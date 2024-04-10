@@ -8,7 +8,7 @@ interface ICopyProps {
   children: React.ReactNode;
   text: string;
   onCopy?: (text: string, result: boolean) => void;
-  dir?: "left" | "right";
+  dir?: "left" | "right" | "bottom";
 }
 
 const CopyBox: React.FC<ICopyProps> = ({ children, text, dir }) => {
@@ -49,10 +49,25 @@ const rightStyle = css`
   }
 `;
 
+const bottomStyle = css`
+  .tooltip-content {
+    top: auto;
+    bottom: -28px;
+  }
+  .tooltip-content::before {
+    right: unset;
+    top: -10px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+`;
+
 const CopyContent = styled.div<{ dir: string }>`
   cursor: pointer;
   position: relative;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 4px;
 
@@ -78,5 +93,6 @@ const CopyContent = styled.div<{ dir: string }>`
     right: -6px;
     transform: translateX(50%) rotate(90deg);
   }
-  ${({ dir }) => dir === "right" && rightStyle}
+  ${({ dir }) =>
+    dir === "right" ? rightStyle : dir === "bottom" ? bottomStyle : ""}
 `;

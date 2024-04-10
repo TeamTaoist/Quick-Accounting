@@ -96,12 +96,18 @@ const Assets = () => {
   useEffect(() => {
     const fetchAssetsList = async () => {
       setIsLoading(true);
-      workspace?.vault_wallet && (await getAssets());
-      workspace?.vault_wallet && (await getHideAssets());
-      setIsLoading(false);
+      try {
+        if (workspace?.vault_wallet) {
+          await getAssets();
+          await getHideAssets();
+        }
+      } catch (error) {
+        console.log("🚀 ~ fetchAssetsList ~ error:", error);
+        setIsLoading(false);
+      }
     };
     fetchAssetsList();
-  }, [workspace?.vault_wallet]);
+  }, [getAssets, getHideAssets, workspace?.vault_wallet]);
 
   const filterList: AssetType[] =
     assetsList
