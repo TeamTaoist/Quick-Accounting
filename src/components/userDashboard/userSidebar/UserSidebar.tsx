@@ -226,7 +226,7 @@ const Disconnect = styled.div`
   }
 `;
 const SidebarLinkList = styled.div<SidebarProps>`
-  margin-top: ${({ hideSidebar }) => (hideSidebar ? "38px" : "16px")};
+  margin-top: 16px;
 `;
 export const BuildVersion = styled.div`
   position: fixed;
