@@ -1,5 +1,4 @@
 import {
-  ArrowImg,
   PaymentRequest,
   RequestBtn,
   SafeAddress,
@@ -7,7 +6,6 @@ import {
   SidebarLinkList,
   WorkspaceInfo,
 } from "./WorkspaceSidebar.style";
-import arrow from "../../../assets/workspace/arrow.svg";
 import add from "../../../assets/workspace/plus-white.svg";
 import share from "../../../assets/workspace/share.svg";
 import { useEffect, useState } from "react";
@@ -19,28 +17,21 @@ import queue from "../../../assets/workspace/queue.svg";
 import bookkeeping from "../../../assets/workspace/bookkeeping.svg";
 import reports from "../../../assets/workspace/reports.svg";
 import setting from "../../../assets/workspace/setting.svg";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import NewPaymentRequest from "../../../pages/workspaceDashboard/newPaymentRequest/NewPaymentRequest";
 import { useWorkspace } from "../../../store/useWorkspace";
 import { useSafeStore } from "../../../store/useSafeStore";
 import { clientToSigner } from "../../../utils/ethProvider";
-import {
-  type Config,
-  useConnectorClient,
-  useSwitchChain,
-  useAccount,
-} from "wagmi";
+import { useConnectorClient, useSwitchChain, useAccount } from "wagmi";
 import { useLoading } from "../../../store/useLoading";
 import { toast } from "react-toastify";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useSharePaymentRequest } from "../../../store/useSharePaymentRequest";
 import CopyBox from "../../copy";
-import CopyIcon from "../../../assets/copy.svg";
 import styled from "@emotion/styled";
 import { BuildVersion } from "../../userDashboard/userSidebar/UserSidebar";
 import Version from "../../version";
-import { IconButton, Typography } from "@mui/material";
+import { IconButton, SvgIcon, Typography } from "@mui/material";
 import { getChainLogo } from "../../../utils/chain";
 
 export interface SidebarProps {
@@ -141,12 +132,36 @@ const WorkspaceSidebar = () => {
           </Typography>
 
           <IconButton onClick={handleSidebar}>
-            <ArrowImg
-              hideSidebar={hideSidebar}
-              onClick={handleSidebar}
-              src={arrow}
-              alt=""
-            />
+            <SvgIcon
+              sx={{
+                width: "16px",
+                height: "16px",
+                transform: hideSidebar ? "rotate(180deg)" : "rotate(0)",
+              }}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.33333 11.3334L4 8.00008L7.33333 4.66675"
+                  stroke="#94A3B8"
+                  strokeWidth="1.33333"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M12 11.3334L8.66663 8.00008L12 4.66675"
+                  stroke="#94A3B8"
+                  strokeWidth="1.33333"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </SvgIcon>
           </IconButton>
         </SidebarHeader>
 
@@ -166,7 +181,39 @@ const WorkspaceSidebar = () => {
               <SafeAddress>
                 <CopyBox text={workspace.vault_wallet}>
                   <span>{recipientFormate(workspace.vault_wallet)}</span>
-                  <img src={CopyIcon} alt="" />
+                  <SvgIcon
+                    sx={{ color: "#94A3B8", width: "12px", height: "12px" }}
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7.75 1H4.3C4.1 1 3.9 1.1 3.75 1.25C3.6 1.4 3.5 1.6 3.5 1.8V8.2C3.5 8.4 3.6 8.6 3.75 8.75C3.9 8.9 4.1 9 4.3 9H9.2C9.4 9 9.6 8.9 9.75 8.75C9.9 8.6 10 8.4 10 8.2V3.25L7.75 1Z"
+                        stroke="currentColor"
+                        strokeWidth="1.33"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M1.5 3.7998V10.1998C1.5 10.3998 1.6 10.5998 1.75 10.7498C1.9 10.8998 2.1 10.9998 2.3 10.9998H7.2"
+                        stroke="currentColor"
+                        strokeWidth="1.33333"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M7.5 1V3.5H10"
+                        stroke="currentColor"
+                        strokeWidth="1.33333"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </SvgIcon>
                 </CopyBox>
               </SafeAddress>
             </div>
@@ -235,9 +282,11 @@ const WorkspaceSidebar = () => {
           />
         </SidebarLinkList>
       </SidebarContainer>
-      <BuildVersion>
-        <Version />
-      </BuildVersion>
+      {!hideSidebar && (
+        <BuildVersion>
+          <Version />
+        </BuildVersion>
+      )}
       {newPaymentsVisible && (
         <NewPaymentRequest onClose={() => setNewPaymentsVisible(false)} />
       )}

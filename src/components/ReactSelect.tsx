@@ -32,19 +32,22 @@ export const customStyles: any = {
     fontFamily: "Inter",
     color: "#0F172A",
   }),
-  option: (provided: any, state: any) => ({
-    ...provided,
-    backgroundColor: state.isFocused && "#E2E8F0",
-    color: "#0F172A",
-    fontSize: "14px",
-    fontFamily: "Inter",
-    margin: "4px",
-    maxWidth: "calc(100% - 16px)",
-    borderRadius: "6px",
-    "&:hover": {
-      backgroundColor: "#E2E8F0",
-    },
-  }),
+  option: (provided: any, state: any) => (
+    console.log("state", state),
+    {
+      ...provided,
+      backgroundColor: (state.isFocused || state.isSelected) && "#E2E8F0",
+      color: "#0F172A",
+      fontSize: "14px",
+      fontFamily: "Inter",
+      margin: "4px",
+      maxWidth: "calc(100% - 16px)",
+      borderRadius: "6px",
+      "&::hover": {
+        backgroundColor: "#E2E8F0",
+      },
+    }
+  ),
   singleValue: (provided: any) => ({
     ...provided,
     color: "#0F172A",
@@ -181,6 +184,13 @@ export default function ReactSelect({
       menuPortalTarget={document.body}
       // isClearable={false}
       isDisabled={isDisabled}
+      theme={(theme) => ({
+        ...theme,
+        colors: {
+          ...theme.colors,
+          primary25: "var(--clr-gray-200)",
+        },
+      })}
     />
   );
 }
